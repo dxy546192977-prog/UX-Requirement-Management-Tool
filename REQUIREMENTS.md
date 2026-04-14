@@ -1,12 +1,12 @@
-# Requirements Management - Development Requirements
+# 需求管理工具 - 开发规范
 
-## Auto Save & Git Push
+## 自动保存与 Git 推送
 
-Every time a project is uploaded or any modification is made, the system must **automatically save and push changes to the Git repository**.
+每次上传项目或进行任何修改后，系统必须**自动保存并推送变更到 Git 仓库**。
 
-### Rules
+### 规则
 
-- **On project upload**: After uploading a new project, automatically run `git add`, `git commit`, and `git push` to sync changes to the remote repository.
-- **On every modification**: After each code or file modification, automatically stage, commit, and push the changes.
-- **Commit messages**: Should be descriptive and reflect the nature of the change (e.g., `feat: add new requirement`, `fix: update dashboard layout`).
-- **Target branch**: Push to the current working branch (default: `main`).
+- **上传项目时**：上传新项目后，自动执行 `git add`、`git commit`、`git push`，将变更同步到远程仓库。
+- **每次修改后**：每次代码或文件修改完成后，自动暂存、提交并推送变更。
+- **提交信息**：应具有描述性，反映变更内容（如 `feat: 新增需求项`、`fix: 修复面板布局`）。
+- **目标分支**：推送到当前工作分支（默认：`main`）。
