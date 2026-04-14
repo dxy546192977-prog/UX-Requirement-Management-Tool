@@ -468,15 +468,6 @@
     .status-developing { background: rgba(244,114,182,0.15); color: #f472b6; }
     .status-developing::before { background: #f472b6; }
 
-    /* Column Empty State */
-    .column-empty {
-      text-align: center;
-      padding: 24px 12px;
-      color: var(--text-muted);
-      font-size: 13px;
-      opacity: 0.5;
-    }
-
     /* Footer */
     .footer {
       text-align: center;
@@ -488,37 +479,19 @@
     }
 
     /* Responsive */
-    @media (max-width: 1200px) {
-      .kanban-board {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
     @media (max-width: 768px) {
       .header { padding: 16px 20px; }
       .tab-bar { padding: 16px 20px 0; }
       .main { padding: 16px 20px 32px; }
       .header-content { flex-direction: column; gap: 12px; align-items: flex-start; }
       .header-right { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .kanban-board {
-        grid-template-columns: 1fr;
-      }
-      .tab-bar {
-        overflow-x: auto;
-      }
+      .tab-bar { overflow-x: auto; }
+      .req-card { flex-direction: column; align-items: flex-start; }
+      .req-card-left { width: 100%; }
+      .req-card-right { width: 100%; flex-wrap: wrap; }
     }
 
     /* Scrollbar */
-    .column-body::-webkit-scrollbar {
-      width: 4px;
-    }
-    .column-body::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .column-body::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 2px;
-    }
     .modal::-webkit-scrollbar {
       width: 6px;
     }
@@ -552,7 +525,7 @@
 <div class="tab-bar" id="tabBar"></div>
 
 <main class="main">
-  <div class="kanban-board" id="kanbanBoard"></div>
+  <div class="req-list" id="reqList"></div>
 </main>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
@@ -673,21 +646,20 @@ const requirementsData = {
 };
 
 // ==================== State ====================
-let currentPart = requirementsData.parts[0];
+let currentFilter = "all"; // "all" or part name
 
 // ==================== Helpers ====================
 function getStatusMeta(status) {
   return requirementsData.statusMeta[status] || requirementsData.statusMeta["待对焦"];
 }
 
-function getReqsByPartAndStatus(part, status) {
-  return requirementsData.requirements.filter(
-    req => req.part === part && req.status === status
-  );
-}
-
 function getReqsByPart(part) {
   return requirementsData.requirements.filter(req => req.part === part);
+}
+
+function getFilteredReqs() {
+  if (currentFilter === "all") return requirementsData.requirements;
+  return requirementsData.requirements.filter(req => req.part === currentFilter);
 }
 
 // ==================== Render ====================
@@ -707,7 +679,7 @@ function renderStats() {
     </div>
     <div class="stat-item">
       <div class="stat-value" style="color: var(--accent-cyan)">${partCounts["交易导购"] || 0}</div>
-      <div class="stat-label">导购交易</div>
+      <div class="stat-label">交易导购</div>
     </div>
     <div class="stat-item">
       <div class="stat-value" style="color: var(--accent-purple)">${partCounts["机票辅营"] || 0}</div>
@@ -718,48 +690,40 @@ function renderStats() {
 
 function renderTabs() {
   const container = document.getElementById("tabBar");
-  container.innerHTML = requirementsData.parts.map(part => {
+  const allCount = requirementsData.requirements.length;
+  const allActive = currentFilter === "all" ? "active" : "";
+
+  let tabsHtml = `<button class="tab-btn ${allActive}" onclick="switchFilter('all')">
+    所有需求<span class="tab-count">${allCount}</span>
+  </button>`;
+
+  tabsHtml += requirementsData.parts.map(part => {
     const count = getReqsByPart(part).length;
-    const activeClass = currentPart === part ? "active" : "";
-    return `<button class="tab-btn ${activeClass}" onclick="switchPart('${part}')">
+    const activeClass = currentFilter === part ? "active" : "";
+    return `<button class="tab-btn ${activeClass}" onclick="switchFilter('${part}')">
       ${part}<span class="tab-count">${count}</span>
     </button>`;
   }).join("");
+
+  container.innerHTML = tabsHtml;
 }
 
-function switchPart(part) {
-  currentPart = part;
+function switchFilter(filter) {
+  currentFilter = filter;
   renderTabs();
-  renderKanban();
+  renderList();
 }
 
-function renderKanban() {
-  const container = document.getElementById("kanbanBoard");
-  const statuses = requirementsData.statuses;
+function renderList() {
+  const container = document.getElementById("reqList");
+  const reqs = getFilteredReqs();
 
-  container.innerHTML = statuses.map(status => {
-    const meta = getStatusMeta(status);
-    const reqs = getReqsByPartAndStatus(currentPart, status);
+  if (reqs.length === 0) {
+    container.innerHTML = `<div class="req-list-empty">暂无需求</div>`;
+    return;
+  }
 
-    const cardsHtml = reqs.length > 0
-      ? reqs.map(req => renderReqCard(req)).join("")
-      : `<div class="column-empty">No items</div>`;
-
-    return `
-      <div class="kanban-column">
-        <div class="column-header">
-          <div class="column-title">
-            <span class="column-dot ${meta.dotClass}"></span>
-            ${status}
-          </div>
-          <span class="column-count">${reqs.length}</span>
-        </div>
-        <div class="column-body">
-          ${cardsHtml}
-        </div>
-      </div>
-    `;
-  }).join("");
+  container.innerHTML = reqs.map(req => renderReqCard(req)).join("");
 }
 
 function renderReqCard(req) {
@@ -770,17 +734,23 @@ function renderReqCard(req) {
     "P3": "priority-p3"
   }[req.priority] || "priority-p2";
 
+  const statusMeta = getStatusMeta(req.status);
+  const showPartBadge = currentFilter === "all";
+
   return `
     <div class="req-card" onclick="openModal('${req.id}')">
-      <div class="req-card-id">${req.id}</div>
-      <div class="req-card-name">${req.name}</div>
-      <div class="req-card-meta">
+      <div class="req-card-left">
+        <span class="req-card-id">${req.id}</span>
+        <span class="req-card-name">${req.name}</span>
+      </div>
+      <div class="req-card-right">
+        ${showPartBadge ? `<span class="req-card-part-badge">${req.part}</span>` : ''}
+        <span class="req-card-status req-card-status ${statusMeta.cssClass}">${req.status}</span>
         <span class="req-card-priority ${priorityClass}">${req.priority}</span>
         <span class="req-card-owner">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           ${req.owner}
         </span>
-        <span class="req-card-date">${req.updated_at}</span>
       </div>
     </div>
   `;
@@ -853,7 +823,7 @@ document.addEventListener("keydown", function(e) {
 // ==================== Init ====================
 renderStats();
 renderTabs();
-renderKanban();
+renderList();
 </script>
 
 </body>
