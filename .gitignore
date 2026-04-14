@@ -1,0 +1,7 @@
+# API 定义文件（敏感/体积大）
+openapi.json
+
+# 临时文件
+screenshot.png
+*.DS_Store
+.DS_Store
