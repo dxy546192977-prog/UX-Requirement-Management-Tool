@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Requirements Dashboard</title>
+  <title>国内机票需求</title>
   <style>
     :root {
       --bg-primary: #0f1117;
@@ -26,18 +26,17 @@
       --radius: 12px;
       --radius-sm: 8px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       line-height: 1.6;
       min-height: 100vh;
+      overflow-x: auto;
     }
 
-    /* Header */
+    /* ===== Header ===== */
     .header {
       background: linear-gradient(135deg, #1a1d27 0%, #222533 100%);
       border-bottom: 1px solid var(--border);
@@ -47,414 +46,252 @@
       z-index: 100;
       backdrop-filter: blur(12px);
     }
-
     .header-content {
-      max-width: 1600px;
+      max-width: 1800px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .header-left p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    .header-stats { display: flex; gap: 20px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--accent-blue); }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .header-left h1 {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--text-primary);
-    }
-
-    .header-left p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .header-stats {
-      display: flex;
-      gap: 20px;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent-blue);
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .prd-link {
+    .btn-submit-req {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: var(--radius-sm);
-      font-size: 13px;
+      font-size: 14px;
+      font-weight: 500;
       text-decoration: none;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
+      border: none;
+      background: var(--accent-blue);
+      color: #fff;
+      cursor: pointer;
       transition: all 0.2s;
     }
+    .btn-submit-req:hover { background: #3a7aef; box-shadow: 0 2px 12px rgba(79,140,255,0.3); }
 
-    .prd-link:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
-      background: rgba(79,140,255,0.08);
-    }
-
-    /* Tab Bar */
+    /* ===== Tab Bar ===== */
     .tab-bar {
-      max-width: 1600px;
+      max-width: 1800px;
       margin: 0 auto;
-      padding: 20px 40px 0;
+      padding: 16px 40px 0;
       display: flex;
       gap: 4px;
     }
-
     .tab-btn {
-      padding: 10px 24px;
+      padding: 8px 20px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: all 0.2s;
       border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     }
-
-    .tab-btn:hover {
-      color: var(--text-secondary);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .tab-btn.active {
-      color: var(--accent-blue);
-      border-bottom-color: var(--accent-blue);
-      background: rgba(79,140,255,0.06);
-    }
-
+    .tab-btn:hover { color: var(--text-secondary); background: rgba(255,255,255,0.03); }
+    .tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: rgba(79,140,255,0.06); }
     .tab-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-left: 8px;
-      background: rgba(79,140,255,0.15);
-      color: var(--accent-blue);
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 9px; font-size: 11px; font-weight: 600; margin-left: 6px;
+      background: rgba(79,140,255,0.15); color: var(--accent-blue);
     }
+    .tab-btn.active .tab-count { background: var(--accent-blue); color: #fff; }
 
-    .tab-btn.active .tab-count {
-      background: var(--accent-blue);
-      color: #fff;
-    }
-
-    /* Main Content */
+    /* ===== Kanban ===== */
     .main {
-      max-width: 1200px;
+      max-width: 1800px;
       margin: 0 auto;
-      padding: 20px 40px 40px;
+      padding: 16px 40px 40px;
     }
-
-    /* Requirement List */
-    .req-list {
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      min-height: 65vh;
+    }
+    .kanban-column {
+      background: var(--bg-column);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      min-height: 300px;
+      transition: border-color 0.2s;
+    }
+    .kanban-column.drag-over {
+      border-color: var(--accent-blue);
+      background: rgba(79,140,255,0.04);
+    }
+    .column-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .column-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .column-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-pending-review { background: var(--accent-orange); }
+    .dot-pending-design { background: var(--accent-purple); }
+    .dot-designing { background: var(--accent-cyan); }
+    .dot-design-done { background: var(--accent-green); }
+    .dot-pending-dev { background: var(--accent-blue); }
+    .dot-developing { background: var(--accent-pink); }
+    .dot-live { background: #34d399; }
+    .column-count {
+      background: var(--bg-card); color: var(--text-muted);
+      padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 500;
+    }
+    .column-body {
+      padding: 8px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .column-empty {
+      text-align: center;
+      padding: 20px 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+      opacity: 0.5;
     }
 
-    /* Compact Requirement Card */
+    /* ===== Req Card (compact) ===== */
     .req-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      cursor: pointer;
+      padding: 10px 12px;
+      cursor: grab;
       transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
-
     .req-card:hover {
       border-color: var(--accent-blue);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-      background: var(--bg-hover);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
-
-    .req-card-left {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .req-card.dragging {
+      opacity: 0.4;
+      transform: rotate(2deg);
     }
-
     .req-card-id {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      white-space: nowrap;
-      flex-shrink: 0;
-      min-width: 56px;
-    }
-
-    .req-card-name {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .req-card-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .req-card-priority {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .priority-p0 { background: rgba(239,68,68,0.15); color: #ef4444; }
-    .priority-p1 { background: rgba(245,158,11,0.15); color: #f59e0b; }
-    .priority-p2 { background: rgba(79,140,255,0.15); color: #4f8cff; }
-    .priority-p3 { background: rgba(107,114,128,0.15); color: #6b7280; }
-
-    .req-card-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-      padding: 2px 10px;
-      border-radius: 12px;
-      white-space: nowrap;
-    }
-
-    .req-card-status::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    .req-card-owner {
-      font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-    }
-
-    .req-card-part-badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      background: rgba(167,139,250,0.1);
-      color: var(--accent-purple);
-      border: 1px solid rgba(167,139,250,0.2);
-      white-space: nowrap;
-    }
-
-    .req-list-empty {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(4px);
-    }
-
-    .modal-overlay.visible {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      width: 90%;
-      max-width: 640px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-
-    .modal-header {
-      padding: 24px 28px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .modal-title-area {
-      flex: 1;
-    }
-
-    .modal-id {
-      font-size: 12px;
+      font-size: 10px;
       color: var(--text-muted);
       font-family: 'SF Mono', 'Fira Code', monospace;
       margin-bottom: 4px;
     }
-
-    .modal-name {
-      font-size: 18px;
-      font-weight: 600;
+    .req-card-name {
+      font-size: 13px;
+      font-weight: 500;
       color: var(--text-primary);
+      margin-bottom: 6px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: var(--bg-primary);
-      color: var(--text-muted);
-      border-radius: 8px;
-      cursor: pointer;
+    .req-card-meta {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .modal-close:hover {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-    }
-
-    .modal-body {
-      padding: 20px 28px 28px;
-    }
-
-    .modal-meta {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .modal-summary {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      padding: 12px 16px;
-      background: rgba(79,140,255,0.05);
-      border-left: 3px solid var(--accent-blue);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      margin-bottom: 16px;
-    }
-
-    .modal-links {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .modal-link {
-      display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 7px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      transition: all 0.2s;
+      flex-wrap: wrap;
+    }
+    .req-card-priority {
+      font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 4px;
+    }
+    .priority-p0 { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .priority-p1 { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .priority-p2 { background: rgba(79,140,255,0.15); color: #4f8cff; }
+    .priority-p3 { background: rgba(107,114,128,0.15); color: #6b7280; }
+    .req-card-owner {
+      font-size: 11px; color: var(--text-muted);
+      display: flex; align-items: center; gap: 3px;
+    }
+    .req-card-part-badge {
+      font-size: 10px; padding: 1px 6px; border-radius: 8px;
+      background: rgba(167,139,250,0.1); color: var(--accent-purple);
+      border: 1px solid rgba(167,139,250,0.2);
     }
 
-    .modal-link:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
-      background: rgba(79,140,255,0.08);
+    /* ===== Modal ===== */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6); z-index: 200;
+      justify-content: center; align-items: center;
+      backdrop-filter: blur(4px);
     }
-
-    .modal-link.disabled {
-      opacity: 0.4;
-      pointer-events: none;
+    .modal-overlay.visible { display: flex; }
+    .modal {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 90%; max-width: 640px;
+      max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
-
+    .modal-header {
+      padding: 24px 28px 16px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .modal-title-area { flex: 1; }
+    .modal-id { font-size: 12px; color: var(--text-muted); font-family: 'SF Mono','Fira Code',monospace; margin-bottom: 4px; }
+    .modal-name { font-size: 18px; font-weight: 600; }
+    .modal-close {
+      width: 32px; height: 32px; border: none; background: var(--bg-primary);
+      color: var(--text-muted); border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .modal-body { padding: 20px 28px 28px; }
+    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .modal-summary {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+      padding: 12px 16px; background: rgba(79,140,255,0.05);
+      border-left: 3px solid var(--accent-blue);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 16px;
+    }
+    .modal-links { display: flex; gap: 10px; margin-bottom: 16px; }
+    .modal-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: var(--radius-sm); font-size: 13px;
+      text-decoration: none; border: 1px solid var(--border);
+      color: var(--text-secondary); transition: all 0.2s;
+    }
+    .modal-link:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(79,140,255,0.08); }
+    .modal-link.disabled { opacity: 0.4; pointer-events: none; }
     .modal-notes {
-      padding: 10px 14px;
-      background: rgba(245,158,11,0.06);
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      color: var(--text-muted);
+      padding: 10px 14px; background: rgba(245,158,11,0.06);
+      border-radius: var(--radius-sm); font-size: 13px; color: var(--text-muted);
       border: 1px dashed rgba(245,158,11,0.2);
     }
-
-    .modal-notes::before {
-      content: 'Note: ';
-      font-weight: 600;
-      color: var(--accent-orange);
-    }
-
-    /* Badge */
+    .modal-notes::before { content: 'Note: '; font-weight: 600; color: var(--accent-orange); }
     .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; padding: 3px 10px;
+      border-radius: 12px; font-size: 12px; font-weight: 500; white-space: nowrap;
     }
-
-    .badge-status {
-      gap: 5px;
-    }
-
-    .badge-status::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
+    .badge-status { gap: 5px; }
+    .badge-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
     .status-pending-review { background: rgba(245,158,11,0.15); color: #f59e0b; }
     .status-pending-review::before { background: #f59e0b; }
     .status-pending-design { background: rgba(167,139,250,0.15); color: #a78bfa; }
@@ -467,41 +304,82 @@
     .status-pending-dev::before { background: #4f8cff; }
     .status-developing { background: rgba(244,114,182,0.15); color: #f472b6; }
     .status-developing::before { background: #f472b6; }
+    .status-live { background: rgba(52,211,153,0.15); color: #34d399; }
+    .status-live::before { background: #34d399; }
 
-    /* Footer */
+    /* ===== Submit Req Modal ===== */
+    .submit-modal {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 90%; max-width: 520px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5); padding: 28px;
+    }
+    .submit-modal h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    .submit-modal p { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+    .submit-modal label {
+      display: block; font-size: 13px; font-weight: 500;
+      color: var(--text-secondary); margin-bottom: 6px;
+    }
+    .submit-modal input, .submit-modal select, .submit-modal textarea {
+      width: 100%; padding: 10px 14px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--bg-primary);
+      color: var(--text-primary); font-size: 14px; margin-bottom: 14px;
+      font-family: inherit; transition: border-color 0.2s;
+    }
+    .submit-modal input:focus, .submit-modal select:focus, .submit-modal textarea:focus {
+      outline: none; border-color: var(--accent-blue);
+    }
+    .submit-modal textarea { resize: vertical; min-height: 60px; }
+    .submit-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+    .submit-modal-actions button {
+      padding: 9px 20px; border-radius: var(--radius-sm); font-size: 14px;
+      font-weight: 500; cursor: pointer; border: none; transition: all 0.2s;
+    }
+    .btn-cancel { background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-cancel:hover { border-color: var(--text-muted); }
+    .btn-confirm { background: var(--accent-blue); color: #fff; }
+    .btn-confirm:hover { background: #3a7aef; }
+    .form-row { display: flex; gap: 12px; }
+    .form-row > div { flex: 1; }
+
+    /* ===== Footer ===== */
     .footer {
-      text-align: center;
-      padding: 32px 40px;
-      color: var(--text-muted);
-      font-size: 12px;
-      border-top: 1px solid var(--border);
-      margin-top: 20px;
+      text-align: center; padding: 32px 40px; color: var(--text-muted);
+      font-size: 12px; border-top: 1px solid var(--border); margin-top: 20px;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
+    /* ===== Responsive ===== */
+    @media (max-width: 1400px) {
+      .kanban-board { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .kanban-board { grid-template-columns: repeat(2, 1fr); }
       .header { padding: 16px 20px; }
-      .tab-bar { padding: 16px 20px 0; }
-      .main { padding: 16px 20px 32px; }
+      .tab-bar { padding: 12px 20px 0; }
+      .main { padding: 12px 20px 32px; }
       .header-content { flex-direction: column; gap: 12px; align-items: flex-start; }
       .header-right { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .tab-bar { overflow-x: auto; }
-      .req-card { flex-direction: column; align-items: flex-start; }
-      .req-card-left { width: 100%; }
-      .req-card-right { width: 100%; flex-wrap: wrap; }
     }
 
-    /* Scrollbar */
-    .modal::-webkit-scrollbar {
-      width: 6px;
+    /* ===== Scrollbar ===== */
+    .column-body::-webkit-scrollbar { width: 4px; }
+    .column-body::-webkit-scrollbar-track { background: transparent; }
+    .column-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .modal::-webkit-scrollbar { width: 6px; }
+    .modal::-webkit-scrollbar-track { background: transparent; }
+    .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      padding: 12px 24px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500; z-index: 300;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
     }
-    .modal::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .modal::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
+    .toast.visible { opacity: 1; }
+    .toast-success { background: var(--accent-green); color: #0f1117; }
+    .toast-error { background: var(--accent-red); color: #fff; }
   </style>
 </head>
 <body>
@@ -509,15 +387,15 @@
 <header class="header">
   <div class="header-content">
     <div class="header-left">
-      <h1>国内机票需求管理</h1>
-      <p>Last updated: 2026-04-14</p>
+      <h1>国内机票需求</h1>
+      <p>Last updated: <span id="lastUpdated">2026-04-14</span></p>
     </div>
     <div class="header-right">
       <div class="header-stats" id="headerStats"></div>
-      <a href="https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1" target="_blank" class="prd-link">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        PRD Document
-      </a>
+      <button class="btn-submit-req" onclick="openSubmitModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        提需求
+      </button>
     </div>
   </div>
 </header>
@@ -525,12 +403,54 @@
 <div class="tab-bar" id="tabBar"></div>
 
 <main class="main">
-  <div class="req-list" id="reqList"></div>
+  <div class="kanban-board" id="kanbanBoard"></div>
 </main>
 
+<!-- Detail Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
 </div>
+
+<!-- Submit Req Modal -->
+<div class="modal-overlay" id="submitOverlay" onclick="closeSubmitModal(event)">
+  <div class="submit-modal" id="submitModalContent" onclick="event.stopPropagation()">
+    <h2>提交需求</h2>
+    <p>粘贴语雀 PRD 链接，系统将自动解析并添加到「待对焦」</p>
+    <label>语雀 PRD 链接 *</label>
+    <input type="url" id="prdUrlInput" placeholder="https://aliyuque.antfin.com/..." />
+    <label>需求名称 *</label>
+    <input type="text" id="reqNameInput" placeholder="请输入需求名称" />
+    <div class="form-row">
+      <div>
+        <label>所属类目</label>
+        <select id="reqPartSelect">
+          <option value="交易导购">交易导购</option>
+          <option value="机票辅营">机票辅营</option>
+        </select>
+      </div>
+      <div>
+        <label>优先级</label>
+        <select id="reqPrioritySelect">
+          <option value="P1">P1</option>
+          <option value="P0">P0</option>
+          <option value="P2">P2</option>
+          <option value="P3">P3</option>
+        </select>
+      </div>
+    </div>
+    <label>需求描述</label>
+    <textarea id="reqSummaryInput" placeholder="简要描述需求内容..."></textarea>
+    <label>提交人</label>
+    <input type="text" id="reqOwnerInput" placeholder="请输入姓名" />
+    <div class="submit-modal-actions">
+      <button class="btn-cancel" onclick="closeSubmitModal()">取消</button>
+      <button class="btn-confirm" onclick="handleSubmitReq()">提交需求</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <footer class="footer">
   国内机票需求管理系统 v2.0 | Owner: Liang Yu
@@ -545,17 +465,17 @@ const requirementsData = {
     prd_url: "https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1"
   },
   parts: ["交易导购", "机票辅营"],
-  statuses: ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中"],
+  statuses: ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "已上线"],
   statusMeta: {
     "待对焦":  { cssClass: "status-pending-review", dotClass: "dot-pending-review" },
     "待设计":  { cssClass: "status-pending-design", dotClass: "dot-pending-design" },
     "设计中":  { cssClass: "status-designing",      dotClass: "dot-designing" },
     "设计完成": { cssClass: "status-design-done",    dotClass: "dot-design-done" },
     "待开发":  { cssClass: "status-pending-dev",     dotClass: "dot-pending-dev" },
-    "开发中":  { cssClass: "status-developing",      dotClass: "dot-developing" }
+    "开发中":  { cssClass: "status-developing",      dotClass: "dot-developing" },
+    "已上线":  { cssClass: "status-live",            dotClass: "dot-live" }
   },
   requirements: [
-    // ---- 交易导购 ----
     {
       id: "REQ-001",
       part: "交易导购",
@@ -639,53 +559,58 @@ const requirementsData = {
       notes: "关键数据：本地公共交通700w UV",
       created_at: "2026-04-14",
       updated_at: "2026-04-14"
-    },
-    // ---- 机票辅营 ----
-    // (暂无具体需求，子文档权限受限待补充)
+    }
   ]
 };
 
 // ==================== State ====================
-let currentFilter = "all"; // "all" or part name
+let currentFilter = "all";
+let draggedReqId = null;
 
 // ==================== Helpers ====================
 function getStatusMeta(status) {
   return requirementsData.statusMeta[status] || requirementsData.statusMeta["待对焦"];
 }
-
 function getReqsByPart(part) {
-  return requirementsData.requirements.filter(req => req.part === part);
+  return requirementsData.requirements.filter(r => r.part === part);
 }
-
 function getFilteredReqs() {
   if (currentFilter === "all") return requirementsData.requirements;
-  return requirementsData.requirements.filter(req => req.part === currentFilter);
+  return requirementsData.requirements.filter(r => r.part === currentFilter);
+}
+function getFilteredReqsByStatus(status) {
+  return getFilteredReqs().filter(r => r.status === status);
+}
+function generateReqId() {
+  const maxId = requirementsData.requirements.reduce((max, r) => {
+    const num = parseInt(r.id.replace("REQ-", ""));
+    return num > max ? num : max;
+  }, 0);
+  return "REQ-" + String(maxId + 1).padStart(3, "0");
+}
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+// ==================== Toast ====================
+function showToast(message, type) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = "toast toast-" + type + " visible";
+  setTimeout(() => { toast.classList.remove("visible"); }, 3000);
 }
 
 // ==================== Render ====================
 function renderStats() {
   const container = document.getElementById("headerStats");
-  const allReqs = requirementsData.requirements;
-  const totalReqs = allReqs.length;
+  const totalReqs = requirementsData.requirements.length;
   const partCounts = {};
-  requirementsData.parts.forEach(part => {
-    partCounts[part] = getReqsByPart(part).length;
-  });
+  requirementsData.parts.forEach(p => { partCounts[p] = getReqsByPart(p).length; });
 
-  container.innerHTML = `
-    <div class="stat-item">
-      <div class="stat-value">${totalReqs}</div>
-      <div class="stat-label">Total</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" style="color: var(--accent-cyan)">${partCounts["交易导购"] || 0}</div>
-      <div class="stat-label">交易导购</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" style="color: var(--accent-purple)">${partCounts["机票辅营"] || 0}</div>
-      <div class="stat-label">机票辅营</div>
-    </div>
-  `;
+  container.innerHTML = '<div class="stat-item"><div class="stat-value">' + totalReqs + '</div><div class="stat-label">Total</div></div>'
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-cyan)">' + (partCounts["交易导购"]||0) + '</div><div class="stat-label">交易导购</div></div>'
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">' + (partCounts["机票辅营"]||0) + '</div><div class="stat-label">机票辅营</div></div>';
 }
 
 function renderTabs() {
@@ -693,114 +618,110 @@ function renderTabs() {
   const allCount = requirementsData.requirements.length;
   const allActive = currentFilter === "all" ? "active" : "";
 
-  let tabsHtml = `<button class="tab-btn ${allActive}" onclick="switchFilter('all')">
-    所有需求<span class="tab-count">${allCount}</span>
-  </button>`;
-
-  tabsHtml += requirementsData.parts.map(part => {
+  let html = '<button class="tab-btn ' + allActive + '" onclick="switchFilter(\'all\')">所有需求<span class="tab-count">' + allCount + '</span></button>';
+  requirementsData.parts.forEach(part => {
     const count = getReqsByPart(part).length;
-    const activeClass = currentFilter === part ? "active" : "";
-    return `<button class="tab-btn ${activeClass}" onclick="switchFilter('${part}')">
-      ${part}<span class="tab-count">${count}</span>
-    </button>`;
-  }).join("");
-
-  container.innerHTML = tabsHtml;
+    const active = currentFilter === part ? "active" : "";
+    html += '<button class="tab-btn ' + active + '" onclick="switchFilter(\'' + part + '\')">' + part + '<span class="tab-count">' + count + '</span></button>';
+  });
+  container.innerHTML = html;
 }
 
 function switchFilter(filter) {
   currentFilter = filter;
   renderTabs();
-  renderList();
+  renderKanban();
 }
 
-function renderList() {
-  const container = document.getElementById("reqList");
-  const reqs = getFilteredReqs();
+function renderKanban() {
+  const container = document.getElementById("kanbanBoard");
+  const statuses = requirementsData.statuses;
 
-  if (reqs.length === 0) {
-    container.innerHTML = `<div class="req-list-empty">暂无需求</div>`;
-    return;
-  }
+  container.innerHTML = statuses.map(status => {
+    const meta = getStatusMeta(status);
+    const reqs = getFilteredReqsByStatus(status);
+    const cardsHtml = reqs.length > 0
+      ? reqs.map(r => renderReqCard(r)).join("")
+      : '<div class="column-empty">No items</div>';
 
-  container.innerHTML = reqs.map(req => renderReqCard(req)).join("");
+    return '<div class="kanban-column" data-status="' + status + '" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">'
+      + '<div class="column-header"><div class="column-title"><span class="column-dot ' + meta.dotClass + '"></span>' + status + '</div><span class="column-count">' + reqs.length + '</span></div>'
+      + '<div class="column-body">' + cardsHtml + '</div></div>';
+  }).join("");
 }
 
 function renderReqCard(req) {
-  const priorityClass = {
-    "P0": "priority-p0",
-    "P1": "priority-p1",
-    "P2": "priority-p2",
-    "P3": "priority-p3"
-  }[req.priority] || "priority-p2";
+  const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
+  const showPart = currentFilter === "all";
 
-  const statusMeta = getStatusMeta(req.status);
-  const showPartBadge = currentFilter === "all";
-
-  return `
-    <div class="req-card" onclick="openModal('${req.id}')">
-      <div class="req-card-left">
-        <span class="req-card-id">${req.id}</span>
-        <span class="req-card-name">${req.name}</span>
-      </div>
-      <div class="req-card-right">
-        ${showPartBadge ? `<span class="req-card-part-badge">${req.part}</span>` : ''}
-        <span class="req-card-status req-card-status ${statusMeta.cssClass}">${req.status}</span>
-        <span class="req-card-priority ${priorityClass}">${req.priority}</span>
-        <span class="req-card-owner">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          ${req.owner}
-        </span>
-      </div>
-    </div>
-  `;
+  return '<div class="req-card" draggable="true" data-req-id="' + req.id + '" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" onclick="openModal(\'' + req.id + '\')">'
+    + '<div class="req-card-id">' + req.id + '</div>'
+    + '<div class="req-card-name">' + req.name + '</div>'
+    + '<div class="req-card-meta">'
+    + (showPart ? '<span class="req-card-part-badge">' + req.part + '</span>' : '')
+    + '<span class="req-card-priority ' + priorityClass + '">' + req.priority + '</span>'
+    + '<span class="req-card-owner"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' + req.owner + '</span>'
+    + '</div></div>';
 }
 
-// ==================== Modal ====================
+// ==================== Drag & Drop ====================
+function handleDragStart(event) {
+  draggedReqId = event.currentTarget.dataset.reqId;
+  event.currentTarget.classList.add("dragging");
+  event.dataTransfer.effectAllowed = "move";
+}
+function handleDragEnd(event) {
+  event.currentTarget.classList.remove("dragging");
+  draggedReqId = null;
+  document.querySelectorAll(".kanban-column").forEach(col => col.classList.remove("drag-over"));
+}
+function handleDragOver(event) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "move";
+  const column = event.currentTarget;
+  column.classList.add("drag-over");
+}
+function handleDragLeave(event) {
+  event.currentTarget.classList.remove("drag-over");
+}
+function handleDrop(event) {
+  event.preventDefault();
+  const column = event.currentTarget;
+  column.classList.remove("drag-over");
+  const newStatus = column.dataset.status;
+  if (!draggedReqId || !newStatus) return;
+
+  const req = requirementsData.requirements.find(r => r.id === draggedReqId);
+  if (req && req.status !== newStatus) {
+    req.status = newStatus;
+    req.updated_at = todayStr();
+    renderKanban();
+    renderStats();
+    renderTabs();
+    showToast(req.id + " 已移至「" + newStatus + "」", "success");
+  }
+  draggedReqId = null;
+}
+
+// ==================== Detail Modal ====================
 function openModal(reqId) {
+  if (draggedReqId) return;
   const req = requirementsData.requirements.find(r => r.id === reqId);
   if (!req) return;
 
   const meta = getStatusMeta(req.status);
-  const priorityClass = {
-    "P0": "priority-p0",
-    "P1": "priority-p1",
-    "P2": "priority-p2",
-    "P3": "priority-p3"
-  }[req.priority] || "priority-p2";
+  const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
 
   const modal = document.getElementById("modalContent");
-  modal.innerHTML = `
-    <div class="modal-header">
-      <div class="modal-title-area">
-        <div class="modal-id">${req.id}</div>
-        <div class="modal-name">${req.name}</div>
-      </div>
-      <button class="modal-close" onclick="closeModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-meta">
-        <span class="badge badge-status ${meta.cssClass}">${req.status}</span>
-        <span class="badge req-card-priority ${priorityClass}">${req.priority}</span>
-        <span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">${req.part}</span>
-      </div>
-      <div class="modal-summary">${req.summary}</div>
-      <div class="modal-links">
-        <a href="${req.prd_url || '#'}" target="_blank" class="modal-link ${!req.prd_url ? 'disabled' : ''}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          PRD
-        </a>
-        <a href="${req.design_url || '#'}" target="_blank" class="modal-link ${!req.design_url ? 'disabled' : ''}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Design
-        </a>
-      </div>
-      ${req.notes ? `<div class="modal-notes">${req.notes}</div>` : ''}
-      <div style="margin-top:16px;font-size:12px;color:var(--text-muted)">
-        Owner: ${req.owner} | Created: ${req.created_at} | Updated: ${req.updated_at}
-      </div>
-    </div>
-  `;
+  modal.innerHTML = '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + req.id + '</div><div class="modal-name">' + req.name + '</div></div><button class="modal-close" onclick="closeModal()">&times;</button></div>'
+    + '<div class="modal-body">'
+    + '<div class="modal-meta"><span class="badge badge-status ' + meta.cssClass + '">' + req.status + '</span><span class="badge req-card-priority ' + priorityClass + '">' + req.priority + '</span><span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">' + req.part + '</span></div>'
+    + '<div class="modal-summary">' + req.summary + '</div>'
+    + '<div class="modal-links"><a href="' + (req.prd_url||'#') + '" target="_blank" class="modal-link ' + (!req.prd_url?'disabled':'') + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
+    + '<a href="' + (req.design_url||'#') + '" target="_blank" class="modal-link ' + (!req.design_url?'disabled':'') + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Design</a></div>'
+    + (req.notes ? '<div class="modal-notes">' + req.notes + '</div>' : '')
+    + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Owner: ' + req.owner + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
+    + '</div>';
 
   document.getElementById("modalOverlay").classList.add("visible");
   document.body.style.overflow = "hidden";
@@ -812,10 +733,104 @@ function closeModal(event) {
   document.body.style.overflow = "";
 }
 
-// Close modal on Escape
+// ==================== Submit Req Modal ====================
+function openSubmitModal() {
+  document.getElementById("submitOverlay").classList.add("visible");
+  document.body.style.overflow = "hidden";
+  document.getElementById("prdUrlInput").value = "";
+  document.getElementById("reqNameInput").value = "";
+  document.getElementById("reqSummaryInput").value = "";
+  document.getElementById("reqOwnerInput").value = "";
+  document.getElementById("reqPartSelect").value = "交易导购";
+  document.getElementById("reqPrioritySelect").value = "P1";
+  setTimeout(() => document.getElementById("prdUrlInput").focus(), 100);
+}
+
+function closeSubmitModal(event) {
+  if (event && event.target !== document.getElementById("submitOverlay")) return;
+  document.getElementById("submitOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+}
+
+function handleSubmitReq() {
+  const prdUrl = document.getElementById("prdUrlInput").value.trim();
+  const name = document.getElementById("reqNameInput").value.trim();
+  const part = document.getElementById("reqPartSelect").value;
+  const priority = document.getElementById("reqPrioritySelect").value;
+  const summary = document.getElementById("reqSummaryInput").value.trim();
+  const owner = document.getElementById("reqOwnerInput").value.trim();
+
+  if (!name) {
+    showToast("请输入需求名称", "error");
+    return;
+  }
+
+  const newReq = {
+    id: generateReqId(),
+    part: part,
+    name: name,
+    status: "待对焦",
+    priority: priority,
+    owner: owner || "未指定",
+    summary: summary || "待补充",
+    prd_url: prdUrl || null,
+    design_url: null,
+    notes: null,
+    created_at: todayStr(),
+    updated_at: todayStr()
+  };
+
+  requirementsData.requirements.push(newReq);
+  closeSubmitModal();
+  renderStats();
+  renderTabs();
+  renderKanban();
+  showToast(newReq.id + " 已添加到「待对焦」", "success");
+
+  // Attempt DingTalk webhook notification (configure your webhook URL below)
+  sendDingTalkNotification(newReq);
+}
+
+function sendDingTalkNotification(req) {
+  // Replace with your actual DingTalk robot webhook URL
+  const DINGTALK_WEBHOOK = "";
+  if (!DINGTALK_WEBHOOK) {
+    console.log("[DingTalk] Webhook URL not configured. Skipping notification for:", req.id, req.name);
+    return;
+  }
+
+  const message = {
+    msgtype: "markdown",
+    markdown: {
+      title: "新需求提交: " + req.name,
+      text: "### 新需求提交通知\n\n"
+        + "- **需求ID**: " + req.id + "\n"
+        + "- **需求名称**: " + req.name + "\n"
+        + "- **所属类目**: " + req.part + "\n"
+        + "- **优先级**: " + req.priority + "\n"
+        + "- **提交人**: " + req.owner + "\n"
+        + "- **描述**: " + req.summary + "\n"
+        + (req.prd_url ? "- **PRD**: [查看文档](" + req.prd_url + ")\n" : "")
+        + "\n> 请及时对焦处理"
+    }
+  };
+
+  fetch(DINGTALK_WEBHOOK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(message)
+  }).then(res => {
+    if (res.ok) console.log("[DingTalk] Notification sent successfully");
+  }).catch(err => {
+    console.warn("[DingTalk] Failed to send notification:", err);
+  });
+}
+
+// ==================== Keyboard ====================
 document.addEventListener("keydown", function(e) {
   if (e.key === "Escape") {
     document.getElementById("modalOverlay").classList.remove("visible");
+    document.getElementById("submitOverlay").classList.remove("visible");
     document.body.style.overflow = "";
   }
 });
@@ -823,9 +838,9 @@ document.addEventListener("keydown", function(e) {
 // ==================== Init ====================
 renderStats();
 renderTabs();
-renderList();
+renderKanban();
 </script>
 
 </body>
 </html>
-HTMLEOF; __aone_exit=$?; pwd -P > '/var/folders/35/fq353sfj3l55d9r271myxl780000gp/T/aone-copilot-cwd-1776150622661-yum7wra30e9.txt' 2>/dev/null; exit $__aone_exit
+HTMLEOF; __aone_exit=$?; pwd -P > '/var/folders/35/fq353sfj3l55d9r271myxl780000gp/T/aone-copilot-cwd-1776151524909-wzk2ifo26b.txt' 2>/dev/null; exit $__aone_exit
