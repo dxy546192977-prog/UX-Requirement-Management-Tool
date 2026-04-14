@@ -3,723 +3,893 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>国内机票需求</title>
+  <title>Requirements Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* === RESET & BASE === */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --bg-primary: #0f1117;
-      --bg-secondary: #1a1d27;
-      --bg-card: #222533;
-      --bg-hover: #2a2e3f;
-      --text-primary: #e8eaed;
-      --text-secondary: #9aa0a6;
-      --text-muted: #6b7280;
-      --border: #2e3347;
-      --accent-blue: #4f8cff;
-      --accent-green: #34d399;
-      --accent-orange: #f59e0b;
-      --accent-red: #ef4444;
-      --accent-purple: #a78bfa;
-      --accent-cyan: #22d3ee;
-      --accent-pink: #f472b6;
-      --shadow: 0 4px 24px rgba(0,0,0,0.3);
-      --radius: 12px;
-      --radius-sm: 8px;
+      --bg-primary: #0f0f0f;
+      --bg-secondary: #161616;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #1f1f1f;
+      --bg-sub: #141414;
+      --text-primary: #e8e4df;
+      --text-secondary: #9a9590;
+      --text-muted: #6b6560;
+      --accent-warm: #d4a574;
+      --accent-pink: #e8b4b8;
+      --accent-gold: #c9b896;
+      --accent-sage: #8fa88a;
+      --accent-blue: #7ba4c9;
+      --border: rgba(232, 228, 223, 0.06);
+      --border-hover: rgba(212, 165, 116, 0.2);
+      --shadow: 0 8px 40px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 60px rgba(212, 165, 116, 0.06);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+      --font-display: 'Cormorant', Georgia, serif;
+      --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      font-family: var(--font-body);
       background: var(--bg-primary);
       color: var(--text-primary);
       line-height: 1.6;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Header */
+    /* === BACKGROUND ATMOSPHERE === */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 165, 116, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -15%;
+      left: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(232, 180, 184, 0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* === HEADER === */
     .header {
-      background: linear-gradient(135deg, #1a1d27 0%, #222533 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 24px 40px;
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(12px);
+      background: rgba(15, 15, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: clamp(16px, 3vw, 28px) clamp(20px, 5vw, 48px);
     }
 
-    .header-content {
-      max-width: 1400px;
+    .header-inner {
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 24px;
     }
 
-    .header-left h1 {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+    .header-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .header-brand h1 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 600;
       color: var(--text-primary);
+      letter-spacing: -0.5px;
+      font-style: italic;
     }
 
-    .header-left p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 2px;
+    .header-brand .version-tag {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--accent-warm);
+      border: 1px solid rgba(212, 165, 116, 0.25);
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
     }
 
     .header-stats {
       display: flex;
-      gap: 24px;
+      gap: clamp(16px, 3vw, 32px);
     }
 
-    .stat-item {
+    .stat-block {
       text-align: center;
     }
 
-    .stat-value {
-      font-size: 28px;
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 36px);
       font-weight: 700;
-      color: var(--accent-blue);
+      line-height: 1;
     }
+
+    .stat-number.warm { color: var(--accent-warm); }
+    .stat-number.pink { color: var(--accent-pink); }
+    .stat-number.gold { color: var(--accent-gold); }
+    .stat-number.sage { color: var(--accent-sage); }
 
     .stat-label {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      margin-top: 4px;
     }
 
-    /* Main Content */
+    /* === MAIN === */
     .main {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 32px 40px;
+      padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 48px);
+      position: relative;
+      z-index: 1;
     }
 
-    /* Filter Bar */
+    /* === SECTION TITLE === */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      font-style: italic;
+    }
+
+    /* === FILTER BAR === */
     .filter-bar {
       display: flex;
-      gap: 10px;
-      margin-bottom: 28px;
+      gap: 8px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
     }
 
-    .filter-btn {
-      padding: 6px 16px;
-      border-radius: 20px;
+    .filter-pill {
+      padding: 6px 18px;
+      border-radius: 24px;
       border: 1px solid var(--border);
       background: transparent;
-      color: var(--text-secondary);
+      color: var(--text-muted);
+      font-family: var(--font-body);
       font-size: 13px;
+      font-weight: 400;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s var(--ease-out-expo);
+      letter-spacing: 0.3px;
     }
 
-    .filter-btn:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
+    .filter-pill:hover {
+      border-color: var(--border-hover);
+      color: var(--accent-warm);
     }
 
-    .filter-btn.active {
-      background: var(--accent-blue);
-      border-color: var(--accent-blue);
-      color: #fff;
+    .filter-pill.active {
+      background: rgba(212, 165, 116, 0.1);
+      border-color: var(--accent-warm);
+      color: var(--accent-warm);
     }
 
-    /* Project Card */
+    /* === PROJECT CARD === */
     .project-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       margin-bottom: 20px;
       overflow: hidden;
-      transition: all 0.25s;
+      transition: all 0.4s var(--ease-out-expo);
+      position: relative;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent-warm), var(--accent-pink));
+      opacity: 0;
+      transition: opacity 0.4s;
     }
 
     .project-card:hover {
-      border-color: var(--accent-blue);
-      box-shadow: var(--shadow);
-      transform: translateY(-1px);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-2px);
     }
 
-    .project-header {
-      padding: 24px 28px 16px;
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    /* === PROJECT HEADER === */
+    .project-head {
+      padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 32px) clamp(14px, 2vw, 18px);
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      cursor: pointer;
+      gap: 16px;
     }
 
-    .project-title-area {
-      flex: 1;
+    .project-info { flex: 1; }
+
+    .project-id-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
     }
 
     .project-id {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .project-date {
       font-size: 12px;
       color: var(--text-muted);
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      margin-bottom: 4px;
+      font-weight: 300;
     }
 
     .project-name {
-      font-size: 18px;
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.5vw, 28px);
       font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      line-height: 1.3;
     }
 
-    .project-meta {
+    .project-tags {
       display: flex;
-      gap: 16px;
+      gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
 
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .meta-icon {
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Badges */
+    /* === BADGES === */
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 3px 10px;
-      border-radius: 12px;
+      padding: 3px 12px;
+      border-radius: 20px;
       font-size: 12px;
-      font-weight: 500;
-      white-space: nowrap;
+      font-weight: 400;
+      letter-spacing: 0.3px;
     }
 
-    .badge-status {
-      gap: 5px;
+    .badge-dot {
+      gap: 6px;
     }
 
-    .badge-status::before {
+    .badge-dot::before {
       content: '';
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    .status-pending { background: rgba(245,158,11,0.15); color: #f59e0b; }
-    .status-pending::before { background: #f59e0b; }
-    .status-dev { background: rgba(79,140,255,0.15); color: #4f8cff; }
-    .status-dev::before { background: #4f8cff; }
-    .status-integration { background: rgba(167,139,250,0.15); color: #a78bfa; }
-    .status-integration::before { background: #a78bfa; }
-    .status-testing { background: rgba(34,211,238,0.15); color: #22d3ee; }
-    .status-testing::before { background: #22d3ee; }
-    .status-live { background: rgba(52,211,153,0.15); color: #34d399; }
-    .status-live::before { background: #34d399; }
-    .status-paused { background: rgba(107,114,128,0.15); color: #6b7280; }
-    .status-paused::before { background: #6b7280; }
-    .status-cancelled { background: rgba(239,68,68,0.15); color: #ef4444; }
-    .status-cancelled::before { background: #ef4444; }
+    /* Status colors */
+    .s-pending { background: rgba(212, 165, 116, 0.1); color: var(--accent-warm); }
+    .s-pending::before { background: var(--accent-warm); }
+    .s-dev { background: rgba(123, 164, 201, 0.1); color: var(--accent-blue); }
+    .s-dev::before { background: var(--accent-blue); }
+    .s-integration { background: rgba(201, 184, 150, 0.1); color: var(--accent-gold); }
+    .s-integration::before { background: var(--accent-gold); }
+    .s-testing { background: rgba(143, 168, 138, 0.1); color: var(--accent-sage); }
+    .s-testing::before { background: var(--accent-sage); }
+    .s-live { background: rgba(143, 168, 138, 0.15); color: #a8c9a0; }
+    .s-live::before { background: #a8c9a0; }
+    .s-paused { background: rgba(107, 101, 96, 0.15); color: var(--text-muted); }
+    .s-paused::before { background: var(--text-muted); }
+    .s-cancelled { background: rgba(200, 120, 120, 0.1); color: #c87878; }
+    .s-cancelled::before { background: #c87878; }
 
     .badge-priority {
-      font-weight: 600;
+      font-weight: 500;
       font-size: 11px;
+      letter-spacing: 0.5px;
     }
 
-    .priority-p0 { background: rgba(239,68,68,0.15); color: #ef4444; }
-    .priority-p1 { background: rgba(245,158,11,0.15); color: #f59e0b; }
-    .priority-p2 { background: rgba(79,140,255,0.15); color: #4f8cff; }
-    .priority-p3 { background: rgba(107,114,128,0.15); color: #6b7280; }
+    .p-p0 { background: rgba(200, 120, 120, 0.12); color: #d49090; }
+    .p-p1 { background: rgba(212, 165, 116, 0.12); color: var(--accent-warm); }
+    .p-p2 { background: rgba(123, 164, 201, 0.12); color: var(--accent-blue); }
+    .p-p3 { background: rgba(107, 101, 96, 0.12); color: var(--text-muted); }
 
     .badge-category {
-      background: rgba(167,139,250,0.1);
-      color: var(--accent-purple);
-      border: 1px solid rgba(167,139,250,0.2);
+      background: rgba(232, 180, 184, 0.08);
+      color: var(--accent-pink);
+      border: 1px solid rgba(232, 180, 184, 0.12);
     }
 
-    /* Project Body */
-    .project-body {
-      padding: 0 28px 24px;
-    }
-
-    .project-summary {
-      font-size: 14px;
+    .badge-owner {
       color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 16px;
-      padding: 12px 16px;
-      background: rgba(79,140,255,0.05);
-      border-left: 3px solid var(--accent-blue);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 12px;
+      font-weight: 300;
     }
 
-    .project-links {
+    /* === EXPAND ICON === */
+    .expand-arrow {
+      width: 28px;
+      height: 28px;
       display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: transform 0.35s var(--ease-out-expo);
+      flex-shrink: 0;
+      margin-top: 8px;
     }
 
-    .link-btn {
+    .expand-arrow.open {
+      transform: rotate(90deg);
+    }
+
+    /* === PROGRESS BAR === */
+    .progress-track {
+      width: 100%;
+      height: 2px;
+      background: rgba(232, 228, 223, 0.04);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-warm), var(--accent-pink));
+      border-radius: 1px;
+      transition: width 0.6s var(--ease-out-expo);
+    }
+
+    /* === COLLAPSIBLE BODY === */
+    .project-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s var(--ease-out-expo);
+    }
+
+    .project-body.open {
+      max-height: 3000px;
+    }
+
+    .project-body-inner {
+      padding: 0 clamp(20px, 3vw, 32px) clamp(20px, 3vw, 28px);
+    }
+
+    /* === SUMMARY === */
+    .summary-block {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: rgba(212, 165, 116, 0.03);
+      border-left: 2px solid var(--accent-warm);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    }
+
+    /* === LINKS === */
+    .link-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .link-item {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
+      gap: 8px;
+      padding: 8px 16px;
       border-radius: var(--radius-sm);
       font-size: 13px;
+      font-weight: 400;
       text-decoration: none;
-      transition: all 0.2s;
       border: 1px solid var(--border);
       color: var(--text-secondary);
+      transition: all 0.3s var(--ease-out-expo);
     }
 
-    .link-btn:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
-      background: rgba(79,140,255,0.08);
+    .link-item:hover {
+      border-color: var(--border-hover);
+      color: var(--accent-warm);
+      background: rgba(212, 165, 116, 0.04);
     }
 
-    .link-btn.disabled {
-      opacity: 0.4;
+    .link-item.empty {
+      opacity: 0.3;
       pointer-events: none;
     }
 
-    /* Sub Requirements */
-    .sub-req-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 12px;
+    .link-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
+    }
+
+    /* === KEY DATA === */
+    .key-data {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .data-card {
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .data-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .data-value {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 700;
+      color: var(--accent-warm);
+      line-height: 1;
+    }
+
+    .data-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 300;
+    }
+
+    /* === SUB REQUIREMENTS === */
+    .sub-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      margin-bottom: 16px;
     }
 
-    .sub-req-count {
-      background: var(--bg-primary);
-      color: var(--text-muted);
-      padding: 1px 8px;
-      border-radius: 10px;
+    .sub-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-style: italic;
+    }
+
+    .sub-count {
       font-size: 12px;
-      font-weight: 400;
+      color: var(--text-muted);
+      background: var(--bg-sub);
+      padding: 2px 10px;
+      border-radius: 12px;
     }
 
-    .sub-req-list {
+    .sub-list {
       display: grid;
       gap: 8px;
     }
 
-    .sub-req-item {
+    .sub-item {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      padding: 12px 16px;
-      background: var(--bg-primary);
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--bg-sub);
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
-      transition: all 0.2s;
+      transition: all 0.3s var(--ease-out-expo);
     }
 
-    .sub-req-item:hover {
+    .sub-item:hover {
       border-color: var(--border);
-      background: var(--bg-hover);
+      background: var(--bg-card-hover);
     }
 
-    .sub-req-id {
+    .sub-id {
       font-size: 11px;
       color: var(--text-muted);
-      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-weight: 500;
+      letter-spacing: 0.5px;
       white-space: nowrap;
-      padding-top: 2px;
+      padding-top: 3px;
+      min-width: 80px;
     }
 
-    .sub-req-content {
-      flex: 1;
-    }
+    .sub-content { flex: 1; }
 
-    .sub-req-name {
+    .sub-name {
       font-size: 14px;
       font-weight: 500;
       color: var(--text-primary);
       margin-bottom: 4px;
     }
 
-    .sub-req-summary {
+    .sub-summary {
       font-size: 13px;
+      font-weight: 300;
       color: var(--text-muted);
       line-height: 1.6;
     }
 
-    .sub-req-status {
+    .sub-badge {
       flex-shrink: 0;
+      margin-top: 2px;
     }
 
-    /* Notes */
-    .project-notes {
-      margin-top: 16px;
-      padding: 10px 14px;
-      background: rgba(245,158,11,0.06);
-      border-radius: var(--radius-sm);
+    /* === NOTES === */
+    .note-block {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: rgba(201, 184, 150, 0.04);
+      border-radius: var(--radius-xs);
+      border: 1px dashed rgba(201, 184, 150, 0.12);
       font-size: 13px;
+      font-weight: 300;
       color: var(--text-muted);
-      border: 1px dashed rgba(245,158,11,0.2);
+      line-height: 1.6;
     }
 
-    .project-notes::before {
-      content: 'Note: ';
-      font-weight: 600;
-      color: var(--accent-orange);
+    .note-label {
+      font-weight: 500;
+      color: var(--accent-gold);
+      margin-right: 4px;
     }
 
-    /* Footer */
+    /* === FOOTER === */
     .footer {
       text-align: center;
-      padding: 32px 40px;
+      padding: 40px clamp(20px, 5vw, 48px);
       color: var(--text-muted);
       font-size: 12px;
+      font-weight: 300;
       border-top: 1px solid var(--border);
-      margin-top: 40px;
+      margin-top: 48px;
+      letter-spacing: 0.5px;
     }
 
-    /* Collapse Animation */
-    .collapsible {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease;
-    }
-
-    .collapsible.expanded {
-      max-height: 2000px;
-    }
-
-    .expand-icon {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      transition: transform 0.3s;
-      flex-shrink: 0;
-    }
-
-    .expand-icon.rotated {
-      transform: rotate(90deg);
-    }
-
-    /* Progress Bar */
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: var(--bg-primary);
-      border-radius: 2px;
-      overflow: hidden;
-      margin-top: 12px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 2px;
-      transition: width 0.5s ease;
-    }
-
-    .progress-fill.green { background: linear-gradient(90deg, #34d399, #22d3ee); }
-    .progress-fill.orange { background: linear-gradient(90deg, #f59e0b, #f472b6); }
-    .progress-fill.blue { background: linear-gradient(90deg, #4f8cff, #a78bfa); }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header { padding: 16px 20px; }
-      .main { padding: 20px; }
-      .header-content { flex-direction: column; gap: 16px; align-items: flex-start; }
-      .project-header { padding: 16px 20px 12px; }
-      .project-body { padding: 0 20px 20px; }
-      .project-links { flex-direction: column; }
-      .project-meta { gap: 10px; }
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
+    .footer-line {
+      width: 40px;
+      height: 1px;
+      background: var(--accent-warm);
+      margin: 0 auto 16px;
       opacity: 0.3;
+    }
+
+    /* === ANIMATIONS === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-inner {
+      animation: fadeInDown 0.6s var(--ease-out-expo) both;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .key-data { grid-template-columns: repeat(2, 1fr); }
+      .sub-item { flex-direction: column; gap: 8px; }
+      .sub-id { min-width: auto; }
+      .sub-badge { align-self: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .project-tags { gap: 6px; }
+      .key-data { grid-template-columns: 1fr; }
+    }
+
+    /* === REDUCED MOTION === */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
     }
   </style>
 </head>
 <body>
 
+<!-- === HEADER === -->
 <header class="header">
-  <div class="header-content">
-    <div class="header-left">
-      <h1>国内机票需求</h1>
-      <p>Last updated: 2026-04-14</p>
+  <div class="header-inner">
+    <div class="header-brand">
+      <h1>Requirements</h1>
+      <span class="version-tag">v1.0</span>
     </div>
     <div class="header-stats" id="headerStats"></div>
   </div>
 </header>
 
+<!-- === MAIN CONTENT === -->
 <main class="main">
+  <div class="section-title">Project Overview</div>
   <div class="filter-bar" id="filterBar"></div>
   <div id="projectList"></div>
 </main>
 
+<!-- === FOOTER === -->
 <footer class="footer">
-  国内机票需求管理系统 v1.0 | Owner: Liang Yu
+  <div class="footer-line"></div>
+  Requirements Management -- Liang Yu
 </footer>
 
 <script>
-const requirementsData = {
-  "meta": {
-    "version": "1.0",
-    "created_at": "2026-04-14",
-    "description": "国内机票需求"
-  },
-  "categories": [
-    "正向导购交易", "保险&辅营", "搜索", "订单", "支付", "售后", "营销", "基础能力", "其他"
+/* === DATA === */
+const DATA = {
+  categories: [
+    "All", "正向导购交易", "保险&辅营", "搜索", "订单", "支付", "售后", "营销", "基础能力"
   ],
-  "status_enum": ["待评审", "开发中", "联调中", "测试中", "已上线", "已暂停", "已取消"],
-  "projects": [
+  projects: [
     {
-      "id": "PRJ-001",
-      "name": "正向导购交易 & 保险辅营需求",
-      "prd_url": "https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1",
-      "design_url": null,
-      "category": "正向导购交易",
-      "status": "待评审",
-      "priority": "P1",
-      "summary": "包含两个子模块：1) 正向导购交易 - 用户购买流程相关需求；2) 保险 & 辅营 - 保险产品和辅营产品相关需求。（PRD 子文档需权限访问，待补充详细摘要）",
-      "sub_requirements": [
-        { "id": "PRJ-001-01", "name": "正向导购交易", "summary": "待补充（子文档需权限）", "status": "待评审" },
-        { "id": "PRJ-001-02", "name": "保险 & 辅营", "summary": "待补充（子文档需权限）", "status": "待评审" }
+      id: "PRJ-001",
+      name: "正向导购交易 & 保险辅营需求",
+      prdUrl: "https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1",
+      designUrl: null,
+      category: "正向导购交易",
+      status: "待评审",
+      priority: "P1",
+      summary: "包含两个子模块：1) 正向导购交易 -- 用户购买流程相关需求；2) 保险 & 辅营 -- 保险产品和辅营产品相关需求。",
+      keyData: null,
+      subRequirements: [
+        { id: "PRJ-001-01", name: "正向导购交易", summary: "待补充（子文档需权限）", status: "待评审" },
+        { id: "PRJ-001-02", name: "保险 & 辅营", summary: "待补充（子文档需权限）", status: "待评审" }
       ],
-      "owner": "良予",
-      "created_at": "2026-04-14",
-      "updated_at": "2026-04-14",
-      "notes": "PRD 子文档链接权限受限，需要开放权限后补充详细需求摘要"
+      owner: "良予",
+      createdAt: "2026-04-14",
+      updatedAt: "2026-04-14",
+      notes: "PRD 子文档链接权限受限，需要开放权限后补充详细需求摘要"
     },
     {
-      "id": "PRJ-002",
-      "name": "高德机票全量切飞猪",
-      "prd_url": "https://aliyuque.antfin.com/xinchuan.lxc/kb/rb5i1112gigu4e8z?singleDoc#TwaNx",
-      "design_url": "https://www.figma.com/design/usgAklz7EPzQ9R9dUvePv5/%E9%AB%98%E5%BE%B7%E6%9C%BA%E7%A5%A8%E5%85%A8%E9%87%8F%E5%88%87%E9%A3%9E%E7%8C%AA?node-id=4-10529&t=R2dLA8Ptsg8aQhnX-4",
-      "category": "正向导购交易",
-      "status": "待评审",
-      "priority": "P1",
-      "summary": "将高德地图中的机票相关入口全量切换至飞猪，提升机票转化率。核心目标：统一账户体系、统一列表页体验、接入飞猪智慧出行方案，覆盖高德首页金刚位、地图导航搜索、公共交通等多个入口场景。",
-      "sub_requirements": [
-        { "id": "PRJ-002-01", "name": "高德首页切量：机票切飞猪机票首页", "summary": "高德首页金刚位点击机票/火车票后跳转飞猪机票首页，解决当前不支持国际机票搜索、对新用户不友好等问题。切换后可支持国际搜索和更友好的搜索体验。", "status": "待评审" },
-        { "id": "PRJ-002-02", "name": "地图导航搜索-飞机入口跳转飞猪列表页", "summary": "地图导航搜索中飞机入口（搜索点击大，飞机占比20%）直接跳转飞猪独家列表页，提升转化。", "status": "待评审" },
-        { "id": "PRJ-002-03", "name": "登录授权优化", "summary": "用户全部授权淘宝账户登录，无淘宝账户则由高德提供手机号注册并提醒，确保账户体系一致，营销优惠权益统一，提升用户转化。", "status": "待评审" },
-        { "id": "PRJ-002-04", "name": "导航搜索-公共交通-异地搜索-智慧出行方案", "summary": "异地公共交通场景（400w UV）接入飞猪智慧出行推荐方案，当前短途火车占90%、机票仅10%，通过智慧推荐提升机票占比。", "status": "待评审" },
-        { "id": "PRJ-002-05", "name": "导航搜索-公共交通-异地搜索-推荐飞机入口", "summary": "异地搜索场景推荐飞机入口，跳转飞猪独家列表。", "status": "待评审" },
-        { "id": "PRJ-002-06", "name": "导航搜索-公共交通-本地搜索-返程机票入口", "summary": "本地公共交通场景（700w UV）搜索机场时增加订返程机票入口，探索推荐订机票返程。", "status": "待评审" }
+      id: "PRJ-002",
+      name: "高德机票全量切飞猪",
+      prdUrl: "https://aliyuque.antfin.com/xinchuan.lxc/kb/rb5i1112gigu4e8z?singleDoc#TwaNx",
+      designUrl: "https://www.figma.com/design/usgAklz7EPzQ9R9dUvePv5/",
+      category: "正向导购交易",
+      status: "待评审",
+      priority: "P1",
+      summary: "将高德地图中的机票相关入口全量切换至飞猪，提升机票转化率。核心目标：统一账户体系、统一列表页体验、接入飞猪智慧出行方案，覆盖高德首页金刚位、地图导航搜索、公共交通等多个入口场景。",
+      keyData: [
+        { value: "20%", label: "地图搜索飞机占比" },
+        { value: "400w", label: "异地公共交通 UV" },
+        { value: "700w", label: "本地公共交通 UV" }
       ],
-      "owner": "良予",
-      "created_at": "2026-04-14",
-      "updated_at": "2026-04-14",
-      "notes": "PRD 作者: xinchuan.lxc。高德入口盘点包含12个场景入口，产品落地方案聚焦4大方向。关键数据：地图搜索飞机占比20%，异地公共交通400w UV，本地公共交通700w UV。"
+      subRequirements: [
+        { id: "PRJ-002-01", name: "高德首页切量：机票切飞猪机票首页", summary: "高德首页金刚位点击机票/火车票后跳转飞猪机票首页，解决当前不支持国际机票搜索、对新用户不友好等问题。切换后可支持国际搜索和更友好的搜索体验。", status: "待评审" },
+        { id: "PRJ-002-02", name: "地图导航搜索-飞机入口跳转飞猪列表页", summary: "地图导航搜索中飞机入口（搜索点击大，飞机占比20%）直接跳转飞猪独家列表页，提升转化。", status: "待评审" },
+        { id: "PRJ-002-03", name: "登录授权优化", summary: "用户全部授权淘宝账户登录，无淘宝账户则由高德提供手机号注册并提醒，确保账户体系一致，营销优惠权益统一，提升用户转化。", status: "待评审" },
+        { id: "PRJ-002-04", name: "导航搜索-公共交通-异地搜索-智慧出行方案", summary: "异地公共交通场景（400w UV）接入飞猪智慧出行推荐方案，当前短途火车占90%、机票仅10%，通过智慧推荐提升机票占比。", status: "待评审" },
+        { id: "PRJ-002-05", name: "导航搜索-公共交通-异地搜索-推荐飞机入口", summary: "异地搜索场景推荐飞机入口，跳转飞猪独家列表。", status: "待评审" },
+        { id: "PRJ-002-06", name: "导航搜索-公共交通-本地搜索-返程机票入口", summary: "本地公共交通场景（700w UV）搜索机场时增加订返程机票入口，探索推荐订机票返程。", status: "待评审" }
+      ],
+      owner: "良予",
+      createdAt: "2026-04-14",
+      updatedAt: "2026-04-14",
+      notes: "PRD 作者: xinchuan.lxc. 高德入口盘点包含12个场景入口，产品落地方案聚焦4大方向。"
     }
   ]
 };
 
-const statusClassMap = {
-  "待评审": "status-pending",
-  "开发中": "status-dev",
-  "联调中": "status-integration",
-  "测试中": "status-testing",
-  "已上线": "status-live",
-  "已暂停": "status-paused",
-  "已取消": "status-cancelled"
+/* === STATUS & PRIORITY MAPS === */
+const STATUS_CLASS = {
+  "待评审": "s-pending", "开发中": "s-dev", "联调中": "s-integration",
+  "测试中": "s-testing", "已上线": "s-live", "已暂停": "s-paused", "已取消": "s-cancelled"
 };
 
-const priorityClassMap = {
-  "P0": "priority-p0",
-  "P1": "priority-p1",
-  "P2": "priority-p2",
-  "P3": "priority-p3"
+const PRIORITY_CLASS = {
+  "P0": "p-p0", "P1": "p-p1", "P2": "p-p2", "P3": "p-p3"
 };
 
-let currentFilter = "all";
+let activeFilter = "All";
 
-function getStatusClass(status) {
-  return statusClassMap[status] || "status-pending";
-}
-
-function getPriorityClass(priority) {
-  return priorityClassMap[priority] || "priority-p2";
-}
-
+/* === RENDER STATS === */
 function renderStats() {
-  const container = document.getElementById("headerStats");
-  const projects = requirementsData.projects;
-  const totalProjects = projects.length;
-  const totalSubReqs = projects.reduce((sum, project) => sum + project.sub_requirements.length, 0);
-  const statusCounts = {};
-  projects.forEach(project => {
-    statusCounts[project.status] = (statusCounts[project.status] || 0) + 1;
-  });
+  const totalProjects = DATA.projects.length;
+  const totalSubs = DATA.projects.reduce((s, p) => s + p.subRequirements.length, 0);
+  const pending = DATA.projects.filter(p => p.status === "待评审").length;
 
-  container.innerHTML = `
-    <div class="stat-item">
-      <div class="stat-value">${totalProjects}</div>
-      <div class="stat-label">Projects</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value">${totalSubReqs}</div>
-      <div class="stat-label">Sub-Reqs</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" style="color: var(--accent-orange)">${statusCounts["待评审"] || 0}</div>
-      <div class="stat-label">Pending</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" style="color: var(--accent-green)">${statusCounts["已上线"] || 0}</div>
-      <div class="stat-label">Live</div>
-    </div>
+  document.getElementById("headerStats").innerHTML = `
+    <div class="stat-block"><div class="stat-number warm">${totalProjects}</div><div class="stat-label">Projects</div></div>
+    <div class="stat-block"><div class="stat-number gold">${totalSubs}</div><div class="stat-label">Sub-reqs</div></div>
+    <div class="stat-block"><div class="stat-number pink">${pending}</div><div class="stat-label">Pending</div></div>
   `;
 }
 
+/* === RENDER FILTERS === */
 function renderFilters() {
-  const container = document.getElementById("filterBar");
-  const categories = ["all", ...new Set(requirementsData.projects.map(p => p.category))];
-  const labels = { "all": "All Projects" };
-
-  container.innerHTML = categories.map(category => {
-    const label = labels[category] || category;
-    const activeClass = currentFilter === category ? "active" : "";
-    return `<button class="filter-btn ${activeClass}" onclick="setFilter('${category}')">${label}</button>`;
-  }).join("");
+  const usedCategories = ["All", ...new Set(DATA.projects.map(p => p.category))];
+  document.getElementById("filterBar").innerHTML = usedCategories.map(cat =>
+    `<button class="filter-pill ${activeFilter === cat ? 'active' : ''}" onclick="setFilter('${cat}')">${cat === 'All' ? 'All Projects' : cat}</button>`
+  ).join("");
 }
 
 function setFilter(category) {
-  currentFilter = category;
+  activeFilter = category;
   renderFilters();
   renderProjects();
 }
 
+/* === TOGGLE PROJECT === */
 function toggleProject(projectId) {
-  const body = document.getElementById(`body-${projectId}`);
-  const icon = document.getElementById(`icon-${projectId}`);
-  body.classList.toggle("expanded");
-  icon.classList.toggle("rotated");
+  const body = document.getElementById("body-" + projectId);
+  const arrow = document.getElementById("arrow-" + projectId);
+  body.classList.toggle("open");
+  arrow.classList.toggle("open");
 }
 
-function calculateProgress(subRequirements) {
-  if (!subRequirements.length) return 0;
-  const completedStatuses = ["已上线"];
-  const completed = subRequirements.filter(sub => completedStatuses.includes(sub.status)).length;
-  return Math.round((completed / subRequirements.length) * 100);
+/* === CALCULATE PROGRESS === */
+function calcProgress(subs) {
+  if (!subs.length) return 0;
+  return Math.round(subs.filter(s => s.status === "已上线").length / subs.length * 100);
 }
 
+/* === RENDER PROJECTS === */
 function renderProjects() {
+  const filtered = activeFilter === "All" ? DATA.projects : DATA.projects.filter(p => p.category === activeFilter);
   const container = document.getElementById("projectList");
-  const filteredProjects = currentFilter === "all"
-    ? requirementsData.projects
-    : requirementsData.projects.filter(p => p.category === currentFilter);
 
-  if (!filteredProjects.length) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">[ ]</div>
-        <p>No projects found for this filter.</p>
-      </div>
-    `;
+  if (!filtered.length) {
+    container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-muted);font-style:italic;">No projects found.</div>`;
     return;
   }
 
-  container.innerHTML = filteredProjects.map(project => {
-    const progress = calculateProgress(project.sub_requirements);
-    const progressColor = progress >= 80 ? "green" : progress >= 40 ? "blue" : "orange";
+  container.innerHTML = filtered.map((project, index) => {
+    const progress = calcProgress(project.subRequirements);
+    const statusClass = STATUS_CLASS[project.status] || "s-pending";
+    const priorityClass = PRIORITY_CLASS[project.priority] || "p-p2";
 
     return `
-      <div class="project-card">
-        <div class="project-header" onclick="toggleProject('${project.id}')">
-          <div class="project-title-area">
-            <div class="project-id">${project.id}</div>
-            <div class="project-name">${project.name}</div>
-            <div class="project-meta">
-              <span class="badge badge-status ${getStatusClass(project.status)}">${project.status}</span>
-              <span class="badge badge-priority ${getPriorityClass(project.priority)}">${project.priority}</span>
-              <span class="badge badge-category">${project.category}</span>
-              <span class="meta-item">
-                <span class="meta-icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </span>
-                ${project.owner}
-              </span>
-              <span class="meta-item">
-                <span class="meta-icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                </span>
-                ${project.updated_at}
-              </span>
+      <div class="project-card reveal" style="transition-delay: ${index * 0.08}s">
+        <div class="project-head" onclick="toggleProject('${project.id}')">
+          <div class="project-info">
+            <div class="project-id-line">
+              <span class="project-id">${project.id}</span>
+              <span class="project-date">${project.updatedAt}</span>
             </div>
-            <div class="progress-bar">
-              <div class="progress-fill ${progressColor}" style="width: ${progress}%"></div>
+            <div class="project-name">${project.name}</div>
+            <div class="project-tags">
+              <span class="badge badge-dot ${statusClass}">${project.status}</span>
+              <span class="badge badge-priority ${priorityClass}">${project.priority}</span>
+              <span class="badge badge-category">${project.category}</span>
+              <span class="badge-owner">${project.owner}</span>
             </div>
           </div>
-          <div class="expand-icon" id="icon-${project.id}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="expand-arrow" id="arrow-${project.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
         </div>
 
-        <div class="collapsible" id="body-${project.id}">
-          <div class="project-body">
-            <div class="project-summary">${project.summary}</div>
+        <div class="progress-track">
+          <div class="progress-bar" style="width: ${progress}%"></div>
+        </div>
 
-            <div class="project-links">
-              <a href="${project.prd_url}" target="_blank" class="link-btn ${!project.prd_url ? 'disabled' : ''}">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div class="project-body" id="body-${project.id}">
+          <div class="project-body-inner">
+
+            <div class="summary-block">${project.summary}</div>
+
+            <div class="link-row">
+              <a href="${project.prdUrl || '#'}" target="_blank" class="link-item ${!project.prdUrl ? 'empty' : ''}">
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 PRD Document
               </a>
-              <a href="${project.design_url || '#'}" target="_blank" class="link-btn ${!project.design_url ? 'disabled' : ''}">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <a href="${project.designUrl || '#'}" target="_blank" class="link-item ${!project.designUrl ? 'empty' : ''}">
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                 Design File
               </a>
             </div>
 
-            <div class="sub-req-title">
-              Sub Requirements
-              <span class="sub-req-count">${project.sub_requirements.length}</span>
+            ${project.keyData ? `
+              <div class="key-data">
+                ${project.keyData.map(d => `
+                  <div class="data-card">
+                    <div class="data-value">${d.value}</div>
+                    <div class="data-label">${d.label}</div>
+                  </div>
+                `).join("")}
+              </div>
+            ` : ''}
+
+            <div class="sub-header">
+              <span class="sub-title">Sub Requirements</span>
+              <span class="sub-count">${project.subRequirements.length}</span>
             </div>
 
-            <div class="sub-req-list">
-              ${project.sub_requirements.map(sub => `
-                <div class="sub-req-item">
-                  <span class="sub-req-id">${sub.id}</span>
-                  <div class="sub-req-content">
-                    <div class="sub-req-name">${sub.name}</div>
-                    <div class="sub-req-summary">${sub.summary}</div>
+            <div class="sub-list">
+              ${project.subRequirements.map(sub => `
+                <div class="sub-item">
+                  <span class="sub-id">${sub.id}</span>
+                  <div class="sub-content">
+                    <div class="sub-name">${sub.name}</div>
+                    <div class="sub-summary">${sub.summary}</div>
                   </div>
-                  <div class="sub-req-status">
-                    <span class="badge badge-status ${getStatusClass(sub.status)}">${sub.status}</span>
+                  <div class="sub-badge">
+                    <span class="badge badge-dot ${STATUS_CLASS[sub.status] || 's-pending'}">${sub.status}</span>
                   </div>
                 </div>
               `).join("")}
             </div>
 
-            ${project.notes ? `<div class="project-notes">${project.notes}</div>` : ''}
+            ${project.notes ? `
+              <div class="note-block">
+                <span class="note-label">Note:</span> ${project.notes}
+              </div>
+            ` : ''}
+
           </div>
         </div>
       </div>
     `;
   }).join("");
+
+  observeReveal();
 }
 
-// Initialize
+/* === INTERSECTION OBSERVER FOR ANIMATIONS === */
+function observeReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+
+  document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
+}
+
+/* === INIT === */
 renderStats();
 renderFilters();
 renderProjects();
@@ -727,3 +897,4 @@ renderProjects();
 
 </body>
 </html>
+HTMLEOF; __aone_exit=$?; pwd -P > '/var/folders/35/fq353sfj3l55d9r271myxl780000gp/T/aone-copilot-cwd-1776150462682-hn3kvwyw8to.txt' 2>/dev/null; exit $__aone_exit
