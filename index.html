@@ -550,34 +550,50 @@ const requirementsData = {
 let currentFilter = "all";
 let draggedReqId = null;
 
-// ==================== Data Persistence (localStorage) ====================
-const STORAGE_KEY = "requirements_data_v2";
-const API_BASE = "http://localhost:3001"; // kept for Yuque API proxy (optional)
+// ==================== Data Persistence (JSONBin Cloud) ====================
+const JSONBIN_BIN_ID = "69df0733856a68218935bf1a";
+const JSONBIN_API_KEY = "$2a$10$lH4WjQMDHsbfEMFvFzRtaOS9a9AjOVNA2VaGAcjV1x3//rJg6tuLO";
+const JSONBIN_BASE_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
 function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ requirements: requirementsData.requirements }));
-    console.log("[Save] Data saved to localStorage (" + requirementsData.requirements.length + " items)");
-  } catch (err) {
-    console.warn("[Save] localStorage write failed:", err.message);
-  }
+  const payload = { requirements: requirementsData.requirements };
+  fetch(JSONBIN_BASE_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": JSONBIN_API_KEY
+    },
+    body: JSON.stringify(payload)
+  }).then(function(res) {
+    if (res.ok) {
+      console.log("[Cloud Save] Synced " + requirementsData.requirements.length + " items to JSONBin");
+    } else {
+      console.warn("[Cloud Save] Server returned " + res.status);
+    }
+  }).catch(function(err) {
+    console.warn("[Cloud Save] Failed:", err.message);
+  });
 }
 
-function loadData() {
+async function loadData() {
   try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var data = JSON.parse(raw);
-      if (data.requirements && Array.isArray(data.requirements)) {
-        requirementsData.requirements = data.requirements;
-        console.log("[Load] Loaded " + data.requirements.length + " items from localStorage");
+    const res = await fetch(JSONBIN_BASE_URL + "/latest", {
+      headers: { "X-Master-Key": JSONBIN_API_KEY }
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.record && json.record.requirements && Array.isArray(json.record.requirements)) {
+        requirementsData.requirements = json.record.requirements;
+        console.log("[Cloud Load] Loaded " + json.record.requirements.length + " items from JSONBin");
+        renderStats();
+        renderTabs();
+        renderKanban();
         return;
       }
     }
-    console.log("[Load] No saved data found, using defaults");
+    console.warn("[Cloud Load] Unexpected response, using default data");
   } catch (err) {
-    console.warn("[Load] localStorage read failed:", err.message);
-    console.log("[Load] Using default data");
+    console.warn("[Cloud Load] Failed:", err.message, "- using default data");
   }
 }
 
@@ -1121,7 +1137,7 @@ async function handleSubmitReq() {
     updated_at: todayStr()
   };
 
-  requirementsData.requirements.push(newReq);
+  requirementsData.requirements.unshift(newReq);
   saveData();
   closeSubmitModal();
   renderStats();
@@ -1178,12 +1194,12 @@ document.addEventListener("keydown", function(e) {
 });
 
 // ==================== Init ====================
-loadData();
+// Render with default data first for instant display, then load cloud data
 renderStats();
 renderTabs();
 renderKanban();
+loadData(); // async: will re-render once cloud data is fetched
 </script>
 
 </body>
 </html>
-HTMLEOF; __aone_exit=$?; pwd -P > '/var/folders/35/fq353sfj3l55d9r271myxl780000gp/T/aone-copilot-cwd-1776151524909-wzk2ifo26b.txt' 2>/dev/null; exit $__aone_exit
