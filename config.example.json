@@ -1,4 +1,13 @@
 {
   "yuque_api_base": "https://yuque-api.antfin-inc.com",
-  "yuque_token": "YOUR_YUQUE_API_TOKEN_HERE"
+  "yuque_token": "YOUR_YUQUE_API_TOKEN_HERE",
+
+  "oss_access_key_id": "YOUR_OSS_ACCESS_KEY_ID",
+  "oss_access_key_secret": "YOUR_OSS_ACCESS_KEY_SECRET",
+
+  "_comment_ai": "AI 设计助理配置（ai_provider 支持 openai / qwen）",
+  "ai_provider": "openai",
+  "ai_api_base": "https://api.openai.com",
+  "ai_api_key": "YOUR_AI_API_KEY_HERE",
+  "ai_model": "gpt-4o-mini"
 }
