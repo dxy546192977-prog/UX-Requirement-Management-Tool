@@ -87,6 +87,8 @@
       gap: 4px;
     }
     .tab-btn {
+      display: inline-flex;
+      align-items: center;
       padding: 8px 20px;
       border: none;
       background: transparent;
@@ -882,10 +884,14 @@ const OSS_READ_URL = OSS_ENDPOINT + "/" + OSS_FILE_KEY;
 const OSS_STORAGE_KEY_ID     = "oss_access_key_id";
 const OSS_STORAGE_KEY_SECRET = "oss_access_key_secret";
 
+// 从 config.json 加载的 OSS 凭证（优先级高于 localStorage）
+let configOssKeyId     = "";
+let configOssKeySecret = "";
+
 function getOssCredentials() {
   return {
-    accessKeyId:     localStorage.getItem(OSS_STORAGE_KEY_ID)     || "",
-    accessKeySecret: localStorage.getItem(OSS_STORAGE_KEY_SECRET) || ""
+    accessKeyId:     configOssKeyId     || localStorage.getItem(OSS_STORAGE_KEY_ID)     || "",
+    accessKeySecret: configOssKeySecret || localStorage.getItem(OSS_STORAGE_KEY_SECRET) || ""
   };
 }
 
@@ -1996,10 +2002,23 @@ function renderLoading() {
     + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-green)">-</div><div class="stat-label">AI</div></div>';
 }
 
+// 从 config.json 加载配置，优先将 OSS key 注入内存，再启动数据加载
 renderLoading();
 renderMonthDisplay();
 updateNotifyButtonState();
-loadData();
+
+fetch("config.json?t=" + Date.now())
+  .then(function(res) { return res.ok ? res.json() : Promise.reject(res.status); })
+  .then(function(cfg) {
+    if (cfg.oss_access_key_id)     configOssKeyId     = cfg.oss_access_key_id;
+    if (cfg.oss_access_key_secret) configOssKeySecret = cfg.oss_access_key_secret;
+  })
+  .catch(function(err) {
+    console.warn("[Config] 无法加载 config.json，将使用本地存储的 OSS 凭证：", err);
+  })
+  .finally(function() {
+    loadData();
+  });
 </script>
 
 </body>
