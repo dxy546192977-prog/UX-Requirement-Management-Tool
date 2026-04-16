@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Git Push to GitHub",
+      "type": "shell",
+      "command": "cd '${workspaceFolder}' && git add -A && git commit -m 'sync: auto push on save' --allow-empty && git push origin main && osascript -e 'tell application \"Google Chrome\" to execute front window active tab javascript \"localStorage.setItem(\\\"githubSynced\\\", Date.now())\"' && osascript -e 'display notification \"数据已同步到 GitHub ✓\" with title \"同步成功\" sound name \"Glass\"'",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

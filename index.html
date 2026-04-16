@@ -2034,6 +2034,20 @@ function renderLoading() {
 renderLoading();
 renderMonthDisplay();
 loadData();
+
+// ==================== GitHub Sync Toast ====================
+function checkGithubSyncedToast() {
+  const syncedAt = localStorage.getItem("githubSynced");
+  if (!syncedAt) return;
+  const elapsed = Date.now() - parseInt(syncedAt, 10);
+  if (elapsed < 30000) {
+    showToast("✓ 数据已同步到 GitHub", "success");
+  }
+  localStorage.removeItem("githubSynced");
+}
+
+window.addEventListener("focus", checkGithubSyncedToast);
+checkGithubSyncedToast();
 </script>
 
 </body>
