@@ -119,7 +119,18 @@ function retryJob(jobId, config, yuqueSvc) {
 
 // ---------- 流水线实现 ----------
 
+function _isMockMode(config) {
+  const key = (config.ai_api_key || '').trim();
+  return !key || key === 'YOUR_AI_API_KEY_HERE';
+}
+
 async function _runJob(job, config, yuqueSvc) {
+  const mockMode = _isMockMode(config);
+  if (mockMode) {
+    console.log(`[AiDesign] Job ${job.id} — MOCK MODE (no ai_api_key configured)`);
+    return _runJobMock(job, config, yuqueSvc);
+  }
+
   // Phase 1: 拉取 PRD 正文
   _updateJob(job, { status: 'processing', stage: 'fetching_prd' });
   console.log(`[AiDesign] Job ${job.id} — Phase 1: fetching PRD`);
@@ -168,6 +179,115 @@ async function _runJob(job, config, yuqueSvc) {
   });
 
   console.log(`[AiDesign] Job ${job.id} — Done. ${modules.length} modules identified.`);
+}
+
+/**
+ * Mock 模式：无需 AI API Key，拉取语雀 PRD 元数据后用规则生成示例结果
+ * 让你完整跑通：触发 → 阶段进度 → 结果展示 → 确认/重跑 整条链路
+ */
+async function _runJobMock(job, config, yuqueSvc) {
+  const _sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  // Phase 1: 真实拉取 PRD 元数据（可读 title/description）
+  _updateJob(job, { status: 'processing', stage: 'fetching_prd' });
+  await _sleep(800);
+
+  let prdTitle = '需求文档';
+  let prdDesc  = '';
+  const hasYuqueToken = config.yuque_token && config.yuque_token !== 'YOUR_YUQUE_API_TOKEN_HERE';
+
+  if (hasYuqueToken) {
+    try {
+      const prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
+      prdTitle = prdContent.title || prdTitle;
+      prdDesc  = prdContent.description || '';
+      console.log(`[AiDesign Mock] Fetched PRD title: "${prdTitle}"`);
+    } catch (err) {
+      console.warn('[AiDesign Mock] Could not fetch PRD, using defaults:', err.message);
+    }
+  }
+
+  // Phase 2: 模拟需求拆解（基于 title/desc 做简单规则推断）
+  _updateJob(job, { stage: 'decomposing' });
+  await _sleep(1200);
+
+  const pages   = _inferPagesFromTitle(prdTitle);
+  const summary = `【Mock】${prdTitle} — 基于 PRD 标题自动推断，共识别 ${pages.length} 个涉及页面。接入 AI API Key 后将使用真实拆解。`;
+
+  // Phase 3: 模拟模块方案生成
+  _updateJob(job, { stage: 'planning' });
+  await _sleep(1000);
+
+  const modules = _buildMockModules(pages, prdTitle);
+
+  _updateJob(job, {
+    status:  'needs_confirmation',
+    stage:   null,
+    summary,
+    pages,
+    modules
+  });
+
+  console.log(`[AiDesign Mock] Job ${job.id} — Done (mock). ${modules.length} modules.`);
+}
+
+/** 根据 PRD 标题关键词推断涉及页面 */
+function _inferPagesFromTitle(title) {
+  const rules = [
+    { keywords: ['首页', 'home', '搜索', 'search'], page: '首页' },
+    { keywords: ['listing', '列表', '搜索结果', '搜索列表'], page: '列表页' },
+    { keywords: ['下单', '预订', 'booking', '填写'], page: '下单页' },
+    { keywords: ['订单', 'order', '详情', '售后'], page: '订单详情页' },
+    { keywords: ['支付', 'pay', '收银'], page: '支付页' },
+    { keywords: ['个人中心', '我的', 'profile'], page: '个人中心' },
+    { keywords: ['弹窗', 'modal', '浮层', '引流'], page: '弹窗/浮层' },
+  ];
+  const lower   = title.toLowerCase();
+  const matched = rules.filter((r) => r.keywords.some((k) => lower.includes(k))).map((r) => r.page);
+  return matched.length ? matched : ['首页', '列表页'];
+}
+
+/** 为每个页面生成示例模块 */
+function _buildMockModules(pages, prdTitle) {
+  const templatesByPage = {
+    '首页':      [
+      { name: '搜索入口模块', intent: '优化用户搜索起点的交互体验，提升首屏点击率', change_type: 'modify', notes: '注意与首屏氛围图的层叠关系，搜索框需固定在视口上方' },
+      { name: '营销 Banner 模块', intent: '承载活动运营内容，提升活动曝光', change_type: 'create', notes: '图片比例建议 16:5，支持多图轮播，自动播放间隔 3s' },
+    ],
+    '列表页':    [
+      { name: '结果列表卡片', intent: '清晰展示搜索结果，帮助用户快速比价决策', change_type: 'modify', notes: '价格信息视觉权重最高，航班时刻与时长次之' },
+      { name: '筛选/排序栏', intent: '让用户快速过滤到目标结果', change_type: 'reuse', notes: '复用现有筛选组件，本次只调整默认排序逻辑' },
+    ],
+    '下单页':    [
+      { name: '乘客信息模块', intent: '引导用户快速填写乘客信息，减少流失', change_type: 'modify', notes: '自动填入历史乘客，名字超长时省略号处理' },
+      { name: '价格明细模块', intent: '透明展示费用构成，增强用户信任', change_type: 'reuse', notes: '直接复用现有价格明细组件，无需改动' },
+      { name: '附加产品推荐', intent: '提升辅营商品转化', change_type: 'create', notes: '本次 PRD 核心新增模块，需与产品确认推荐逻辑与坑位数量' },
+    ],
+    '订单详情页': [
+      { name: '订单状态头部', intent: '第一时间让用户了解订单当前状态', change_type: 'modify', notes: '状态文案需覆盖：待支付 / 待出票 / 已出票 / 已取消 / 售后中' },
+      { name: '快捷操作按钮组', intent: '减少用户查找操作路径的成本', change_type: 'modify', notes: '本次新增"改期"入口，需评估与退票按钮的视觉优先级' },
+    ],
+    '支付页':    [
+      { name: '支付方式选择', intent: '引导用户完成支付，减少放弃率', change_type: 'modify', notes: '本次新增花呗分期入口' },
+    ],
+    '个人中心':  [
+      { name: '我的订单入口', intent: '快速跳转到订单管理', change_type: 'reuse', notes: '无改动，直接复用' },
+    ],
+    '弹窗/浮层': [
+      { name: '引流弹窗', intent: '在用户行为节点触发引流，提升跨产品转化', change_type: 'create', notes: '触发时机与展示频次需与产品确认，避免影响正向转化' },
+    ],
+  };
+
+  const modules = [];
+  pages.forEach((page) => {
+    const templates = templatesByPage[page] || [
+      { name: `${page} — 主体内容模块`, intent: `承载 ${prdTitle} 的核心需求改动`, change_type: 'modify', notes: 'Mock 模式下无法精确拆解，接入 AI Key 后将自动生成详细方案' }
+    ];
+    templates.forEach((t) => {
+      modules.push({ ...t, page, status: 'pending' });
+    });
+  });
+  return modules;
 }
 
 // ---------- Prompt 构建 ----------

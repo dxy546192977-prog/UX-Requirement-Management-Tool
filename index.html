@@ -55,7 +55,7 @@
     }
     .header-left { display: flex; align-items: center; gap: 24px; justify-content: center; }
     .header-left-title { flex: 1; }
-    .header-left .btn-submit-mobile { flex: 1; justify-content: flex-end; }
+    .header-left .btn-submit-mobile { flex-shrink: 0; }
     .header-left-title h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
     .header-right { display: flex; align-items: center; gap: 20px; }
     .header-stats { display: flex; gap: 20px; }
@@ -694,7 +694,7 @@
       /* 移动端：显示行1专用按钮，隐藏行2专用按钮 */
       .btn-submit-mobile {
         display: inline-flex; padding: 6px 12px; font-size: 13px;
-        flex: 1 1 0%; justify-content: flex-end; min-width: 0;
+        flex-shrink: 0;
       }
       .btn-submit-desktop { display: none; }
 
@@ -2438,7 +2438,10 @@ function renderAiDesignSection(req) {
       + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
       + '触发 AI 拆解</button>'
       + '</div></div>'
-      + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案</div>'
+      + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案'
+      + '<span style="margin-left:8px;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600;'
+      + 'background:rgba(245,158,11,0.12);color:var(--accent-orange);border:1px solid rgba(245,158,11,0.25)">'
+      + 'Mock 模式</span></div>'
       + '</div>';
   }
 

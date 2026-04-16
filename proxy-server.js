@@ -296,14 +296,13 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (!config.ai_api_key || config.ai_api_key === 'YOUR_AI_API_KEY_HERE') {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'AI API Key not configured. Please update config.json with your ai_api_key.' }));
-      return;
+    const isMock = !config.ai_api_key || config.ai_api_key === 'YOUR_AI_API_KEY_HERE';
+    if (isMock) {
+      console.log('[AiDesign] No ai_api_key — running in MOCK mode');
     }
 
     const job = aiDesignSvc.createJob(reqId, prdUrl, config, yuqueSvc);
-    console.log(`[AiDesign] Created job ${job.id} for req ${reqId}`);
+    console.log(`[AiDesign] Created job ${job.id} for req ${reqId}${isMock ? ' (mock)' : ''}`);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(job));
