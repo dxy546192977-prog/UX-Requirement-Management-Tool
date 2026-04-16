@@ -57,7 +57,7 @@
     .header-left-title h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
     .header-right { display: flex; align-items: center; gap: 20px; }
     .header-stats { display: flex; gap: 20px; }
-    .stat-item { text-align: center; }
+    .stat-item { text-align: center; min-width: 64px; }
     .stat-value { font-size: 24px; font-weight: 700; color: var(--accent-blue); }
     .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -158,6 +158,7 @@
     .dot-design-done { background: var(--accent-green); }
     .dot-pending-dev { background: var(--accent-blue); }
     .dot-developing { background: var(--accent-pink); }
+    .dot-gray-release { background: #a78bfa; }
     .dot-live { background: #34d399; }
     .column-count {
       background: var(--bg-card); color: var(--text-muted);
@@ -337,6 +338,8 @@
     .status-pending-dev::before { background: #4f8cff; }
     .status-developing { background: rgba(244,114,182,0.15); color: #f472b6; }
     .status-developing::before { background: #f472b6; }
+    .status-gray-release { background: rgba(167,139,250,0.15); color: #a78bfa; }
+    .status-gray-release::before { background: #a78bfa; }
     .status-live { background: rgba(52,211,153,0.15); color: #34d399; }
     .status-live::before { background: #34d399; }
 
@@ -840,7 +843,7 @@ const requirementsData = {
     prd_url: "https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1"
   },
   parts: ["交易导购", "机票辅营", "AI"],
-  statuses: ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "已上线"],
+  statuses: ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "灰度中", "已上线"],
   statusMeta: {
     "待对焦":  { cssClass: "status-pending-review", dotClass: "dot-pending-review" },
     "待设计":  { cssClass: "status-pending-design", dotClass: "dot-pending-design" },
@@ -848,6 +851,7 @@ const requirementsData = {
     "设计完成": { cssClass: "status-design-done",    dotClass: "dot-design-done" },
     "待开发":  { cssClass: "status-pending-dev",     dotClass: "dot-pending-dev" },
     "开发中":  { cssClass: "status-developing",      dotClass: "dot-developing" },
+    "灰度中":  { cssClass: "status-gray-release",    dotClass: "dot-gray-release" },
     "已上线":  { cssClass: "status-live",            dotClass: "dot-live" }
   },
   requirements: []
@@ -1259,13 +1263,24 @@ function handleDrop(event) {
   const newStatus = column.dataset.status;
   if (!draggedReqId || !newStatus) return;
 
+  const statusOrder = ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "灰度中", "已上线"];
+
   const req = requirementsData.requirements.find(r => r.id === draggedReqId);
   if (req && req.status !== newStatus) {
     const oldStatus = req.status;
+    const oldIndex = statusOrder.indexOf(oldStatus);
+    const newIndex = statusOrder.indexOf(newStatus);
+    const isForwardMove = newIndex > oldIndex;
+
     req.status = newStatus;
     req.updated_at = todayStr();
-    if (!Array.isArray(req.status_history)) req.status_history = [];
-    req.status_history.push({ date: todayStr(), from: oldStatus, to: newStatus });
+
+    // 只有正向推进（往后拖）才记录状态变更历史
+    if (isForwardMove) {
+      if (!Array.isArray(req.status_history)) req.status_history = [];
+      req.status_history.push({ date: todayStr(), from: oldStatus, to: newStatus });
+    }
+
     saveData();
     renderKanban();
     renderStats();
@@ -1647,16 +1662,26 @@ function applySearchHighlight() {
     const nameEl = card.querySelector(".req-card-name");
     const fullText = req.name;
     const lowerText = fullText.toLowerCase();
-    const matchIndex = lowerText.indexOf(lowerKeyword);
+    const nameMatchIndex = lowerText.indexOf(lowerKeyword);
 
-    if (matchIndex !== -1) {
+    // 同时检索 summary 字段
+    const summaryText = (req.summary || "").toLowerCase();
+    const summaryMatched = summaryText.includes(lowerKeyword);
+
+    const isMatched = nameMatchIndex !== -1 || summaryMatched;
+
+    if (isMatched) {
       card.classList.add("search-match");
       card.classList.remove("search-dim");
-      // 高亮匹配文字
-      const before = fullText.slice(0, matchIndex);
-      const matched = fullText.slice(matchIndex, matchIndex + searchKeyword.length);
-      const after = fullText.slice(matchIndex + searchKeyword.length);
-      nameEl.innerHTML = before + '<span class="search-highlight">' + matched + '</span>' + after;
+      // 高亮 name 中的匹配文字
+      if (nameMatchIndex !== -1) {
+        const before = fullText.slice(0, nameMatchIndex);
+        const matched = fullText.slice(nameMatchIndex, nameMatchIndex + searchKeyword.length);
+        const after = fullText.slice(nameMatchIndex + searchKeyword.length);
+        nameEl.innerHTML = before + '<span class="search-highlight">' + matched + '</span>' + after;
+      } else {
+        nameEl.textContent = fullText;
+      }
     } else {
       card.classList.add("search-dim");
       card.classList.remove("search-match");
