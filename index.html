@@ -53,8 +53,9 @@
       justify-content: space-between;
       align-items: center;
     }
-    .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-    .header-left p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .header-left-title h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .header-left-title p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 20px; }
     .header-stats { display: flex; gap: 20px; }
     .stat-item { text-align: center; }
@@ -551,10 +552,10 @@
 <header class="header">
   <div class="header-content">
     <div class="header-left">
-      <h1>国内机票需求</h1>
-      <p>Last updated: <span id="lastUpdated">2026-04-14</span></p>
-    </div>
-    <div class="header-right">
+      <div class="header-left-title">
+        <h1>国内机票需求</h1>
+        <p>Last updated: <span id="lastUpdated">2026-04-14</span></p>
+      </div>
       <div class="month-switcher">
         <span class="month-switcher-label">月份</span>
         <button class="month-btn" onclick="shiftMonth(-1)" title="上个月">&#8249;</button>
@@ -562,6 +563,8 @@
         <button class="month-btn" onclick="shiftMonth(1)" title="下个月">&#8250;</button>
         <button class="month-all-btn" id="monthAllBtn" onclick="switchMonth('all')">全部</button>
       </div>
+    </div>
+    <div class="header-right">
       <div class="header-stats" id="headerStats"></div>
       <div class="search-wrapper">
         <button class="search-icon-btn" id="searchIconBtn" onclick="toggleSearch()" title="搜索需求">
@@ -1441,8 +1444,11 @@ function handleDrop(event) {
 
   const req = requirementsData.requirements.find(r => r.id === draggedReqId);
   if (req && req.status !== newStatus) {
+    const oldStatus = req.status;
     req.status = newStatus;
     req.updated_at = todayStr();
+    if (!Array.isArray(req.status_history)) req.status_history = [];
+    req.status_history.push({ date: todayStr(), from: oldStatus, to: newStatus });
     saveData();
     renderKanban();
     renderStats();
@@ -1475,6 +1481,7 @@ function openModal(reqId) {
     + '</div>'
     + (req.notes ? '<div class="modal-notes">' + req.notes + '</div>' : '')
     + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Owner: ' + req.owner + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
+    + renderStatusHistory(req)
     + '</div>';
 
   document.getElementById("modalOverlay").classList.add("visible");
