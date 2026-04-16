@@ -383,6 +383,46 @@
     .form-row { display: flex; gap: 12px; }
     .form-row > div { flex: 1; }
 
+    /* ===== Card Appear Animation ===== */
+    @keyframes card-appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .req-card.animate-in {
+      animation: card-appear 0.25s ease both;
+    }
+
+    /* ===== Month Switcher ===== */
+    .month-switcher {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .month-switcher-label {
+      font-size: 12px; color: var(--text-muted); margin-right: 2px;
+    }
+    .month-btn {
+      width: 28px; height: 28px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      border-radius: 6px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.2s; font-size: 14px;
+    }
+    .month-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+    .month-display {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      min-width: 64px; text-align: center;
+      padding: 4px 10px; border-radius: 6px;
+      background: rgba(79,140,255,0.08); border: 1px solid rgba(79,140,255,0.2);
+    }
+    .month-all-btn {
+      font-size: 11px; padding: 3px 8px; border-radius: 5px;
+      border: 1px dashed var(--border); background: transparent;
+      color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    }
+    .month-all-btn:hover, .month-all-btn.active {
+      border-color: var(--accent-blue); color: var(--accent-blue);
+      background: rgba(79,140,255,0.06);
+    }
+
     /* ===== Footer ===== */
     .footer {
       text-align: center; padding: 32px 40px; color: var(--text-muted);
@@ -470,6 +510,13 @@
       <p>Last updated: <span id="lastUpdated">2026-04-14</span></p>
     </div>
     <div class="header-right">
+      <div class="month-switcher">
+        <span class="month-switcher-label">月份</span>
+        <button class="month-btn" onclick="shiftMonth(-1)" title="上个月">&#8249;</button>
+        <span class="month-display" id="monthDisplay">-</span>
+        <button class="month-btn" onclick="shiftMonth(1)" title="下个月">&#8250;</button>
+        <button class="month-all-btn" id="monthAllBtn" onclick="switchMonth('all')">全部</button>
+      </div>
       <div class="header-stats" id="headerStats"></div>
       <button class="btn-submit-req" onclick="openSubmitModal()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1000,6 +1047,12 @@ const requirementsData = {
 let currentFilter = "all";
 let draggedReqId = null;
 
+// currentMonth: "all" | "YYYY-MM"
+let currentMonth = (function() {
+  const now = new Date();
+  return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+})();
+
 // ==================== Data Persistence (JSONBin Cloud) ====================
 const JSONBIN_BIN_ID = "69df0733856a68218935bf1a";
 const JSONBIN_API_KEY = "$2a$10$lH4WjQMDHsbfEMFvFzRtaOS9a9AjOVNA2VaGAcjV1x3//rJg6tuLO";
@@ -1063,16 +1116,60 @@ async function loadData() {
   renderKanban();
 }
 
+// ==================== Month Switcher ====================
+function renderMonthDisplay() {
+  const display = document.getElementById("monthDisplay");
+  const allBtn = document.getElementById("monthAllBtn");
+  if (!display) return;
+  if (currentMonth === "all") {
+    display.textContent = "全部";
+    allBtn && allBtn.classList.add("active");
+  } else {
+    const [year, month] = currentMonth.split("-");
+    display.textContent = year + "/" + month;
+    allBtn && allBtn.classList.remove("active");
+  }
+}
+
+function switchMonth(month) {
+  currentMonth = month;
+  renderMonthDisplay();
+  renderStats();
+  renderTabs();
+  renderKanban();
+}
+
+function shiftMonth(delta) {
+  if (currentMonth === "all") {
+    const now = new Date();
+    currentMonth = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+  }
+  const [year, month] = currentMonth.split("-").map(Number);
+  const date = new Date(year, month - 1 + delta, 1);
+  currentMonth = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0");
+  renderMonthDisplay();
+  renderStats();
+  renderTabs();
+  renderKanban();
+}
+
 // ==================== Helpers ====================
 function getStatusMeta(status) {
   return requirementsData.statusMeta[status] || requirementsData.statusMeta["待对焦"];
 }
 function getReqsByPart(part) {
-  return requirementsData.requirements.filter(r => r.part === part);
+  const reqs = requirementsData.requirements.filter(r => r.part === part);
+  if (currentMonth === "all") return reqs;
+  return reqs.filter(r => (r.created_at || "").startsWith(currentMonth));
 }
 function getFilteredReqs() {
-  if (currentFilter === "all") return requirementsData.requirements;
-  return requirementsData.requirements.filter(r => r.part === currentFilter);
+  let reqs = currentFilter === "all"
+    ? requirementsData.requirements
+    : requirementsData.requirements.filter(r => r.part === currentFilter);
+  if (currentMonth !== "all") {
+    reqs = reqs.filter(r => (r.created_at || "").startsWith(currentMonth));
+  }
+  return reqs;
 }
 function getFilteredReqsByStatus(status) {
   return getFilteredReqs().filter(r => r.status === status);
@@ -1204,7 +1301,7 @@ function renderKanban() {
     const meta = getStatusMeta(status);
     const reqs = getFilteredReqsByStatus(status);
     const cardsHtml = reqs.length > 0
-      ? reqs.map(r => renderReqCard(r)).join("")
+      ? reqs.map((r, index) => renderReqCard(r, index)).join("")
       : '<div class="column-empty">No items</div>';
 
     return '<div class="kanban-column" data-status="' + status + '" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">'
@@ -1213,11 +1310,12 @@ function renderKanban() {
   }).join("");
 }
 
-function renderReqCard(req) {
+function renderReqCard(req, index) {
   const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
   const showPart = currentFilter === "all";
+  const animDelay = typeof index === "number" ? (index * 40) + "ms" : "0ms";
 
-  return '<div class="req-card" draggable="true" data-req-id="' + req.id + '" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" onclick="handleCardClick(event, \'' + req.id + '\')" onpointerdown="handleLongPressStart(event, \'' + req.id + '\')" onpointerup="handleLongPressEnd(event)" onpointerleave="handleLongPressEnd(event)">'
+  return '<div class="req-card animate-in" style="animation-delay:' + animDelay + '" draggable="true" data-req-id="' + req.id + '" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" onclick="handleCardClick(event, \'' + req.id + '\')" onpointerdown="handleLongPressStart(event, \'' + req.id + '\')" onpointerup="handleLongPressEnd(event)" onpointerleave="handleLongPressEnd(event)">'
     + '<button class="req-card-delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
     + '<div class="req-card-id">' + req.id + '</div>'
     + '<div class="req-card-name">' + req.name + '</div>'
@@ -1723,6 +1821,7 @@ function renderLoading() {
 }
 
 renderLoading();
+renderMonthDisplay();
 loadData();
 </script>
 
