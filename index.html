@@ -1026,10 +1026,16 @@ function saveData() {
 }
 
 async function loadData() {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   try {
     const res = await fetch(JSONBIN_BASE_URL + "/latest", {
-      headers: { "X-Master-Key": JSONBIN_API_KEY }
+      headers: { "X-Master-Key": JSONBIN_API_KEY },
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
+
     if (res.ok) {
       const json = await res.json();
       if (json.record && json.record.requirements && Array.isArray(json.record.requirements)) {
@@ -1041,10 +1047,20 @@ async function loadData() {
         return;
       }
     }
-    console.warn("[Cloud Load] Unexpected response, using default data");
+    console.warn("[Cloud Load] Unexpected response, falling back to default data");
   } catch (err) {
-    console.warn("[Cloud Load] Failed:", err.message, "- using default data");
+    clearTimeout(timeoutId);
+    if (err.name === "AbortError") {
+      console.warn("[Cloud Load] Request timed out after 5s, falling back to default data");
+    } else {
+      console.warn("[Cloud Load] Failed:", err.message, "- falling back to default data");
+    }
   }
+
+  // Fallback: render with built-in default data
+  renderStats();
+  renderTabs();
+  renderKanban();
 }
 
 // ==================== Helpers ====================
@@ -1662,11 +1678,29 @@ document.addEventListener("keydown", function(e) {
 });
 
 // ==================== Init ====================
-// Render with default data first for instant display, then load cloud data
-renderStats();
-renderTabs();
-renderKanban();
-loadData(); // async: will re-render once cloud data is fetched
+// Show loading skeleton immediately, then render once cloud data is ready
+function renderLoading() {
+  const statuses = requirementsData.statuses;
+  const kanbanBoard = document.getElementById("kanbanBoard");
+  kanbanBoard.innerHTML = statuses.map(status => {
+    const meta = requirementsData.statusMeta[status] || requirementsData.statusMeta["待对焦"];
+    return '<div class="kanban-column">'
+      + '<div class="column-header"><div class="column-title"><span class="column-dot ' + meta.dotClass + '"></span>' + status + '</div><span class="column-count">-</span></div>'
+      + '<div class="column-body"><div class="column-empty" style="opacity:0.3">Loading...</div></div>'
+      + '</div>';
+  }).join("");
+
+  const tabBar = document.getElementById("tabBar");
+  tabBar.innerHTML = '<button class="tab-btn active">所有需求<span class="tab-count">-</span></button>';
+
+  const headerStats = document.getElementById("headerStats");
+  headerStats.innerHTML = '<div class="stat-item"><div class="stat-value">-</div><div class="stat-label">Total</div></div>'
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-cyan)">-</div><div class="stat-label">交易导购</div></div>'
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">-</div><div class="stat-label">机票辅营</div></div>';
+}
+
+renderLoading();
+loadData();
 </script>
 
 </body>
