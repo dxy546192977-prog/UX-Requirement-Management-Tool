@@ -879,27 +879,26 @@ function saveOssCredentials(keyId, keySecret) {
   localStorage.setItem(OSS_STORAGE_KEY_SECRET, keySecret.trim());
 }
 
-// 生成 OSS PutObject 签名（HMAC-SHA1）
-async function buildOssPutHeaders(contentBody) {
+// 生成 OSS 预签名 PUT URL（Query 参数签名，绕过浏览器禁止设置 Date/Authorization header 的限制）
+async function buildOssPresignedPutUrl(expiresInSeconds) {
   const { accessKeyId, accessKeySecret } = getOssCredentials();
   if (!accessKeyId || !accessKeySecret) return null;
 
-  const date        = new Date().toUTCString();
-  const contentType = "application/json";
-  const stringToSign = "PUT\n\n" + contentType + "\n" + date + "\n/" + OSS_BUCKET + "/" + OSS_FILE_KEY;
+  const expires      = Math.floor(Date.now() / 1000) + (expiresInSeconds || 60);
+  const contentType  = "application/json";
+  const stringToSign = "PUT\n\n" + contentType + "\n" + expires + "\n/" + OSS_BUCKET + "/" + OSS_FILE_KEY;
 
   const encoder   = new TextEncoder();
   const keyData   = encoder.encode(accessKeySecret);
   const msgData   = encoder.encode(stringToSign);
   const cryptoKey = await crypto.subtle.importKey("raw", keyData, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
   const sigBuffer = await crypto.subtle.sign("HMAC", cryptoKey, msgData);
-  const signature = btoa(String.fromCharCode(...new Uint8Array(sigBuffer)));
+  const signature = encodeURIComponent(btoa(String.fromCharCode(...new Uint8Array(sigBuffer))));
 
-  return {
-    "Content-Type":  contentType,
-    "Date":          date,
-    "Authorization": "OSS " + accessKeyId + ":" + signature
-  };
+  return OSS_READ_URL
+    + "?OSSAccessKeyId=" + encodeURIComponent(accessKeyId)
+    + "&Expires=" + expires
+    + "&Signature=" + signature;
 }
 
 async function saveData() {
@@ -909,13 +908,14 @@ async function saveData() {
     return;
   }
 
-  const body    = JSON.stringify({ requirements: requirementsData.requirements }, null, 2);
-  const headers = await buildOssPutHeaders(body);
-  if (!headers) return;
+  const presignedUrl = await buildOssPresignedPutUrl(60);
+  if (!presignedUrl) return;
 
-  fetch(OSS_READ_URL, {
+  const body = JSON.stringify({ requirements: requirementsData.requirements }, null, 2);
+
+  fetch(presignedUrl, {
     method:  "PUT",
-    headers: headers,
+    headers: { "Content-Type": "application/json" },
     body:    body
   }).then(function(res) {
     if (res.ok) {
