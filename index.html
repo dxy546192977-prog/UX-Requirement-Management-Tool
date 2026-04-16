@@ -383,6 +383,51 @@
     .form-row { display: flex; gap: 12px; }
     .form-row > div { flex: 1; }
 
+    /* ===== Search ===== */
+    .search-wrapper {
+      display: flex; align-items: center; gap: 0; position: relative;
+    }
+    .search-icon-btn {
+      width: 36px; height: 36px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      border-radius: var(--radius-sm); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .search-icon-btn:hover, .search-icon-btn.active {
+      border-color: var(--accent-blue); color: var(--accent-blue);
+      background: rgba(79,140,255,0.08);
+    }
+    .search-input-wrap {
+      overflow: hidden;
+      max-width: 0;
+      opacity: 0;
+      transition: max-width 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
+      margin-left: 0;
+    }
+    .search-input-wrap.open {
+      max-width: 200px;
+      opacity: 1;
+      margin-left: 8px;
+    }
+    .search-input {
+      width: 180px; height: 36px;
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-primary);
+      font-size: 13px; padding: 0 12px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent-blue); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    /* 搜索高亮 & 降透明 */
+    .req-card.search-dim { opacity: 0.2; }
+    .req-card.search-match { opacity: 1; }
+    .search-highlight {
+      background: rgba(245,158,11,0.35); color: #f59e0b;
+      border-radius: 2px; padding: 0 1px;
+    }
+
     /* ===== Card Appear Animation ===== */
     @keyframes card-appear {
       from { opacity: 0; transform: translateY(10px); }
@@ -518,6 +563,14 @@
         <button class="month-all-btn" id="monthAllBtn" onclick="switchMonth('all')">全部</button>
       </div>
       <div class="header-stats" id="headerStats"></div>
+      <div class="search-wrapper">
+        <button class="search-icon-btn" id="searchIconBtn" onclick="toggleSearch()" title="搜索需求">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <div class="search-input-wrap" id="searchInputWrap">
+          <input class="search-input" id="searchInput" type="text" placeholder="搜索需求名称..." oninput="handleSearch(this.value)" />
+        </div>
+      </div>
       <button class="btn-submit-req" onclick="openSubmitModal()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         提需求
@@ -1668,6 +1721,96 @@ function setSubmitBtnLoading(loading) {
     btn.disabled = false;
   }
 }
+
+// ==================== Search ====================
+let searchKeyword = "";
+
+function toggleSearch() {
+  const wrap = document.getElementById("searchInputWrap");
+  const btn = document.getElementById("searchIconBtn");
+  const input = document.getElementById("searchInput");
+  const isOpen = wrap.classList.contains("open");
+
+  if (isOpen) {
+    wrap.classList.remove("open");
+    btn.classList.remove("active");
+    searchKeyword = "";
+    input.value = "";
+    clearSearchHighlight();
+  } else {
+    wrap.classList.add("open");
+    btn.classList.add("active");
+    setTimeout(() => input.focus(), 300);
+  }
+}
+
+function handleSearch(keyword) {
+  searchKeyword = keyword.trim();
+  applySearchHighlight();
+}
+
+function applySearchHighlight() {
+  const cards = document.querySelectorAll(".req-card");
+  if (!searchKeyword) {
+    clearSearchHighlight();
+    return;
+  }
+
+  const lowerKeyword = searchKeyword.toLowerCase();
+
+  cards.forEach(card => {
+    const reqId = card.dataset.reqId;
+    const req = requirementsData.requirements.find(r => r.id === reqId);
+    if (!req) return;
+
+    const nameEl = card.querySelector(".req-card-name");
+    const fullText = req.name;
+    const lowerText = fullText.toLowerCase();
+    const matchIndex = lowerText.indexOf(lowerKeyword);
+
+    if (matchIndex !== -1) {
+      card.classList.add("search-match");
+      card.classList.remove("search-dim");
+      // 高亮匹配文字
+      const before = fullText.slice(0, matchIndex);
+      const matched = fullText.slice(matchIndex, matchIndex + searchKeyword.length);
+      const after = fullText.slice(matchIndex + searchKeyword.length);
+      nameEl.innerHTML = before + '<span class="search-highlight">' + matched + '</span>' + after;
+    } else {
+      card.classList.add("search-dim");
+      card.classList.remove("search-match");
+      nameEl.textContent = fullText;
+    }
+  });
+}
+
+function clearSearchHighlight() {
+  document.querySelectorAll(".req-card").forEach(card => {
+    card.classList.remove("search-match", "search-dim");
+    const reqId = card.dataset.reqId;
+    const req = requirementsData.requirements.find(r => r.id === reqId);
+    if (req) {
+      const nameEl = card.querySelector(".req-card-name");
+      if (nameEl) nameEl.textContent = req.name;
+    }
+  });
+}
+
+// 按 Escape 关闭搜索框
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape" && searchKeyword !== "") {
+    const wrap = document.getElementById("searchInputWrap");
+    const btn = document.getElementById("searchIconBtn");
+    const input = document.getElementById("searchInput");
+    if (wrap && wrap.classList.contains("open")) {
+      wrap.classList.remove("open");
+      btn && btn.classList.remove("active");
+      searchKeyword = "";
+      if (input) input.value = "";
+      clearSearchHighlight();
+    }
+  }
+});
 
 // ==================== Part Inference ====================
 const PART_OWNER_MAP = {
