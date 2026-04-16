@@ -634,6 +634,13 @@
       background: var(--accent-blue); color: #fff; transition: all 0.2s;
     }
     .btn-notify-save:hover { background: #3a7aef; }
+    .btn-oss-edit {
+      padding: 5px 14px; border-radius: var(--radius-sm); font-size: 12px;
+      font-weight: 500; cursor: pointer; border: 1px solid var(--border);
+      background: transparent; color: var(--text-secondary); transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-oss-edit:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
 
     /* ===== Responsive ===== */
     @media (max-width: 1400px) {
@@ -792,17 +799,19 @@
     <h2>☁️ 阿里云 OSS 配置</h2>
     <p class="notify-desc">配置阿里云 RAM 用户的 AccessKey，用于将需求数据写入 OSS 云端存储。AccessKey 仅保存在本地浏览器，不会上传到任何服务器。</p>
     <div id="ossCurrentStatus"></div>
-    <label>AccessKey ID</label>
-    <input type="text" id="ossKeyIdInput" placeholder="LTAI5t..." autocomplete="off" />
-    <label style="margin-top:12px;">AccessKey Secret</label>
-    <input type="password" id="ossKeySecretInput" placeholder="输入 AccessKey Secret" autocomplete="off" />
-    <p class="notify-hint">
-      获取方式：阿里云控制台 → 右上角头像 → AccessKey 管理 → 使用 RAM 用户 AccessKey → 创建。<br>
-      请确保该 RAM 用户已授权 <strong>AliyunOSSFullAccess</strong> 或 OSS 写入权限。
-    </p>
-    <div class="notify-modal-actions">
-      <button class="btn-notify-clear" onclick="clearOssCredentials()">清除配置</button>
-      <button class="btn-notify-save" onclick="saveOssCredentialsFromUI()">保存</button>
+    <div id="ossInputArea">
+      <label>AccessKey ID</label>
+      <input type="text" id="ossKeyIdInput" placeholder="LTAI5t..." autocomplete="off" />
+      <label style="margin-top:12px;">AccessKey Secret</label>
+      <input type="password" id="ossKeySecretInput" placeholder="输入 AccessKey Secret" autocomplete="off" />
+      <p class="notify-hint">
+        获取方式：阿里云控制台 → 右上角头像 → AccessKey 管理 → 使用 RAM 用户 AccessKey → 创建。<br>
+        请确保该 RAM 用户已授权 <strong>AliyunOSSFullAccess</strong> 或 OSS 写入权限。
+      </p>
+      <div class="notify-modal-actions">
+        <button class="btn-notify-clear" onclick="clearOssCredentials()">清除配置</button>
+        <button class="btn-notify-save" onclick="saveOssCredentialsFromUI()">保存</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1824,11 +1833,14 @@ function openNotifySettings() {
   const ossStatusEl = document.getElementById("ossCurrentStatus");
   const ossKeyIdInput = document.getElementById("ossKeyIdInput");
   const ossKeySecretInput = document.getElementById("ossKeySecretInput");
+  const ossInputArea = document.getElementById("ossInputArea");
   if (accessKeyId) {
     const maskedId = accessKeyId.substring(0, 8) + "****";
-    ossStatusEl.innerHTML = '<div class="notify-status on"><span class="notify-status-dot"></span>已配置：' + maskedId + '</div>';
+    ossStatusEl.innerHTML = '<div class="notify-status on" style="display:flex;align-items:center;justify-content:space-between;"><span style="display:flex;align-items:center;gap:8px;"><span class="notify-status-dot"></span>已配置：' + maskedId + '</span><button class="btn-oss-edit" onclick="showOssInputArea()">修改</button></div>';
+    ossInputArea.style.display = "none";
   } else {
     ossStatusEl.innerHTML = '<div class="notify-status off"><span class="notify-status-dot"></span>未配置，数据将无法写入云端</div>';
+    ossInputArea.style.display = "";
   }
   ossKeyIdInput.value = "";
   ossKeySecretInput.value = "";
@@ -1836,6 +1848,10 @@ function openNotifySettings() {
   document.getElementById("notifyOverlay").classList.add("visible");
   document.body.style.overflow = "hidden";
   setTimeout(() => input.focus(), 100);
+}
+
+function showOssInputArea() {
+  document.getElementById("ossInputArea").style.display = "";
 }
 
 function saveOssCredentialsFromUI() {
