@@ -613,6 +613,12 @@
     }
     .notify-status.on .notify-status-dot { background: var(--accent-green); }
     .notify-status.off .notify-status-dot { background: var(--text-muted); }
+    .notify-status.oss-configured {
+      justify-content: space-between;
+    }
+    .notify-status.oss-configured .oss-status-left {
+      display: flex; align-items: center; gap: 8px;
+    }
     .notify-modal-actions {
       display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;
     }
@@ -1836,7 +1842,7 @@ function openNotifySettings() {
   const ossInputArea = document.getElementById("ossInputArea");
   if (accessKeyId) {
     const maskedId = accessKeyId.substring(0, 8) + "****";
-    ossStatusEl.innerHTML = '<div class="notify-status on" style="display:flex;align-items:center;justify-content:space-between;"><span style="display:flex;align-items:center;gap:8px;"><span class="notify-status-dot"></span>已配置：' + maskedId + '</span><button class="btn-oss-edit" onclick="showOssInputArea()">修改</button></div>';
+    ossStatusEl.innerHTML = '<div class="notify-status on oss-configured"><span class="oss-status-left"><span class="notify-status-dot"></span>已配置：' + maskedId + '</span><button class="btn-oss-edit" onclick="showOssInputArea()">修改</button></div>';
     ossInputArea.style.display = "none";
   } else {
     ossStatusEl.innerHTML = '<div class="notify-status off"><span class="notify-status-dot"></span>未配置，数据将无法写入云端</div>';
