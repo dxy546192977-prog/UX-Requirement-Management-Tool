@@ -2383,6 +2383,16 @@ fetch("config.json?t=" + Date.now())
 /** 当前活跃的轮询 timer，用于清除 */
 var _aiPollTimers = {};
 
+/** 仅在这几个状态允许新建/触发 AI 任务 */
+var AI_DESIGN_TRIGGER_STATUSES = ['待对焦', '待设计', '设计中'];
+
+/**
+ * 判断该需求当前状态是否允许触发 AI 帮你做
+ */
+function isAiDesignTriggerAllowed(req) {
+  return AI_DESIGN_TRIGGER_STATUSES.indexOf(req.status) !== -1;
+}
+
 /**
  * 渲染卡片级 AI 状态徽标
  */
@@ -2421,27 +2431,39 @@ function renderAiDesignSection(req) {
     + '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>'
     + '</svg>AI 设计助理</div>';
 
-  // 没有 AI 任务时：显示触发按钮
+  // 没有 AI 任务时：依据需求所处阶段决定是否显示入口
   if (!ai || !ai.status) {
+    // 进入交付链路后不再提供入口
+    if (!isAiDesignTriggerAllowed(req)) {
+      return '<div class="ai-section">'
+        + header
+        + '<div class="ai-section-actions"></div></div>'
+        + '<div class="ai-trigger-wrap">'
+        + '<div class="ai-empty-hint">当前阶段已进入交付链路，不再提供 AI帮你做</div>'
+        + '</div></div>';
+    }
     if (!req.prd_url) {
       return '<div class="ai-section">'
         + header
         + '<div class="ai-section-actions"></div></div>'
         + '<div class="ai-trigger-wrap">'
-        + '<div class="ai-empty-hint">请先添加 PRD 链接，然后触发 AI 拆解</div>'
+        + '<div class="ai-empty-hint">请先添加 PRD 链接，然后使用 AI帮你做</div>'
         + '</div></div>';
     }
     return '<div class="ai-section">'
       + header
       + '<div class="ai-section-actions">'
       + '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
-      + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
-      + '触发 AI 拆解</button>'
+      + '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
+      + '<g id="ai-spark-edit"><path fill="currentColor" d="M22.9141 7.5 8.41406 22H4v-4.4141L18.5 3.08594zM6 18.4141V20h1.58594l9.70706 -9.707 -1.586 -1.58597zM7 1.5c0.00002 1.93297 1.56703 3.49998 3.5 3.5v2l-0.1748 0.00391c-1.79222 0.08816 -3.22971 1.52481 -3.32032 3.31639L7 10.5H5c0 -1.87274 -1.47081 -3.4016 -3.32031 -3.49512L1.5 7V5l0.17969 -0.00488C3.52916 4.90158 4.99998 3.37271 5 1.5z"/></g></svg>'
+      + 'AI帮你做</button>'
       + '</div></div>'
       + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案'
       + '<span style="margin-left:8px;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600;'
       + 'background:rgba(245,158,11,0.12);color:var(--accent-orange);border:1px solid rgba(245,158,11,0.25)">'
-      + 'Mock 模式</span></div>'
+      + (API_BASE ? 'Mock 模式' : '本地 Mock') + '</span>'
+      + (!API_BASE ? '<span style="margin-left:6px;font-size:10px;color:var(--text-muted)">（无需代理服务）</span>' : '')
+      + '</div>'
       + '</div>';
   }
 
@@ -2456,9 +2478,11 @@ function renderAiDesignSection(req) {
   var statusLabel = statusLabelMap[ai.status] || ai.status;
   var isRunning = ai.status === 'queued' || ai.status === 'processing';
 
-  var retryBtn  = '<button class="ai-btn ai-btn-secondary" onclick="retryAiDesign(\'' + req.id + '\', \'' + (ai.job_id || '') + '\')">'
-    + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>'
-    + '重跑</button>';
+  var retryBtn  = isAiDesignTriggerAllowed(req)
+    ? '<button class="ai-btn ai-btn-secondary" onclick="retryAiDesign(\'' + req.id + '\', \'' + (ai.job_id || '') + '\')">'
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>'
+      + '重跑</button>'
+    : '';
 
   var confirmBtn = (ai.status === 'needs_confirmation')
     ? '<button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')">'
@@ -2547,17 +2571,25 @@ function _stageLabel(stage) {
 }
 
 /**
- * 触发 AI 设计拆解任务
+ * 触发 AI 帮你做任务
  */
 async function triggerAiDesign(reqId) {
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
-  if (!req || !req.prd_url) {
+  if (!req) return;
+
+  if (!isAiDesignTriggerAllowed(req)) {
+    showToast('当前阶段已进入交付链路，不支持 AI帮你做', 'error');
+    return;
+  }
+
+  if (!req.prd_url) {
     showToast('请先添加 PRD 链接', 'error');
     return;
   }
 
+  // 没有代理服务 → 走纯前端 Mock 流水线（完整 UI 体验，无需后端）
   if (!API_BASE) {
-    showToast('需要启动代理服务（node proxy-server.js）才能使用 AI 拆解', 'error');
+    runAiDesignMockLocal(req);
     return;
   }
 
@@ -2576,7 +2608,6 @@ async function triggerAiDesign(reqId) {
 
     var job = await res.json();
 
-    // 更新需求对象里的 AI 字段
     req.ai_design = {
       status:     job.status,
       stage:      job.stage,
@@ -2589,12 +2620,156 @@ async function triggerAiDesign(reqId) {
     };
     saveData();
     openModal(reqId);
-    showToast('AI 设计助理已启动，正在分析 PRD…', 'success');
+    showToast('AI帮你做已启动，正在分析 PRD…', 'success');
 
     startAiPolling(reqId, job.id);
   } catch (err) {
     showToast('网络错误：' + err.message, 'error');
   }
+}
+
+// ==================== 纯前端 Mock 流水线（无需代理/API Key）====================
+
+/**
+ * 完全在浏览器内运行的 Mock 流水线
+ * Phase 1 → Phase 2 → Phase 3 各有延迟，模拟真实异步节奏
+ * 结果基于 PRD 标题 + FDG 页面/模块知识库规则推断
+ */
+async function runAiDesignMockLocal(req) {
+  var _sleep = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
+
+  // 初始化状态
+  req.ai_design = {
+    status: 'processing', stage: 'fetching_prd',
+    job_id: 'local-' + Date.now(),
+    summary: null, pages: [], modules: [], last_error: null,
+    updated_at: new Date().toISOString()
+  };
+  saveData();
+  openModal(req.id);
+  showToast('AI帮你做已启动（本地 Mock 模式）', 'success');
+
+  function _tick(patch) {
+    Object.assign(req.ai_design, patch, { updated_at: new Date().toISOString() });
+    _refreshAiSectionIfOpen(req);
+  }
+
+  // Phase 1: 读取 PRD 信息（从已有字段里取，不发网络请求）
+  await _sleep(900);
+  _tick({ stage: 'decomposing' });
+
+  // Phase 2: 需求拆解
+  await _sleep(1400);
+  var titleRaw = req.name || req.summary || 'PRD 需求文档';
+  var pages    = _fdgInferPages(titleRaw);
+  var summary  = _fdgBuildSummary(titleRaw, pages);
+  _tick({ stage: 'planning', pages: pages, summary: summary });
+
+  // Phase 3: 设计方案生成
+  await _sleep(1200);
+  var modules = _fdgBuildModules(pages, titleRaw, req);
+
+  _tick({
+    status: 'needs_confirmation',
+    stage:  null,
+    modules: modules
+  });
+
+  saveData();
+  renderKanban();
+  showToast('AI 拆解完成，请在需求详情中确认方案', 'success');
+}
+
+// ---------- FDG 知识库规则（对齐 fliggy-design-gui 页面/模块体系）----------
+
+var _FDG_PAGE_RULES = [
+  { keys: ['首页', 'home', '搜索入口', '首屏'],                          page: '首页 (tabs.home)' },
+  { keys: ['listing', '列表', '搜索结果', '机票列表', '航班列表'],        page: '列表页 (flight.list)' },
+  { keys: ['下单', '预订', 'booking', '填写乘客', '下单页'],              page: '下单页 (flight.booking)' },
+  { keys: ['订单详情', '订单状态', 'order detail', '出行信息'],           page: '订单详情页 (flight.order-detail)' },
+  { keys: ['支付', 'pay', '收银台'],                                      page: '支付页' },
+  { keys: ['弹窗', 'modal', '浮层', '引流', '跨品'],                      page: '弹窗/浮层组件' },
+  { keys: ['个人中心', '我的', 'mine', 'profile'],                        page: '个人中心 (tabs.mine)' },
+  { keys: ['低价地图', '低价日历', '价格日历'],                           page: '低价地图/日历' },
+  { keys: ['辅营', '险', '保险', '增值'],                                 page: '下单页 (flight.booking)' },
+  { keys: ['改签', '退票', '售后', '退改'],                               page: '订单详情页 (flight.order-detail)' },
+];
+
+function _fdgInferPages(title) {
+  var lower   = title.toLowerCase();
+  var matched = [];
+  _FDG_PAGE_RULES.forEach(function(rule) {
+    if (rule.keys.some(function(k) { return lower.includes(k.toLowerCase()); })) {
+      if (matched.indexOf(rule.page) === -1) matched.push(rule.page);
+    }
+  });
+  return matched.length ? matched : ['首页 (tabs.home)', '列表页 (flight.list)'];
+}
+
+function _fdgBuildSummary(title, pages) {
+  return '【Mock · FDG】' + title
+    + ' — 识别到 ' + pages.length + ' 个涉及页面：' + pages.join('、')
+    + '。以下模块清单基于 Fliggy Design GUI 页面规范自动推断，接入 AI Key 后将使用语雀 PRD 正文精确拆解。';
+}
+
+// 每个 FDG 页面对应的典型模块模板（对齐 fliggy-design-gui 模块知识库）
+var _FDG_MODULE_TEMPLATES = {
+  '首页 (tabs.home)': [
+    { name: '搜索入口模块 (flight-home-search)',    intent: '首屏核心交互，用户发起机票搜索的起点',        change_type: 'modify', notes: '对应 spec: pages/tabs/home/modules/flight-home-search/spec.md；改动需同步检查小搜模块与大搜的切换逻辑' },
+    { name: '营销氛围/Banner (flight-home-promo)',  intent: '承载活动运营内容，提升活动曝光与点击',        change_type: 'create', notes: '对应 spec: modules/flight-home-promo；图片比例 16:5，支持多图轮播' },
+    { name: '小金刚导航 (flight-home-kingkong)',    intent: '快速分流用户到各垂类场景',                    change_type: 'reuse',  notes: '直接复用现有小金刚组件，本次无改动' },
+  ],
+  '列表页 (flight.list)': [
+    { name: '航班结果列表卡片',                     intent: '展示搜索结果，帮助用户快速比价决策',           change_type: 'modify', notes: '价格信息视觉权重最高；参考 pages/vertical/flight/list/modules/ 下各卡片 spec' },
+    { name: '低价日历模块',                         intent: '帮助用户快速找到低价日期，提升搜索转化',       change_type: 'create', notes: '参考 需求汇总/低价地图 已有 demo；注意与筛选栏的联动' },
+    { name: '筛选/排序栏',                          intent: '让用户快速过滤到目标航班',                    change_type: 'reuse',  notes: '复用现有筛选组件；本次只调整默认排序逻辑（价格优先）' },
+    { name: '营销条 (marketing-bar)',               intent: '在列表顶部透出优惠活动信息',                   change_type: 'create', notes: '对应 pages/vertical/flight/list/modules/营销条；注意压缩高度，不占用过多结果区空间' },
+  ],
+  '下单页 (flight.booking)': [
+    { name: '乘客信息模块 (flight-booking-passenger)', intent: '引导用户快速填写乘客信息，减少流失',      change_type: 'modify', notes: '对应 spec: modules/flight-booking-passenger；自动填入历史乘客，名字超长时省略号处理' },
+    { name: '价格明细 (flight-booking-price-detail)',  intent: '透明展示费用构成，增强用户信任',          change_type: 'reuse',  notes: '对应 spec: modules/flight-booking-price-detail；直接复用，无需改动' },
+    { name: '附加产品/辅营 (flight-booking-addon)',    intent: '提升辅营商品转化（保险、行李额、选座）',  change_type: 'modify', notes: '对应 spec: modules/flight-booking-addon；核心改动区域，需与产品确认坑位数量与排序规则' },
+    { name: '底部支付条 (flight-booking-bottom-pay)',  intent: '固定底部，引导用户完成支付',             change_type: 'reuse',  notes: '对应 spec: modules/flight-booking-bottom-pay-bar；金额展示需与价格明细保持数据同步' },
+  ],
+  '订单详情页 (flight.order-detail)': [
+    { name: '订单状态头部',                         intent: '第一时间让用户了解订单当前状态',              change_type: 'modify', notes: '状态文案需覆盖：待支付/待出票/已出票/已取消/售后中；参考 pages/vertical/flight/order-detail/modules/订单状态头部' },
+    { name: '快捷操作按钮组',                       intent: '减少用户查找操作路径的成本',                  change_type: 'modify', notes: '本次改动：新增改签/退票入口，需评估与现有按钮的视觉优先级' },
+    { name: '行程详情模块',                         intent: '展示完整行程信息，方便用户核对',              change_type: 'reuse',  notes: '直接复用，无改动' },
+    { name: '履约服务卡组',                         intent: '展示已购附加服务，提升售后体验感知',          change_type: 'modify', notes: '本次新增海免商品推荐模块嵌入位，参考 需求汇总/海免商品推荐' },
+  ],
+  '弹窗/浮层组件': [
+    { name: '引流弹窗模块',                         intent: '在用户行为节点触发跨品引流，提升转化',        change_type: 'create', notes: '触发时机与展示频次需与产品确认；参考 需求汇总/下单页火车票引流弹窗 已有 demo' },
+  ],
+  '低价地图/日历': [
+    { name: '低价日历交互组件',                     intent: '可视化展示多日期价格，帮助用户选择最优出行时间', change_type: 'create', notes: '参考 需求汇总/低价地图/低价地图-交互demo.html；注意数据加载态与骨架屏设计' },
+  ],
+  '支付页': [
+    { name: '支付方式选择',                         intent: '引导用户完成支付，减少放弃率',               change_type: 'modify', notes: '本次新增花呗分期入口' },
+  ],
+  '个人中心 (tabs.mine)': [
+    { name: '我的订单入口',                         intent: '快速跳转到订单管理',                         change_type: 'reuse',  notes: '无改动，直接复用' },
+  ],
+};
+
+function _fdgBuildModules(pages, title, req) {
+  var modules = [];
+  pages.forEach(function(page) {
+    var templates = _FDG_MODULE_TEMPLATES[page];
+    if (!templates) {
+      modules.push({
+        name: page + ' — 主体模块', page: page,
+        intent: '承载本次 PRD 核心改动，具体模块需进一步与产品确认',
+        change_type: 'modify',
+        notes: '接入 AI Key 后将基于 PRD 正文精确拆解模块清单',
+        status: 'pending'
+      });
+      return;
+    }
+    templates.forEach(function(t) {
+      modules.push(Object.assign({}, t, { page: page, status: 'pending' }));
+    });
+  });
+  return modules;
 }
 
 /**
@@ -2652,9 +2827,9 @@ function startAiPolling(reqId, jobId) {
         delete _aiPollTimers[reqId];
 
         if (job.status === 'needs_confirmation') {
-          showToast('AI 拆解完成，请在需求详情中确认方案', 'success');
+          showToast('AI帮你做已完成，请在需求详情中确认方案', 'success');
         } else if (job.status === 'failed') {
-          showToast('AI 拆解失败：' + (job.last_error || '未知错误'), 'error');
+          showToast('AI帮你做失败：' + (job.last_error || '未知错误'), 'error');
         }
       }
     } catch (err) {
@@ -2712,6 +2887,11 @@ function confirmAiDesign(reqId) {
 async function retryAiDesign(reqId, jobId) {
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req) return;
+
+  if (!isAiDesignTriggerAllowed(req)) {
+    showToast('当前阶段已进入交付链路，不支持 AI帮你做', 'error');
+    return;
+  }
 
   if (!API_BASE) {
     showToast('需要启动代理服务才能重跑任务', 'error');
