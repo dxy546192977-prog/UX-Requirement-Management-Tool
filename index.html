@@ -786,6 +786,24 @@
       <button class="btn-notify-test" onclick="testNotifyWebhook()">发送测试</button>
       <button class="btn-notify-save" onclick="saveNotifyWebhook()">保存</button>
     </div>
+
+    <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);" />
+
+    <h2>☁️ 阿里云 OSS 配置</h2>
+    <p class="notify-desc">配置阿里云 RAM 用户的 AccessKey，用于将需求数据写入 OSS 云端存储。AccessKey 仅保存在本地浏览器，不会上传到任何服务器。</p>
+    <div id="ossCurrentStatus"></div>
+    <label>AccessKey ID</label>
+    <input type="text" id="ossKeyIdInput" placeholder="LTAI5t..." autocomplete="off" />
+    <label style="margin-top:12px;">AccessKey Secret</label>
+    <input type="password" id="ossKeySecretInput" placeholder="输入 AccessKey Secret" autocomplete="off" />
+    <p class="notify-hint">
+      获取方式：阿里云控制台 → 右上角头像 → AccessKey 管理 → 使用 RAM 用户 AccessKey → 创建。<br>
+      请确保该 RAM 用户已授权 <strong>AliyunOSSFullAccess</strong> 或 OSS 写入权限。
+    </p>
+    <div class="notify-modal-actions">
+      <button class="btn-notify-clear" onclick="clearOssCredentials()">清除配置</button>
+      <button class="btn-notify-save" onclick="saveOssCredentialsFromUI()">保存</button>
+    </div>
   </div>
 </div>
 
@@ -839,60 +857,105 @@ let currentMonth = (function() {
   return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
 })();
 
-// ==================== Data Persistence (JSONBin Cloud) ====================
-const JSONBIN_BIN_ID = "69df0733856a68218935bf1a";
-const JSONBIN_API_KEY = "$2a$10$lH4WjQMDHsbfEMFvFzRtaOS9a9AjOVNA2VaGAcjV1x3//rJg6tuLO";
-const JSONBIN_BASE_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
+// ==================== Data Persistence (阿里云 OSS) ====================
+const OSS_BUCKET   = "designacceleration";
+const OSS_REGION   = "oss-cn-beijing";
+const OSS_ENDPOINT = "https://" + OSS_BUCKET + "." + OSS_REGION + ".aliyuncs.com";
+const OSS_FILE_KEY = "requirements.json";
+const OSS_READ_URL = OSS_ENDPOINT + "/" + OSS_FILE_KEY;
 
-function saveData() {
-  const payload = { requirements: requirementsData.requirements };
-  fetch(JSONBIN_BASE_URL, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Master-Key": JSONBIN_API_KEY
-    },
-    body: JSON.stringify(payload)
+const OSS_STORAGE_KEY_ID     = "oss_access_key_id";
+const OSS_STORAGE_KEY_SECRET = "oss_access_key_secret";
+
+function getOssCredentials() {
+  return {
+    accessKeyId:     localStorage.getItem(OSS_STORAGE_KEY_ID)     || "",
+    accessKeySecret: localStorage.getItem(OSS_STORAGE_KEY_SECRET) || ""
+  };
+}
+
+function saveOssCredentials(keyId, keySecret) {
+  localStorage.setItem(OSS_STORAGE_KEY_ID,     keyId.trim());
+  localStorage.setItem(OSS_STORAGE_KEY_SECRET, keySecret.trim());
+}
+
+// 生成 OSS PutObject 签名（HMAC-SHA1）
+async function buildOssPutHeaders(contentBody) {
+  const { accessKeyId, accessKeySecret } = getOssCredentials();
+  if (!accessKeyId || !accessKeySecret) return null;
+
+  const date        = new Date().toUTCString();
+  const contentType = "application/json";
+  const stringToSign = "PUT\n\n" + contentType + "\n" + date + "\n/" + OSS_BUCKET + "/" + OSS_FILE_KEY;
+
+  const encoder   = new TextEncoder();
+  const keyData   = encoder.encode(accessKeySecret);
+  const msgData   = encoder.encode(stringToSign);
+  const cryptoKey = await crypto.subtle.importKey("raw", keyData, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
+  const sigBuffer = await crypto.subtle.sign("HMAC", cryptoKey, msgData);
+  const signature = btoa(String.fromCharCode(...new Uint8Array(sigBuffer)));
+
+  return {
+    "Content-Type":  contentType,
+    "Date":          date,
+    "Authorization": "OSS " + accessKeyId + ":" + signature
+  };
+}
+
+async function saveData() {
+  const { accessKeyId, accessKeySecret } = getOssCredentials();
+  if (!accessKeyId || !accessKeySecret) {
+    showToast("⚠️ 请先在设置中填写阿里云 AccessKey", "error");
+    return;
+  }
+
+  const body    = JSON.stringify({ requirements: requirementsData.requirements }, null, 2);
+  const headers = await buildOssPutHeaders(body);
+  if (!headers) return;
+
+  fetch(OSS_READ_URL, {
+    method:  "PUT",
+    headers: headers,
+    body:    body
   }).then(function(res) {
     if (res.ok) {
-      console.log("[Cloud Save] Synced " + requirementsData.requirements.length + " items to JSONBin");
+      console.log("[OSS Save] Synced " + requirementsData.requirements.length + " items");
     } else {
-      console.warn("[Cloud Save] Server returned " + res.status);
+      res.text().then(t => console.warn("[OSS Save] Failed " + res.status + ":", t));
+      showToast("⚠️ 数据保存失败（" + res.status + "），请检查 AccessKey 配置", "error");
     }
   }).catch(function(err) {
-    console.warn("[Cloud Save] Failed:", err.message);
+    console.warn("[OSS Save] Error:", err.message);
+    showToast("⚠️ 数据保存失败：" + err.message, "error");
   });
 }
 
 async function loadData() {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  const timeoutId  = setTimeout(() => controller.abort(), 10000);
 
   try {
-    const res = await fetch(JSONBIN_BASE_URL + "/latest", {
-      headers: { "X-Master-Key": JSONBIN_API_KEY },
-      signal: controller.signal
-    });
+    const res = await fetch(OSS_READ_URL + "?t=" + Date.now(), { signal: controller.signal });
     clearTimeout(timeoutId);
 
     if (res.ok) {
       const json = await res.json();
-      if (json.record && json.record.requirements && Array.isArray(json.record.requirements)) {
-        requirementsData.requirements = json.record.requirements;
-        console.log("[Cloud Load] Loaded " + json.record.requirements.length + " items from JSONBin");
+      if (json.requirements && Array.isArray(json.requirements)) {
+        requirementsData.requirements = json.requirements;
+        console.log("[OSS Load] Loaded " + json.requirements.length + " items from OSS");
         renderStats();
         renderTabs();
         renderKanban();
         return;
       }
     }
-    console.warn("[Cloud Load] Unexpected response from JSONBin");
+    console.warn("[OSS Load] Unexpected response:", res.status);
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === "AbortError") {
-      console.warn("[Cloud Load] Request timed out after 5s");
+      console.warn("[OSS Load] Request timed out after 10s");
     } else {
-      console.warn("[Cloud Load] Failed:", err.message);
+      console.warn("[OSS Load] Failed:", err.message);
     }
   }
 
@@ -1756,9 +1819,44 @@ function openNotifySettings() {
     clearBtn.style.display = "none";
   }
 
+  // 初始化 OSS 配置状态
+  const { accessKeyId } = getOssCredentials();
+  const ossStatusEl = document.getElementById("ossCurrentStatus");
+  const ossKeyIdInput = document.getElementById("ossKeyIdInput");
+  const ossKeySecretInput = document.getElementById("ossKeySecretInput");
+  if (accessKeyId) {
+    const maskedId = accessKeyId.substring(0, 8) + "****";
+    ossStatusEl.innerHTML = '<div class="notify-status on"><span class="notify-status-dot"></span>已配置：' + maskedId + '</div>';
+  } else {
+    ossStatusEl.innerHTML = '<div class="notify-status off"><span class="notify-status-dot"></span>未配置，数据将无法写入云端</div>';
+  }
+  ossKeyIdInput.value = "";
+  ossKeySecretInput.value = "";
+
   document.getElementById("notifyOverlay").classList.add("visible");
   document.body.style.overflow = "hidden";
   setTimeout(() => input.focus(), 100);
+}
+
+function saveOssCredentialsFromUI() {
+  const keyId     = document.getElementById("ossKeyIdInput").value.trim();
+  const keySecret = document.getElementById("ossKeySecretInput").value.trim();
+  if (!keyId || !keySecret) {
+    showToast("请填写完整的 AccessKey ID 和 Secret", "error");
+    return;
+  }
+  saveOssCredentials(keyId, keySecret);
+  document.getElementById("notifyOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+  showToast("☁️ 阿里云 OSS 配置已保存", "success");
+}
+
+function clearOssCredentials() {
+  localStorage.removeItem(OSS_STORAGE_KEY_ID);
+  localStorage.removeItem(OSS_STORAGE_KEY_SECRET);
+  document.getElementById("notifyOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+  showToast("OSS 配置已清除", "success");
 }
 
 function closeNotifySettings(event) {
