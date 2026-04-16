@@ -53,9 +53,8 @@
       justify-content: space-between;
       align-items: center;
     }
-    .header-left { display: flex; align-items: center; gap: 16px; }
+    .header-left { display: flex; align-items: center; gap: 24px; }
     .header-left-title h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-    .header-left-title p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 20px; }
     .header-stats { display: flex; gap: 20px; }
     .stat-item { text-align: center; }
@@ -223,6 +222,7 @@
       line-height: 1.4;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -423,6 +423,29 @@
       width: 6px; height: 6px; border-radius: 50%;
       background: var(--border); flex-shrink: 0;
     }
+    .status-history-item {
+      position: relative;
+    }
+    .status-history-item:hover .status-history-delete {
+      opacity: 1;
+    }
+    .status-history-delete {
+      opacity: 0;
+      margin-left: auto;
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 4px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      transition: opacity 0.15s, color 0.15s;
+      border-radius: 4px;
+    }
+    .status-history-delete:hover {
+      color: #ef4444;
+    }
 
     /* ===== Search ===== */
     .search-wrapper {
@@ -483,26 +506,29 @@
       display: flex; align-items: center; gap: 6px;
     }
     .month-switcher-label {
-      font-size: 12px; color: var(--text-muted); margin-right: 2px;
+      font-size: 12px; color: var(--text-muted); margin-right: 4px;
+      line-height: 28px;
     }
     .month-btn {
       width: 28px; height: 28px; border: 1px solid var(--border);
       background: transparent; color: var(--text-muted);
       border-radius: 6px; cursor: pointer; display: flex;
       align-items: center; justify-content: center;
-      transition: all 0.2s; font-size: 14px;
+      transition: all 0.2s; font-size: 14px; flex-shrink: 0;
     }
     .month-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
     .month-display {
       font-size: 13px; font-weight: 600; color: var(--text-primary);
-      min-width: 64px; text-align: center;
-      padding: 4px 10px; border-radius: 6px;
+      min-width: 72px; text-align: center;
+      height: 28px; line-height: 28px;
+      padding: 0 10px; border-radius: 6px;
       background: rgba(79,140,255,0.08); border: 1px solid rgba(79,140,255,0.2);
     }
     .month-all-btn {
-      font-size: 11px; padding: 3px 8px; border-radius: 5px;
+      font-size: 12px; height: 28px; padding: 0 10px; border-radius: 6px;
       border: 1px dashed var(--border); background: transparent;
       color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center;
     }
     .month-all-btn:hover, .month-all-btn.active {
       border-color: var(--accent-blue); color: var(--accent-blue);
@@ -514,6 +540,100 @@
       text-align: center; padding: 32px 40px; color: var(--text-muted);
       font-size: 12px; border-top: 1px solid var(--border); margin-top: 20px;
     }
+
+    /* ===== DingTalk Settings Button ===== */
+    .btn-notify-settings {
+      width: 36px; height: 36px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      border-radius: var(--radius-sm); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0; position: relative;
+    }
+    .btn-notify-settings:hover {
+      border-color: var(--accent-blue); color: var(--accent-blue);
+      background: rgba(79,140,255,0.08);
+    }
+    .btn-notify-settings.configured {
+      border-color: var(--accent-green); color: var(--accent-green);
+    }
+    .btn-notify-settings.configured:hover {
+      background: rgba(52,211,153,0.08);
+    }
+    .notify-dot {
+      position: absolute; top: 5px; right: 5px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-green);
+      display: none;
+    }
+    .btn-notify-settings.configured .notify-dot { display: block; }
+
+    /* ===== DingTalk Settings Modal ===== */
+    .notify-modal {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 90%; max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5); padding: 28px;
+    }
+    .notify-modal h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    .notify-modal .notify-desc {
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;
+    }
+    .notify-modal label {
+      display: block; font-size: 13px; font-weight: 500;
+      color: var(--text-secondary); margin-bottom: 6px;
+    }
+    .notify-modal input {
+      width: 100%; padding: 10px 14px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--bg-primary);
+      color: var(--text-primary); font-size: 13px; margin-bottom: 8px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      transition: border-color 0.2s;
+    }
+    .notify-modal input:focus { outline: none; border-color: var(--accent-blue); }
+    .notify-modal input::placeholder { color: var(--text-muted); font-family: inherit; }
+    .notify-hint {
+      font-size: 12px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;
+    }
+    .notify-hint a { color: var(--accent-blue); text-decoration: none; }
+    .notify-hint a:hover { text-decoration: underline; }
+    .notify-status {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px; border-radius: var(--radius-sm);
+      font-size: 13px; margin-bottom: 16px;
+    }
+    .notify-status.on {
+      background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);
+      color: var(--accent-green);
+    }
+    .notify-status.off {
+      background: rgba(107,114,128,0.08); border: 1px solid rgba(107,114,128,0.15);
+      color: var(--text-muted);
+    }
+    .notify-status-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .notify-status.on .notify-status-dot { background: var(--accent-green); }
+    .notify-status.off .notify-status-dot { background: var(--text-muted); }
+    .notify-modal-actions {
+      display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;
+    }
+    .btn-notify-clear {
+      padding: 9px 16px; border-radius: var(--radius-sm); font-size: 13px;
+      font-weight: 500; cursor: pointer; border: 1px solid rgba(239,68,68,0.3);
+      background: transparent; color: var(--accent-red); transition: all 0.2s;
+    }
+    .btn-notify-clear:hover { background: rgba(239,68,68,0.08); border-color: var(--accent-red); }
+    .btn-notify-test {
+      padding: 9px 16px; border-radius: var(--radius-sm); font-size: 13px;
+      font-weight: 500; cursor: pointer; border: 1px solid var(--border);
+      background: transparent; color: var(--text-secondary); transition: all 0.2s;
+    }
+    .btn-notify-test:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+    .btn-notify-save {
+      padding: 9px 20px; border-radius: var(--radius-sm); font-size: 13px;
+      font-weight: 500; cursor: pointer; border: none;
+      background: var(--accent-blue); color: #fff; transition: all 0.2s;
+    }
+    .btn-notify-save:hover { background: #3a7aef; }
 
     /* ===== Responsive ===== */
     @media (max-width: 1400px) {
@@ -594,10 +714,8 @@
     <div class="header-left">
       <div class="header-left-title">
         <h1>国内机票需求</h1>
-        <p>Last updated: <span id="lastUpdated">2026-04-14</span></p>
       </div>
       <div class="month-switcher">
-        <span class="month-switcher-label">月份</span>
         <button class="month-btn" onclick="shiftMonth(-1)" title="上个月">&#8249;</button>
         <span class="month-display" id="monthDisplay">-</span>
         <button class="month-btn" onclick="shiftMonth(1)" title="下个月">&#8250;</button>
@@ -614,6 +732,10 @@
           <input class="search-input" id="searchInput" type="text" placeholder="搜索需求名称..." oninput="handleSearch(this.value)" />
         </div>
       </div>
+      <button class="btn-notify-settings" id="notifySettingsBtn" onclick="openNotifySettings()" title="钉钉通知设置">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notify-dot"></span>
+      </button>
       <button class="btn-submit-req" onclick="openSubmitModal()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         提需求
@@ -643,6 +765,26 @@
     <div class="submit-modal-actions">
       <button class="btn-cancel" onclick="closeSubmitModal()">取消</button>
       <button class="btn-confirm" onclick="handleSubmitReq()">提交</button>
+    </div>
+  </div>
+</div>
+
+<!-- DingTalk Notify Settings Modal -->
+<div class="modal-overlay" id="notifyOverlay" onclick="closeNotifySettings(event)">
+  <div class="notify-modal" onclick="event.stopPropagation()">
+    <h2>🔔 钉钉通知设置</h2>
+    <p class="notify-desc">配置钉钉群机器人 Webhook，新需求提交后将自动发送通知到群里。Webhook URL 仅保存在本地浏览器，不会上传到云端。</p>
+    <div id="notifyCurrentStatus"></div>
+    <label>Webhook URL</label>
+    <input type="text" id="notifyWebhookInput" placeholder="https://oapi.dingtalk.com/robot/send?access_token=..." />
+    <p class="notify-hint">
+      获取方式：钉钉群 → 群设置 → 智能群助手 → 添加机器人 → 自定义 → 复制 Webhook 地址。<br>
+      安全设置建议选择「自定义关键词」，填入 <strong>需求</strong>。
+    </p>
+    <div class="notify-modal-actions">
+      <button class="btn-notify-clear" id="notifyClearBtn" onclick="clearNotifyWebhook()">清除配置</button>
+      <button class="btn-notify-test" onclick="testNotifyWebhook()">发送测试</button>
+      <button class="btn-notify-save" onclick="saveNotifyWebhook()">保存</button>
     </div>
   </div>
 </div>
@@ -913,20 +1055,6 @@ const requirementsData = {
       updated_at: "2026-04-15"
     },
     {
-      id: "REQ-018",
-      part: "交易导购",
-      name: "OTA无免费托运行李的提示优化",
-      status: "设计完成",
-      priority: "P0",
-      owner: "晰予",
-      summary: "PM: 晰予 | 设计: 良予",
-      prd_url: "https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1",
-      design_url: null,
-      notes: null,
-      created_at: "2026-04-15",
-      updated_at: "2026-04-15"
-    },
-    {
       id: "REQ-019",
       part: "交易导购",
       name: "OTA限制条件&组合商品表达优化",
@@ -1139,6 +1267,17 @@ const requirementsData = {
   ]
 };
 
+// ==================== HTML Escape (XSS prevention) ====================
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 // ==================== State ====================
 let currentFilter = "all";
 let draggedReqId = null;
@@ -1328,7 +1467,7 @@ function handleUndo() {
     clearTimeout(toastTimer);
     const toast = document.getElementById("toast");
     toast.classList.remove("visible");
-    showToast("Already undo", "success");
+    showToast("已撤销", "success");
   }
 }
 
@@ -1343,7 +1482,7 @@ function deleteRequirement(reqId) {
   requirementsData.requirements.splice(reqIndex, 1);
   saveData();
 
-  closeModal();
+  forceCloseModal();
   renderKanban();
   renderStats();
   renderTabs();
@@ -1360,11 +1499,12 @@ function deleteRequirement(reqId) {
 // ==================== Render ====================
 function renderStats() {
   const container = document.getElementById("headerStats");
-  const totalReqs = requirementsData.requirements.length;
+  // Use month-filtered counts to stay consistent with tab counts
   const partCounts = {};
   requirementsData.parts.forEach(p => { partCounts[p] = getReqsByPart(p).length; });
+  const totalFiltered = Object.values(partCounts).reduce((sum, n) => sum + n, 0);
 
-  container.innerHTML = '<div class="stat-item"><div class="stat-value">' + totalReqs + '</div><div class="stat-label">Total</div></div>'
+  container.innerHTML = '<div class="stat-item"><div class="stat-value">' + totalFiltered + '</div><div class="stat-label">Total</div></div>'
     + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-cyan)">' + (partCounts["交易导购"]||0) + '</div><div class="stat-label">交易导购</div></div>'
     + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">' + (partCounts["机票辅营"]||0) + '</div><div class="stat-label">机票辅营</div></div>';
 }
@@ -1413,12 +1553,12 @@ function renderReqCard(req, index) {
 
   return '<div class="req-card animate-in" style="animation-delay:' + animDelay + '" draggable="true" data-req-id="' + req.id + '" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" onclick="handleCardClick(event, \'' + req.id + '\')" onpointerdown="handleLongPressStart(event, \'' + req.id + '\')" onpointerup="handleLongPressEnd(event)" onpointerleave="handleLongPressEnd(event)">'
     + '<button class="req-card-delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
-    + '<div class="req-card-id">' + req.id + '</div>'
-    + '<div class="req-card-name">' + req.name + '</div>'
+    + '<div class="req-card-id">' + escapeHtml(req.id) + '</div>'
+    + '<div class="req-card-name">' + escapeHtml(req.name) + '</div>'
     + '<div class="req-card-meta">'
-    + (showPart ? '<span class="req-card-part-badge">' + req.part + '</span>' : '')
-    + '<span class="req-card-priority ' + priorityClass + '">' + req.priority + '</span>'
-    + '<span class="req-card-owner"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' + req.owner + '</span>'
+    + (showPart ? '<span class="req-card-part-badge">' + escapeHtml(req.part) + '</span>' : '')
+    + '<span class="req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span>'
+    + '<span class="req-card-owner"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' + escapeHtml(req.owner) + '</span>'
     + '</div></div>';
 }
 
@@ -1498,17 +1638,32 @@ function handleDrop(event) {
 }
 
 // ==================== Status History ====================
+function deleteStatusHistory(reqId, index) {
+  const req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !Array.isArray(req.status_history)) return;
+  req.status_history.splice(index, 1);
+  saveData();
+  openModal(reqId);
+  showToast("变更记录已删除", "success");
+}
+
 function renderStatusHistory(req) {
   const history = req.status_history;
   if (!Array.isArray(history) || history.length === 0) return "";
 
-  const itemsHtml = history.map(function(item) {
+  const itemsHtml = history.map(function(item, index) {
     return '<div class="status-history-item">'
       + '<span class="status-history-date">' + item.date + '</span>'
       + '<span class="status-history-dot"></span>'
       + '<span class="status-history-from">' + item.from + '</span>'
       + '<span class="status-history-arrow">→</span>'
       + '<span class="status-history-to">' + item.to + '</span>'
+      + '<button class="status-history-delete" title="删除此记录" onclick="event.stopPropagation();deleteStatusHistory(\'' + req.id + '\',' + index + ')">'
+      + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+      + '<polyline points="3 6 5 6 21 6"/>'
+      + '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'
+      + '</svg>'
+      + '</button>'
       + '</div>';
   }).join("");
 
@@ -1528,10 +1683,10 @@ function openModal(reqId) {
   const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
 
   const modal = document.getElementById("modalContent");
-  modal.innerHTML = '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + req.id + '</div><div class="modal-name">' + req.name + '</div></div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="closeModal()">&times;</button></div></div>'
+  modal.innerHTML = '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-name">' + escapeHtml(req.name) + '</div></div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
     + '<div class="modal-body">'
-    + '<div class="modal-meta"><span class="badge badge-status ' + meta.cssClass + '">' + req.status + '</span><span class="badge req-card-priority ' + priorityClass + '">' + req.priority + '</span><span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">' + req.part + '</span></div>'
-    + '<div class="modal-summary">' + req.summary + '</div>'
+    + '<div class="modal-meta"><span class="badge badge-status ' + meta.cssClass + '">' + escapeHtml(req.status) + '</span><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">' + escapeHtml(req.part) + '</span></div>'
+    + '<div class="modal-summary">' + escapeHtml(req.summary) + '</div>'
     + '<div class="modal-links">'
     + (req.prd_url
       ? '<a href="' + req.prd_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
@@ -1550,7 +1705,13 @@ function openModal(reqId) {
 }
 
 function closeModal(event) {
+  // Allow direct calls (no event) or clicks on the overlay backdrop only
   if (event && event.target !== document.getElementById("modalOverlay")) return;
+  document.getElementById("modalOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+}
+
+function forceCloseModal() {
   document.getElementById("modalOverlay").classList.remove("visible");
   document.body.style.overflow = "";
 }
@@ -1632,6 +1793,7 @@ function openEditModal(reqId) {
 }
 
 function closeEditModal(event) {
+  // Allow direct calls (no event) or clicks on the overlay backdrop only
   if (event && event.target !== document.getElementById("submitOverlay")) return;
   document.getElementById("submitOverlay").classList.remove("visible");
   document.body.style.overflow = "";
@@ -1750,7 +1912,21 @@ function parseYuquePastedText(rawText) {
 /**
  * Try to fetch doc info from Yuque API via proxy (optional enhancement).
  */
+// API_BASE is optional — only used if a local proxy server is running
+const API_BASE = (function() {
+  try {
+    // In local dev with a proxy server, set window.API_BASE before this script
+    return window.API_BASE || "";
+  } catch (e) {
+    return "";
+  }
+})();
+
 async function fetchYuqueDocInfo(prdUrl) {
+  if (!API_BASE) {
+    throw new Error("No API proxy configured");
+  }
+
   var controller = new AbortController();
   var timeoutId = setTimeout(function() { controller.abort(); }, 8000);
 
@@ -1965,10 +2141,16 @@ async function handleSubmitReq() {
   sendDingTalkNotification(newReq);
 }
 
+// ==================== DingTalk Notification ====================
+const DINGTALK_STORAGE_KEY = "req_mgmt_dingtalk_webhook";
+
+function getDingTalkWebhook() {
+  return localStorage.getItem(DINGTALK_STORAGE_KEY) || "";
+}
+
 function sendDingTalkNotification(req) {
-  // Replace with your actual DingTalk robot webhook URL
-  const DINGTALK_WEBHOOK = "";
-  if (!DINGTALK_WEBHOOK) {
+  const webhookUrl = getDingTalkWebhook();
+  if (!webhookUrl) {
     console.log("[DingTalk] Webhook URL not configured. Skipping notification for:", req.id, req.name);
     return;
   }
@@ -1977,7 +2159,7 @@ function sendDingTalkNotification(req) {
     msgtype: "markdown",
     markdown: {
       title: "新需求提交: " + req.name,
-      text: "### 新需求提交通知\n\n"
+      text: "### 📋 新需求提交通知\n\n"
         + "- **需求ID**: " + req.id + "\n"
         + "- **需求名称**: " + req.name + "\n"
         + "- **所属类目**: " + req.part + "\n"
@@ -1985,19 +2167,127 @@ function sendDingTalkNotification(req) {
         + "- **提交人**: " + req.owner + "\n"
         + "- **描述**: " + req.summary + "\n"
         + (req.prd_url ? "- **PRD**: [查看文档](" + req.prd_url + ")\n" : "")
-        + "\n> 请及时对焦处理"
+        + "\n> 请及时对焦处理 🙏"
     }
   };
 
-  fetch(DINGTALK_WEBHOOK, {
+  fetch(webhookUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(message)
-  }).then(res => {
-    if (res.ok) console.log("[DingTalk] Notification sent successfully");
-  }).catch(err => {
+  }).then(function(res) {
+    if (res.ok) {
+      console.log("[DingTalk] Notification sent successfully for:", req.id);
+    } else {
+      console.warn("[DingTalk] Server returned:", res.status);
+    }
+  }).catch(function(err) {
     console.warn("[DingTalk] Failed to send notification:", err);
   });
+}
+
+// ==================== DingTalk Settings Modal ====================
+function openNotifySettings() {
+  const webhookUrl = getDingTalkWebhook();
+  const input = document.getElementById("notifyWebhookInput");
+  const statusEl = document.getElementById("notifyCurrentStatus");
+  const clearBtn = document.getElementById("notifyClearBtn");
+
+  input.value = webhookUrl;
+
+  if (webhookUrl) {
+    const maskedUrl = webhookUrl.replace(/access_token=([a-f0-9]{8})[a-f0-9]+/, "access_token=$1****");
+    statusEl.innerHTML = '<div class="notify-status on"><span class="notify-status-dot"></span>已配置：' + maskedUrl + '</div>';
+    clearBtn.style.display = "inline-flex";
+  } else {
+    statusEl.innerHTML = '<div class="notify-status off"><span class="notify-status-dot"></span>未配置，新需求提交后不会发送通知</div>';
+    clearBtn.style.display = "none";
+  }
+
+  document.getElementById("notifyOverlay").classList.add("visible");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => input.focus(), 100);
+}
+
+function closeNotifySettings(event) {
+  if (event && event.target !== document.getElementById("notifyOverlay")) return;
+  document.getElementById("notifyOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+}
+
+function saveNotifyWebhook() {
+  const url = document.getElementById("notifyWebhookInput").value.trim();
+  if (!url) {
+    showToast("请输入 Webhook URL", "error");
+    return;
+  }
+  if (!url.startsWith("https://oapi.dingtalk.com/robot/send")) {
+    showToast("URL 格式不正确，请检查后重试", "error");
+    return;
+  }
+  localStorage.setItem(DINGTALK_STORAGE_KEY, url);
+  updateNotifyButtonState();
+  document.getElementById("notifyOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+  showToast("钉钉通知已配置 🔔", "success");
+}
+
+function clearNotifyWebhook() {
+  localStorage.removeItem(DINGTALK_STORAGE_KEY);
+  updateNotifyButtonState();
+  document.getElementById("notifyOverlay").classList.remove("visible");
+  document.body.style.overflow = "";
+  showToast("通知配置已清除", "success");
+}
+
+function testNotifyWebhook() {
+  const url = document.getElementById("notifyWebhookInput").value.trim();
+  if (!url) {
+    showToast("请先输入 Webhook URL", "error");
+    return;
+  }
+  if (!url.startsWith("https://oapi.dingtalk.com/robot/send")) {
+    showToast("URL 格式不正确，请检查后重试", "error");
+    return;
+  }
+
+  const testMessage = {
+    msgtype: "markdown",
+    markdown: {
+      title: "需求管理系统通知测试",
+      text: "### ✅ 钉钉通知配置成功\n\n"
+        + "需求管理系统已成功连接到此群，新需求提交后将自动发送通知。\n\n"
+        + "> 这是一条测试消息，可以忽略 😊"
+    }
+  };
+
+  showToast("正在发送测试消息...", "success");
+
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(testMessage)
+  }).then(function(res) {
+    if (res.ok) {
+      showToast("测试消息发送成功！请查看钉钉群 ✅", "success");
+    } else {
+      showToast("发送失败，请检查 Webhook URL 是否正确", "error");
+    }
+  }).catch(function() {
+    showToast("网络错误，请检查 URL 或网络连接", "error");
+  });
+}
+
+function updateNotifyButtonState() {
+  const btn = document.getElementById("notifySettingsBtn");
+  if (!btn) return;
+  if (getDingTalkWebhook()) {
+    btn.classList.add("configured");
+    btn.title = "钉钉通知已配置 ✅";
+  } else {
+    btn.classList.remove("configured");
+    btn.title = "钉钉通知设置";
+  }
 }
 
 // ==================== Keyboard ====================
@@ -2033,21 +2323,8 @@ function renderLoading() {
 
 renderLoading();
 renderMonthDisplay();
+updateNotifyButtonState();
 loadData();
-
-// ==================== GitHub Sync Toast ====================
-function checkGithubSyncedToast() {
-  const syncedAt = localStorage.getItem("githubSynced");
-  if (!syncedAt) return;
-  const elapsed = Date.now() - parseInt(syncedAt, 10);
-  if (elapsed < 30000) {
-    showToast("✓ 数据已同步到 GitHub", "success");
-  }
-  localStorage.removeItem("githubSynced");
-}
-
-window.addEventListener("focus", checkGithubSyncedToast);
-checkGithubSyncedToast();
 </script>
 
 </body>
