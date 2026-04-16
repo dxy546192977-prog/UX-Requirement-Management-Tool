@@ -837,7 +837,7 @@ const requirementsData = {
     created_at: "2026-04-14",
     prd_url: "https://aliyuque.antfin.com/lbnxdv/eo7e7e/vv4o2li9dzlgf5e1"
   },
-  parts: ["交易导购", "机票辅营"],
+  parts: ["交易导购", "机票辅营", "AI"],
   statuses: ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "已上线"],
   statusMeta: {
     "待对焦":  { cssClass: "status-pending-review", dotClass: "dot-pending-review" },
@@ -1136,7 +1136,8 @@ function renderStats() {
 
   container.innerHTML = '<div class="stat-item"><div class="stat-value">' + totalFiltered + '</div><div class="stat-label">Total</div></div>'
     + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-cyan)">' + (partCounts["交易导购"]||0) + '</div><div class="stat-label">交易导购</div></div>'
-    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">' + (partCounts["机票辅营"]||0) + '</div><div class="stat-label">机票辅营</div></div>';
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">' + (partCounts["机票辅营"]||0) + '</div><div class="stat-label">机票辅营</div></div>'
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-green)">' + (partCounts["AI"]||0) + '</div><div class="stat-label">AI</div></div>';
 }
 
 function renderTabs() {
@@ -1689,7 +1690,8 @@ document.addEventListener("keydown", function(e) {
 // ==================== Part Inference ====================
 const PART_OWNER_MAP = {
   "交易导购": ["晰予", "孙笠", "以慢", "新川", "楼兰"],
-  "机票辅营": ["澈飞", "之娴", "宸芳"]
+  "机票辅营": ["澈飞", "之娴", "宸芳"],
+  "AI": []
 };
 
 function inferPartFromOwner(ownerName, currentFilter) {
@@ -1990,7 +1992,8 @@ function renderLoading() {
   const headerStats = document.getElementById("headerStats");
   headerStats.innerHTML = '<div class="stat-item"><div class="stat-value">-</div><div class="stat-label">Total</div></div>'
     + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-cyan)">-</div><div class="stat-label">交易导购</div></div>'
-    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">-</div><div class="stat-label">机票辅营</div></div>';
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-purple)">-</div><div class="stat-label">机票辅营</div></div>'
+    + '<div class="stat-item"><div class="stat-value" style="color:var(--accent-green)">-</div><div class="stat-label">AI</div></div>';
 }
 
 renderLoading();
