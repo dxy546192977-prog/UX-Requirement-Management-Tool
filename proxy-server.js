@@ -3,6 +3,9 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+const yuqueSvc   = require('./services/yuque-service');
+const aiDesignSvc = require('./services/ai-design-service');
+
 // ==================== Config ====================
 const CONFIG_PATH = path.join(__dirname, 'config.json');
 const DATA_PATH = path.join(__dirname, 'data', 'local_requirements.json');
@@ -266,6 +269,113 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ---- AI Design Assistant Routes ----
+
+  // POST /api/ai-design/jobs — 创建 AI 设计拆解任务
+  if (pathname === '/api/ai-design/jobs' && req.method === 'POST') {
+    let body;
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid JSON body' }));
+      return;
+    }
+
+    const { reqId, prdUrl } = body;
+    if (!reqId || !prdUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'reqId and prdUrl are required' }));
+      return;
+    }
+
+    const config = loadConfig();
+    if (!config) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+      return;
+    }
+
+    if (!config.ai_api_key || config.ai_api_key === 'YOUR_AI_API_KEY_HERE') {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'AI API Key not configured. Please update config.json with your ai_api_key.' }));
+      return;
+    }
+
+    const job = aiDesignSvc.createJob(reqId, prdUrl, config, yuqueSvc);
+    console.log(`[AiDesign] Created job ${job.id} for req ${reqId}`);
+
+    res.writeHead(201, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(job));
+    return;
+  }
+
+  // GET /api/ai-design/jobs/:id — 查询任务状态与产物
+  const jobGetMatch = pathname.match(/^\/api\/ai-design\/jobs\/([^/]+)$/);
+  if (jobGetMatch && req.method === 'GET') {
+    const jobId = jobGetMatch[1];
+    const job   = aiDesignSvc.getJob(jobId);
+    if (!job) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `Job ${jobId} not found` }));
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(job));
+    return;
+  }
+
+  // POST /api/ai-design/jobs/:id/retry — 重跑任务
+  const jobRetryMatch = pathname.match(/^\/api\/ai-design\/jobs\/([^/]+)\/retry$/);
+  if (jobRetryMatch && req.method === 'POST') {
+    const jobId  = jobRetryMatch[1];
+    const config = loadConfig();
+    if (!config) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+      return;
+    }
+
+    const job = aiDesignSvc.retryJob(jobId, config, yuqueSvc);
+    if (!job) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `Job ${jobId} not found` }));
+      return;
+    }
+    console.log(`[AiDesign] Retrying job ${jobId}`);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(job));
+    return;
+  }
+
+  // GET /api/yuque/doc-content?url=... — 读取 PRD 正文
+  if (pathname === '/api/yuque/doc-content' && req.method === 'GET') {
+    const yuqueUrl = parsed.searchParams.get('url');
+    if (!yuqueUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Missing "url" query parameter' }));
+      return;
+    }
+
+    const config = loadConfig();
+    if (!config || !config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Yuque API Token not configured' }));
+      return;
+    }
+
+    try {
+      const prdFull = await yuqueSvc.fetchPrdFull(config, yuqueUrl);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(prdFull));
+    } catch (err) {
+      console.error('[Yuque Content] Error:', err.message);
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
   // ---- Static Files (fallback) ----
   if (req.method === 'GET' && !pathname.startsWith('/api/')) {
     serveStaticFile(pathname, res);
@@ -281,15 +391,24 @@ server.listen(PORT, () => {
   console.log(`[Server] Running at http://localhost:${PORT}`);
   console.log(`[Server] Open http://localhost:${PORT} in your browser`);
   console.log(`[Server] API endpoints:`);
-  console.log(`  GET  /api/data          - Load requirements`);
-  console.log(`  POST /api/data          - Save requirements`);
-  console.log(`  GET  /api/yuque/doc?url= - Fetch Yuque doc info`);
-  console.log(`  GET  /health            - Health check`);
+  console.log(`  GET  /api/data                       - Load requirements`);
+  console.log(`  POST /api/data                       - Save requirements`);
+  console.log(`  GET  /api/yuque/doc?url=             - Fetch Yuque doc meta`);
+  console.log(`  GET  /api/yuque/doc-content?url=     - Fetch Yuque doc full content`);
+  console.log(`  POST /api/ai-design/jobs             - Create AI design job`);
+  console.log(`  GET  /api/ai-design/jobs/:id         - Get job status & result`);
+  console.log(`  POST /api/ai-design/jobs/:id/retry   - Retry a failed job`);
+  console.log(`  GET  /health                         - Health check`);
 
   const config = loadConfig();
   if (!config || !config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
     console.warn('[Server] WARNING: Yuque API Token not configured! Please update config.json');
   } else {
     console.log('[Server] Yuque API Token loaded successfully');
+  }
+  if (!config || !config.ai_api_key || config.ai_api_key === 'YOUR_AI_API_KEY_HERE') {
+    console.warn('[Server] WARNING: AI API Key not configured! AI design assistant will not work.');
+  } else {
+    console.log(`[Server] AI provider: ${config.ai_provider || 'openai'} / model: ${config.ai_model || 'gpt-4o-mini'}`);
   }
 });

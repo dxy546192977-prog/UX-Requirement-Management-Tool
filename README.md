@@ -42,3 +42,41 @@ Open `index.html` in your browser. Click the "Submit Requirement" button, paste 
 - Drag & drop to change requirement status
 - DingTalk webhook notifications (optional)
 - Dark theme UI
+- **AI Design Assistant** (branch: `feature/ai-design-assistant-flow`) — trigger AI to decompose PRD into page/module design plans
+
+## AI Design Assistant Setup
+
+This feature requires the proxy server and an AI API key.
+
+**1. Configure `config.json`:**
+
+```json
+{
+  "yuque_api_base": "https://yuque-api.antfin-inc.com",
+  "yuque_token": "your_yuque_token",
+  "ai_provider": "openai",
+  "ai_api_base": "https://api.openai.com",
+  "ai_api_key": "your_ai_api_key",
+  "ai_model": "gpt-4o-mini"
+}
+```
+
+Supported `ai_provider` values: `openai` (any OpenAI-compatible API) or `qwen` / `dashscope` (Alibaba Cloud Tongyi Qianwen).
+
+**2. Start the proxy server:**
+
+```bash
+node proxy-server.js
+```
+
+**3. Open the dashboard via `http://localhost:3001`** (not directly as a file — the AI feature requires the proxy).
+
+**4. Trigger AI analysis:**
+
+1. Add a requirement with a Yuque PRD link.
+2. Open the requirement detail.
+3. Click "触发 AI 拆解" (Trigger AI Analysis).
+4. Wait for the AI to decompose the PRD (~30–60s depending on model).
+5. Review the result (summary + page list + module plan) and click "确认方案".
+
+See `docs/ai-design-assistant-workflow.md` for the full workflow documentation.

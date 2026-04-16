@@ -53,7 +53,9 @@
       justify-content: space-between;
       align-items: center;
     }
-    .header-left { display: flex; align-items: center; gap: 24px; }
+    .header-left { display: flex; align-items: center; gap: 24px; justify-content: center; }
+    .header-left-title { flex: 1; }
+    .header-left .btn-submit-mobile { flex: 1; justify-content: flex-end; }
     .header-left-title h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
     .header-right { display: flex; align-items: center; gap: 20px; }
     .header-stats { display: flex; gap: 20px; }
@@ -208,10 +210,10 @@
       width: 24px; height: 24px; border-radius: 6px;
       border: none; background: rgba(239,68,68,0.15);
       color: var(--accent-red); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: none; align-items: center; justify-content: center;
       opacity: 0; transition: opacity 0.2s, background 0.2s; z-index: 2;
     }
-    .req-card:hover .req-card-delete { opacity: 1; }
+    .req-card:hover .req-card-delete { display: flex; opacity: 1; }
     .req-card-delete:hover { background: rgba(239,68,68,0.3); }
     .req-card-id {
       font-size: 10px;
@@ -668,14 +670,17 @@
       .header { padding: 12px 16px; position: sticky; top: 0; z-index: 100; }
       .header-content { flex-direction: column; gap: 8px; align-items: stretch; }
 
-      /* 行1：标题左 + 月份切换 + 提需求按钮 右 */
+      /* 行1：相对定位容器，月份切换器绝对居中 */
       .header-left {
         display: flex; flex-direction: row;
-        justify-content: space-between; align-items: center; gap: 8px;
+        justify-content: space-between; align-items: center;
+        position: relative;
       }
+      .header-left-title { flex-shrink: 0; }
       .header-left-title h1 { font-size: 17px; }
       .header-left-title p { font-size: 11px; }
       .header-left .month-switcher {
+        position: absolute; left: 50%; transform: translateX(-50%);
         display: flex; flex-shrink: 0;
       }
       .month-switcher-label { display: none; }
@@ -687,7 +692,10 @@
       }
 
       /* 移动端：显示行1专用按钮，隐藏行2专用按钮 */
-      .btn-submit-mobile { display: inline-flex; padding: 6px 12px; font-size: 13px; }
+      .btn-submit-mobile {
+        display: inline-flex; padding: 6px 12px; font-size: 13px;
+        flex: 1 1 0%; justify-content: flex-end; min-width: 0;
+      }
       .btn-submit-desktop { display: none; }
 
       /* 行2：数字统计(flex:1) + 搜索icon + 铃铛icon 并排 */
@@ -710,7 +718,9 @@
         scrollbar-width: none;
       }
       .tab-bar::-webkit-scrollbar { display: none; }
-      .tab-btn { white-space: nowrap; padding: 6px 14px; font-size: 13px; }
+      .tab-btn { white-space: nowrap; padding: 6px 14px; font-size: 13px; flex-shrink: 0; }
+      /* 末尾留白，确保最后一个 tab 完整可见 */
+      .tab-btn:last-child { margin-right: 16px; }
 
       /* Main */
       .main { padding: 10px 16px 32px; }
@@ -808,6 +818,133 @@
     }
     .modal-delete-btn:hover {
       background: rgba(239,68,68,0.18);
+    }
+
+    /* ===== AI Design Assistant ===== */
+    /* 卡片级徽标 */
+    .ai-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.3px; margin-top: 6px;
+    }
+    .ai-badge-idle     { background: rgba(107,114,128,0.15); color: var(--text-muted); }
+    .ai-badge-queued   { background: rgba(245,158,11,0.15);  color: var(--accent-orange); }
+    .ai-badge-processing { background: rgba(34,211,238,0.15); color: var(--accent-cyan); animation: ai-pulse 1.4s ease-in-out infinite; }
+    .ai-badge-confirm  { background: rgba(167,139,250,0.18); color: var(--accent-purple); }
+    .ai-badge-done     { background: rgba(52,211,153,0.15);  color: var(--accent-green); }
+    .ai-badge-failed   { background: rgba(239,68,68,0.12);   color: var(--accent-red); }
+    @keyframes ai-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    /* Modal 内 AI 区块 */
+    .ai-section {
+      margin-top: 20px; border-top: 1px solid var(--border); padding-top: 18px;
+    }
+    .ai-section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .ai-section-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+    }
+    .ai-section-title svg { color: var(--accent-purple); }
+    .ai-section-actions { display: flex; gap: 8px; }
+    .ai-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px;
+      font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .ai-btn-primary {
+      background: var(--accent-purple); color: #fff;
+    }
+    .ai-btn-primary:hover { background: #9370e8; box-shadow: 0 2px 10px rgba(167,139,250,0.3); }
+    .ai-btn-secondary {
+      background: rgba(107,114,128,0.12); color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .ai-btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .ai-btn-confirm {
+      background: var(--accent-green); color: #0f1117;
+    }
+    .ai-btn-confirm:hover { background: #28c28a; box-shadow: 0 2px 10px rgba(52,211,153,0.3); }
+    .ai-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* 状态条 */
+    .ai-status-bar {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 14px;
+    }
+    .ai-status-bar.queued     { background: rgba(245,158,11,0.08);  color: var(--accent-orange);  border: 1px solid rgba(245,158,11,0.2); }
+    .ai-status-bar.processing { background: rgba(34,211,238,0.08);  color: var(--accent-cyan);    border: 1px solid rgba(34,211,238,0.2); }
+    .ai-status-bar.needs_confirmation { background: rgba(167,139,250,0.08); color: var(--accent-purple); border: 1px solid rgba(167,139,250,0.2); }
+    .ai-status-bar.completed  { background: rgba(52,211,153,0.08);  color: var(--accent-green);   border: 1px solid rgba(52,211,153,0.2); }
+    .ai-status-bar.failed     { background: rgba(239,68,68,0.08);   color: var(--accent-red);     border: 1px solid rgba(239,68,68,0.2); }
+    .ai-spinner {
+      width: 14px; height: 14px; border: 2px solid currentColor;
+      border-top-color: transparent; border-radius: 50%;
+      animation: ai-spin 0.8s linear infinite; flex-shrink: 0;
+    }
+    @keyframes ai-spin { to { transform: rotate(360deg); } }
+
+    /* 摘要 */
+    .ai-summary {
+      padding: 12px 14px; background: rgba(167,139,250,0.06);
+      border-left: 3px solid var(--accent-purple);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .ai-summary-label {
+      font-size: 11px; font-weight: 600; color: var(--accent-purple);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+
+    /* 模块表 */
+    .ai-modules-label {
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+    }
+    .ai-module-item {
+      padding: 12px 14px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--bg-column);
+      margin-bottom: 8px; display: grid; gap: 5px;
+    }
+    .ai-module-item:last-child { margin-bottom: 0; }
+    .ai-module-header { display: flex; align-items: center; gap: 8px; }
+    .ai-module-name { font-size: 13px; font-weight: 600; color: var(--text-primary); flex: 1; }
+    .ai-module-page { font-size: 11px; color: var(--text-muted); }
+    .ai-change-badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600;
+    }
+    .ai-change-create  { background: rgba(34,211,238,0.12);  color: var(--accent-cyan); }
+    .ai-change-modify  { background: rgba(245,158,11,0.12);  color: var(--accent-orange); }
+    .ai-change-reuse   { background: rgba(52,211,153,0.12);  color: var(--accent-green); }
+    .ai-module-intent  { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .ai-module-notes   { font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .ai-module-status-confirmed { border-color: rgba(52,211,153,0.3); }
+    .ai-module-confirmed-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; color: var(--accent-green);
+    }
+    .ai-empty-hint {
+      text-align: center; padding: 24px; color: var(--text-muted);
+      font-size: 13px; border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .ai-pages-row {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
+    }
+    .ai-page-tag {
+      padding: 3px 10px; border-radius: 10px; font-size: 11px;
+      background: rgba(79,140,255,0.1); color: var(--accent-blue);
+      border: 1px solid rgba(79,140,255,0.2);
+    }
+    .ai-trigger-wrap { display: flex; align-items: center; gap: 10px; }
+    .ai-trigger-hint { font-size: 12px; color: var(--text-muted); }
+    /* 进度阶段标 */
+    .ai-stage-label {
+      font-size: 11px; opacity: 0.75; margin-left: 4px;
     }
   </style>
 </head>
@@ -1292,7 +1429,9 @@ function renderReqCard(req, index) {
     + (showPart ? '<span class="req-card-part-badge">' + escapeHtml(req.part) + '</span>' : '')
     + '<span class="req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span>'
     + '<span class="req-card-owner"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' + escapeHtml(req.owner) + '</span>'
-    + '</div></div>';
+    + '</div>'
+    + renderAiBadge(req)
+    + '</div>';
 }
 
 // ==================== Card Click ====================
@@ -1537,10 +1676,17 @@ function openModal(reqId) {
     + (req.notes ? '<div class="modal-notes">' + req.notes + '</div>' : '')
     + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Owner: ' + req.owner + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
     + renderStatusHistory(req)
+    + renderAiDesignSection(req)
     + '</div>';
 
   document.getElementById("modalOverlay").classList.add("visible");
   document.body.style.overflow = "hidden";
+
+  // 若任务正在执行则自动轮询
+  if (req.ai_design && req.ai_design.job_id &&
+      (req.ai_design.status === 'queued' || req.ai_design.status === 'processing')) {
+    startAiPolling(req.id, req.ai_design.job_id);
+  }
 }
 
 function closeModal(event) {
@@ -2231,6 +2377,377 @@ fetch("config.json?t=" + Date.now())
   .finally(function() {
     loadData();
   });
+
+// ==================== AI Design Assistant ====================
+
+/** 当前活跃的轮询 timer，用于清除 */
+var _aiPollTimers = {};
+
+/**
+ * 渲染卡片级 AI 状态徽标
+ */
+function renderAiBadge(req) {
+  var ai = req.ai_design;
+  if (!ai || !ai.status || ai.status === 'idle') return '';
+
+  var labelMap = {
+    queued:               '⏳ AI 排队中',
+    processing:           '⚡ AI 分析中',
+    needs_confirmation:   '👁 待确认',
+    completed:            '✓ AI 已完成',
+    failed:               '✗ AI 失败'
+  };
+  var classMap = {
+    queued:             'ai-badge-queued',
+    processing:         'ai-badge-processing',
+    needs_confirmation: 'ai-badge-confirm',
+    completed:          'ai-badge-done',
+    failed:             'ai-badge-failed'
+  };
+  var label = labelMap[ai.status] || ai.status;
+  var cls   = classMap[ai.status] || 'ai-badge-idle';
+  return '<div class="ai-badge ' + cls + '">' + label + '</div>';
+}
+
+/**
+ * 渲染 Modal 内的 AI 设计助理区块
+ */
+function renderAiDesignSection(req) {
+  var ai = req.ai_design;
+
+  var header = '<div class="ai-section-header">'
+    + '<div class="ai-section-title">'
+    + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+    + '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>'
+    + '</svg>AI 设计助理</div>';
+
+  // 没有 AI 任务时：显示触发按钮
+  if (!ai || !ai.status) {
+    if (!req.prd_url) {
+      return '<div class="ai-section">'
+        + header
+        + '<div class="ai-section-actions"></div></div>'
+        + '<div class="ai-trigger-wrap">'
+        + '<div class="ai-empty-hint">请先添加 PRD 链接，然后触发 AI 拆解</div>'
+        + '</div></div>';
+    }
+    return '<div class="ai-section">'
+      + header
+      + '<div class="ai-section-actions">'
+      + '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
+      + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+      + '触发 AI 拆解</button>'
+      + '</div></div>'
+      + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案</div>'
+      + '</div>';
+  }
+
+  // 有任务时，渲染状态 + 内容
+  var statusLabelMap = {
+    queued:             '排队等待中…',
+    processing:         _stageLabel(ai.stage),
+    needs_confirmation: '分析完成，请确认',
+    completed:          '已确认',
+    failed:             '执行失败'
+  };
+  var statusLabel = statusLabelMap[ai.status] || ai.status;
+  var isRunning = ai.status === 'queued' || ai.status === 'processing';
+
+  var retryBtn  = '<button class="ai-btn ai-btn-secondary" onclick="retryAiDesign(\'' + req.id + '\', \'' + (ai.job_id || '') + '\')">'
+    + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>'
+    + '重跑</button>';
+
+  var confirmBtn = (ai.status === 'needs_confirmation')
+    ? '<button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')">'
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
+      + '确认方案</button>'
+    : '';
+
+  var html = '<div class="ai-section">'
+    + header
+    + '<div class="ai-section-actions">'
+    + (isRunning ? '' : retryBtn)
+    + confirmBtn
+    + '</div></div>';
+
+  // 状态条
+  html += '<div class="ai-status-bar ' + ai.status + '">'
+    + (isRunning ? '<div class="ai-spinner"></div>' : '')
+    + '<span>' + escapeHtml(statusLabel) + '</span>'
+    + (ai.updated_at ? '<span style="margin-left:auto;font-size:11px;opacity:0.6">' + ai.updated_at.slice(0, 16).replace('T', ' ') + '</span>' : '')
+    + '</div>';
+
+  // 失败原因
+  if (ai.status === 'failed' && ai.last_error) {
+    html += '<div style="font-size:12px;color:var(--accent-red);padding:8px 12px;'
+      + 'background:rgba(239,68,68,0.06);border-radius:var(--radius-sm);margin-bottom:12px">'
+      + escapeHtml(ai.last_error) + '</div>';
+  }
+
+  // 摘要
+  if (ai.summary) {
+    html += '<div class="ai-summary">'
+      + '<div class="ai-summary-label">需求摘要</div>'
+      + escapeHtml(ai.summary)
+      + '</div>';
+  }
+
+  // 涉及页面
+  if (ai.pages && ai.pages.length) {
+    html += '<div class="ai-pages-row">';
+    ai.pages.forEach(function(p) {
+      html += '<span class="ai-page-tag">' + escapeHtml(p) + '</span>';
+    });
+    html += '</div>';
+  }
+
+  // 模块清单
+  if (ai.modules && ai.modules.length) {
+    html += '<div class="ai-modules-label">模块清单（' + ai.modules.length + ' 个）</div>';
+    ai.modules.forEach(function(mod, idx) {
+      var changeClass = { create: 'ai-change-create', modify: 'ai-change-modify', reuse: 'ai-change-reuse' }[mod.change_type] || 'ai-change-create';
+      var changeLabel = { create: '新建', modify: '改现有', reuse: '直接复用' }[mod.change_type] || mod.change_type;
+      var isConfirmed = mod.status === 'confirmed';
+
+      html += '<div class="ai-module-item' + (isConfirmed ? ' ai-module-status-confirmed' : '') + '">'
+        + '<div class="ai-module-header">'
+        + '<span class="ai-module-name">' + escapeHtml(mod.name) + '</span>'
+        + '<span class="ai-change-badge ' + changeClass + '">' + changeLabel + '</span>'
+        + (isConfirmed ? '<span class="ai-module-confirmed-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>已确认</span>' : '')
+        + '</div>';
+      if (mod.page) {
+        html += '<div class="ai-module-page">页面：' + escapeHtml(mod.page) + '</div>';
+      }
+      if (mod.intent) {
+        html += '<div class="ai-module-intent">' + escapeHtml(mod.intent) + '</div>';
+      }
+      if (mod.notes) {
+        html += '<div class="ai-module-notes">备注：' + escapeHtml(mod.notes) + '</div>';
+      }
+      html += '</div>';
+    });
+  } else if (!isRunning && ai.status !== 'failed') {
+    html += '<div class="ai-empty-hint">暂无模块数据</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function _stageLabel(stage) {
+  var map = {
+    fetching_prd: '正在拉取 PRD 正文…',
+    decomposing:  '正在拆解需求…',
+    planning:     '正在生成设计方案…'
+  };
+  return map[stage] || 'AI 处理中…';
+}
+
+/**
+ * 触发 AI 设计拆解任务
+ */
+async function triggerAiDesign(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !req.prd_url) {
+    showToast('请先添加 PRD 链接', 'error');
+    return;
+  }
+
+  if (!API_BASE) {
+    showToast('需要启动代理服务（node proxy-server.js）才能使用 AI 拆解', 'error');
+    return;
+  }
+
+  try {
+    var res = await fetch(API_BASE + '/api/ai-design/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reqId: req.id, prdUrl: req.prd_url })
+    });
+
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      showToast('创建任务失败：' + (err.error || res.status), 'error');
+      return;
+    }
+
+    var job = await res.json();
+
+    // 更新需求对象里的 AI 字段
+    req.ai_design = {
+      status:     job.status,
+      stage:      job.stage,
+      job_id:     job.id,
+      summary:    null,
+      pages:      [],
+      modules:    [],
+      last_error: null,
+      updated_at: job.updated_at
+    };
+    saveData();
+    openModal(reqId);
+    showToast('AI 设计助理已启动，正在分析 PRD…', 'success');
+
+    startAiPolling(reqId, job.id);
+  } catch (err) {
+    showToast('网络错误：' + err.message, 'error');
+  }
+}
+
+/**
+ * 开始轮询任务状态（每 3 秒一次，最多 5 分钟）
+ */
+function startAiPolling(reqId, jobId) {
+  // 清除同 reqId 的旧 timer
+  if (_aiPollTimers[reqId]) {
+    clearInterval(_aiPollTimers[reqId]);
+  }
+
+  var maxPolls = 100; // 约 5 分钟
+  var pollCount = 0;
+
+  _aiPollTimers[reqId] = setInterval(async function() {
+    pollCount++;
+    if (pollCount > maxPolls) {
+      clearInterval(_aiPollTimers[reqId]);
+      delete _aiPollTimers[reqId];
+      return;
+    }
+
+    try {
+      var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId);
+      if (!res.ok) return;
+      var job = await res.json();
+
+      var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+      if (!req) {
+        clearInterval(_aiPollTimers[reqId]);
+        delete _aiPollTimers[reqId];
+        return;
+      }
+
+      // 更新本地数据
+      req.ai_design = {
+        status:     job.status,
+        stage:      job.stage,
+        job_id:     job.id,
+        summary:    job.summary,
+        pages:      job.pages || [],
+        modules:    job.modules || [],
+        last_error: job.last_error,
+        updated_at: job.updated_at
+      };
+
+      // 若 modal 当前打开的是这个 req，刷新 AI 区块
+      _refreshAiSectionIfOpen(req);
+
+      // 终止状态则停止轮询
+      if (job.status === 'needs_confirmation' || job.status === 'completed' || job.status === 'failed') {
+        saveData();
+        renderKanban(); // 刷新卡片徽标
+        clearInterval(_aiPollTimers[reqId]);
+        delete _aiPollTimers[reqId];
+
+        if (job.status === 'needs_confirmation') {
+          showToast('AI 拆解完成，请在需求详情中确认方案', 'success');
+        } else if (job.status === 'failed') {
+          showToast('AI 拆解失败：' + (job.last_error || '未知错误'), 'error');
+        }
+      }
+    } catch (err) {
+      console.warn('[AiPoll] Error:', err.message);
+    }
+  }, 3000);
+}
+
+/**
+ * 如果当前 Modal 打开的就是这个需求，刷新其中的 AI 区块（避免整页重建）
+ */
+function _refreshAiSectionIfOpen(req) {
+  var overlay = document.getElementById('modalOverlay');
+  if (!overlay || !overlay.classList.contains('visible')) return;
+  var idEl = document.querySelector('#modalContent .modal-id');
+  if (!idEl || idEl.textContent !== req.id) return;
+
+  // 找到或创建 AI 区块容器
+  var body = document.querySelector('#modalContent .modal-body');
+  if (!body) return;
+  var existing = body.querySelector('.ai-section');
+  var newHtml   = renderAiDesignSection(req);
+  var tmp = document.createElement('div');
+  tmp.innerHTML = newHtml;
+  var newSection = tmp.firstElementChild;
+
+  if (existing) {
+    body.replaceChild(newSection, existing);
+  } else {
+    body.appendChild(newSection);
+  }
+}
+
+/**
+ * 确认 AI 设计方案（把 needs_confirmation -> completed，所有模块标为 confirmed）
+ */
+function confirmAiDesign(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !req.ai_design) return;
+
+  req.ai_design.status = 'completed';
+  if (req.ai_design.modules) {
+    req.ai_design.modules.forEach(function(m) { m.status = 'confirmed'; });
+  }
+  req.updated_at = todayStr();
+  saveData();
+  renderKanban();
+  openModal(reqId);
+  showToast('AI 设计方案已确认', 'success');
+}
+
+/**
+ * 重跑 AI 任务
+ */
+async function retryAiDesign(reqId, jobId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req) return;
+
+  if (!API_BASE) {
+    showToast('需要启动代理服务才能重跑任务', 'error');
+    return;
+  }
+
+  var url = jobId
+    ? API_BASE + '/api/ai-design/jobs/' + jobId + '/retry'
+    : null;
+
+  // 如果没有 jobId，则重新创建任务
+  if (!url) {
+    return triggerAiDesign(reqId);
+  }
+
+  try {
+    var res = await fetch(url, { method: 'POST' });
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      showToast('重跑失败：' + (err.error || res.status), 'error');
+      return;
+    }
+    var job = await res.json();
+
+    req.ai_design.status     = job.status;
+    req.ai_design.stage      = job.stage;
+    req.ai_design.last_error = null;
+    req.ai_design.summary    = null;
+    req.ai_design.pages      = [];
+    req.ai_design.modules    = [];
+    req.ai_design.updated_at = job.updated_at;
+    saveData();
+    openModal(reqId);
+    showToast('AI 任务已重新启动', 'success');
+    startAiPolling(reqId, job.id);
+  } catch (err) {
+    showToast('网络错误：' + err.message, 'error');
+  }
+}
 </script>
 
 </body>
