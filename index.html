@@ -1571,6 +1571,27 @@ function setSubmitBtnLoading(loading) {
   }
 }
 
+// ==================== Part Inference ====================
+const PART_OWNER_MAP = {
+  "交易导购": ["晰予", "孙笠", "以慢", "新川", "楼兰"],
+  "机票辅营": ["澈飞", "之娴", "宸芳"]
+};
+
+function inferPartFromOwner(ownerName, currentFilter) {
+  // If user is on a specific tab, respect that first
+  if (currentFilter !== "all") return currentFilter;
+
+  // Match owner name against known members
+  for (const [part, members] of Object.entries(PART_OWNER_MAP)) {
+    if (members.some(member => ownerName.includes(member))) {
+      return part;
+    }
+  }
+
+  // Default fallback
+  return requirementsData.parts[0];
+}
+
 async function handleSubmitReq() {
   var rawInput = document.getElementById("prdUrlInput").value.trim();
 
@@ -1606,9 +1627,11 @@ async function handleSubmitReq() {
 
   setSubmitBtnLoading(false);
 
+  var inferredPart = inferPartFromOwner(docCreator, currentFilter);
+
   var newReq = {
     id: generateReqId(),
-    part: currentFilter !== "all" ? currentFilter : requirementsData.parts[0],
+    part: inferredPart,
     name: docTitle,
     status: "待对焦",
     priority: "P1",
