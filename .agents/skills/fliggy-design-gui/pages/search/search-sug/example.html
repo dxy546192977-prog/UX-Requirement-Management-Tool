@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>搜索 Sug 页</title>
+  <style>
+    :root {
+      --bg-page: #f2f3f5;
+      --bg-panel: #ffffff;
+      --primary: #6666ff;
+      --brand: #ff5533;
+      --color-darkgray: #0f131a;
+      --text-primary: #0f131a;
+      --text-secondary: #919499;
+      --divider: #f2f3f5;
+      --color-black: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 750px;
+      margin: 0 auto;
+      background: var(--bg-page);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text-primary);
+    }
+
+    .page {
+      width: 750px;
+      min-height: 100vh;
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .status-bar {
+      width: 750px;
+      height: 88px;
+      background: rgba(0, 0, 0, 0);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .status-time {
+      font-size: 30px;
+      line-height: 42px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-right svg {
+      color: var(--text-primary);
+    }
+
+    .status-battery {
+      width: 48px;
+      height: 24px;
+      border: 2px solid var(--text-primary);
+      border-radius: 5px;
+      position: relative;
+      padding: 2px;
+    }
+
+    .status-battery::after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 8px;
+      background: var(--text-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .status-battery-inner {
+      width: 70%;
+      height: 100%;
+      background: var(--text-primary);
+      border-radius: 2px;
+    }
+
+    .search-wrap {
+      width: 750px;
+      padding: 8px 18px 0;
+      background: var(--bg-panel);
+    }
+
+    .search-box {
+      width: 714px;
+      height: 180px;
+      padding: 12px 12px 12px 6px;
+      display: flex;
+      align-items: stretch;
+      background: var(--bg-panel);
+      border: 3px solid var(--primary);
+      border-radius: 18px;
+    }
+
+    .search-box__inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .back {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .back img { width: 48px; height: 48px; display: block; }
+
+    .search-content {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .input-row {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      margin-top: 6px;
+    }
+
+    .cursor-bar {
+      width: 3px;
+      height: 32px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      flex: 0 0 auto;
+      margin-left: 6px;
+    }
+
+    .placeholder {
+      font-size: 28px;
+      line-height: 1.4;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding-right: 6px;
+      padding-bottom: 6px;
+    }
+
+    .btn-primary {
+      width: 120px;
+      height: 60px;
+      border: 0;
+      border-radius: 42px;
+      background: var(--primary);
+      color: var(--bg-panel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      line-height: 1.4;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .panel {
+      width: 750px;
+      border-radius: 24px 24px 0 0;
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .list {
+      width: 714px;
+      padding: 0;
+      margin: 0;
+    }
+
+    .item {
+      width: 714px;
+      min-height: 96px;
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .content {
+      width: 714px;
+      height: 96px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 0;
+      margin: -1px 0;
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      flex: none;
+      display: grid;
+      place-items: center;
+    }
+
+    .icon img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    .right {
+      width: 666px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .texts {
+      width: 606px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .title {
+      font-size: 30px;
+      line-height: 42px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: none;
+    }
+
+    .title .hit {
+      color: var(--brand);
+    }
+
+    .sub {
+      font-size: 24px;
+      line-height: 34px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: none;
+    }
+
+    .arrow {
+      width: 48px;
+      height: 48px;
+      flex: none;
+      display: grid;
+      place-items: center;
+    }
+
+    .arrow img {
+      width: 48px;
+      height: 48px;
+      display: block;
+    }
+
+    .divider {
+      width: 714px;
+      height: 0;
+      padding: 0 18px 0 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .divider::after {
+      content: "";
+      width: 670px;
+      border-top: 1px solid var(--divider);
+    }
+
+    .item--hotel { min-height: 132px; }
+
+    .item--hotel .content {
+      height: 132px;
+      align-items: flex-start;
+    }
+
+    .item--hotel .right {
+      height: 84px;
+      align-items: center;
+      width: 670px;
+      flex: none;
+    }
+
+    .item--hotel .texts {
+      height: 84px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 6px;
+      width: 670px;
+    }
+
+    .hotel-top {
+      width: 670px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .hotel-title {
+      font-size: 30px;
+      line-height: 42px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 460px;
+    }
+
+    .price {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      color: var(--brand);
+      font-family: "Alibaba Sans 102", "PingFang SC", system-ui, sans-serif;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .price .yen { font-size: 24px; line-height: 22px; }
+    .price .num { font-size: 36px; line-height: 28px; }
+
+    .price .qi {
+      font-family: "PingFang SC", system-ui, sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 24px;
+      margin-left: 2px;
+    }
+
+    .hotel-sub {
+      font-size: 24px;
+      line-height: 34px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 670px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-label="搜索提链页">
+    <div class="status-bar" aria-label="状态栏">
+      <span class="status-time">9:41</span>
+      <div class="status-right" aria-hidden="true">
+        <svg width="34" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="8" width="6" height="16" rx="2" fill="currentColor"/>
+          <rect x="9" y="5" width="6" height="19" rx="2" fill="currentColor"/>
+          <rect x="18" y="2" width="6" height="22" rx="2" fill="currentColor"/>
+          <rect x="27" y="0" width="6" height="24" rx="2" fill="currentColor"/>
+        </svg>
+        <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 4C18.4 4 22.2 5.8 24.9 8.8L27.4 6.2C24.1 2.4 19.4 0 14 0C8.6 0 3.9 2.4 0.6 6.2L3.1 8.8C5.8 5.8 9.6 4 14 4Z" fill="currentColor"/>
+          <path d="M14 11C16.6 11 18.9 12 20.6 13.9L23.1 11.3C20.8 8.8 17.6 7.2 14 7.2C10.4 7.2 7.2 8.8 4.9 11.3L7.4 13.9C9.1 12 11.4 11 14 11Z" fill="currentColor"/>
+          <circle cx="14" cy="19" r="3" fill="currentColor"/>
+        </svg>
+        <div class="status-battery"><div class="status-battery-inner"></div></div>
+      </div>
+    </div>
+
+    <section class="search-wrap" aria-label="搜索输入区">
+      <div class="search-box" role="group" aria-label="搜索框">
+        <div class="search-box__inner">
+          <button class="back" aria-label="返回">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01pFcfnw1NI7Rx247sH_!!6000000001546-2-tps-96-96.png" alt="返回" />
+          </button>
+
+          <div class="search-content">
+            <div class="input-row">
+              <span class="placeholder">巴黎埃菲尔铁塔</span>
+              <span class="cursor-bar" aria-hidden="true"></span>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary">搜索</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="城市搜索结果面板">
+      <div class="list" role="list">
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="门票" src="https://gw.alicdn.com/imgextra/i2/O1CN01Bso7ju1XxvlTy4Nqz_!!6000000002991-2-tps-36-36.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>·门票</div>
+                <div class="sub">法国·法兰西岛·巴黎</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="度假" src="https://gw.alicdn.com/imgextra/i1/O1CN01gDRpu81KFsfPOvTeM_!!6000000001135-2-tps-36-36.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>·跟团游</div>
+                <div class="sub">法国·法兰西岛·巴黎</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="度假" src="https://gw.alicdn.com/imgextra/i1/O1CN01gDRpu81KFsfPOvTeM_!!6000000001135-2-tps-36-36.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>·一日游</div>
+                <div class="sub">法国·法兰西岛·巴黎</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="AI" src="https://gw.alicdn.com/imgextra/i1/O1CN01c1Ri681aIevDRxOyq_!!6000000003307-2-tps-72-72.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>攻略</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="酒店" src="https://gw.alicdn.com/imgextra/i4/O1CN017KrZah1qWt4upjptv_!!6000000005504-2-tps-36-36.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>·酒店</div>
+                <div class="sub">法国·法兰西岛·巴黎</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item item--hotel" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="酒店" src="https://gw.alicdn.com/imgextra/i4/O1CN017KrZah1qWt4upjptv_!!6000000005504-2-tps-36-36.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="hotel-top">
+                  <div class="hotel-title">巴黎15区宜必思埃菲尔铁塔酒店</div>
+                  <div class="price" aria-label="价格"><span class="yen">¥</span><span class="num">888</span><span class="qi">起</span></div>
+                </div>
+                <div class="hotel-sub">4.8分｜巴黎-第八区</div>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item item--hotel" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="酒店" src="https://gw.alicdn.com/imgextra/i4/O1CN017KrZah1qWt4upjptv_!!6000000005504-2-tps-36-36.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="hotel-top">
+                  <div class="hotel-title">巴黎中心大堂新乐町酒店</div>
+                  <div class="price" aria-label="价格"><span class="yen">¥</span><span class="num">888</span><span class="qi">起</span></div>
+                </div>
+                <div class="hotel-sub">4.8分｜巴黎-第八区</div>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="联想词" src="https://gw.alicdn.com/imgextra/i4/O1CN01VrNsvX1MejO8Jknsl_!!6000000001460-2-tps-72-72.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>门票</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <div class="item" role="listitem">
+          <div class="content">
+            <div class="icon"><img alt="联想词" src="https://gw.alicdn.com/imgextra/i4/O1CN01VrNsvX1MejO8Jknsl_!!6000000001460-2-tps-72-72.png"></div>
+            <div class="right">
+              <div class="texts">
+                <div class="title"><span class="hit">巴黎埃菲尔铁塔</span>门票</div>
+              </div>
+              <div class="arrow"><img alt="更多" src="https://gw.alicdn.com/imgextra/i1/O1CN01wMjSlq1uCyJq435H2_!!6000000006002-2-tps-96-96.png"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — tag-promo（大促类 / 促销标签）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  padding: 48px 24px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+/* ========== fdl-tag-promo ========== */
+.fdl-tag-promo {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-tag-promo__icon svg {
+  display: block;
+}
+
+.fdl-tag-promo--double-11 {
+  background-color: var(--color-promo-1);
+}
+
+.fdl-tag-promo--pre-sale {
+  background-color: var(--color-promo-2);
+}
+
+.fdl-tag-promo__text {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--color-white);
+}
+  </style>
+</head>
+<body>
+
+  <span class="fdl-tag-promo fdl-tag-promo--double-11" role="img" aria-label="双11">
+    <span class="fdl-tag-promo__icon" aria-hidden="true">
+      <svg width="37" height="19" viewBox="0 0 37 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M26.708 0.00016276C25.4908 0.00016276 24.664 0.0910643 23.6802 0.504179C22.8922 0.834508 22.9854 1.77599 23.6769 1.80845C23.8656 1.81738 24.2535 2.00243 24.2268 2.45044L23.136 17.6269C23.0995 18.1285 23.4486 18.5514 23.9441 18.6106C24.7191 18.6885 25.3532 18.6861 26.129 18.5993C26.6335 18.5424 27.0408 18.1188 27.0756 17.6148L28.2247 1.16159C28.266 0.562616 27.9518 0.0285695 26.708 0.00016276ZM35.0172 0.00016276C33.7993 0.00016276 32.9725 0.0910643 31.9886 0.504179C31.2007 0.834508 31.2946 1.77599 31.9862 1.80845C32.1749 1.81738 32.5628 2.00243 32.536 2.45044L31.4453 17.6269C31.4088 18.1285 31.7578 18.5514 32.2534 18.6106C33.0284 18.6885 33.6616 18.6861 34.4374 18.5993C34.9419 18.5424 35.3493 18.1188 35.3841 17.6148L36.534 1.16159C36.5753 0.562616 36.2603 0.0285695 35.0172 0.00016276ZM15.6793 11.0313C15.655 10.9882 15.6542 10.9363 15.6761 10.8908L19.2934 3.47588C19.6181 2.83145 19.61 2.05636 19.2294 1.44277C18.8561 0.842983 18.2123 0.485059 17.5046 0.485059H11.2417C11.1599 0.485059 11.0935 0.5508 11.0935 0.631962V2.63748C11.0935 2.71945 11.1599 2.786 11.2417 2.786H16.8219C16.9329 2.786 17.0041 2.90206 16.9547 3.00027L14.3982 8.17841C14.3448 8.28392 14.1958 8.28798 14.1367 8.1849L12.5284 5.42783C12.4871 5.35397 12.4078 5.30771 12.3219 5.30771H10.0407C9.92656 5.30771 9.8553 5.43026 9.91117 5.52928L12.9066 10.7732C12.9309 10.8162 12.9325 10.8689 12.9098 10.9128L10.0108 16.7353C9.95733 16.8416 9.80833 16.8449 9.74922 16.7418L6.44284 10.9095C6.41855 10.8673 6.41693 10.8146 6.4396 10.7699L10.1274 3.47588C10.4529 2.83145 10.444 2.05636 10.0634 1.44277C9.6901 0.842172 9.04632 0.485059 8.33856 0.485059H0.677946C0.596157 0.485059 0.529754 0.5508 0.529754 0.631962V2.63748C0.529754 2.71945 0.596157 2.786 0.677946 2.786H7.65672C7.76685 2.786 7.83892 2.90206 7.78952 3.00027L5.16499 8.19139C5.11155 8.2969 4.96255 8.29934 4.90424 8.19707L3.33406 5.42783C3.29114 5.35397 3.21259 5.30771 3.12756 5.30771H0.874725C0.760544 5.30771 0.689283 5.43026 0.745159 5.52928L3.75434 10.8348C3.77863 10.8779 3.78025 10.9306 3.75758 10.9744L0.0163473 18.3756C-0.0338597 18.4738 0.0374019 18.5899 0.148343 18.5899H2.34045C2.42952 18.5899 2.51131 18.5404 2.5518 18.46L5.03219 13.5546C5.08482 13.4483 5.23464 13.445 5.29294 13.5473L8.08429 18.4706C8.12721 18.5444 8.20576 18.5899 8.29078 18.5899H11.5057C11.5955 18.5899 11.6773 18.5404 11.717 18.46L14.2387 13.6081C14.2921 13.5026 14.442 13.4994 14.5003 13.6017L17.2357 18.4706C17.2778 18.5444 17.3564 18.5899 17.4422 18.5899H19.7283C19.8416 18.5899 19.9137 18.4681 19.857 18.3691L15.6793 11.0313Z" fill="var(--color-white)"/>
+      </svg>
+    </span>
+  </span>
+
+  <span class="fdl-tag-promo fdl-tag-promo--pre-sale">
+    <span class="fdl-tag-promo__text">预售</span>
+  </span>
+
+</body>
+</html>

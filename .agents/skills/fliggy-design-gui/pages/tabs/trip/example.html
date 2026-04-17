@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>tabs.trip — 行程 Tab</title>
+  <style>
+
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+    :root {
+      --trip-page-bg: #f5f6fa;
+      --trip-header-h: 193px;
+      --trip-content-offset-top: var(--trip-header-h);
+      --color-bg: #f2f3f5;
+      --color-white: #ffffff;
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-indigo-1: #6666ff;
+      --fdl-tabbar-nav-h: 102px;
+      --fdl-tabbar-safe-h: 64px;
+      --space-section-pad-y: 48px;
+      --space-gap-lg: 18px;
+      --space-gap-md: 12px;
+      --space-gap-sm: 6px;
+      --radius-m: 12px;
+      --radius-xs: 3px;
+      --radius-l: 24px;
+      --radius-loc-pill: 48px;
+      --radius-play-corner: 8px;
+      --radius-tab-icon: 4px;
+      --font-body: "PingFang SC", "SimHei", sans-serif;
+      --font-number: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      --color-home-tag-cream: #feebd8;
+      --color-home-warm-text: #805540;
+      --color-pay-1: #ff5533;
+      --color-pay-2: #ff8c1a;
+      --color-safeguard-4: #fef5ec;
+      --color-white-80: rgba(255, 255, 255, 0.8);
+      --color-darkgray-70: rgba(15, 19, 26, 0.7);
+      --color-black-40: rgba(0, 0, 0, 0.4);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--trip-page-bg);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+      padding-bottom: calc(var(--fdl-tabbar-nav-h) + var(--fdl-tabbar-safe-h) + env(safe-area-inset-bottom, 0px));
+    }
+    .trip-page { width: 750px; max-width: 100vw; margin: 0 auto; position: relative; }
+    .trip-page__header {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100vw;
+      z-index: 100;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .trip-page__header .top-nav { transition: background 0.2s ease; }
+    .trip-page__header:not(.is-scrolled) .top-nav { background: transparent; }
+    .trip-page__header.is-scrolled {
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(15, 19, 26, 0.06);
+    }
+    .trip-page__header.is-scrolled .top-nav { background: #fff; }
+    .top-nav {
+      display: flex;
+      flex-direction: column;
+      width: 750px;
+      height: 193px;
+      padding: 0;
+    }
+    .top-nav__statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px 0;
+      width: 100%;
+      height: 88px;
+    }
+    .top-nav__statusbar-time {
+      font-size: 30px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: 0.5px;
+    }
+    .top-nav__statusbar-icons { display: flex; align-items: center; gap: 8px; }
+    .top-nav__statusbar-icons img { height: 28px; object-fit: contain; }
+    .top-nav__titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 0 30px;
+      width: 100%;
+      height: 105px;
+    }
+    .top-nav__title { font-size: 40px; font-weight: 700; color: #000; line-height: 1.2; }
+    .top-nav__actions { display: flex; align-items: center; gap: 12px; }
+    .top-nav__action-btn {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top-nav__action-btn img { width: 48px; height: 48px; object-fit: contain; }
+    .trip-page__main {
+      padding-top: var(--trip-content-offset-top);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding-bottom: 32px;
+    }
+    .trip-page__ai-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 8px 30px 0;
+    }
+    .ai-entry {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 20px 30px;
+      gap: 24px;
+      width: 690px;
+      max-width: 100%;
+      height: 117px;
+      background: #fff;
+      border-radius: 12px;
+    }
+    .ai-entry__icon { flex: none; width: 80px; height: 72px; }
+    .ai-entry__icon img { width: 100%; height: 100%; object-fit: contain; }
+    .ai-entry__text {
+      flex: 1;
+      font-size: 28px;
+      font-weight: 600;
+      color: #111827;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ai-entry__btn {
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 36px;
+      background: #6666ff;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+    }
+    .ai-entry__btn-text { font-size: 28px; font-weight: 600; color: #fff; white-space: nowrap; }
+    .trip-timeline {
+      position: relative;
+      width: 100%;
+      padding: 8px 0 32px;
+    }
+    .trip-timeline__rail {
+      position: absolute;
+      left: 39px;
+      top: 24px;
+      bottom: 48px;
+      width: 2px;
+      background: #e5e7eb;
+      pointer-events: none;
+    }
+    .trip-timeline__group { position: relative; margin-bottom: 56px; }
+    .trip-timeline__group:last-child { margin-bottom: 0; }
+    .trip-timeline__node-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 30px;
+      gap: 10px;
+      min-height: 36px;
+    }
+    .trip-timeline__dot {
+      flex: 0 0 20px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #e5e7eb;
+      background: #fff;
+      z-index: 1;
+    }
+    .trip-timeline__label {
+      flex: 1;
+      min-width: 0;
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #333;
+    }
+    .trip-timeline__weather {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 24px;
+      color: #9ca3af;
+      flex-shrink: 0;
+    }
+    .trip-timeline__chev { font-size: 20px; color: #9ca3af; }
+    .trip-timeline__card-slot {
+      margin-top: 12px;
+      margin-left: 60px;
+      width: 660px;
+      max-width: calc(100% - 60px);
+    }
+    .trip-page__feeds-head {
+      width: 690px;
+      max-width: calc(100% - 60px);
+      margin: 16px auto 0;
+      padding: 0 6px;
+      font-size: 32px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .hotel-card__header { display: flex; }
+    .hotel-card__name-row { flex: 1; min-width: 0; }
+    .train-card__schedule-arrow { width: 10px; height: 13px; }
+
+/* 行程卡片：order-card / train-card / hotel-card / ticket-card（与供稿 BEM 一致，作用域在 .trip-page 下） */
+    .order-card,.train-card,.hotel-card,.ticket-card{display:flex;flex-direction:column;align-items:center;width:660px;background:#fff;border-radius:24px;overflow:hidden}
+    .order-card{gap:24px}.train-card,.hotel-card,.ticket-card{gap:30px}
+    .order-card__header,.train-card__header{display:flex;align-items:center;justify-content:space-between;width:100%;padding:32px 32px 0}
+    .hotel-card{padding:20px 0 0}.ticket-card{padding:30px 0 0}
+    .order-card__header-left,.train-card__header-left{display:flex;align-items:center;gap:12px}
+    .order-card__airline-logo,.train-card__icon{width:42px;height:42px;flex-shrink:0}
+    .order-card__title,.train-card__title{font-weight:600;font-size:32px;line-height:1.2;color:#111827}
+    .order-card__share-btn,.train-card__share-btn{width:56px;height:56px;flex-shrink:0;cursor:pointer}
+    .order-card__route,.train-card__route{display:flex;align-items:flex-start;justify-content:space-between;width:100%;padding:0 32px}
+    .order-card__endpoint,.train-card__endpoint{display:flex;flex-direction:column;gap:4px}
+    .order-card__endpoint--depart,.train-card__endpoint--depart{align-items:flex-start}
+    .order-card__endpoint--arrive,.train-card__endpoint--arrive{align-items:flex-end}
+    .order-card__label{font-weight:400;font-size:22px;line-height:1.4;color:#9CA3AF}
+    .order-card__time,.train-card__time{font-weight:700;font-size:56px;line-height:1.1;color:#111827;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+    .order-card__airport,.train-card__station{font-weight:400;font-size:26px;line-height:1.4;color:#333}
+    .order-card__route-middle{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;padding-top:24px}
+    .order-card__status-wrapper{display:inline-flex;align-items:center;gap:10px}
+    .order-card__status-badge{display:inline-flex;align-items:center;padding:6px 20px;background:#F0F5FF;border-radius:20px;font-weight:500;font-size:24px;color:#3B82F6}
+    .order-card__status-dots{display:flex;gap:5px;align-items:center}
+    .order-card__status-dot{width:6px;height:6px;border-radius:50%;background:#93C5FD}
+    .order-card__notice{font-size:20px;color:#9CA3AF}
+    .order-card__details{display:flex;justify-content:space-between;width:100%;padding:0 32px}
+    .order-card__detail-item{display:flex;flex-direction:column;gap:4px;align-items:center}
+    .order-card__detail-item:first-child{align-items:flex-start}.order-card__detail-item:last-child{align-items:flex-end}
+    .order-card__detail-value{font-weight:600;font-size:30px;color:#111827}
+    .order-card__detail-label{display:flex;align-items:center;gap:4px;font-size:22px;color:#9CA3AF}
+    .order-card__info-icon{display:inline-flex;width:22px;height:22px;border-radius:50%;border:1.5px solid #D1D5DB;font-size:14px;color:#D1D5DB;justify-content:center;align-items:center}
+    .order-card__traveler{display:flex;align-items:center;gap:16px;width:100%;padding:0 32px}
+    .order-card__traveler-label{font-size:24px;color:#9CA3AF;flex-shrink:0}
+    .order-card__traveler-names{font-weight:500;font-size:28px;color:#111827}
+    .order-card__checkin-banner{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 64px);padding:16px 24px;background:#FFFBEB;border-radius:16px}
+    .order-card__checkin-text{font-size:22px;color:#919499}.order-card__checkin-time{font-weight:500}
+    .order-card__checkin-btn{padding:10px 28px;background:#FFE033;border-radius:24px;border:0;font-weight:600;font-size:24px;color:#111827;cursor:pointer}
+    .order-card__divider,.train-card__divider,.hotel-card__divider,.ticket-card__divider{width:calc(100% - 64px);height:1px;background:#F3F4F6}
+    .order-card__actions,.train-card__actions,.hotel-card__actions,.ticket-card__actions{display:flex;align-items:center;width:100%;padding:0 0 8px}
+    .order-card__action-item,.train-card__action-item,.hotel-card__action-item,.ticket-card__action-item{flex:1;display:flex;align-items:center;justify-content:center;padding:16px 0;font-size:26px;font-weight:500;color:#111827;border:0;background:transparent;cursor:pointer;position:relative}
+    .order-card__action-item--more,.train-card__action-item--more,.hotel-card__action-item--more,.ticket-card__action-item--more{flex:0.6;color:#9CA3AF;font-weight:400}
+    .hotel-card__action-item--more{flex:0.5}.ticket-card__action-item--more{flex:0.5}
+    .order-card__action-item+.order-card__action-item::before,.train-card__action-item+.train-card__action-item::before,.hotel-card__action-item+.hotel-card__action-item::before,.ticket-card__action-item+.ticket-card__action-item::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:28px;background:#E5E7EB}
+    .train-card__route-middle{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;padding-top:4px}
+    .train-card__schedule-wrapper{display:flex;align-items:center;gap:10px}
+    .train-card__dashes{display:flex;gap:4px;align-items:center}
+    .train-card__dash{width:8px;height:2px;background:#D1D5DB;border-radius:1px}
+    .train-card__schedule-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 18px;border:2px solid #E5E7EB;border-radius:20px;font-size:24px;color:#374151;background:transparent;cursor:pointer}
+    .train-card__notice{font-size:20px;color:#9CA3AF}
+    .train-card__gate{display:flex;align-items:center;gap:16px;width:100%;padding:0 32px}
+    .train-card__gate-label{font-size:26px;color:#9CA3AF}.train-card__gate-value{font-weight:600;font-size:28px;color:#111827}
+    .train-card__passengers{display:flex;flex-direction:column;gap:16px;width:100%;padding:0 32px}
+    .train-card__passenger{display:flex;align-items:center;gap:12px}
+    .train-card__passenger-name{font-size:26px;color:#9CA3AF;min-width:78px}
+    .train-card__passenger-seat{font-weight:600;font-size:28px;color:#111827}
+    .train-card__seat-tag{padding:2px 10px;border:1px solid #D1D5DB;border-radius:6px;font-size:22px;color:#6B7280}
+    .hotel-card__body{display:flex;flex-direction:column;gap:20px;width:100%;padding:0 32px}
+    .hotel-card__header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;width:100%}
+    .hotel-card__name{font-weight:600;font-size:32px;line-height:1.4;color:#111827}
+    .hotel-card__copy-icon{width:24px;height:24px;margin-left:4px;vertical-align:middle;cursor:pointer}
+    .hotel-card__info-section{display:flex;justify-content:space-between;gap:20px;width:100%}
+    .hotel-card__info{display:flex;flex-direction:column;gap:8px;flex:1}
+    .hotel-card__date,.hotel-card__room-type{font-size:26px;line-height:1.4;color:#333}
+    .hotel-card__room-type{color:#6B7280}
+    .hotel-card__image{width:140px;height:100px;border-radius:12px;object-fit:cover;background:#E5E7EB;flex-shrink:0}
+    .hotel-card__address-row{display:flex;align-items:center;justify-content:space-between;width:100%;padding:16px 24px;background:#F9FAFB;border-radius:12px}
+    .hotel-card__address-left{display:flex;align-items:center;gap:8px;flex:1}
+    .hotel-card__location-icon{width:21px;height:24px;flex-shrink:0}
+    .hotel-card__address-text{font-size:24px;color:#333}
+    .hotel-card__address-copy{width:24px;height:24px;margin-left:6px;cursor:pointer}
+    .hotel-card__phone-btn{width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin-left:12px;cursor:pointer}
+    .hotel-card__phone-icon{width:37px;height:37px}
+    .ticket-card__body{display:flex;justify-content:space-between;gap:24px;width:100%;padding:0 32px;align-items:flex-start}
+    .ticket-card__info{display:flex;flex-direction:column;gap:16px;flex:1}
+    .ticket-card__title{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:32px;color:#111827;cursor:pointer}
+    .ticket-card__title-arrow{font-size:24px;color:#9CA3AF}
+    .ticket-card__details{display:flex;flex-direction:column;gap:8px}
+    .ticket-card__detail-text{font-size:26px;color:#6B7280;line-height:1.5}
+    .ticket-card__entry-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .ticket-card__entry-link{display:inline-flex;align-items:center;gap:4px;font-weight:600;font-size:26px;color:#111827;text-decoration:none}
+    .ticket-card__entry-link-arrow{font-size:20px;color:#9CA3AF}
+    .ticket-card__qrcode{width:188px;height:179px;flex-shrink:0}
+
+/* ========== fdl-feeds-dual：与 components/platform/widgets/feeds-dual-column/example.html 内样式块同步 ========== */
+    .fdl-feeds-dual-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding-bottom: var(--space-section-pad-y);
+    }
+    
+    .fdl-feeds-dual {
+      width: 690px;
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-gap-lg);
+      position: relative;
+    }
+    
+    .fdl-feeds-dual__bg {
+      position: absolute;
+      width: 750px;
+      left: calc(50% - 750px / 2);
+      top: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    .fdl-feeds-dual__bg-top {
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(180deg, var(--color-white) 0%, var(--color-bg) 100%);
+    }
+    
+    .fdl-feeds-dual__bg-solid {
+      width: 100%;
+      height: 100%;
+      min-height: 1595px;
+      background: var(--color-bg);
+    }
+    
+    .fdl-feeds-dual__col {
+      width: 336px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-gap-lg);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .fdl-feeds-dual__col--right {
+      z-index: 2;
+    }
+    
+    .fdl-feeds-dual__banner {
+      width: 336px;
+      height: 440px;
+      border-radius: var(--radius-m);
+      position: relative;
+      overflow: hidden;
+      background-color: var(--color-bg);
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .fdl-feeds-dual__banner--demo {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01dfOivO1ceIs1i3c5W_!!6000000003625-2-tps-336-440.png");
+    }
+    
+    .fdl-feeds-dual__dots {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-gap-sm);
+      align-items: center;
+    }
+    
+    .fdl-feeds-dual__dot {
+      width: 24px;
+      height: 6px;
+      border-radius: var(--radius-xs) 0;
+    }
+    
+    .fdl-feeds-dual__dot--on {
+      background: var(--color-brand-1);
+    }
+    
+    .fdl-feeds-dual__dot--off {
+      background: var(--color-white-80);
+    }
+    
+    .fdl-feeds-dual__card {
+      width: 336px;
+      border-radius: var(--radius-m);
+      overflow: hidden;
+      background: var(--color-white);
+    }
+    
+    .fdl-feeds-dual__card--tall {
+      height: 538px;
+    }
+    
+    .fdl-feeds-dual__card--mid {
+      height: 492px;
+    }
+    
+    .fdl-feeds-dual__card--xl {
+      height: 565px;
+    }
+    
+    .fdl-feeds-dual__media {
+      width: 336px;
+      height: 336px;
+      border-radius: var(--radius-m) var(--radius-m) 0 0;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      background-color: var(--color-bg);
+    }
+    
+    .fdl-feeds-dual__media--ex1 {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01DC0HgW1imu07p3GFZ_!!6000000004456-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__media--ex2 {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN012YdNJr1Js44Ocuc3U_!!6000000001083-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__media--ex3 {
+      background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN017qEK5e1mn8fW7C09n_!!6000000004998-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__media--ex4 {
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01CNtjGZ22Qj8kG2p5m_!!6000000007115-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__tag {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 4px 12px;
+      gap: var(--space-gap-sm);
+      background: var(--color-home-tag-cream);
+      border-radius: var(--radius-m) 0;
+    }
+    
+    .fdl-feeds-dual__tag--dark {
+      background: var(--color-darkgray-70);
+    }
+    
+    .fdl-feeds-dual__tag-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .fdl-feeds-dual__tag-label {
+      font-size: 20px;
+      line-height: 140%;
+      color: var(--color-home-warm-text);
+    }
+    
+    .fdl-feeds-dual__tag--dark .fdl-feeds-dual__tag-label {
+      color: var(--color-white);
+    }
+    
+    .fdl-feeds-dual__loc {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: auto;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 6px 12px;
+      gap: var(--space-gap-sm);
+      background: var(--color-darkgray-70);
+      border-radius: var(--radius-loc-pill);
+      margin: 12px;
+      max-width: calc(100% - 24px);
+      box-sizing: border-box;
+    }
+    
+    .fdl-feeds-dual__loc-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .fdl-feeds-dual__loc-text {
+      font-size: 20px;
+      line-height: 140%;
+      color: var(--color-white);
+      text-align: left;
+      flex: 0 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .fdl-feeds-dual__play {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: var(--color-black-40);
+      border-radius: var(--radius-play-corner);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .fdl-feeds-dual__play-icon {
+      width: 0;
+      height: 0;
+      border-left: 10px solid var(--color-white);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      margin-left: 2px;
+    }
+    
+    .fdl-feeds-dual__body {
+      width: 336px;
+      padding: 12px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-gap-md);
+      background: var(--color-white);
+      border-radius: 0 0 var(--radius-m) var(--radius-m);
+    }
+    
+    .fdl-feeds-dual__titles {
+      width: 312px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-gap-sm);
+    }
+    
+    .fdl-feeds-dual__title-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-gap-sm);
+      width: 100%;
+    }
+    
+    .fdl-feeds-dual__title-main {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 140%;
+      color: var(--color-darkgray);
+      flex: 1;
+    }
+    
+    .fdl-feeds-dual__title-sub {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .fdl-feeds-dual__pill {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 6px;
+      background: var(--color-bg);
+      border-radius: var(--radius-tab-icon);
+      flex-shrink: 0;
+    }
+    
+    .fdl-feeds-dual__pill-text {
+      font-size: 20px;
+      color: var(--color-midgray);
+    }
+    
+    .fdl-feeds-dual__desc {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--space-gap-md);
+      width: 312px;
+    }
+    
+    .fdl-feeds-dual__rating {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-indigo-1);
+    }
+    
+    .fdl-feeds-dual__desc-long {
+      font-size: 24px;
+      color: var(--color-midgray);
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .fdl-feeds-dual__price-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 312px;
+    }
+    
+    .fdl-feeds-dual__price-group {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: var(--space-gap-md);
+    }
+    
+    .fdl-feeds-dual__price-sym {
+      font-family: var(--font-number);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-pay-1);
+    }
+    
+    .fdl-feeds-dual__price-num {
+      font-family: var(--font-number);
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--color-pay-1);
+      line-height: 27px;
+    }
+    
+    .fdl-feeds-dual__price-unit {
+      font-family: var(--font-body);
+      font-size: 20px;
+      color: var(--color-pay-1);
+    }
+    
+    .fdl-feeds-dual__sales {
+      font-size: 20px;
+      color: var(--color-midgray);
+    }
+    
+    .fdl-feeds-dual__split {
+      width: 312px;
+      height: 0;
+      border: 1px solid var(--color-bg);
+    }
+    
+    .fdl-feeds-dual__review {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 6px;
+      gap: var(--space-gap-sm);
+      background: var(--color-safeguard-4);
+      border-radius: var(--radius-tab-icon);
+      width: 255px;
+    }
+    
+    .fdl-feeds-dual__review-text {
+      font-size: 24px;
+      color: var(--color-home-warm-text);
+    }
+
+    
+/* ========== FDG 一级底部导航（与 components/platform/navigation/tabbar/example.html 一致） ========== */
+    .fdl-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100vw;
+      z-index: 1000;
+    }
+    .fdl-tabbar__nav {
+      height: var(--fdl-tabbar-nav-h);
+      background: var(--color-white);
+      box-shadow: 0 -1px 0 var(--color-bg);
+    }
+    .fdl-tabbar__list {
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+    }
+    .fdl-tabbar__item {
+      flex: 1;
+      position: relative;
+    }
+    .fdl-tabbar__link {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      gap: var(--space-gap-sm);
+      text-decoration: none;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-tabbar__link:focus-visible {
+      outline: 2px solid var(--color-indigo-1);
+      outline-offset: 2px;
+    }
+    .fdl-tabbar__icon {
+      width: 48px;
+      height: 48px;
+      position: relative;
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+    .fdl-tabbar__icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .fdl-tabbar__icon .fdl-tabbar__icon-img--active {
+      display: none;
+    }
+    .fdl-tabbar__icon .fdl-tabbar__icon-img--inactive {
+      display: block;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__icon .fdl-tabbar__icon-img--active {
+      display: block;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__icon .fdl-tabbar__icon-img--inactive {
+      display: none;
+    }
+    .fdl-tabbar__label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1;
+      text-align: center;
+      color: var(--color-darkgray);
+      transition: font-weight 0.2s ease;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__label {
+      font-weight: 500;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active .fdl-tabbar__icon {
+      width: 102px;
+      height: 102px;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active::before {
+      content: "";
+      position: absolute;
+      width: 35px;
+      height: 25px;
+      background: var(--color-brand-1);
+      filter: blur(12.5px);
+      border-radius: 50%;
+      left: 50%;
+      bottom: 15%;
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active .fdl-tabbar__label {
+      display: none;
+    }
+    .fdl-tabbar__safe-area {
+      min-height: var(--fdl-tabbar-safe-h);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: var(--color-white);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="trip-page">
+    <header class="trip-page__header" id="tripHeader">
+      <div class="top-nav" aria-label="行程顶栏">
+        <div class="top-nav__statusbar">
+          <span class="top-nav__statusbar-time">9:41</span>
+          <div class="top-nav__statusbar-icons">
+            <img src="https://gw.alicdn.com/imgextra/i3/O1CN01FOz8UB20bbJQYA8on_!!6000000006868-55-tps-40-28.svg" alt="" />
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN01ZMrbWf1wfwbaHvk58_!!6000000006336-55-tps-32-28.svg" alt="" />
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN01JMKSqX26XpkVy2cd1_!!6000000007672-55-tps-50-28.svg" alt="" />
+          </div>
+        </div>
+        <div class="top-nav__titlebar">
+          <span class="top-nav__title">行程</span>
+          <div class="top-nav__actions">
+            <button type="button" class="top-nav__action-btn" aria-label="添加">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01VVhlhY28yyS1AZYco_!!6000000008002-55-tps-48-48.svg" alt="" />
+            </button>
+            <button type="button" class="top-nav__action-btn" aria-label="分享">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01jDjOEv1XBqB7zDhgd_!!6000000002886-55-tps-48-48.svg" alt="" />
+            </button>
+            <button type="button" class="top-nav__action-btn" aria-label="更多">
+              <img src="https://gw.alicdn.com/imgextra/i2/O1CN01lSJn4O1Z9fX2eX56h_!!6000000003152-55-tps-48-48.svg" alt="" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="trip-page__main" id="main">
+      <div class="trip-page__ai-wrap">
+        <div class="ai-entry">
+          <div class="ai-entry__icon">
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN0154szHt1a0L4zMW12X_!!6000000003267-55-tps-80-72.svg" alt="" />
+          </div>
+          <div class="ai-entry__text">"杭州周边2小时直达景点"</div>
+          <button type="button" class="ai-entry__btn"><span class="ai-entry__btn-text">问一问</span></button>
+        </div>
+      </div>
+
+<section class="trip-timeline" aria-label="行程时间线">
+      <div class="trip-timeline__rail" aria-hidden="true"></div>
+
+      <div class="trip-timeline__group">
+        <div class="trip-timeline__node-row">
+          <span class="trip-timeline__dot" aria-hidden="true"></span>
+          <span class="trip-timeline__label">10月1号 前往北京</span>
+          <div class="trip-timeline__weather">
+            <span>28°/35°晴</span>
+            <span class="trip-timeline__weather-ico" aria-hidden="true">☁</span>
+            <span class="trip-timeline__chev">&gt;</span>
+          </div>
+        </div>
+        <div class="trip-timeline__card-slot">
+          <div class="order-card">
+            <div class="order-card__header">
+              <div class="order-card__header-left">
+                <img class="order-card__airline-logo" src="https://gw.alicdn.com/imgextra/i3/O1CN0188npJ31C1D3NM04GH_!!6000000000020-55-tps-42-42.svg" alt="" />
+                <span class="order-card__title">国航CA1129</span>
+              </div>
+              <img class="order-card__share-btn" src="https://gw.alicdn.com/imgextra/i1/O1CN01aANSA41GIqluMaabs_!!6000000000600-55-tps-56-56.svg" alt="分享" />
+            </div>
+            <div class="order-card__route">
+              <div class="order-card__endpoint order-card__endpoint--depart">
+                <span class="order-card__label">预计起飞</span>
+                <span class="order-card__time">06:00</span>
+                <span class="order-card__airport">萧山T1</span>
+              </div>
+              <div class="order-card__route-middle">
+                <div class="order-card__status-wrapper">
+                  <span class="order-card__status-dots"><span class="order-card__status-dot"></span><span class="order-card__status-dot"></span><span class="order-card__status-dot"></span></span>
+                  <span class="order-card__status-badge">计划起飞</span>
+                  <span class="order-card__status-dots"><span class="order-card__status-dot"></span><span class="order-card__status-dot"></span><span class="order-card__status-dot"></span></span>
+                </div>
+                <span class="order-card__notice">实际信息请以机场为准</span>
+              </div>
+              <div class="order-card__endpoint order-card__endpoint--arrive">
+                <span class="order-card__label">预计到达</span>
+                <span class="order-card__time">08:00</span>
+                <span class="order-card__airport">首都T1</span>
+              </div>
+            </div>
+            <div class="order-card__details">
+              <div class="order-card__detail-item">
+                <span class="order-card__detail-value">20KG/人</span>
+                <span class="order-card__detail-label">行李额度 <span class="order-card__info-icon">i</span></span>
+              </div>
+              <div class="order-card__detail-item">
+                <span class="order-card__detail-value">F23-G23</span>
+                <span class="order-card__detail-label">值机柜台</span>
+              </div>
+              <div class="order-card__detail-item">
+                <span class="order-card__detail-value">A05</span>
+                <span class="order-card__detail-label">登机口</span>
+              </div>
+            </div>
+            <div class="order-card__traveler">
+              <span class="order-card__traveler-label">出行人</span>
+              <span class="order-card__traveler-names">刘亦菲、李现</span>
+            </div>
+            <div class="order-card__checkin-banner">
+              <span class="order-card__checkin-text">预计在线值机截止时间 <span class="order-card__checkin-time">12月8日 8:20</span></span>
+              <button type="button" class="order-card__checkin-btn">值机选座</button>
+            </div>
+            <div class="order-card__divider"></div>
+            <div class="order-card__actions">
+              <button type="button" class="order-card__action-item order-card__action-item--more">更多</button>
+              <button type="button" class="order-card__action-item">查看订单</button>
+              <button type="button" class="order-card__action-item">我要退改</button>
+              <button type="button" class="order-card__action-item">发票报销</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trip-timeline__group">
+        <div class="trip-timeline__node-row">
+          <span class="trip-timeline__dot" aria-hidden="true"></span>
+          <span class="trip-timeline__label">10月1号 高铁返程</span>
+          <div class="trip-timeline__weather">
+            <span>22°/30°多云</span>
+            <span class="trip-timeline__chev">&gt;</span>
+          </div>
+        </div>
+        <div class="trip-timeline__card-slot">
+          <div class="train-card">
+            <div class="train-card__header">
+              <div class="train-card__header-left">
+                <img class="train-card__icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01H66BRp1hPiKiblJJ1_!!6000000004270-55-tps-42-42.svg" alt="" />
+                <span class="train-card__title">高铁G7201</span>
+              </div>
+              <img class="train-card__share-btn" src="https://gw.alicdn.com/imgextra/i1/O1CN01aANSA41GIqluMaabs_!!6000000000600-55-tps-56-56.svg" alt="分享" />
+            </div>
+            <div class="train-card__route">
+              <div class="train-card__endpoint train-card__endpoint--depart">
+                <span class="train-card__time">22:00</span>
+                <span class="train-card__station">杭州南站</span>
+              </div>
+              <div class="train-card__route-middle">
+                <div class="train-card__schedule-wrapper">
+                  <span class="train-card__dashes"><span class="train-card__dash"></span><span class="train-card__dash"></span><span class="train-card__dash"></span><span class="train-card__dash"></span><span class="train-card__dash"></span></span>
+                  <button type="button" class="train-card__schedule-btn">时刻表 <img class="train-card__schedule-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN017NUf7m1RTLch9NEVC_!!6000000002112-55-tps-10-13.svg" alt="" /></button>
+                  <span class="train-card__dashes"><span class="train-card__dash"></span><span class="train-card__dash"></span><span class="train-card__dash"></span><span class="train-card__dash"></span><span class="train-card__dash"></span></span>
+                </div>
+                <span class="train-card__notice">*实际信息请以车站为准</span>
+              </div>
+              <div class="train-card__endpoint train-card__endpoint--arrive">
+                <span class="train-card__time">22:00</span>
+                <span class="train-card__station">上海虹桥站</span>
+              </div>
+            </div>
+            <div class="train-card__gate">
+              <span class="train-card__gate-label">检票口</span>
+              <span class="train-card__gate-value">8A、9A</span>
+            </div>
+            <div class="train-card__passengers">
+              <div class="train-card__passenger">
+                <span class="train-card__passenger-name">谢洋洋</span>
+                <span class="train-card__passenger-seat">18车厢099号 二等座</span>
+                <span class="train-card__seat-tag">靠窗</span>
+              </div>
+              <div class="train-card__passenger">
+                <span class="train-card__passenger-name">谢小小</span>
+                <span class="train-card__passenger-seat">18车厢099号 二等座</span>
+                <span class="train-card__seat-tag">过道</span>
+              </div>
+            </div>
+            <div class="train-card__divider"></div>
+            <div class="train-card__actions">
+              <button type="button" class="train-card__action-item train-card__action-item--more">更多</button>
+              <button type="button" class="train-card__action-item">查看订单</button>
+              <button type="button" class="train-card__action-item">我要退改</button>
+              <button type="button" class="train-card__action-item">发票报销</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trip-timeline__group">
+        <div class="trip-timeline__node-row">
+          <span class="trip-timeline__dot" aria-hidden="true"></span>
+          <span class="trip-timeline__label">10月1号 入住酒店</span>
+          <div class="trip-timeline__weather"><span>28°/35°晴</span><span class="trip-timeline__chev">&gt;</span></div>
+        </div>
+        <div class="trip-timeline__card-slot">
+          <div class="hotel-card">
+            <div class="hotel-card__body">
+              <div class="hotel-card__header">
+                <div class="hotel-card__name-row">
+                  <span class="hotel-card__name">杭州西溪湿地文二西路西溪谷产业园亚朵酒店<img class="hotel-card__copy-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01UaQsNI1zo8XLlBWlB_!!6000000006760-55-tps-24-24.svg" alt="复制" /></span>
+                </div>
+                <img class="hotel-card__share-btn" src="https://gw.alicdn.com/imgextra/i1/O1CN01aANSA41GIqluMaabs_!!6000000000600-55-tps-56-56.svg" alt="分享" />
+              </div>
+              <div class="hotel-card__info-section">
+                <div class="hotel-card__info">
+                  <span class="hotel-card__date">10月1日-10月3日 1间 2晚</span>
+                  <span class="hotel-card__room-type">高级大床房·1间·含早</span>
+                </div>
+                <img class="hotel-card__image" src="https://gw.alicdn.com/imgextra/i3/O1CN01wFo2bY22I1cBpUZYj_!!6000000007096-55-tps-160-104.svg" alt="" />
+              </div>
+              <div class="hotel-card__address-row">
+                <div class="hotel-card__address-left">
+                  <img class="hotel-card__location-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01WVMI4C1URvEnhm6k0_!!6000000002515-55-tps-21-24.svg" alt="" />
+                  <span class="hotel-card__address-text">杭州西溪湿地33948号</span>
+                  <img class="hotel-card__address-copy" src="https://gw.alicdn.com/imgextra/i2/O1CN01UaQsNI1zo8XLlBWlB_!!6000000006760-55-tps-24-24.svg" alt="复制" />
+                </div>
+                <div class="hotel-card__phone-btn">
+                  <img class="hotel-card__phone-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01ysk7CS1L4id85MaZ8_!!6000000001246-55-tps-37-37.svg" alt="电话" />
+                </div>
+              </div>
+            </div>
+            <div class="hotel-card__divider"></div>
+            <div class="hotel-card__actions">
+              <button type="button" class="hotel-card__action-item hotel-card__action-item--more">更多</button>
+              <button type="button" class="hotel-card__action-item">联系酒店</button>
+              <button type="button" class="hotel-card__action-item">查看订单</button>
+              <button type="button" class="hotel-card__action-item">再次预订</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trip-timeline__group">
+        <div class="trip-timeline__node-row">
+          <span class="trip-timeline__dot" aria-hidden="true"></span>
+          <span class="trip-timeline__label">10月2日 游玩景点</span>
+          <div class="trip-timeline__weather"><span>26°/32°晴</span><span class="trip-timeline__chev">&gt;</span></div>
+        </div>
+        <div class="trip-timeline__card-slot">
+          <div class="ticket-card">
+            <div class="ticket-card__body">
+              <div class="ticket-card__info">
+                <span class="ticket-card__title">腾冲北海湿地保护区 <span class="ticket-card__title-arrow">&#8250;</span></span>
+                <div class="ticket-card__details">
+                  <span class="ticket-card__detail-text">大门票 成人票 3张</span>
+                  <span class="ticket-card__detail-text">营业时间 10:00-22:00</span>
+                  <div class="ticket-card__entry-row">
+                    <span class="ticket-card__detail-text">凭二维码直接入园，</span>
+                    <a class="ticket-card__entry-link" href="#">入园地址 <span class="ticket-card__entry-link-arrow">&#8250;</span></a>
+                  </div>
+                </div>
+              </div>
+              <img class="ticket-card__qrcode" src="https://gw.alicdn.com/imgextra/i3/O1CN01eAfj6I1VzBcShUIKa_!!6000000002723-55-tps-188-179.svg" alt="二维码" />
+            </div>
+            <div class="ticket-card__divider"></div>
+            <div class="ticket-card__actions">
+              <button type="button" class="ticket-card__action-item ticket-card__action-item--more">更多</button>
+              <button type="button" class="ticket-card__action-item">景点地址</button>
+              <button type="button" class="ticket-card__action-item">景点详情</button>
+              <button type="button" class="ticket-card__action-item">联系飞猪</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+      <h2 class="trip-page__feeds-head">猜你喜欢</h2>
+<div class="fdl-feeds-dual-wrap">
+        <div class="fdl-feeds-dual">
+          <div class="fdl-feeds-dual__bg" aria-hidden="true">
+            <div class="fdl-feeds-dual__bg-top"></div>
+            <div class="fdl-feeds-dual__bg-solid"></div>
+          </div>
+          <div class="fdl-feeds-dual__col fdl-feeds-dual__col--left">
+            <div class="fdl-feeds-dual__banner fdl-feeds-dual__banner--demo">
+              <div class="fdl-feeds-dual__dots">
+                <div class="fdl-feeds-dual__dot fdl-feeds-dual__dot--on"></div>
+                <div class="fdl-feeds-dual__dot fdl-feeds-dual__dot--off"></div>
+                <div class="fdl-feeds-dual__dot fdl-feeds-dual__dot--off"></div>
+              </div>
+            </div>
+            <div class="fdl-feeds-dual__card fdl-feeds-dual__card--tall">
+              <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex1">
+                <div class="fdl-feeds-dual__tag">
+                  <svg class="fdl-feeds-dual__tag-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="2" fill="var(--color-pay-2)"/>
+                    <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="fdl-feeds-dual__tag-label">无需换票</span>
+                </div>
+                <div class="fdl-feeds-dual__loc">
+                  <svg class="fdl-feeds-dual__loc-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+                  </svg>
+                  <span class="fdl-feeds-dual__loc-text">近湖州市中心...</span>
+                </div>
+              </div>
+              <div class="fdl-feeds-dual__body">
+                <div class="fdl-feeds-dual__titles">
+                  <div class="fdl-feeds-dual__title-row">
+                    <span class="fdl-feeds-dual__title-main">西湖游船体验</span>
+                    <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+                  </div>
+                  <div class="fdl-feeds-dual__title-row"><span class="fdl-feeds-dual__title-sub">含三潭印月门票</span></div>
+                </div>
+                <div class="fdl-feeds-dual__desc"><span class="fdl-feeds-dual__rating">评分 4.9</span></div>
+                <div class="fdl-feeds-dual__price-row">
+                  <div class="fdl-feeds-dual__price-group">
+                    <span class="fdl-feeds-dual__price-sym">¥</span>
+                    <span class="fdl-feeds-dual__price-num">694</span>
+                    <span class="fdl-feeds-dual__price-unit">起</span>
+                  </div>
+                  <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+                </div>
+              </div>
+            </div>
+            <div class="fdl-feeds-dual__card fdl-feeds-dual__card--tall">
+              <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex3">
+                <div class="fdl-feeds-dual__tag">
+                  <svg class="fdl-feeds-dual__tag-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="2" fill="var(--color-pay-2)"/>
+                    <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="fdl-feeds-dual__tag-label">无需换票</span>
+                </div>
+                <div class="fdl-feeds-dual__loc">
+                  <svg class="fdl-feeds-dual__loc-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+                  </svg>
+                  <span class="fdl-feeds-dual__loc-text">近湖州市中心...</span>
+                </div>
+                <div class="fdl-feeds-dual__play"><div class="fdl-feeds-dual__play-icon"></div></div>
+              </div>
+              <div class="fdl-feeds-dual__body">
+                <div class="fdl-feeds-dual__titles">
+                  <div class="fdl-feeds-dual__title-row">
+                    <span class="fdl-feeds-dual__title-main">莫干山民宿体验</span>
+                    <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+                  </div>
+                  <div class="fdl-feeds-dual__title-row"><span class="fdl-feeds-dual__title-sub">竹林深处的静谧</span></div>
+                </div>
+                <div class="fdl-feeds-dual__desc"><span class="fdl-feeds-dual__rating">评分 4.8</span></div>
+                <div class="fdl-feeds-dual__price-row">
+                  <div class="fdl-feeds-dual__price-group">
+                    <span class="fdl-feeds-dual__price-sym">¥</span>
+                    <span class="fdl-feeds-dual__price-num">694</span>
+                    <span class="fdl-feeds-dual__price-unit">起</span>
+                  </div>
+                  <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+                </div>
+                <div class="fdl-feeds-dual__split"></div>
+                <div class="fdl-feeds-dual__review"><span class="fdl-feeds-dual__review-text">无需换票</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="fdl-feeds-dual__col fdl-feeds-dual__col--right">
+            <div class="fdl-feeds-dual__card fdl-feeds-dual__card--mid">
+              <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex2">
+                <div class="fdl-feeds-dual__tag fdl-feeds-dual__tag--dark"><span class="fdl-feeds-dual__tag-label">景点</span></div>
+              </div>
+              <div class="fdl-feeds-dual__body">
+                <div class="fdl-feeds-dual__titles">
+                  <div class="fdl-feeds-dual__title-row">
+                    <span class="fdl-feeds-dual__title-main">灵隐寺祈福之旅</span>
+                    <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+                  </div>
+                  <div class="fdl-feeds-dual__title-row"><span class="fdl-feeds-dual__title-sub">千年古刹寻禅意</span></div>
+                </div>
+                <div class="fdl-feeds-dual__price-row">
+                  <div class="fdl-feeds-dual__price-group">
+                    <span class="fdl-feeds-dual__price-sym">¥</span>
+                    <span class="fdl-feeds-dual__price-num">694</span>
+                    <span class="fdl-feeds-dual__price-unit">起</span>
+                  </div>
+                  <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+                </div>
+              </div>
+            </div>
+            <div class="fdl-feeds-dual__card fdl-feeds-dual__card--xl">
+              <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex4">
+                <div class="fdl-feeds-dual__tag fdl-feeds-dual__tag--dark"><span class="fdl-feeds-dual__tag-label">景点</span></div>
+                <div class="fdl-feeds-dual__loc">
+                  <svg class="fdl-feeds-dual__loc-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+                  </svg>
+                  <span class="fdl-feeds-dual__loc-text">近湖州市中心...</span>
+                </div>
+                <div class="fdl-feeds-dual__play"><div class="fdl-feeds-dual__play-icon"></div></div>
+              </div>
+              <div class="fdl-feeds-dual__body">
+                <div class="fdl-feeds-dual__titles">
+                  <div class="fdl-feeds-dual__title-row">
+                    <span class="fdl-feeds-dual__title-main">千岛湖环湖骑行</span>
+                    <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+                  </div>
+                </div>
+                <div class="fdl-feeds-dual__desc">
+                  <span class="fdl-feeds-dual__desc-long">湖光山色尽收眼底，沿途打卡网红景点</span>
+                </div>
+                <div class="fdl-feeds-dual__price-row">
+                  <div class="fdl-feeds-dual__price-group">
+                    <span class="fdl-feeds-dual__price-sym">¥</span>
+                    <span class="fdl-feeds-dual__price-num">694</span>
+                    <span class="fdl-feeds-dual__price-unit">起</span>
+                  </div>
+                  <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<div class="fdl-tabbar">
+    <nav class="fdl-tabbar__nav" aria-label="底部主导航">
+      <ul class="fdl-tabbar__list">
+        <li class="fdl-tabbar__item fdl-tabbar__item--fliggy">
+          <a class="fdl-tabbar__link" href="#" aria-label="首页">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i4/O1CN01C1KZp61fkfDbhqDGb_!!6000000004045-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN01eNqqfN2803m2U1a3R_!!6000000007869-2-tps-204-214.png" width="204" height="214" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">首页</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i3/O1CN018WSOmF1geXXRCSdee_!!6000000004167-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN010oGY6j1iNiDYeKlL0_!!6000000004401-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">会员</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i4/O1CN01Hn4QVN1MnQuj2rkYr_!!6000000001479-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i2/O1CN012vS02w1kkGxVWS4hE_!!6000000004721-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">消息</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item fdl-tabbar__item--active">
+          <a class="fdl-tabbar__link" href="#" aria-label="行程" aria-current="page">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i2/O1CN01x0SUcY1O2NS7urI3g_!!6000000001647-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN01P27V8t1uN324l68EU_!!6000000006024-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">行程</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i1/O1CN01VLEq8s1CUWOysFWgi_!!6000000000084-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i1/O1CN01u12TM81hqHIyW5bc4_!!6000000004328-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">我的</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="fdl-tabbar__safe-area" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    (function () {
+      var h = document.getElementById("tripHeader");
+      if (!h) return;
+      function tick() {
+        h.classList.toggle("is-scrolled", (window.scrollY || 0) > 100);
+      }
+      window.addEventListener("scroll", tick, { passive: true });
+      tick();
+    })();
+  </script>
+</body>
+</html>

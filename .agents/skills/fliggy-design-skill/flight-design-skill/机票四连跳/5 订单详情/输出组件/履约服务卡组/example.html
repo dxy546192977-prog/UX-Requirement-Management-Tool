@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>履约服务卡组预览</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-page-bg: #F2F3F5;
+      --color-white: #FFFFFF;
+      --color-brand: #6666FF;
+      --color-brand-soft: #F5F5FF;
+      --color-emphasis: #FFE033;
+      --color-divider: #D2D4D9;
+      --radius-pill: 42px;
+      --radius-l: 12px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--color-page-bg);
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .stack {
+      width: 714px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .service-primary-card,
+    .service-note-card {
+      background: var(--color-white);
+      border-radius: var(--radius-l);
+      overflow: hidden;
+    }
+    .service-primary-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      background: var(--color-brand-soft);
+    }
+    .service-title {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .service-head-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .status-icon,
+    .copy-icon,
+    .note-icon {
+      display: block;
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+    .status-icon {
+      width: 32px;
+      height: 32px;
+    }
+    .service-cta {
+      width: 140px;
+      height: 48px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      background: var(--color-emphasis);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .service-primary-body {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 18px 24px 24px;
+    }
+    .info-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      color: var(--color-midgray);
+    }
+    .copy-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .copy-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .copy-link {
+      color: var(--color-brand);
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 24px;
+    }
+    .service-note-card {
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .note-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .note-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .note-icon {
+      width: 36px;
+      height: 36px;
+    }
+    .note-card-btn {
+      width: 140px;
+      height: 48px;
+      border-radius: var(--radius-pill);
+      border: 2px solid var(--color-divider);
+      background: transparent;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-midgray);
+    }
+    .note-tags {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 24px;
+      color: var(--color-midgray);
+    }
+    .divider {
+      width: 20px;
+      height: 0;
+      border-top: 2px solid var(--color-divider);
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="stack">
+    <section class="service-primary-card">
+      <div class="service-primary-head">
+        <div class="service-head-main">
+          <img class="status-icon" src="https://gw.alicdn.com/imgextra/i3/O1CN019weas01b7xHaY3agN_!!6000000003419-2-tps-64-64.png" alt="状态">
+          <div class="service-title">8月18日15:30 选座截止</div>
+        </div>
+        <button class="service-cta">去值机</button>
+      </div>
+      <div class="service-primary-body">
+        <div class="info-line">
+          <span>航司预定编码：AB9D7X</span>
+          <span class="copy-group"><img class="copy-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN019KRIpB1aYEOCj1xZD_!!6000000003341-2-tps-40-40.png" alt="复制"><span class="copy-link">复制</span></span>
+        </div>
+        <div class="info-line">
+          <span>请在起飞前确认护照、签证和英文姓名与订单一致。</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="service-note-card">
+      <div class="note-card-head">
+        <div class="note-card-title">
+          <img class="note-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01ukoyEq1WjRcizhQaK_!!6000000002824-2-tps-72-72.png" alt="出行前必读">
+          <span>出行前必读</span>
+        </div>
+        <button class="note-card-btn">查看</button>
+      </div>
+      <div class="note-tags">
+        <span>防诈骗提醒</span>
+        <span class="divider"></span>
+        <span>值机说明</span>
+        <span class="divider"></span>
+        <span>登机证件</span>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

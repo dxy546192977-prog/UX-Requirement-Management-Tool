@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>tabs.member — 会员 Tab</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+* { box-sizing: border-box; }
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+  --space-gap-sm: 6px;
+  --space-page-gutter: 18px;
+  --member-fixed-header-h: 176px; /* 状态栏 88 + 一级导航 88 */
+  --member-content-offset-top: var(--member-fixed-header-h);
+  --member-content-max-w: 714px; /* 750 - 18*2 */
+  --font-body: "PingFang SC", "SimHei", sans-serif;
+  --fdl-tabbar-nav-h: 102px;
+  --fdl-tabbar-safe-h: 64px;
+  --color-text-primary: var(--color-darkgray);
+  --color-text-secondary: var(--color-lightgray);
+  --member-level-badge-1: #929292;
+  --member-level-badge-2: #4c4b53;
+  --member-level-progress-fill: #9195a5;
+  --member-level-art-border: #606060;
+  --member-level-art-blur: rgba(96, 96, 96, 0.2);
+  --member-task-card-bg: #fff5eb;
+  --member-task-btn-1: #f0c990;
+  --member-task-btn-2: #ffe2b8;
+  --member-lock-bg: #eeeff1;
+  --member-lock-metal: #919499;
+  --member-banner-bg: linear-gradient(135deg, #e8f0ff 0%, #f5f8ff 50%, #fff 100%);
+}
+body {
+  margin: 0;
+  background: var(--color-bg);
+  font-family: var(--font-body);
+  padding-bottom: calc(
+    var(--fdl-tabbar-nav-h) + var(--fdl-tabbar-safe-h) + env(safe-area-inset-bottom, 0px)
+  );
+}
+
+/* 顶部固定状态栏：纯白底 + 750×88 前景图（与 tabs.home 资源一致） */
+.member-status-bar {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 750px;
+  max-width: 100vw;
+  height: 88px;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+.status-bar {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #ffffff;
+}
+
+.fdl-member-level-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: var(--member-content-max-w);
+      max-width: 100%;
+      height: auto;
+      background: var(--color-white);
+      border-radius: var(--radius-l);
+      overflow: hidden;
+    }
+    .fdl-member-level-card__top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0;
+      gap: 12px;
+      width: 100%;
+      background: var(--color-white);
+      border-radius: var(--radius-l) var(--radius-l) 0 0;
+    }
+    .fdl-member-level-card__user-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0 0 0 24px;
+      width: 100%;
+      max-width: var(--member-content-max-w);
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .fdl-member-level-card__avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .fdl-member-level-card__avatar-wrap {
+      position: relative;
+      width: 68px;
+      height: 68px;
+    }
+    .fdl-member-level-card__avatar {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      object-fit: cover;
+    }
+    .fdl-member-level-card__level-badge {
+      box-sizing: border-box;
+      position: absolute;
+      left: 10px;
+      top: 40px;
+      min-width: 48px;
+      height: 28px;
+      padding: 0 8px;
+      background: linear-gradient(180deg, var(--member-level-badge-1) 0%, var(--member-level-badge-2) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.32);
+      border-radius: 12px;
+      color: var(--color-white);
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fdl-member-level-card__progress-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .fdl-member-level-card__progress-line {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+    .fdl-member-level-card__track {
+      position: relative;
+      width: 88px;
+      height: 12px;
+      background: rgba(15, 19, 26, 0.1);
+      border-radius: 12px;
+    }
+    .fdl-member-level-card__fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 12px;
+      width: 64.9%;
+      background: var(--member-level-progress-fill);
+      border-radius: 12px;
+    }
+    .fdl-member-level-card__progress-num {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 3px;
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      font-size: 22px;
+      line-height: 26px;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-level-card__progress-num span {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      font-size: 22px;
+      line-height: 26px;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-level-card__chevron {
+      flex-shrink: 0;
+      opacity: 0.5;
+      display: block;
+    }
+    .fdl-member-level-card__expiry {
+      font-size: 22px;
+      line-height: 26px;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-level-card__stats {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    .fdl-member-level-card__stat {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      font-size: 22px;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__stat .fdl-member-level-card__chevron {
+      margin-left: 0;
+    }
+    .fdl-member-level-card__stat-val {
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-size: 30px;
+      line-height: 100%;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__stat-val--sm {
+      font-size: 24px;
+    }
+    .fdl-member-level-card__level-art {
+      position: relative;
+      width: 162px;
+      height: 127px;
+    }
+    .fdl-member-level-card__level-art-bg {
+      position: absolute;
+      width: 160px;
+      height: 170px;
+      left: -6px;
+      top: -20px;
+      opacity: 0.2;
+      filter: blur(1.5px);
+      background-color: var(--member-level-art-blur);
+      border: 2.8px solid var(--member-level-art-border);
+      border-radius: 20px;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__level-art-img {
+      position: absolute;
+      width: 156.11px;
+      height: 108.95px;
+      left: -12.4px;
+      top: 6.2px;
+      object-fit: contain;
+    }
+    .fdl-member-level-card__benefits {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__benefit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 135px;
+      text-align: center;
+    }
+    .fdl-member-level-card__benefit-icon {
+      position: relative;
+      width: 71px;
+      min-width: 71px;
+      height: 64px;
+      min-height: 64px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .fdl-member-level-card__benefit-icon-inner {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #efd0a4 0%, #e8c48f 100%);
+      flex-shrink: 0;
+      z-index: 0;
+    }
+    .fdl-member-level-card__benefit-svg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      display: block;
+      pointer-events: none;
+    }
+    .fdl-member-level-card__benefit-label {
+      width: auto;
+      min-height: 31px;
+      font-size: 22px;
+      line-height: 140%;
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fdl-member-level-card__lock {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      right: -8px;
+      top: -5px;
+      z-index: 2;
+    }
+    .fdl-member-level-card__lock-bg {
+      box-sizing: border-box;
+      position: absolute;
+      width: 37.82px;
+      height: 37.82px;
+      left: 0;
+      top: 0;
+      background: var(--member-lock-bg);
+      border: 3.4px solid var(--color-white);
+      border-radius: 50%;
+    }
+    .fdl-member-level-card__lock-shape {
+      position: absolute;
+      width: 17.32px;
+      height: 21.28px;
+      left: 10.29px;
+      top: 7.37px;
+    }
+    .fdl-member-level-card__lock-body {
+      position: absolute;
+      width: 17.32px;
+      height: 13.25px;
+      left: 0;
+      top: 8.03px;
+      background: var(--member-lock-metal);
+      border-radius: 2px;
+    }
+    .fdl-member-level-card__lock-shackle {
+      position: absolute;
+      width: 10.36px;
+      height: 8.63px;
+      left: 3.48px;
+      top: 0;
+      box-sizing: border-box;
+      border: 3px solid var(--member-lock-metal);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+    }
+    .fdl-member-level-card__more {
+      position: relative;
+      width: 78px;
+      height: 103px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-secondary);
+      opacity: 0.5;
+      font-size: 24px;
+      line-height: 28px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-family: inherit;
+    }
+    .fdl-member-level-card__more .fdl-member-level-card__chevron {
+      position: absolute;
+      right: 0;
+      top: 33px;
+      opacity: 0.5;
+    }
+    .fdl-member-level-card__tasks {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 0 0 18px;
+      width: 100%;
+      max-width: var(--member-content-max-w);
+      background: var(--color-white);
+      border-radius: 0 0 var(--radius-l) var(--radius-l);
+      position: relative;
+      overflow: hidden;
+    }
+    .fdl-member-level-card__tasks-scroll {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 18px;
+      gap: 18px;
+      overflow-x: auto;
+      flex: 1;
+      min-width: 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .fdl-member-level-card__tasks-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .fdl-member-level-card__tasks-fade {
+      flex-shrink: 0;
+      width: 29px;
+      height: 199px;
+      background: linear-gradient(to left, var(--color-white), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+    .fdl-member-level-card__task {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px;
+      gap: 18px;
+      width: 488px;
+      height: 199px;
+      background: var(--member-task-card-bg);
+      border-radius: var(--radius-m);
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__task-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__task-sub {
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 140%;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-level-card__task-body {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      width: 100%;
+    }
+    .fdl-member-level-card__task-reward {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .fdl-member-level-card__task-icon {
+      flex-shrink: 0;
+      width: 92px;
+      height: 92px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffd5ac 0%, #ebc287 100%);
+    }
+    .fdl-member-level-card__task-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 22px;
+      line-height: 140%;
+      color: var(--color-text-primary);
+      min-width: max-content;
+    }
+    .fdl-member-level-card__task-text p {
+      margin: 0;
+      white-space: nowrap;
+    }
+    .fdl-member-level-card__task-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      width: 120px;
+      height: 48px;
+      padding: 10px 0;
+      border: none;
+      border-radius: 42px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      background: linear-gradient(91.19deg, var(--member-task-btn-1) 4.43%, var(--member-task-btn-2) 99.39%);
+    }
+
+.fdl-member-brand-benefits__wrap {
+      width: var(--member-content-max-w);
+      max-width: 100%;
+      box-sizing: border-box;
+      background: var(--color-white);
+      border-radius: var(--radius-l);
+      padding: 20px 18px 18px;
+    }
+    .fdl-member-brand-benefits {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 14px;
+      width: 100%;
+      max-width: 100%;
+    }
+    .fdl-member-brand-benefits__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+    }
+    .fdl-member-brand-benefits__head-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .fdl-member-brand-benefits__title {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-brand-benefits__sub {
+      margin: 6px 0 0;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-brand-benefits__view-all {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 2px;
+      text-decoration: none;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-text-secondary);
+      transition: color 0.2s;
+    }
+    .fdl-member-brand-benefits__view-all:hover {
+      color: #5c5f66;
+    }
+    .fdl-member-brand-benefits__view-all:hover .fdl-member-brand-benefits__view-all-icon path {
+      fill: #5c5f66;
+    }
+    .fdl-member-brand-benefits__view-all-icon {
+      width: 12px;
+      height: 12px;
+    }
+    .fdl-member-brand-benefits__view-all-icon path {
+      transition: fill 0.2s;
+    }
+    .fdl-member-brand-benefits__list {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 2px 2px 6px;
+      margin: 0 -2px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .fdl-member-brand-benefits__list::-webkit-scrollbar {
+      display: none;
+    }
+    .fdl-member-brand-benefits__card {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      width: 252px;
+      min-height: 170px;
+      max-height: 170px;
+      padding: 10px 12px 12px;
+      border-radius: var(--radius-m);
+      color: #fff;
+      overflow: hidden;
+      text-align: center;
+    }
+    .fdl-member-brand-benefits__card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      width: 100%;
+      min-height: 0;
+    }
+    .fdl-member-brand-benefits__logo-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100px;
+      height: 46px;
+      background: rgba(255, 255, 255, 0.12);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
+      border-radius: 6px;
+      opacity: 0.95;
+    }
+    .fdl-member-brand-benefits__logo {
+      max-width: 92%;
+      max-height: 92%;
+      object-fit: contain;
+    }
+    .fdl-member-brand-benefits__card-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.25;
+      max-width: 100%;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .fdl-member-brand-benefits__card-hint {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: rgba(255, 255, 255, 0.78);
+      max-width: 100%;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .fdl-member-brand-benefits__btn {
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 200px;
+      height: 42px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 21px;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      background: linear-gradient(91.19deg, var(--member-task-btn-1) 4.43%, var(--member-task-btn-2) 99.39%);
+      transition: filter 0.15s ease, transform 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-member-brand-benefits__btn:hover {
+      filter: brightness(1.06);
+    }
+    .fdl-member-brand-benefits__btn:active {
+      transform: scale(0.98);
+    }
+    .fdl-member-brand-benefits__card--accor {
+      background: linear-gradient(360deg, #5a6084 0%, #7d829c 100%);
+    }
+    .fdl-member-brand-benefits__card--hilton {
+      background: linear-gradient(180deg, #b1826b 0%, #814d34 100%);
+    }
+    .fdl-member-brand-benefits__card--hyatt {
+      background: linear-gradient(180deg, #9d8181 0%, #8c7474 50.12%, #7c6767 100%);
+    }
+
+.fdl-member-airline-banner {
+      box-sizing: border-box;
+      width: var(--member-content-max-w);
+      max-width: 100%;
+      min-height: 120px;
+      padding: 24px 28px;
+      border-radius: var(--radius-l);
+      background: var(--member-banner-bg);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .fdl-member-airline-banner__text {
+      flex: 1;
+      min-width: 0;
+    }
+    .fdl-member-airline-banner__title {
+      margin: 0 0 8px;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-airline-banner__desc {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-airline-banner__media {
+      flex-shrink: 0;
+      width: 160px;
+      height: 100px;
+      object-fit: contain;
+    }
+
+.fdl-member-hotel-feeds-wrap {
+      width: 100%;
+      max-width: var(--member-content-max-w);
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .fdl-member-hotel-feeds {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0 0;
+      width: 100%;
+      max-width: var(--member-content-max-w);
+      background: var(--color-white);
+      border-radius: var(--radius-l) var(--radius-l) 0 0;
+    }
+    .fdl-member-hotel-feeds__main-tabs {
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      width: 100%;
+      height: 80px;
+      background: var(--color-white);
+    }
+    .fdl-member-hotel-feeds__main-tabs-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      height: 80px;
+    }
+    .fdl-member-hotel-feeds__main-tab {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      isolation: isolate;
+      position: relative;
+      height: 80px;
+      border-radius: var(--radius-m);
+      flex: 1;
+    }
+    .fdl-member-hotel-feeds__main-tab.is-active {
+      background: linear-gradient(180deg, #feebd8 0%, #ffffff 100%);
+    }
+    .fdl-member-hotel-feeds__main-tab-text {
+      font-size: 28px;
+      line-height: 1.4;
+      text-align: center;
+      color: var(--color-darkgray);
+    }
+    .fdl-member-hotel-feeds__main-tab.is-active .fdl-member-hotel-feeds__main-tab-text {
+      font-weight: 500;
+    }
+    .fdl-member-hotel-feeds__main-tab:not(.is-active) .fdl-member-hotel-feeds__main-tab-text {
+      font-weight: 400;
+    }
+    .fdl-member-hotel-feeds__sub-tabs {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px 18px 0;
+      gap: 10px;
+      width: 100%;
+    }
+    .fdl-member-hotel-feeds__sub-tabs-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      height: 48px;
+    }
+    .fdl-member-hotel-feeds__sub-tab {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 24px;
+      height: 48px;
+      border-radius: 24px;
+      flex: none;
+    }
+    .fdl-member-hotel-feeds__sub-tab.is-active {
+      background: var(--color-safeguard-4);
+    }
+    .fdl-member-hotel-feeds__sub-tab.is-active .fdl-member-hotel-feeds__sub-tab-text {
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .fdl-member-hotel-feeds__sub-tab:not(.is-active) {
+      background: var(--color-label);
+    }
+    .fdl-member-hotel-feeds__sub-tab:not(.is-active) .fdl-member-hotel-feeds__sub-tab-text {
+      font-weight: 400;
+      color: var(--color-midgray);
+    }
+    .fdl-member-hotel-feeds__sub-tab-text {
+      font-size: 24px;
+      line-height: 1.4;
+    }
+    .fdl-member-hotel-feeds__filter {
+      width: 100%;
+      height: 72px;
+      position: relative;
+      background: var(--color-white);
+    }
+    .fdl-member-hotel-feeds__filter-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 28px;
+      gap: 16px;
+      position: absolute;
+      width: 100%;
+      height: 48px;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      flex-wrap: nowrap;
+      box-sizing: border-box;
+    }
+    .fdl-member-hotel-feeds__filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .fdl-member-hotel-feeds__filter-btn-text {
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-darkgray);
+      white-space: nowrap;
+    }
+    .fdl-member-hotel-feeds__dates {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 48px;
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+    }
+    .fdl-member-hotel-feeds__cal {
+      width: 36px;
+      height: 36px;
+      flex: none;
+    }
+    .fdl-member-hotel-feeds__date-line {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .fdl-member-hotel-feeds__date-line span {
+      font-size: 26px;
+      line-height: 1.4;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .fdl-member-hotel-feeds__date-main {
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .fdl-member-hotel-feeds__date-week {
+      font-weight: 400;
+      color: var(--color-lightgray);
+    }
+    .fdl-member-hotel-feeds__date-sep {
+      width: 0;
+      height: 48px;
+      border: 1px solid #d2d4d9;
+      margin: 0 10px;
+      flex-shrink: 0;
+    }
+    .fdl-member-hotel-feeds__list {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px;
+      gap: 18px;
+      width: 100%;
+      background: var(--color-white);
+    }
+    .fdl-member-hotel-feeds__card {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 18px;
+      width: 100%;
+      position: relative;
+      padding-bottom: 18px;
+      isolation: isolate;
+    }
+    .fdl-member-hotel-feeds__img-wrap {
+      width: 222px;
+      height: 272px;
+      border-radius: var(--radius-m);
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01Yl3Pso1M3dIzhT31p_!!6000000001379-2-tps-444-544.png");
+      background-size: cover;
+      background-position: center;
+      flex: none;
+      position: relative;
+    }
+    .fdl-member-hotel-feeds__badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 36px;
+      width: 168px;
+      background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01YnaMKl28GY22OVCd3_!!6000000007905-2-tps-336-72.png");
+      background-size: cover;
+      border-radius: 12px 0 12px 0;
+      z-index: 1;
+    }
+    .fdl-member-hotel-feeds__info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-grow: 1;
+      height: 272px;
+      justify-content: space-between;
+      min-width: 0;
+    }
+    .fdl-member-hotel-feeds__info-top {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+    }
+    .fdl-member-hotel-feeds__title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0 6px;
+      width: 100%;
+    }
+    .fdl-member-hotel-feeds__title {
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1.4;
+      color: var(--color-darkgray);
+    }
+    .fdl-member-hotel-feeds__level {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 4px;
+      height: 28px;
+      background: var(--color-label);
+      border-radius: 4px;
+      font-size: 20px;
+      line-height: 1.4;
+      color: var(--color-lightgray);
+    }
+    .fdl-member-hotel-feeds__rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .fdl-member-hotel-feeds__score {
+      width: 48px;
+      height: 28px;
+      background: var(--color-indigo-1);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 1;
+    }
+    .fdl-member-hotel-feeds__score-label {
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 1.4;
+      color: var(--color-indigo-1);
+    }
+    .fdl-member-hotel-feeds__reviews {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 1.4;
+      color: var(--color-darkgray);
+    }
+    .fdl-member-hotel-feeds__loc {
+      width: 100%;
+      font-size: 24px;
+      line-height: 1.4;
+      color: var(--color-midgray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .fdl-member-hotel-feeds__tags {
+      display: flex;
+      align-items: center;
+    }
+    .fdl-member-hotel-feeds__tag-l {
+      display: flex;
+      align-items: center;
+      padding: 0 1px 0 6px;
+      gap: 6px;
+      height: 28px;
+      background: linear-gradient(90deg, #6e5a4f 0%, #564131 100%);
+      border: 1px solid #bfaa9f;
+      border-radius: 4px 0 0 4px;
+      color: var(--color-safeguard-4);
+      font-size: 20px;
+    }
+    .fdl-member-hotel-feeds__tag-l img {
+      width: 24px;
+      height: 24px;
+    }
+    .fdl-member-hotel-feeds__tag-r {
+      display: flex;
+      align-items: center;
+      padding: 0 6px 0 0;
+      gap: 6px;
+      height: 28px;
+      background: var(--color-white);
+      border: 1px solid #bfaa9f;
+      border-left: none;
+      border-radius: 0 4px 4px 0;
+      font-size: 20px;
+      color: #805540;
+    }
+    .fdl-member-hotel-feeds__info-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .fdl-member-hotel-feeds__price {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+    .fdl-member-hotel-feeds__price-y {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1;
+      color: var(--color-pay-1);
+    }
+    .fdl-member-hotel-feeds__price-n {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 42px;
+      line-height: 0.7;
+      color: var(--color-pay-1);
+    }
+    .fdl-member-hotel-feeds__price-suf {
+      font-size: 20px;
+      line-height: 1;
+      color: var(--color-pay-1);
+      margin-left: 4px;
+    }
+    .fdl-member-hotel-feeds__discount {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 6px;
+      gap: 6px;
+      height: 28px;
+      background: rgba(255, 242, 240, 0.6);
+      border-radius: 9px;
+      font-size: 20px;
+      line-height: 1.4;
+      color: var(--color-pay-1);
+    }
+    .fdl-member-hotel-feeds__discount img {
+      width: 24px;
+      height: 24px;
+    }
+    .fdl-member-hotel-feeds__discount-sep {
+      width: 0;
+      height: 16px;
+      border-left: 1px dashed #ffaa99;
+    }
+    .fdl-member-hotel-feeds__divider {
+      position: absolute;
+      width: calc(100% - 36px);
+      left: 18px;
+      bottom: 0;
+      border-bottom: 1px solid #f2f3f5;
+      z-index: 2;
+    }
+
+/* ========== FDG 一级底部导航（与 components/platform/navigation/tabbar/example.html 一致） ========== */
+    .fdl-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100vw;
+      z-index: 1000;
+    }
+    .fdl-tabbar__nav {
+      height: var(--fdl-tabbar-nav-h);
+      background: var(--color-white);
+      box-shadow: 0 -1px 0 var(--color-bg);
+    }
+    .fdl-tabbar__list {
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+    }
+    .fdl-tabbar__item {
+      flex: 1;
+      position: relative;
+    }
+    .fdl-tabbar__link {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      gap: var(--space-gap-sm);
+      text-decoration: none;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-tabbar__link:focus-visible {
+      outline: 2px solid var(--color-indigo-1);
+      outline-offset: 2px;
+    }
+    .fdl-tabbar__icon {
+      width: 48px;
+      height: 48px;
+      position: relative;
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+    .fdl-tabbar__icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .fdl-tabbar__icon .fdl-tabbar__icon-img--active {
+      display: none;
+    }
+    .fdl-tabbar__icon .fdl-tabbar__icon-img--inactive {
+      display: block;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__icon .fdl-tabbar__icon-img--active {
+      display: block;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__icon .fdl-tabbar__icon-img--inactive {
+      display: none;
+    }
+    .fdl-tabbar__label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1;
+      text-align: center;
+      color: var(--color-darkgray);
+      transition: font-weight 0.2s ease;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__label {
+      font-weight: 500;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active .fdl-tabbar__icon {
+      width: 102px;
+      height: 102px;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active::before {
+      content: "";
+      position: absolute;
+      width: 35px;
+      height: 25px;
+      background: var(--color-brand-1);
+      filter: blur(12.5px);
+      border-radius: 50%;
+      left: 50%;
+      bottom: 15%;
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active .fdl-tabbar__label {
+      display: none;
+    }
+    .fdl-tabbar__safe-area {
+      min-height: var(--fdl-tabbar-safe-h);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: var(--color-white);
+    }
+
+
+/* --- tabs.member 整页编排（714 内容宽 = 750 - 18*2；见 spec.md）--- */
+.member-page {
+  width: 750px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+.member-page__head {
+  position: fixed;
+  top: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  max-width: 100vw;
+  z-index: 99;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+/* 01 一级导航栏（供稿 Frame 146 / 181 / 142） */
+.member-page__nav-root {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 88px;
+  box-sizing: border-box;
+}
+.member-page__nav-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  gap: 24px;
+  width: 100%;
+  height: 88px;
+  box-sizing: border-box;
+}
+.member-page__nav-cluster {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 36px;
+  flex: 0 0 auto;
+}
+.member-page__nav-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: 4px;
+  width: 96px;
+  flex: 0 0 auto;
+}
+.member-page__nav-h1 {
+  margin: 0;
+  width: 96px;
+  font-family: "PingFang SC", var(--font-body);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 140%;
+  color: #0f131a;
+  text-align: center;
+}
+.member-page__nav-underline {
+  width: 54px;
+  height: 6px;
+  background: #0f131a;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.member-page__nav-mile {
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+  font-family: "PingFang SC", var(--font-body);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 140%;
+  color: #0f131a;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.member-page__nav-mile:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+.member-page__nav-rule {
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.member-page__nav-rule:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+.member-page__nav-rule img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.member-page__main {
+  padding-top: var(--member-content-offset-top);
+}
+.member-page__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px var(--space-page-gutter) 0;
+}
+.member-page__feeds {
+  margin-top: 24px;
+  padding: 0 var(--space-page-gutter) 32px;
+}
+.fdl-member-brand-benefits {
+  width: 100%;
+  max-width: 100%;
+}
+.fdl-member-airline-banner {
+  width: var(--member-content-max-w);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+  </style>
+</head>
+<body>
+  <div class="member-status-bar" aria-hidden="true">
+    <img
+      class="status-bar"
+      src="https://gw.alicdn.com/imgextra/i3/O1CN01pjMeFr1E44lRvyCyE_!!6000000000297-2-tps-750-88.png"
+      width="750"
+      height="88"
+      alt=""
+      decoding="async"
+    />
+  </div>
+  <div class="member-page">
+
+<header class="member-page__head">
+  <div class="member-page__nav-root">
+    <nav class="member-page__nav-bar" aria-label="会员页一级导航">
+      <div class="member-page__nav-cluster">
+        <div class="member-page__nav-title-block">
+          <h1 class="member-page__nav-h1" aria-current="page">会员</h1>
+          <span class="member-page__nav-underline" aria-hidden="true"></span>
+        </div>
+        <a class="member-page__nav-mile" href="#">里程</a>
+      </div>
+      <a class="member-page__nav-rule" href="#" aria-label="规则说明"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01fhYGKR1kLzy2dEB3R_!!6000000004668-2-tps-96-96.png" width="48" height="48" alt="" /></a>
+    </nav>
+  </div>
+</header>
+
+    <main class="member-page__main" id="main">
+      <div class="member-page__stack">
+<article class="fdl-member-level-card" aria-label="会员等级与权益">
+    <div class="fdl-member-level-card__top">
+      <div class="fdl-member-level-card__user-row">
+        <div class="fdl-member-level-card__details">
+          <div class="fdl-member-level-card__avatar-row">
+            <div class="fdl-member-level-card__avatar-wrap">
+              <img class="fdl-member-level-card__avatar" src="https://gw.alicdn.com/imgextra/i2/O1CN014DNuYv1vK87nB30K5_!!6000000006153-2-tps-68-68.png" alt="用户头像" width="68" height="68" />
+              <span class="fdl-member-level-card__level-badge">F1</span>
+            </div>
+            <div class="fdl-member-level-card__progress-block">
+              <div class="fdl-member-level-card__progress-line">
+                <div class="fdl-member-level-card__track" aria-hidden="true">
+                  <div class="fdl-member-level-card__fill"></div>
+                </div>
+                <div class="fdl-member-level-card__progress-num">
+                  <span>12980/20000</span>
+                  <svg class="fdl-member-level-card__chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g opacity="0.5"><path d="M13.8483 8.044C14.3456 8.53427 14.3812 9.3074 13.9549 9.83808L13.8483 9.956L6.09099 17.604C5.55546 18.132 4.68718 18.132 4.15165 17.604C3.65437 17.1137 3.61885 16.3406 4.04509 15.8099L4.15165 15.692L10.9393 9L4.15165 2.30799C3.65437 1.81772 3.61885 1.04459 4.04509 0.51391L4.15165 0.395989C4.64893 -0.0942831 5.43312 -0.129302 5.97138 0.29093L6.09099 0.395989L13.8483 8.044Z" fill="var(--color-lightgray)"/></g>
+                  </svg>
+                </div>
+              </div>
+              <div class="fdl-member-level-card__expiry">2025/04/30到期</div>
+            </div>
+          </div>
+          <div class="fdl-member-level-card__stats">
+            <div class="fdl-member-level-card__stat">
+              <span>里程</span>
+              <span class="fdl-member-level-card__stat-val">2200</span>
+              <svg class="fdl-member-level-card__chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g opacity="0.5"><path d="M13.8483 8.044C14.3456 8.53427 14.3812 9.3074 13.9549 9.83808L13.8483 9.956L6.09099 17.604C5.55546 18.132 4.68718 18.132 4.15165 17.604C3.65437 17.1137 3.61885 16.3406 4.04509 15.8099L4.15165 15.692L10.9393 9L4.15165 2.30799C3.65437 1.81772 3.61885 1.04459 4.04509 0.51391L4.15165 0.395989C4.64893 -0.0942831 5.43312 -0.129302 5.97138 0.29093L6.09099 0.395989L13.8483 8.044Z" fill="var(--color-lightgray)"/></g>
+              </svg>
+            </div>
+            <div class="fdl-member-level-card__stat">
+              <span>购物金</span>
+              <span class="fdl-member-level-card__stat-val fdl-member-level-card__stat-val--sm">¥600</span>
+              <svg class="fdl-member-level-card__chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g opacity="0.5"><path d="M13.8483 8.044C14.3456 8.53427 14.3812 9.3074 13.9549 9.83808L13.8483 9.956L6.09099 17.604C5.55546 18.132 4.68718 18.132 4.15165 17.604C3.65437 17.1137 3.61885 16.3406 4.04509 15.8099L4.15165 15.692L10.9393 9L4.15165 2.30799C3.65437 1.81772 3.61885 1.04459 4.04509 0.51391L4.15165 0.395989C4.64893 -0.0942831 5.43312 -0.129302 5.97138 0.29093L6.09099 0.395989L13.8483 8.044Z" fill="var(--color-lightgray)"/></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="fdl-member-level-card__level-art" aria-hidden="true">
+          <div class="fdl-member-level-card__level-art-bg"></div>
+          <img class="fdl-member-level-card__level-art-img" src="https://gw.alicdn.com/imgextra/i2/O1CN01Q9o1Ts1gtCDD90f39_!!6000000004199-2-tps-324-254.png" alt="" width="156" height="109" />
+        </div>
+      </div>
+      <div class="fdl-member-level-card__benefits">
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <svg class="fdl-member-level-card__benefit-svg" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M51.7871 37.9441C52.0985 37.2301 52.9058 36.854 53.6637 37.0964C54.4722 37.3553 54.9183 38.2205 54.6595 39.029L54.4964 39.5175C52.7623 44.5432 49.3423 48.8209 44.8092 51.6188C40.1297 54.5068 34.5719 55.6282 29.1388 54.7794C23.7061 53.9306 18.7555 51.1681 15.1799 46.9908C14.5089 46.2068 13.8946 45.3817 13.3394 44.5237L12.6808 47.6824C12.5077 48.5136 11.6935 49.0475 10.8623 48.8744C10.0314 48.7011 9.49825 47.8869 9.67125 47.0559L11.2086 39.6716C11.347 39.008 11.9044 38.5128 12.5797 38.4536C13.2549 38.3944 13.8892 38.7852 14.1411 39.4144C14.9467 41.4296 16.0816 43.3164 17.5149 44.9911C20.6138 48.6117 24.9056 51.0063 29.6142 51.7419C34.3228 52.4773 39.1393 51.5055 43.1948 49.0025C47.2501 46.4995 50.2776 42.6298 51.731 38.0912L51.7871 37.9441Z" fill="#EFD0A4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M31.673 18.6777C38.3556 18.6777 44.9963 21.4849 44.9963 25.5956C44.9963 26.6871 44.601 27.6853 43.8954 28.5631C44.6024 29.447 44.9962 30.4442 44.9963 31.5187C44.9963 32.5655 44.6318 33.528 43.9784 34.3811C44.6349 35.2375 44.9963 36.2 44.9963 37.2315C44.9963 41.3424 39.3805 44.1494 32.6978 44.1494C26.0152 44.1494 20.3994 41.3424 20.3994 37.2315C20.3994 36.1969 20.7608 35.2344 21.4172 34.3781C20.7639 33.5264 20.3994 32.564 20.3994 31.5187C20.3994 30.4428 20.7914 29.4454 21.4983 28.5631C20.7942 27.687 20.3994 26.6871 20.3994 25.5956C20.3994 21.4849 24.9904 18.6778 31.673 18.6777ZM23.7743 36.3688C23.5905 36.62 23.4856 36.9206 23.474 37.2315C23.474 39.064 27.4941 41.0748 32.6978 41.0748C37.9016 41.0748 41.9217 39.064 41.9217 37.2315C41.9217 36.9595 41.8248 36.669 41.6234 36.3708L41.3532 36.5199C39.1149 37.7344 36.04 38.4365 32.6978 38.4365C29.2206 38.4365 26.0325 37.6771 23.7743 36.3688ZM41.3532 30.5969C39.1149 31.8113 36.04 32.5135 32.6978 32.5135C29.2761 32.5135 26.1339 31.7775 23.8833 30.5078C23.6068 30.8582 23.4741 31.2021 23.474 31.5187C23.474 33.3527 27.4941 35.3619 32.6978 35.3619C37.9016 35.3619 41.9217 33.3527 41.9217 31.5187C41.9216 31.2021 41.7893 30.8581 41.5143 30.5078L41.3532 30.5969ZM32.6978 21.7523C27.4942 21.7524 23.4741 23.7632 23.474 25.5956C23.474 27.4281 27.4941 29.4389 32.6978 29.4389C37.9016 29.4389 41.9217 27.4281 41.9217 25.5956C41.9216 23.7632 37.9016 21.7523 32.6978 21.7523Z" fill="#EFD0A4"/><path d="M19.5627 12.3784C24.2421 9.49031 29.8 8.369 35.233 9.21768C40.6657 10.0665 45.6163 12.829 49.1919 17.0063C49.863 17.7904 50.4772 18.6154 51.0324 19.4734L51.691 16.3147C51.8641 15.4836 52.6784 14.9497 53.5096 15.1227C54.3405 15.2959 54.8735 16.1102 54.7006 16.9413L53.1633 24.3255C53.0249 24.9893 52.4675 25.4843 51.7921 25.5436C51.1168 25.6026 50.4825 25.2121 50.2308 24.5828C49.4251 22.5674 48.2903 20.6807 46.8569 19.006C43.7579 15.3854 39.4662 12.9908 34.7576 12.2553C30.0491 11.5199 25.2324 12.4917 21.177 14.9946C17.1217 17.4976 14.0943 21.3674 12.6408 25.9059L12.5847 26.053C12.2734 26.7672 11.4661 27.1433 10.7081 26.9007C9.89964 26.6417 9.45336 25.7766 9.71229 24.9681L9.87543 24.4797C11.6095 19.4539 15.0295 15.1762 19.5627 12.3784Z" fill="#EFD0A4"/></svg>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">里程抵现</span>
+        </div>
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <svg class="fdl-member-level-card__benefit-svg" width="71" height="64" viewBox="0 0 71 64" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M21.3526 10.7033C23.216 9.85107 25.3477 9.79762 27.251 10.5568L34.6826 13.5216L40.5469 10.8976C42.948 9.82336 45.7652 10.8982 46.8399 13.299C47.9148 15.7013 46.8376 18.5204 44.4346 19.5939L38.8321 22.0968H43.5957C48.2898 22.0968 52.0966 25.9022 52.0967 30.5968V31.0988C54.8652 31.141 57.0966 33.3974 57.0967 36.1759V45.5968C57.0967 49.739 53.7388 53.0968 49.5967 53.0968H27.5967C23.4546 53.0968 20.0967 49.7389 20.0967 45.5968V36.1759C20.0968 33.3974 22.3282 31.1411 25.0967 31.0988V30.5968C25.0967 29.7006 25.235 28.8366 25.4922 28.0255C23.1362 28.8517 20.5061 28.4558 18.4922 26.9347L12.8262 22.6554C12.4531 22.3736 12.2329 21.9335 12.2305 21.466C12.2282 20.9985 12.4435 20.5563 12.8135 20.2706L14.1436 19.2443C15.3397 18.3217 16.8632 17.9321 18.3555 18.1662L22.6856 18.8449L24.3174 18.1505L19.4707 13.8869C19.0891 13.5511 18.9035 13.044 18.9776 12.5412C19.0518 12.0384 19.3758 11.607 19.8379 11.3956L21.3526 10.7033ZM52.0176 34.0968C51.6655 34.0968 51.3337 34.1844 51.043 34.339C50.9176 34.4057 50.7997 34.4845 50.6914 34.5744C50.5991 34.6509 50.5144 34.7361 50.4365 34.8273C50.4232 34.8429 50.4094 34.8581 50.3965 34.8742C50.3219 34.9669 50.2553 35.0662 50.1973 35.171C50.1589 35.2404 50.1241 35.312 50.0938 35.3859C50.0486 35.4957 50.0133 35.6104 49.9873 35.7287C49.9557 35.8728 49.9385 36.0224 49.9385 36.1759V40.4972C49.9385 40.6524 49.9304 40.806 49.9151 40.9572C49.8382 41.7134 49.5742 42.4143 49.1699 43.0128C49.0891 43.1326 49.0029 43.2484 48.9112 43.3595C48.8194 43.4707 48.722 43.577 48.6201 43.6788C48.5183 43.7807 48.412 43.8781 48.3008 43.9699C48.0231 44.1991 47.7174 44.3959 47.3897 44.5538C47.2583 44.6171 47.1234 44.6742 46.9854 44.7247C46.5031 44.9013 45.982 44.9972 45.4385 44.9972H31.7549C31.2114 44.9972 30.6903 44.9013 30.208 44.7247C30.07 44.6742 29.9351 44.6171 29.8037 44.5538C29.5415 44.4275 29.2934 44.2764 29.0625 44.1037C28.8892 43.974 28.726 43.8316 28.5733 43.6788C28.4714 43.577 28.374 43.4707 28.2822 43.3595C28.1905 43.2484 28.1043 43.1326 28.0235 43.0128C27.5384 42.2947 27.255 41.4289 27.2549 40.4972V36.1759C27.2549 36.0224 27.2368 35.8729 27.2051 35.7287C27.1791 35.6103 27.1438 35.4957 27.0987 35.3859C27.0683 35.312 27.0335 35.2404 26.9951 35.171C26.9371 35.0662 26.8706 34.9669 26.7959 34.8742C26.783 34.8581 26.7692 34.8429 26.7559 34.8273C26.678 34.7361 26.5934 34.6509 26.501 34.5744C26.3926 34.4846 26.2749 34.4057 26.1494 34.339C25.8589 34.1847 25.5276 34.0968 25.1758 34.0968C24.0277 34.0968 23.0968 35.0278 23.0967 36.1759V45.5968C23.0967 48.0821 25.1114 50.0968 27.5967 50.0968H49.5967C52.082 50.0968 54.0967 48.0821 54.0967 45.5968V36.1759C54.0966 35.0278 53.1657 34.0968 52.0176 34.0968ZM33.5977 25.0968C30.5599 25.0968 28.0968 27.5596 28.0967 30.5968V32.0206C28.5 32.3047 28.859 32.6467 29.1641 33.0333C29.17 33.0408 29.1758 33.0483 29.1817 33.0558C29.3595 33.2838 29.5189 33.5266 29.6563 33.7833C29.6659 33.8013 29.6742 33.8199 29.6836 33.838C29.7196 33.9072 29.7543 33.977 29.7871 34.048C29.7947 34.0642 29.8022 34.0805 29.8096 34.0968C29.8348 34.1529 29.8586 34.2096 29.8819 34.2667C29.8988 34.3085 29.9158 34.3504 29.9317 34.3927C29.9538 34.4517 29.9742 34.5114 29.9942 34.5714C30.0023 34.5958 30.0108 34.6201 30.0186 34.6447C30.0759 34.8261 30.1233 35.0117 30.1602 35.2013C30.1654 35.2282 30.17 35.2553 30.1748 35.2824C30.1866 35.3487 30.1969 35.4154 30.2061 35.4826C30.2112 35.5199 30.2164 35.5573 30.2207 35.5949C30.2274 35.6535 30.2317 35.7124 30.2363 35.7716C30.2394 35.8109 30.2439 35.8502 30.2461 35.8898C30.2514 35.9845 30.2549 36.0799 30.2549 36.1759V40.4972L30.2627 40.6505C30.3397 41.407 30.9786 41.9972 31.7549 41.9972H45.4385C46.2148 41.9972 46.8537 41.407 46.9307 40.6505L46.9385 40.4972V36.1759C46.9385 36.0799 46.941 35.9845 46.9463 35.8898C46.9485 35.8502 46.953 35.8109 46.9561 35.7716C46.9591 35.7331 46.961 35.6946 46.9649 35.6564L46.9776 35.5421C46.98 35.5222 46.9836 35.5024 46.9863 35.4826C46.9955 35.4153 47.0068 35.3487 47.0186 35.2824C47.0234 35.2554 47.027 35.2282 47.0322 35.2013C47.0691 35.0118 47.1166 34.826 47.1738 34.6447C47.1816 34.62 47.1911 34.5959 47.1992 34.5714C47.2192 34.5115 47.2387 34.4516 47.2608 34.3927C47.2767 34.3503 47.2945 34.3086 47.3115 34.2667C47.3347 34.2096 47.3586 34.1529 47.3838 34.0968C47.3911 34.0806 47.3978 34.0641 47.4053 34.048C47.4381 33.977 47.4729 33.9072 47.5088 33.838C47.5182 33.8199 47.5265 33.8013 47.5362 33.7833C47.6735 33.5267 47.833 33.2837 48.0108 33.0558C48.0166 33.0483 48.0224 33.0408 48.0283 33.0333C48.3335 32.6465 48.6932 32.3048 49.0967 32.0206V30.5968C49.0966 27.5596 46.6335 25.0968 43.5957 25.0968H33.5977ZM26.1387 13.3439C25.2064 12.9722 24.1832 12.9249 23.2305 13.1984L28.0869 17.4708C28.4736 17.8112 28.6598 18.3265 28.5781 18.8351C28.4963 19.3437 28.1585 19.7757 27.6846 19.9777L23.4649 21.7746C23.2067 21.8844 22.9227 21.9195 22.6455 21.8761L17.8906 21.13C17.3088 21.0387 16.7166 21.1572 16.2168 21.4572L20.2998 24.5412C21.6081 25.5292 23.3508 25.7264 24.8477 25.0578L43.211 16.8556C44.1005 16.4581 44.4995 15.4139 44.1016 14.5246C43.7037 13.636 42.6612 13.2385 41.7725 13.6359L35.3281 16.5197C34.958 16.6853 34.5359 16.6933 34.1592 16.5431L26.1387 13.3439Z" fill="#EFD0A4"/> </svg>
+            <div class="fdl-member-level-card__lock" aria-label="未解锁">
+              <div class="fdl-member-level-card__lock-bg"></div>
+              <div class="fdl-member-level-card__lock-shape">
+                <div class="fdl-member-level-card__lock-body"></div>
+                <div class="fdl-member-level-card__lock-shackle"></div>
+              </div>
+            </div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">贵宾厅4次</span>
+        </div>
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <svg class="fdl-member-level-card__benefit-svg" width="71" height="64" viewBox="0 0 71 64" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M44.3047 20.5107C44.3047 17.407 41.7882 14.8908 38.6846 14.8906H23.3701C20.2663 14.8906 17.75 17.4069 17.75 20.5107V42.6816C17.75 45.7855 20.2663 48.3018 23.3701 48.3018H44.3047V20.5107ZM47.4639 51.4619H23.3701C18.5211 51.4619 14.5898 47.5307 14.5898 42.6816V20.5107C14.5898 15.6617 18.5211 11.7305 23.3701 11.7305H38.6846C43.5335 11.7307 47.4639 15.6618 47.4639 20.5107V51.4619Z" fill="#EFD0A4"/> <path fill-rule="evenodd" clip-rule="evenodd" d="M44.3047 25.4453V51.4624H53.6423C54.4611 51.4624 55.16 51.1729 55.739 50.5939C56.3181 50.0149 56.6076 49.316 56.6076 48.4972V36.1682C56.6076 33.2071 55.5607 30.6797 53.4669 28.586C51.3731 26.4922 48.8457 25.4453 45.8847 25.4453H44.3047ZM47.4647 48.3024H53.4475V36.1682C53.4475 34.0797 52.7092 32.2972 51.2324 30.8204C50.143 29.731 48.8871 29.0434 47.4647 28.7577V48.3024Z" fill="#EFD0A4"/> <path fill-rule="evenodd" clip-rule="evenodd" d="M27.1591 26.2881L31.208 33.9552L35.3498 26.2753C35.3835 26.2129 35.4212 26.153 35.4629 26.0956C35.5047 26.0382 35.5501 25.9839 35.5992 25.9327C35.6482 25.8814 35.7005 25.8337 35.756 25.7895C35.8115 25.7452 35.8697 25.705 35.9306 25.6686C35.9916 25.6322 36.0547 25.6001 36.1199 25.5722C36.1852 25.5444 36.252 25.521 36.3204 25.5022C36.3888 25.4833 36.4582 25.4691 36.5285 25.4596C36.5989 25.4501 36.6695 25.4453 36.7404 25.4453C36.7922 25.4453 36.8438 25.4478 36.8953 25.4529C36.9468 25.458 36.9979 25.4656 37.0486 25.4757C37.0994 25.4858 37.1496 25.4983 37.199 25.5133C37.2486 25.5284 37.2972 25.5458 37.345 25.5656C37.3928 25.5854 37.4396 25.6075 37.4852 25.6319C37.5309 25.6563 37.5752 25.6828 37.6182 25.7116C37.6612 25.7403 37.7027 25.7711 37.7427 25.804C37.7827 25.8368 37.821 25.8715 37.8576 25.9081C37.8942 25.9447 37.9289 25.983 37.9617 26.023C37.9946 26.063 38.0254 26.1045 38.0541 26.1475C38.0829 26.1905 38.1094 26.2349 38.1338 26.2805C38.1582 26.3261 38.1803 26.3729 38.2001 26.4207C38.2199 26.4685 38.2374 26.5171 38.2524 26.5667C38.2674 26.6162 38.28 26.6663 38.29 26.7171C38.3002 26.7678 38.3078 26.8189 38.3128 26.8704C38.3179 26.9219 38.3204 26.9736 38.3204 27.0253C38.3204 27.2912 38.2573 27.5412 38.1311 27.7753L38.1304 27.7765L32.584 38.061C32.5348 38.1523 32.4771 38.238 32.411 38.3179C32.3449 38.3978 32.2716 38.4706 32.1912 38.5361C32.1107 38.6016 32.0247 38.6587 31.933 38.7072C31.8413 38.7558 31.7458 38.795 31.6464 38.8247C31.547 38.8544 31.4457 38.8742 31.3424 38.884C31.2391 38.8937 31.1359 38.8933 31.0327 38.8828C30.9295 38.8723 30.8283 38.8518 30.7291 38.8213C30.6299 38.7908 30.5347 38.7509 30.4434 38.7017C30.3056 38.6274 30.1815 38.5346 30.0713 38.4234C29.961 38.3121 29.8693 38.1873 29.7962 38.0488L24.3648 27.7637C24.2429 27.5329 24.1816 27.2864 24.1816 27.0253C24.1816 26.9736 24.1842 26.9219 24.1893 26.8704C24.1943 26.8189 24.2019 26.7678 24.212 26.7171C24.2221 26.6663 24.2347 26.6162 24.2497 26.5667C24.2647 26.5171 24.2821 26.4685 24.3019 26.4207C24.3217 26.3729 24.3438 26.3261 24.3682 26.2805C24.3926 26.2349 24.4192 26.1905 24.4479 26.1475C24.4767 26.1045 24.5075 26.063 24.5403 26.023C24.5731 25.983 24.6078 25.9447 24.6444 25.9081C24.681 25.8715 24.7193 25.8368 24.7593 25.804C24.7993 25.7711 24.8408 25.7403 24.8838 25.7116C24.9269 25.6828 24.9712 25.6563 25.0168 25.6319C25.0625 25.6075 25.1092 25.5854 25.157 25.5656C25.2048 25.5458 25.2535 25.5284 25.303 25.5133C25.3525 25.4983 25.4026 25.4858 25.4534 25.4757C25.5042 25.4656 25.5553 25.458 25.6068 25.4529C25.6583 25.4478 25.7099 25.4453 25.7616 25.4453C25.8332 25.4453 25.9044 25.4501 25.9753 25.4598C26.0461 25.4695 26.116 25.4839 26.185 25.5031C26.2539 25.5222 26.3212 25.546 26.3869 25.5743C26.4526 25.6026 26.5161 25.6352 26.5773 25.6721C26.6386 25.7091 26.6971 25.75 26.7528 25.7948C26.8085 25.8397 26.8609 25.8882 26.91 25.9402C26.9592 25.9921 27.0046 26.0472 27.0462 26.1054C27.0879 26.1635 27.1257 26.2248 27.1591 26.2881Z" fill="#EFD0A4"/> </svg>
+            <div class="fdl-member-level-card__lock" aria-label="未解锁">
+              <div class="fdl-member-level-card__lock-bg"></div>
+              <div class="fdl-member-level-card__lock-shape">
+                <div class="fdl-member-level-card__lock-body"></div>
+                <div class="fdl-member-level-card__lock-shackle"></div>
+              </div>
+            </div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">火车票无忧退</span>
+        </div>
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <svg class="fdl-member-level-card__benefit-svg" width="71" height="64" viewBox="0 0 71 64" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M56.6386 40.5986V37.5986C56.6386 37.5481 56.6361 37.4978 56.6312 37.4477C56.6263 37.3975 56.6189 37.3477 56.609 37.2982C56.5991 37.2487 56.5869 37.1999 56.5723 37.1516C56.5576 37.1033 56.5407 37.0559 56.5214 37.0093C56.5021 36.9627 56.4805 36.9171 56.4568 36.8726C56.433 36.8281 56.4071 36.7849 56.3791 36.743C56.351 36.7011 56.321 36.6606 56.289 36.6216C56.257 36.5827 56.2232 36.5454 56.1875 36.5097C56.1518 36.474 56.1145 36.4402 56.0756 36.4082C56.0366 36.3762 55.9961 36.3462 55.9542 36.3181C55.9123 36.2901 55.8691 36.2642 55.8246 36.2404C55.7801 36.2167 55.7345 36.1951 55.6879 36.1758C55.6413 36.1565 55.5939 36.1396 55.5456 36.1249C55.4973 36.1102 55.4485 36.098 55.399 36.0882C55.3495 36.0783 55.2997 36.0709 55.2495 36.066C55.1994 36.0611 55.1491 36.0586 55.0986 36.0586C55.0481 36.0586 54.9978 36.0611 54.9477 36.066C54.8975 36.0709 54.8477 36.0783 54.7982 36.0882C54.7487 36.098 54.6999 36.1102 54.6516 36.1249C54.6033 36.1396 54.5559 36.1565 54.5093 36.1758C54.4627 36.1951 54.4171 36.2167 54.3726 36.2404C54.3281 36.2642 54.2849 36.2901 54.243 36.3181C54.2011 36.3462 54.1606 36.3762 54.1216 36.4082C54.0827 36.4402 54.0454 36.474 54.0097 36.5097C53.974 36.5454 53.9402 36.5827 53.9082 36.6216C53.8762 36.6606 53.8462 36.7011 53.8181 36.743C53.7901 36.7849 53.7642 36.8281 53.7404 36.8726C53.7167 36.9171 53.6951 36.9627 53.6758 37.0093C53.6565 37.0559 53.6396 37.1033 53.6249 37.1516C53.6102 37.1999 53.598 37.2487 53.5882 37.2982C53.5783 37.3477 53.5709 37.3975 53.566 37.4477C53.5611 37.4978 53.5586 37.5481 53.5586 37.5986V40.5986C53.5586 41.8302 53.1232 42.8814 52.2523 43.7523C51.3814 44.6232 50.3302 45.0586 49.0986 45.0586C49.0482 45.0586 48.9979 45.0611 48.9477 45.066C48.8975 45.0709 48.8477 45.0783 48.7982 45.0882C48.7487 45.0981 48.6999 45.1103 48.6516 45.1249C48.6033 45.1396 48.5559 45.1565 48.5093 45.1758C48.4627 45.1951 48.4171 45.2167 48.3726 45.2404C48.3281 45.2642 48.2849 45.2901 48.243 45.3181C48.2011 45.3462 48.1606 45.3762 48.1216 45.4082C48.0827 45.4402 48.0454 45.474 48.0097 45.5097C47.974 45.5454 47.9402 45.5827 47.9082 45.6216C47.8762 45.6606 47.8462 45.7011 47.8181 45.743C47.7901 45.7849 47.7642 45.8281 47.7404 45.8726C47.7167 45.9171 47.6951 45.9627 47.6758 46.0093C47.6565 46.0559 47.6396 46.1033 47.6249 46.1516C47.6102 46.1999 47.598 46.2487 47.5882 46.2982C47.5783 46.3477 47.5709 46.3975 47.566 46.4477C47.5611 46.4979 47.5586 46.5482 47.5586 46.5986C47.5586 47.5719 47.0719 48.0586 46.0986 48.0586C45.1253 48.0586 44.6386 47.5719 44.6386 46.5986C44.6386 46.5482 44.6361 46.4979 44.6312 46.4477C44.6263 46.3975 44.6189 46.3477 44.609 46.2982C44.5991 46.2487 44.5869 46.1999 44.5723 46.1516C44.5576 46.1033 44.5407 46.0559 44.5214 46.0093C44.5021 45.9627 44.4805 45.9171 44.4568 45.8726C44.433 45.8281 44.4071 45.7849 44.3791 45.743C44.351 45.7011 44.321 45.6606 44.289 45.6216C44.257 45.5827 44.2232 45.5454 44.1875 45.5097C44.1518 45.474 44.1145 45.4402 44.0756 45.4082C44.0366 45.3762 43.9961 45.3462 43.9542 45.3181C43.9123 45.2901 43.869 45.2642 43.8245 45.2404C43.78 45.2167 43.7345 45.1951 43.6879 45.1758C43.6413 45.1565 43.5939 45.1396 43.5456 45.1249C43.4973 45.1103 43.4485 45.0981 43.399 45.0882C43.3495 45.0783 43.2997 45.0709 43.2495 45.066C43.1994 45.0611 43.1491 45.0586 43.0986 45.0586H28.0986C28.0481 45.0586 27.9978 45.0611 27.9477 45.066C27.8975 45.0709 27.8477 45.0783 27.7982 45.0882C27.7487 45.0981 27.6999 45.1103 27.6516 45.1249C27.6033 45.1396 27.5559 45.1565 27.5093 45.1758C27.4627 45.1951 27.4171 45.2167 27.3726 45.2404C27.3281 45.2642 27.2849 45.2901 27.243 45.3181C27.2011 45.3462 27.1606 45.3762 27.1216 45.4082C27.0827 45.4402 27.0454 45.474 27.0097 45.5097C26.974 45.5454 26.9402 45.5827 26.9082 45.6216C26.8762 45.6606 26.8462 45.7011 26.8181 45.743C26.7901 45.7849 26.7642 45.8281 26.7404 45.8726C26.7167 45.9171 26.6951 45.9627 26.6758 46.0093C26.6565 46.0559 26.6396 46.1033 26.6249 46.1516C26.6102 46.1999 26.598 46.2487 26.5882 46.2982C26.5783 46.3477 26.5709 46.3975 26.566 46.4477C26.5611 46.4979 26.5586 46.5482 26.5586 46.5986C26.5586 47.5719 26.0719 48.0586 25.0986 48.0586C24.6954 48.0586 24.3513 47.9161 24.0662 47.631C23.7811 47.3459 23.6386 47.0018 23.6386 46.5986C23.6386 46.5482 23.6361 46.4979 23.6312 46.4477C23.6262 46.3975 23.6188 46.3477 23.609 46.2982C23.5992 46.2487 23.5869 46.1999 23.5723 46.1516C23.5576 46.1033 23.5407 46.0559 23.5214 46.0093C23.5021 45.9627 23.4805 45.9171 23.4568 45.8726C23.433 45.8281 23.4071 45.7849 23.3791 45.743C23.351 45.7011 23.321 45.6606 23.289 45.6216C23.257 45.5827 23.2232 45.5454 23.1875 45.5097C23.1519 45.474 23.1145 45.4402 23.0756 45.4082C23.0366 45.3762 22.9961 45.3462 22.9542 45.3181C22.9122 45.2901 22.869 45.2642 22.8245 45.2404C22.7801 45.2167 22.7345 45.1951 22.6879 45.1758C22.6413 45.1565 22.5939 45.1396 22.5456 45.1249C22.4974 45.1103 22.4485 45.0981 22.399 45.0882C22.3496 45.0783 22.2997 45.0709 22.2495 45.066C22.1994 45.0611 22.149 45.0586 22.0986 45.0586H20.5986C18.6253 45.0586 17.6386 44.0719 17.6386 42.0986C17.6386 40.1253 18.6253 39.1386 20.5986 39.1386H26.5986C26.6997 39.1386 26.7999 39.1287 26.899 39.109C26.9982 39.0893 27.0945 39.0601 27.1879 39.0214C27.2814 38.9827 27.3701 38.9352 27.4542 38.8791C27.5383 38.8229 27.616 38.759 27.6875 38.6875L28.9735 37.4016C31.8155 34.5596 35.2461 33.1386 39.2653 33.1386H50.5986C52.3016 33.1386 53.7579 32.5554 54.9674 31.3891C56.1927 30.2076 56.8053 28.7775 56.8053 27.0986C56.8053 25.4197 56.1927 23.9895 54.9674 22.8081C53.7579 21.6417 52.3016 21.0586 50.5986 21.0586H40.9228L38.522 17.4574C36.1225 13.8582 32.7599 12.0586 28.4342 12.0586C27.4571 12.0586 26.6829 12.4549 26.1116 13.2476C25.5403 14.0402 25.4091 14.9 25.7181 15.827L27.462 21.0586H24.2264C23.9911 20.7358 23.6805 20.2608 23.2946 19.6335C22.0331 17.5836 20.2228 16.5586 17.8635 16.5586H17.6736C16.8134 16.5586 16.0792 16.8627 15.471 17.471C14.8627 18.0792 14.5586 18.8134 14.5586 19.6736V22.5986V24.0986C14.5586 26.5949 15.4412 28.7257 17.2063 30.4908C18.9705 32.255 21.0998 33.1376 23.5943 33.1386H23.5986C23.649 33.1386 23.6993 33.1361 23.7495 33.1312C23.7997 33.1263 23.8496 33.1189 23.899 33.109C23.9485 33.0991 23.9974 33.0869 24.0456 33.0723C24.0939 33.0576 24.1413 33.0407 24.1879 33.0214C24.2345 33.0021 24.2801 32.9805 24.3245 32.9568C24.369 32.933 24.4122 32.9071 24.4542 32.8791C24.4961 32.851 24.5366 32.821 24.5756 32.789C24.6145 32.757 24.6519 32.7232 24.6875 32.6875C24.7232 32.6518 24.757 32.6145 24.789 32.5756C24.821 32.5366 24.851 32.4961 24.8791 32.4542C24.9071 32.4123 24.933 32.369 24.9568 32.3245C24.9805 32.28 25.0021 32.2345 25.0214 32.1879C25.0407 32.1413 25.0576 32.0939 25.0723 32.0456C25.0869 31.9973 25.0992 31.9485 25.109 31.899C25.1188 31.8495 25.1262 31.7997 25.1312 31.7495C25.1361 31.6994 25.1386 31.6491 25.1386 31.5986C25.1386 31.5481 25.1361 31.4978 25.1312 31.4477C25.1262 31.3975 25.1188 31.3477 25.109 31.2982C25.0992 31.2487 25.0869 31.1999 25.0723 31.1516C25.0576 31.1033 25.0407 31.0559 25.0214 31.0093C25.0021 30.9627 24.9805 30.9171 24.9568 30.8726C24.933 30.8281 24.9071 30.7849 24.8791 30.743C24.851 30.7011 24.821 30.6606 24.789 30.6216C24.757 30.5827 24.7232 30.5454 24.6875 30.5097C24.6519 30.474 24.6145 30.4402 24.5756 30.4082C24.5366 30.3762 24.4961 30.3462 24.4542 30.3181C24.4122 30.2901 24.369 30.2642 24.3245 30.2404C24.2801 30.2167 24.2345 30.1951 24.1879 30.1758C24.1413 30.1565 24.0939 30.1396 24.0456 30.1249C23.9974 30.1102 23.9485 30.098 23.899 30.0882C23.8496 30.0783 23.7997 30.0709 23.7495 30.066C23.6993 30.0611 23.649 30.0586 23.5986 30.0586C21.9528 30.0586 20.548 29.4767 19.3842 28.313C18.2205 27.1492 17.6386 25.7444 17.6386 24.0986V22.5986V19.6736C17.6386 19.6503 17.6503 19.6386 17.6736 19.6386H17.8635C19.0754 19.6386 20.0113 20.1749 20.6714 21.2477C21.8573 23.1749 22.8331 24.1386 23.5986 24.1386H29.5986C29.7652 24.1386 29.9275 24.1123 30.0856 24.0596C30.1335 24.0436 30.1804 24.0253 30.2264 24.0048C30.2725 23.9843 30.3174 23.9615 30.3613 23.9365C30.4051 23.9115 30.4476 23.8844 30.4887 23.8553C30.5299 23.8262 30.5695 23.7951 30.6076 23.762C30.6457 23.7289 30.6821 23.6941 30.7168 23.6575C30.7515 23.6209 30.7843 23.5827 30.8152 23.5428C30.8461 23.5029 30.875 23.4617 30.9019 23.419C30.9288 23.3763 30.9535 23.3324 30.976 23.2873C30.9986 23.2422 31.0189 23.1961 31.0369 23.149C31.0549 23.1019 31.0706 23.054 31.0839 23.0053C31.0972 22.9567 31.1081 22.9075 31.1166 22.8578C31.1251 22.8081 31.1312 22.7581 31.1347 22.7078C31.1383 22.6575 31.1394 22.6071 31.138 22.5567C31.1367 22.5063 31.1328 22.456 31.1265 22.406C31.1202 22.3559 31.1114 22.3063 31.1003 22.2571C31.0891 22.208 31.0755 22.1595 31.0596 22.1116L28.7366 15.1426C31.8181 15.2244 34.2257 16.5655 35.9593 19.1659L38.8172 23.4528C38.8875 23.5583 38.9696 23.6536 39.0635 23.7389C39.1574 23.8241 39.2602 23.8966 39.3719 23.9564C39.4837 24.0162 39.6011 24.0615 39.724 24.0923C39.847 24.1232 39.9719 24.1386 40.0986 24.1386H50.5986C51.4729 24.1386 52.2165 24.4341 52.8295 25.0252C53.4267 25.6011 53.7253 26.2922 53.7253 27.0986C53.7253 29.0719 52.6831 30.0586 50.5986 30.0586H39.2653C34.3956 30.0586 30.239 31.7803 26.7956 35.2237L25.9607 36.0586H20.5986C18.9307 36.0586 17.5071 36.6483 16.3277 37.8277C15.1483 39.007 14.5586 40.4307 14.5586 42.0986C14.5586 43.7665 15.1483 45.1902 16.3277 46.3695C17.5071 47.5489 18.9307 48.1386 20.5986 48.1386H20.8131C21.0313 48.7535 21.3897 49.3102 21.8883 49.8089C22.7748 50.6954 23.8449 51.1386 25.0986 51.1386C26.3523 51.1386 27.4224 50.6954 28.3089 49.8089C28.8076 49.3102 29.166 48.7535 29.3841 48.1386H41.8131C42.0312 48.7535 42.3896 49.3102 42.8883 49.8089C43.7748 50.6954 44.8449 51.1386 46.0986 51.1386C47.3523 51.1386 48.4224 50.6954 49.3089 49.8089C49.8359 49.2818 50.2063 48.6899 50.42 48.0331C51.9429 47.7817 53.2797 47.0807 54.4302 45.9302C55.9025 44.4579 56.6386 42.6807 56.6386 40.5986Z" fill="#EFD0A4"/> </svg>
+            <div class="fdl-member-level-card__lock" aria-label="未解锁">
+              <div class="fdl-member-level-card__lock-bg"></div>
+              <div class="fdl-member-level-card__lock-shape">
+                <div class="fdl-member-level-card__lock-body"></div>
+                <div class="fdl-member-level-card__lock-shackle"></div>
+              </div>
+            </div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">酒店买贵赔</span>
+        </div>
+        <button type="button" class="fdl-member-level-card__more">
+          <span>更<br />多</span>
+          <svg class="fdl-member-level-card__chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g opacity="0.5"><path d="M13.8483 8.044C14.3456 8.53427 14.3812 9.3074 13.9549 9.83808L13.8483 9.956L6.09099 17.604C5.55546 18.132 4.68718 18.132 4.15165 17.604C3.65437 17.1137 3.61885 16.3406 4.04509 15.8099L4.15165 15.692L10.9393 9L4.15165 2.30799C3.65437 1.81772 3.61885 1.04459 4.04509 0.51391L4.15165 0.395989C4.64893 -0.0942831 5.43312 -0.129302 5.97138 0.29093L6.09099 0.395989L13.8483 8.044Z" fill="var(--color-lightgray)"/></g>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="fdl-member-level-card__tasks">
+      <div class="fdl-member-level-card__tasks-scroll">
+        <div class="fdl-member-level-card__task">
+          <div class="fdl-member-level-card__task-title">预订机票，加速升级</div>
+          <div class="fdl-member-level-card__task-body">
+            <div class="fdl-member-level-card__task-reward">
+              <div class="fdl-member-level-card__task-icon" aria-hidden="true"></div>
+              <div class="fdl-member-level-card__task-text">
+                <p>得升级加速卡</p>
+                <p>30天可加速5倍</p>
+              </div>
+            </div>
+            <button type="button" class="fdl-member-level-card__task-btn">去完成</button>
+          </div>
+        </div>
+        <div class="fdl-member-level-card__task">
+          <div class="fdl-member-level-card__task-title">
+            <span>预订机票，加速升级</span>
+            <span class="fdl-member-level-card__task-sub">金额需达2000</span>
+          </div>
+          <div class="fdl-member-level-card__task-body">
+            <div class="fdl-member-level-card__task-reward">
+              <div class="fdl-member-level-card__task-icon" aria-hidden="true"></div>
+              <div class="fdl-member-level-card__task-text">
+                <p>完成任务得里程</p>
+                <p>+200里程</p>
+              </div>
+            </div>
+            <button type="button" class="fdl-member-level-card__task-btn">去完成</button>
+          </div>
+        </div>
+      </div>
+      <div class="fdl-member-level-card__tasks-fade" aria-hidden="true"></div>
+    </div>
+  </article>
+
+<div class="fdl-member-brand-benefits__wrap">
+    <section class="fdl-member-brand-benefits" aria-label="专属品牌会员权益">
+      <header class="fdl-member-brand-benefits__header">
+        <div class="fdl-member-brand-benefits__head-text">
+          <h2 class="fdl-member-brand-benefits__title">专属品牌会员权益</h2>
+          <p class="fdl-member-brand-benefits__sub">0 元匹配 · 直通礼遇 · 一单回本</p>
+        </div>
+        <a href="#" class="fdl-member-brand-benefits__view-all" aria-label="查看全部品牌会员权益">
+          <span>全部权益</span>
+          <svg class="fdl-member-brand-benefits__view-all-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9.2322 5.36267C9.56373 5.68951 9.58747 6.20493 9.30327 6.55872L9.2322 6.63733L4.06066 11.736C3.70364 12.088 3.12479 12.088 2.76777 11.736C2.43625 11.4091 2.41257 10.8937 2.69673 10.5399L2.76777 10.4613L7.29289 6L2.76777 1.53866C2.43625 1.21181 2.41257 0.696393 2.69673 0.342607L2.76777 0.263993C3.09929 -0.0628554 3.62208 -0.0862014 3.98092 0.193953L4.06066 0.263993L9.2322 5.36267Z" fill="currentColor" />
+          </svg>
+        </a>
+      </header>
+      <div class="fdl-member-brand-benefits__list" role="list">
+        <article class="fdl-member-brand-benefits__card fdl-member-brand-benefits__card--accor" role="listitem">
+          <div class="fdl-member-brand-benefits__card-inner">
+            <div class="fdl-member-brand-benefits__logo-wrap">
+              <img class="fdl-member-brand-benefits__logo" src="https://gw.alicdn.com/imgextra/i4/O1CN01vR5UuV1Iz6Xk0kNcP_!!6000000000963-2-tps-179-96.png" alt="雅高" />
+            </div>
+            <p class="fdl-member-brand-benefits__card-title">直通雅高白金卡</p>
+            <p class="fdl-member-brand-benefits__card-hint">房晚加速 · 早餐礼遇</p>
+          </div>
+          <a href="#" class="fdl-member-brand-benefits__btn">0 元开卡</a>
+        </article>
+        <article class="fdl-member-brand-benefits__card fdl-member-brand-benefits__card--hilton" role="listitem">
+          <div class="fdl-member-brand-benefits__card-inner">
+            <div class="fdl-member-brand-benefits__logo-wrap">
+              <img class="fdl-member-brand-benefits__logo" src="https://gw.alicdn.com/imgextra/i2/O1CN01SkCYyY1lmOPKlPBFf_!!6000000004861-2-tps-179-96.png" alt="希尔顿" />
+            </div>
+            <p class="fdl-member-brand-benefits__card-title">直通希尔顿金卡</p>
+            <p class="fdl-member-brand-benefits__card-hint">积分加倍 · 房型升级</p>
+          </div>
+          <a href="#" class="fdl-member-brand-benefits__btn">0 元开卡</a>
+        </article>
+        <article class="fdl-member-brand-benefits__card fdl-member-brand-benefits__card--hyatt" role="listitem">
+          <div class="fdl-member-brand-benefits__card-inner">
+            <div class="fdl-member-brand-benefits__logo-wrap">
+              <img class="fdl-member-brand-benefits__logo" src="https://gw.alicdn.com/imgextra/i3/O1CN01gTB35k1FMgTGAOzYY_!!6000000000473-2-tps-179-96.png" alt="凯悦" />
+            </div>
+            <p class="fdl-member-brand-benefits__card-title">直通凯悦会员</p>
+            <p class="fdl-member-brand-benefits__card-hint">精英会籍 · 延迟退房</p>
+          </div>
+          <a href="#" class="fdl-member-brand-benefits__btn">0 元开卡</a>
+        </article>
+      </div>
+    </section>
+  </div>
+
+<section class="fdl-member-airline-banner" aria-label="航司会员挑战">
+    <div class="fdl-member-airline-banner__text">
+      <h2 class="fdl-member-airline-banner__title">航司会员挑战</h2>
+      <p class="fdl-member-airline-banner__desc">报名可领兑 · 30元券包</p>
+    </div>
+    <img
+      class="fdl-member-airline-banner__media"
+      src="https://gw.alicdn.com/imgextra/i2/O1CN01Q9o1Ts1gtCDD90f39_!!6000000004199-2-tps-324-254.png"
+      alt=""
+      width="160"
+      height="100"
+    />
+  </section>
+      </div>
+      <div class="member-page__feeds">
+<div class="fdl-member-hotel-feeds-wrap">
+    <section class="fdl-member-hotel-feeds" aria-label="会员酒店推荐">
+      <div class="fdl-member-hotel-feeds__main-tabs">
+        <div class="fdl-member-hotel-feeds__main-tabs-inner">
+          <div class="fdl-member-hotel-feeds__main-tab is-active">
+            <span class="fdl-member-hotel-feeds__main-tab-text">会员价</span>
+          </div>
+          <div class="fdl-member-hotel-feeds__main-tab">
+            <span class="fdl-member-hotel-feeds__main-tab-text">里程倍花</span>
+          </div>
+          <div class="fdl-member-hotel-feeds__main-tab">
+            <span class="fdl-member-hotel-feeds__main-tab-text">里程加钱购</span>
+          </div>
+        </div>
+      </div>
+      <div class="fdl-member-hotel-feeds__sub-tabs">
+        <div class="fdl-member-hotel-feeds__sub-tabs-inner">
+          <div class="fdl-member-hotel-feeds__sub-tab is-active">
+            <span class="fdl-member-hotel-feeds__sub-tab-text">精选</span>
+          </div>
+          <div class="fdl-member-hotel-feeds__sub-tab">
+            <span class="fdl-member-hotel-feeds__sub-tab-text">过夏天</span>
+          </div>
+        </div>
+      </div>
+      <div class="fdl-member-hotel-feeds__filter">
+        <div class="fdl-member-hotel-feeds__filter-inner">
+          <div class="fdl-member-hotel-feeds__filter-btn">
+            <span class="fdl-member-hotel-feeds__filter-btn-text">酒店/度假 · 杭州</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="#0F131A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="fdl-member-hotel-feeds__dates">
+            <img class="fdl-member-hotel-feeds__cal" src="https://gw.alicdn.com/imgextra/i3/O1CN01bphxDa25o28t3VfyI_!!6000000007572-2-tps-72-72.png" alt="" width="36" height="36" />
+            <div class="fdl-member-hotel-feeds__date-line">
+              <span class="fdl-member-hotel-feeds__date-main">02月27日</span>
+              <span class="fdl-member-hotel-feeds__date-week">周五</span>
+            </div>
+            <div class="fdl-member-hotel-feeds__date-sep" aria-hidden="true"></div>
+            <div class="fdl-member-hotel-feeds__date-line">
+              <span class="fdl-member-hotel-feeds__date-main">02月28日</span>
+              <span class="fdl-member-hotel-feeds__date-week">周六</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fdl-member-hotel-feeds__list">
+        <article class="fdl-member-hotel-feeds__card">
+          <div class="fdl-member-hotel-feeds__img-wrap">
+            <div class="fdl-member-hotel-feeds__badge" aria-hidden="true"></div>
+          </div>
+          <div class="fdl-member-hotel-feeds__info">
+            <div class="fdl-member-hotel-feeds__info-top">
+              <div class="fdl-member-hotel-feeds__title-row">
+                <span class="fdl-member-hotel-feeds__title">杭州西溪湿地公园纳德润泽园</span>
+                <span class="fdl-member-hotel-feeds__level">豪华</span>
+              </div>
+              <div class="fdl-member-hotel-feeds__rating">
+                <span class="fdl-member-hotel-feeds__score">4.8</span>
+                <span class="fdl-member-hotel-feeds__score-label">很好</span>
+                <span class="fdl-member-hotel-feeds__reviews">3000+评价</span>
+              </div>
+              <p class="fdl-member-hotel-feeds__loc">距您直线1.6公里·近杭州师范大学仓前校区</p>
+              <div class="fdl-member-hotel-feeds__tags">
+                <div class="fdl-member-hotel-feeds__tag-l">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN01YHLsmd26Hnt0pOn22_!!6000000007637-2-tps-48-48.png" alt="" />
+                  <span>无需换票</span>
+                </div>
+                <div class="fdl-member-hotel-feeds__tag-r">会员价·延迟退房</div>
+              </div>
+            </div>
+            <div class="fdl-member-hotel-feeds__info-bottom">
+              <div class="fdl-member-hotel-feeds__price">
+                <span class="fdl-member-hotel-feeds__price-y">¥</span>
+                <span class="fdl-member-hotel-feeds__price-n">694</span>
+                <span class="fdl-member-hotel-feeds__price-suf">起</span>
+              </div>
+              <div class="fdl-member-hotel-feeds__discount">
+                <img src="https://gw.alicdn.com/imgextra/i2/O1CN011w1fQd1IfPVq2n1Mn_!!6000000000920-2-tps-48-48.png" alt="" />
+                <span>会员价</span>
+                <div class="fdl-member-hotel-feeds__discount-sep" aria-hidden="true"></div>
+                <span>2项优惠¥150</span>
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3.375 1.125L6.75 4.5L3.375 7.875" stroke="#FF5533" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="fdl-member-hotel-feeds__divider" aria-hidden="true"></div>
+        </article>
+        <article class="fdl-member-hotel-feeds__card">
+          <div class="fdl-member-hotel-feeds__img-wrap">
+            <div class="fdl-member-hotel-feeds__badge" aria-hidden="true"></div>
+          </div>
+          <div class="fdl-member-hotel-feeds__info">
+            <div class="fdl-member-hotel-feeds__info-top">
+              <div class="fdl-member-hotel-feeds__title-row">
+                <span class="fdl-member-hotel-feeds__title">示例酒店 B（列表重复结构）</span>
+                <span class="fdl-member-hotel-feeds__level">高档</span>
+              </div>
+              <div class="fdl-member-hotel-feeds__rating">
+                <span class="fdl-member-hotel-feeds__score">4.9</span>
+                <span class="fdl-member-hotel-feeds__score-label">超棒</span>
+                <span class="fdl-member-hotel-feeds__reviews">1200+评价</span>
+              </div>
+              <p class="fdl-member-hotel-feeds__loc">距你直线约650米·西溪园区</p>
+              <div class="fdl-member-hotel-feeds__tags">
+                <div class="fdl-member-hotel-feeds__tag-l">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN01YHLsmd26Hnt0pOn22_!!6000000007637-2-tps-48-48.png" alt="" />
+                  <span>F3会员价</span>
+                </div>
+                <div class="fdl-member-hotel-feeds__tag-r">2项优惠</div>
+              </div>
+            </div>
+            <div class="fdl-member-hotel-feeds__info-bottom">
+              <div class="fdl-member-hotel-feeds__price">
+                <span class="fdl-member-hotel-feeds__price-y">¥</span>
+                <span class="fdl-member-hotel-feeds__price-n">528</span>
+                <span class="fdl-member-hotel-feeds__price-suf">起</span>
+              </div>
+              <div class="fdl-member-hotel-feeds__discount">
+                <img src="https://gw.alicdn.com/imgextra/i2/O1CN011w1fQd1IfPVq2n1Mn_!!6000000000920-2-tps-48-48.png" alt="" />
+                <span>F3会员价</span>
+                <div class="fdl-member-hotel-feeds__discount-sep" aria-hidden="true"></div>
+                <span>里程抵¥50</span>
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3.375 1.125L6.75 4.5L3.375 7.875" stroke="#FF5533" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="fdl-member-hotel-feeds__divider" aria-hidden="true"></div>
+        </article>
+      </div>
+    </section>
+  </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="fdl-tabbar">
+    <nav class="fdl-tabbar__nav" aria-label="底部主导航">
+      <ul class="fdl-tabbar__list">
+        <li class="fdl-tabbar__item fdl-tabbar__item--fliggy">
+          <a class="fdl-tabbar__link" href="#" aria-label="首页">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i4/O1CN01C1KZp61fkfDbhqDGb_!!6000000004045-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN01eNqqfN2803m2U1a3R_!!6000000007869-2-tps-204-214.png" width="204" height="214" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">首页</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item fdl-tabbar__item--active">
+          <a class="fdl-tabbar__link" href="#" aria-label="会员" aria-current="page">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i3/O1CN018WSOmF1geXXRCSdee_!!6000000004167-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN010oGY6j1iNiDYeKlL0_!!6000000004401-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">会员</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#" aria-label="消息">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i4/O1CN01Hn4QVN1MnQuj2rkYr_!!6000000001479-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i2/O1CN012vS02w1kkGxVWS4hE_!!6000000004721-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">消息</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#" aria-label="行程">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i2/O1CN01x0SUcY1O2NS7urI3g_!!6000000001647-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN01P27V8t1uN324l68EU_!!6000000006024-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">行程</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#" aria-label="我的">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i1/O1CN01VLEq8s1CUWOysFWgi_!!6000000000084-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i1/O1CN01u12TM81hqHIyW5bc4_!!6000000004328-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">我的</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="fdl-tabbar__safe-area" aria-hidden="true"></div>
+  </div>
+
+</body>
+</html>

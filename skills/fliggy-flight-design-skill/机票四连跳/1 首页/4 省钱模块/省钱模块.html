@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>机票首页/省钱模块</title>
+  <style>
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-white: #ffffff;
+      --color-label: #f7f8fa;
+      --color-separator: #d2d4d9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-label);
+      color: var(--color-darkgray);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    /* ===== 省钱模块 ===== */
+    .save-money {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px 24px 24px;
+      gap: 10px;
+      width: 702px;
+      height: 256px;
+      background: var(--color-white);
+      border-radius: 18px;
+    }
+
+    /* Title Container */
+    .save-money__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 20px;
+      width: 654px;
+      height: 212px;
+    }
+
+    /* ===== Header Container ===== */
+    .save-money__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      width: 654px;
+      height: 32px;
+    }
+
+    /* Title */
+    .save-money__title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 32px;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+
+    /* More Container */
+    .save-money__more {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+    }
+
+    .save-money__more-text {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 100%;
+      color: var(--color-midgray);
+    }
+
+    .save-money__more-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 10px;
+      height: 24px;
+    }
+
+    .save-money__more-icon svg {
+      display: block;
+      width: 8.47px;
+      height: 14.52px;
+    }
+
+    /* ===== Content Container (卡片行) ===== */
+    .save-money__cards {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      width: 654px;
+      height: 160px;
+    }
+
+    /* ===== 通用卡片 ===== */
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 18px 16px;
+      height: 160px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* ===== 卡片文字信息 ===== */
+    .card__info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card__title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card__title {
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+
+    .card__subtitle {
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 100%;
+      color: var(--color-midgray);
+    }
+
+    /* ============================================
+       Card-01 — 红色折扣卡 (256px)
+       ============================================ */
+    .card--discount {
+      width: 256px;
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01awtbsf1MntJE7vx8U_!!6000000001480-2-tps-512-320.png");
+    }
+
+    /* 红色按钮 */
+    .card__btn--red {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 14px;
+      width: 108px;
+      height: 42px;
+      background: #ff6666;
+      border-radius: 24px;
+      border: none;
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 100%;
+      color: var(--color-white);
+      cursor: pointer;
+    }
+
+    /* ============================================
+       Card-02 — 金色推广卡（中）(242px)
+       ============================================ */
+    .card--promo-mid {
+      width: 242px;
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01ucCwHq1oxn6zs4Wuh_!!6000000005292-2-tps-484-320.png");
+    }
+
+    /* ============================================
+       Card-03 — 金色推广卡（小）(156px)
+       ============================================ */
+    .card--promo-sm {
+      width: 156px;
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01YVP5mc1I4lpLCFKL2_!!6000000000840-2-tps-312-320.png");
+    }
+
+    /* 飞猪 F1 标签 */
+    .card__tag {
+      display: block;
+      width: 34px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .card__tag img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* 金色描边按钮 */
+    .card__btn--gold {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 14px;
+      width: 108px;
+      height: 42px;
+      border: 1px solid rgba(178, 95, 36, 0.32);
+      border-radius: 22px;
+      background: transparent;
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 28px;
+      color: #b25f24;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<section class="save-money">
+  <div class="save-money__inner">
+
+    <!-- Header Container -->
+    <div class="save-money__header">
+      <span class="save-money__title">出行省钱</span>
+      <div class="save-money__more">
+        <span class="save-money__more-text">更多优惠</span>
+        <span class="save-money__more-icon">
+          <svg viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L7.5 7.5L1 14" stroke="#D2D4D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Content Container (卡片行) -->
+    <div class="save-money__cards">
+
+      <!-- Card-01：红色折扣卡 (256px) -->
+      <div class="card card--discount">
+        <div class="card__info">
+          <div class="card__title-row">
+            <span class="card__title">机票优惠券</span>
+          </div>
+          <span class="card__subtitle">领券立减出行省</span>
+        </div>
+        <button class="card__btn--red">立即领取</button>
+      </div>
+
+      <!-- Card-02：金色推广卡（中）(242px) -->
+      <div class="card card--promo-mid">
+        <div class="card__info">
+          <div class="card__title-row">
+            <span class="card__tag">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01ckRuPS233eo0NPAco_!!6000000007200-2-tps-68-48.png" alt="F1" />
+            </span>
+            <span class="card__title">低价机票日历</span>
+          </div>
+          <span class="card__subtitle">看看哪天飞最便宜</span>
+        </div>
+        <button class="card__btn--gold">去看看</button>
+      </div>
+
+      <!-- Card-03：金色推广卡（小）(156px) -->
+      <div class="card card--promo-sm">
+        <div class="card__info">
+          <div class="card__title-row">
+            <span class="card__title">特价机票</span>
+          </div>
+          <span class="card__subtitle">低至1折起</span>
+        </div>
+        <button class="card__btn--gold">去看看</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

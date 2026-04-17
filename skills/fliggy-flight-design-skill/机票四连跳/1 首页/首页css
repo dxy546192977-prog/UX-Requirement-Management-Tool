@@ -1,0 +1,12970 @@
+/* 首页全状态 */
+
+position: relative;
+width: 750px;
+height: 1624px;
+
+background: #F2F3F5;
+
+
+/* Top bar container */
+
+position: absolute;
+width: 750px;
+height: 310px;
+right: 0px;
+top: 0px;
+
+
+
+/* Group 673 */
+
+position: absolute;
+width: 750px;
+height: 310px;
+left: 0px;
+top: 0px;
+
+
+
+/* Group 207 */
+
+position: absolute;
+width: 750px;
+height: 310px;
+left: 0px;
+top: 0px;
+
+
+
+/* 1_首页_改 */
+
+position: absolute;
+width: 750px;
+height: 310px;
+left: 0px;
+top: 0px;
+
+background: #F2F3F5;
+
+
+/* Group 107 */
+
+position: absolute;
+width: 881.7px;
+height: 476px;
+left: -9px;
+top: -146px;
+
+
+
+/* 头图 */
+
+position: absolute;
+width: 750px;
+height: 325px;
+left: calc(50% - 750px/2);
+top: 0px;
+
+
+
+/* 矩形 */
+
+position: absolute;
+width: 549.41px;
+height: 325px;
+left: 0px;
+top: 0px;
+
+background: linear-gradient(52.32deg, rgba(255, 255, 255, 0.02) 53.6%, rgba(51, 51, 51, 0.04) 82.09%);
+
+
+/* 矩形 */
+
+position: absolute;
+width: 402px;
+height: 66.5px;
+left: 308px;
+top: 108px;
+
+background: linear-gradient(90deg, rgba(255, 255, 255, 0.0001) 0%, rgba(51, 51, 51, 0.07) 48.9%, rgba(255, 255, 255, 0.0001) 100%);
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* 矩形 */
+
+position: absolute;
+width: 316px;
+height: 66.5px;
+left: 28px;
+top: 108px;
+
+background: linear-gradient(90deg, rgba(255, 255, 255, 0.0001) 0%, rgba(51, 51, 51, 0.07) 66.11%, rgba(255, 255, 255, 0.0001) 100%);
+mix-blend-mode: normal;
+opacity: 0.5;
+
+
+/* 矩形 */
+
+position: absolute;
+width: 413.41px;
+height: 325px;
+left: 0px;
+top: 0px;
+
+background: linear-gradient(72.67deg, rgba(255, 255, 255, 0.02) 10.93%, rgba(51, 51, 51, 0.04) 67.04%);
+
+
+/* Rectangle 24 */
+
+position: absolute;
+width: 750px;
+height: 60px;
+left: 0px;
+top: 200px;
+
+background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #F2F3F5 100%);
+
+
+/* 图层 4 1 */
+
+position: absolute;
+width: 881.7px;
+height: 476px;
+left: -9px;
+top: -146px;
+
+background: url(图层 4.png);
+
+
+/* Mask group */
+
+position: absolute;
+width: 48px;
+height: 48px;
+left: 622px;
+top: 108px;
+
+
+
+/* Rectangle 66 */
+
+position: absolute;
+width: 48px;
+height: 48px;
+left: 622px;
+top: 108px;
+
+background: #D9D9D9;
+
+
+/* Group 721 */
+
+position: absolute;
+width: 66px;
+height: 6px;
+left: 660px;
+top: 210px;
+
+
+
+/* Frame 1312323495 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+position: absolute;
+width: 66px;
+height: 6px;
+left: 660px;
+top: 210px;
+
+
+
+/* Rectangle 10871 */
+
+width: 18px;
+height: 6px;
+
+background: #FFFFFF;
+border-radius: 6px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Rectangle 10872 */
+
+width: 12px;
+height: 6px;
+
+background: rgba(255, 255, 255, 0.4);
+border-radius: 6px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Rectangle 10873 */
+
+width: 12px;
+height: 6px;
+
+background: rgba(255, 255, 255, 0.4);
+border-radius: 6px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Rectangle 10874 */
+
+width: 12px;
+height: 6px;
+
+background: rgba(255, 255, 255, 0.4);
+border-radius: 6px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Frame 1312323488 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 18px;
+
+position: absolute;
+width: 750px;
+height: 194px;
+left: 0px;
+top: 0px;
+
+
+
+/* iPhone-status-bar(upper) */
+
+width: 750px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Notch */
+
+position: absolute;
+height: 60px;
+left: 0px;
+right: 0px;
+top: 0px;
+
+
+
+/* Subtract */
+
+position: absolute;
+visibility: hidden;
+width: 88px;
+height: 60px;
+left: 154px;
+top: calc(50% - 60px/2);
+
+/* System Bg Dark Base / Primary */
+background: #000000;
+
+
+/* Rectangle 11 */
+
+position: absolute;
+visibility: hidden;
+left: 242px;
+right: 242px;
+top: 0%;
+bottom: 0%;
+
+/* System Bg Dark Base / Primary */
+background: #000000;
+
+
+/* Subtract */
+
+position: absolute;
+visibility: hidden;
+width: 88px;
+height: 60px;
+right: 154px;
+top: calc(50% - 60px/2);
+
+/* System Bg Dark Base / Primary */
+background: #000000;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Status Icons */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 8px;
+
+position: absolute;
+visibility: hidden;
+width: 138px;
+height: 28px;
+right: 28px;
+top: 32px;
+
+
+
+/* Indicator
+
+Recording Indicator
+*/
+
+position: absolute;
+width: 12px;
+height: 12px;
+right: 142px;
+top: 16px;
+
+
+
+/* Indicator */
+
+position: absolute;
+visibility: hidden;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+/* SystemGreen / Light
+
+class var systemGreen: UIColor
+*/
+background: #34C759;
+
+
+/* Time / Light */
+
+position: absolute;
+visibility: hidden;
+width: 108px;
+height: 42px;
+left: 42px;
+top: 24px;
+
+border-radius: 40px;
+
+
+/* 05 二级导航-沉浸式 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 750px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 05 二级导航-沉浸式 */
+
+width: 750px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 153 */
+
+position: absolute;
+width: 60px;
+height: 60px;
+left: 24px;
+top: calc(50% - 60px/2);
+
+background: rgba(0, 0, 0, 0.2);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 30px;
+
+
+/* 05fanhuijiantou */
+
+position: absolute;
+width: 36px;
+height: 36px;
+left: 12px;
+top: 12px;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 30.21%;
+right: 30.29%;
+top: 13.62%;
+bottom: 13.62%;
+
+background: #FFFFFF;
+
+
+/* Frame 144 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+position: absolute;
+width: 132px;
+height: 60px;
+right: 24px;
+top: calc(50% - 60px/2);
+
+
+
+/* Frame 152 */
+
+display: none;
+width: 60px;
+height: 60px;
+
+background: rgba(0, 0, 0, 0.2);
+border-radius: 30px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 153 */
+
+display: none;
+width: 60px;
+height: 60px;
+
+background: rgba(0, 0, 0, 0.2);
+border-radius: 30px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 151 */
+
+display: none;
+width: 60px;
+height: 60px;
+
+background: rgba(0, 0, 0, 0.2);
+border-radius: 30px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Frame 150 */
+
+width: 60px;
+height: 60px;
+
+background: rgba(0, 0, 0, 0.2);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 30px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Group 724 */
+
+position: absolute;
+width: 27px;
+height: 29px;
+left: calc(50% - 27px/2 + 0.5px);
+top: calc(50% - 29px/2 + 0.5px);
+
+
+
+/* Rectangle 10877 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 27px;
+height: 29px;
+left: 17px;
+top: 16px;
+
+border: 2px solid #FFFFFF;
+border-radius: 6px;
+
+
+/* Mask group */
+
+position: absolute;
+width: 27px;
+height: 29px;
+left: 17px;
+top: 16px;
+
+
+
+/* Rectangle 10879 */
+
+position: absolute;
+width: 27px;
+height: 29px;
+left: 17px;
+top: 16px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Subtract */
+
+position: absolute;
+width: 35px;
+height: 34.47px;
+left: 13px;
+top: -4px;
+
+background: #FFFFFF;
+
+
+/* Ellipse 2133 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 10px;
+height: 10px;
+left: 26px;
+top: 24px;
+
+border: 2px solid #FFFFFF;
+
+
+/* Frame 154 */
+
+width: 60px;
+height: 60px;
+
+background: rgba(0, 0, 0, 0.2);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 30px;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* 04gengduo11 */
+
+position: absolute;
+width: 36px;
+height: 36px;
+left: calc(50% - 36px/2);
+top: calc(50% - 36px/2);
+
+
+
+/* Vector */
+
+position: absolute;
+left: 12.65%;
+right: 12.5%;
+top: 41.67%;
+bottom: 41.58%;
+
+background: #FFFFFF;
+
+
+/* Frame 1312323492 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 12px;
+
+position: absolute;
+width: 354px;
+height: 52px;
+left: 115px;
+top: 7px;
+
+
+
+/* Frame 1312323492 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+gap: 6px;
+
+width: 354px;
+height: 52px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Rectangle 10927 */
+
+position: absolute;
+width: 750px;
+height: 85px;
+right: 0px;
+top: 225px;
+
+background: linear-gradient(180deg, rgba(242, 243, 245, 0) 0%, rgba(242, 243, 245, 0.8) 70%, #F2F3F5 100%);
+
+
+/* Group 1299 */
+
+position: absolute;
+width: 379px;
+height: 179px;
+left: 115px;
+top: 20px;
+
+
+
+/* Frame 1312323492 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 12px;
+
+position: absolute;
+width: 354px;
+height: 86px;
+left: 115px;
+top: 113px;
+
+
+
+/* Frame 1312323493 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+gap: 6px;
+
+width: 354px;
+height: 52px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 等风来,不如追风去 */
+
+width: 354px;
+height: 52px;
+
+font-family: 'FliggyFont';
+font-style: italic;
+font-weight: 700;
+font-size: 52px;
+line-height: 100%;
+/* identical to box height, or 52px */
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 1312323491 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+gap: 6px;
+
+width: 287.4px;
+height: 22px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Group 720 */
+
+width: 80.4px;
+height: 21.6px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Rectangle 10870 */
+
+position: absolute;
+width: 80.4px;
+height: 21.6px;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+border-radius: 3.6px;
+
+
+/* Group */
+
+position: absolute;
+left: 1.04%;
+right: 73.49%;
+top: 18.18%;
+bottom: 16.36%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 1.04%;
+right: 73.49%;
+top: 18.18%;
+bottom: 16.36%;
+
+background: #021F36;
+
+
+/* 飞阿勒泰 低至300元 */
+
+width: 201px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Group 719 */
+
+position: absolute;
+width: 238px;
+height: 70px;
+right: 256px;
+top: 20px;
+
+
+
+/* Rectangle 10869 */
+
+position: absolute;
+width: 238px;
+height: 70px;
+left: calc(50% - 238px/2);
+top: 20px;
+
+background: #000000;
+border-radius: 45px;
+
+
+/* Sidebar container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 60px;
+
+position: absolute;
+width: 750px;
+height: 7185px;
+left: 0px;
+top: 225px;
+
+
+
+/* Sidebar child container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 24px;
+
+width: 750px;
+height: 6965px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 搜索模块 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 750px;
+height: 757px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 二级/单程 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 0px 24px;
+
+width: 750px;
+height: 182px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 机票 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+width: 702px;
+height: 182px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Primary tab flight */
+
+width: 702px;
+height: 84px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Tab background */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 9.52%;
+bottom: 0%;
+
+background: linear-gradient(180deg, rgba(242, 243, 245, 0.6) -48.68%, #F2F3F5 62.83%);
+backdrop-filter: blur(12px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 26px 26px 0px 0px;
+
+
+/* 选中 */
+
+position: absolute;
+left: 0%;
+right: 53.28%;
+top: 0%;
+bottom: 0%;
+
+background: #FFFFFF;
+
+
+/* 选中条 */
+
+position: absolute;
+width: 84px;
+height: 24px;
+left: 30px;
+top: 48px;
+
+background: linear-gradient(90deg, #FFE033 4.76%, rgba(255, 224, 51, 0) 106.55%);
+border-radius: 24px;
+
+
+/* Group */
+
+position: absolute;
+width: 242px;
+height: 34px;
+left: 36px;
+top: 26px;
+
+
+
+/* 选中条 */
+
+position: absolute;
+visibility: hidden;
+width: 60px;
+height: 8px;
+left: 6px;
+top: 46px;
+
+background: #FFE033;
+border-radius: 24px;
+
+
+/* Tab group */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+position: absolute;
+width: 242px;
+height: 34px;
+left: 0px;
+top: 0px;
+
+
+
+/* Group */
+
+width: 72px;
+height: 34px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* Group */
+
+width: 2px;
+height: 26px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #D2D4D9;
+
+
+/* Group */
+
+width: 136px;
+height: 34px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #575757;
+
+
+/* Vector */
+
+position: absolute;
+width: 78px;
+height: 27px;
+left: 328px;
+top: 32px;
+
+background: #575757;
+
+
+/* 汽车票 */
+
+position: absolute;
+width: 80px;
+height: 27px;
+left: 438px;
+top: 32px;
+
+background: #575757;
+
+
+/* Vector */
+
+position: absolute;
+width: 122px;
+height: 27px;
+left: 550px;
+top: 32px;
+
+background: #575757;
+
+
+/* Secondary one-way */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 10px;
+
+width: 702px;
+height: 98px;
+
+background: #F2F3F5;
+border-right: 2px solid #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 二级tab */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px 0px 18px;
+gap: 116px;
+
+width: 702px;
+height: 98px;
+
+background: #FFFFFF;
+border-radius: 0px 26px 0px 0px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Tab-子元素1 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+margin: 0 auto;
+width: 234px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* 容器 3795 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+width: 60px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 容器 3853 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+width: 60px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 气泡（未做组件待替换） */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 4px 6px;
+gap: 10px;
+
+width: 60px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Frame 163 */
+
+display: none;
+width: 90px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 1;
+
+
+/* 国内备份 */
+
+width: 60px;
+height: 30px;
+
+/* 📁 30px/Medium_100% */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 100%;
+/* identical to box height, or 30px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 选中条 */
+
+width: 46px;
+height: 6px;
+
+background: #0F131A;
+border-radius: 3px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Tab-子元素1 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+margin: 0 auto;
+width: 234px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 1;
+
+
+/* 容器 3795 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+width: 60px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 容器 3853 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+width: 60px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 气泡（未做组件待替换） */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 4px 6px;
+gap: 10px;
+
+width: 60px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Frame 163 */
+
+display: none;
+width: 90px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 国内备份 */
+
+width: 60px;
+height: 30px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 100%;
+/* identical to box height, or 30px */
+text-align: justify;
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 选中条 */
+
+display: none;
+width: 54px;
+height: 6px;
+
+background: #0F131A;
+border-radius: 3px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Tab-子元素1 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+margin: 0 auto;
+width: 234px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 1;
+
+
+/* 容器 3795 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+width: 60px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 容器 3853 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+width: 60px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 气泡（未做组件待替换） */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 4px 6px;
+gap: 10px;
+
+width: 60px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Frame 163 */
+
+display: none;
+width: 90px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 1;
+
+
+/* 国内备份 */
+
+width: 60px;
+height: 30px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 100%;
+/* identical to box height, or 30px */
+text-align: justify;
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 选中条 */
+
+display: none;
+width: 54px;
+height: 6px;
+
+background: #0F131A;
+border-radius: 3px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 搜索模块 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 750px;
+height: 573px;
+
+filter: drop-shadow(0px 6px 20px rgba(0, 0, 0, 0.03));
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 24px;
+
+width: 750px;
+height: 395px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px 30px;
+gap: 10px;
+isolation: isolate;
+
+width: 702px;
+height: 100px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Flight Info */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 18px;
+
+width: 642px;
+height: 60px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Departure Info */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 10px;
+
+margin: 0 auto;
+width: 287px;
+height: 42px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Departure City */
+
+width: 287px;
+height: 42px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 42px;
+line-height: 100%;
+/* identical to box height, or 42px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Flight Icon */
+
+margin: 0 auto;
+width: 68px;
+height: 68px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Rectangle 10931 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #D9D9D9;
+
+
+/* Group 1264 */
+
+position: absolute;
+left: 8%;
+right: 8%;
+top: -109%;
+bottom: -109%;
+
+
+
+/* Group 1263 */
+
+position: absolute;
+left: 8%;
+right: 8%;
+top: -109%;
+bottom: -109%;
+
+
+
+/* Group 1261 */
+
+position: absolute;
+left: 8%;
+right: 8%;
+top: 58.55%;
+bottom: -109%;
+
+
+
+/* Vector 99 */
+
+position: absolute;
+left: 8%;
+right: 8%;
+top: 62%;
+bottom: -109%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 9.5%;
+right: 78.65%;
+top: 58.55%;
+bottom: 27.77%;
+
+background: #FFD233;
+
+
+/* Group 1262 */
+
+position: absolute;
+left: 8%;
+right: 8%;
+top: -109%;
+bottom: 58.55%;
+
+transform: rotate(-180deg);
+
+
+/* Vector 99 */
+
+position: absolute;
+left: 8%;
+right: 8%;
+top: -109%;
+bottom: 62%;
+
+transform: rotate(-180deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 78.65%;
+right: 9.5%;
+top: 27.77%;
+bottom: 58.55%;
+
+background: #FFD233;
+transform: rotate(-180deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 30.5%;
+right: 29%;
+top: 30.5%;
+bottom: 30.5%;
+
+background: #FFD233;
+
+
+/* Arrival City */
+
+margin: 0 auto;
+width: 287px;
+height: 42px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 42px;
+line-height: 100%;
+/* identical to box height, or 42px */
+text-align: right;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 1;
+
+
+/* 分割线 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 30px;
+gap: 10px;
+
+position: absolute;
+width: 702px;
+height: 0px;
+left: 0px;
+bottom: 0px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Line 5 */
+
+width: 642px;
+height: 0px;
+
+border: 1px solid #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Date input */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 20px 30px;
+gap: 10px;
+isolation: isolate;
+
+width: 702px;
+height: 100px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 523 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 40px;
+
+width: 194px;
+height: 38px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Frame 1312323435 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 2px;
+
+width: 102px;
+height: 38px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 1312323747 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 10px;
+
+width: 27px;
+height: 38px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 9 */
+
+width: 27px;
+height: 37px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 48px;
+line-height: 90%;
+/* or 43px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 1312318162 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 6px;
+
+width: 26px;
+height: 38px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 月 */
+
+width: 26px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 1312323746 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: flex-end;
+padding: 0px;
+gap: 10px;
+
+width: 45px;
+height: 38px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 12 */
+
+width: 45px;
+height: 37px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 48px;
+line-height: 90%;
+/* or 43px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 1312318160 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 6px;
+
+width: 52px;
+height: 38px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 周一 */
+
+width: 52px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 分割线 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 30px;
+gap: 10px;
+
+position: absolute;
+width: 702px;
+height: 1px;
+left: 0px;
+bottom: 0px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Union */
+
+width: 642px;
+height: 1px;
+
+background: #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Line 5 */
+
+position: absolute;
+width: 642px;
+height: 0px;
+left: 30px;
+top: 1px;
+
+border: 1px solid #F2F3F5;
+
+
+/* Passenger input */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+isolation: isolate;
+
+width: 702px;
+height: 107px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 乘机人/单行 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 22px 30px;
+gap: 10px;
+isolation: isolate;
+
+width: 702px;
+height: 106px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Group */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #FFFFFF;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 642px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 1;
+z-index: 1;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+margin: 0 auto;
+width: 642px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 18px;
+
+width: 616px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Text Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 7px;
+
+width: 175px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Title */
+
+width: 150px;
+height: 30px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 100%;
+/* identical to box height, or 30px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Subtitle */
+
+width: 175px;
+height: 25px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 25px;
+line-height: 100%;
+/* identical to box height, or 25px */
+text-align: justify;
+
+color: #149AA8;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 04 气泡-强化 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+
+width: 327px;
+height: 62px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Arrow Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 10px;
+
+width: 62px;
+height: 8px;
+
+transform: matrix(0, -1, -1, 0, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 气泡箭头 */
+
+width: 18px;
+height: 8px;
+
+transform: matrix(0, -1, -1, 0, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 气泡箭头 */
+
+position: absolute;
+width: 18px;
+height: 8px;
+left: 0px;
+top: 22px;
+
+background: rgba(0, 0, 0, 0.5);
+transform: matrix(0, -1, -1, 0, 0, 0);
+
+
+/* Text Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 12px;
+gap: 12px;
+
+width: 319px;
+height: 62px;
+
+background: rgba(0, 0, 0, 0.5);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 我是气泡 */
+
+width: 259px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+text-align: justify;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 关闭按钮 */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 编组 4 */
+
+position: absolute;
+width: 20px;
+height: 20px;
+left: calc(50% - 20px/2);
+top: calc(50% - 20px/2);
+
+
+
+/* Rectangle */
+
+position: absolute;
+left: 8.33%;
+right: 8.33%;
+top: 8.33%;
+bottom: 8.33%;
+
+background: #E6E6E6;
+mix-blend-mode: normal;
+opacity: 0;
+
+
+/* Path */
+
+position: absolute;
+width: 14.55px;
+height: 14.55px;
+left: calc(50% - 14.55px/2 + 0px);
+top: calc(50% - 14.55px/2 + 0px);
+
+background: #FFFFFF;
+
+
+/* arrow */
+
+width: 14px;
+height: 32px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Icon Container */
+
+position: absolute;
+width: 13.33px;
+height: 32px;
+left: 0.67px;
+top: 0px;
+
+
+
+/* Group */
+
+position: absolute;
+left: 7.5%;
+right: -0.43%;
+top: 14.6%;
+bottom: 14.57%;
+
+
+
+/* Group */
+
+position: absolute;
+left: 7.5%;
+right: -0.43%;
+top: 14.6%;
+bottom: 14.57%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 7.5%;
+right: -0.43%;
+top: 14.6%;
+bottom: 14.57%;
+
+background: #919499;
+
+
+/* Group 105 */
+
+width: 702px;
+height: 1px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Group */
+
+position: absolute;
+width: 702px;
+height: 1px;
+left: 0px;
+top: 106px;
+
+
+
+/* Frame 1312323705 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 30px;
+gap: 10px;
+
+position: absolute;
+width: 702px;
+height: 1px;
+left: 0px;
+top: 106px;
+
+background: #FFFFFF;
+
+
+/* Vector (Stroke) */
+
+width: 642px;
+height: 1px;
+
+background: #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 分割线 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 30px;
+gap: 10px;
+
+position: absolute;
+width: 702px;
+height: 1px;
+left: 0px;
+bottom: 0px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Union */
+
+width: 642px;
+height: 1px;
+
+background: #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Line 5 */
+
+position: absolute;
+width: 642px;
+height: 0px;
+left: 30px;
+top: 1px;
+
+border: 1px solid #F2F3F5;
+
+
+/* Cabin class input */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 10px;
+
+width: 702px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 信息/单程1-有气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: flex-start;
+padding: 24px 30px 0px;
+gap: 10px;
+
+width: 702px;
+height: 88px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 信息/单程1-有气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 56px;
+
+width: 642px;
+height: 64px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 舱等/经济舱 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 6px;
+gap: 10px;
+
+width: 323px;
+height: 64px;
+
+background: #F2F3F5;
+border-radius: 16px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Cabin options */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 8px;
+
+width: 311px;
+height: 52px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Economy class option */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 13px 14px;
+gap: 10px;
+
+width: 132px;
+height: 52px;
+
+background: #FFFFFF;
+box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.06);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Economy class label */
+
+width: 104px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Business/First class option */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 13px 14px;
+gap: 10px;
+
+width: 171px;
+height: 52px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Business/First class label */
+
+width: 143px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Footer container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 24px;
+gap: 10px;
+isolation: isolate;
+
+width: 750px;
+height: 178px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 气泡 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-end;
+padding: 2px 10px;
+gap: 10px;
+
+position: absolute;
+width: 212px;
+height: 34px;
+right: 48px;
+top: 14px;
+
+background: linear-gradient(91.13deg, #FF4B6C -3.42%, #FF1835 74.28%, #FF4A6C 100.65%);
+border-radius: 19px 19px 19px 2px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Frame */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 192px;
+height: 30px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Discount icon */
+
+width: 30px;
+height: 30px;
+
+background: url(image.png);
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Discount text */
+
+width: 156px;
+height: 28px;
+
+/* 📁 20px/M_140%(captionBold) */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 140%;
+/* identical to box height, or 28px */
+text-align: justify;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Search button */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 24px 30px;
+gap: 24px;
+
+width: 702px;
+height: 178px;
+
+background: #FFFFFF;
+border-radius: 0px 0px 26px 26px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* 01large */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+padding: 0px 90px;
+gap: 10px;
+isolation: isolate;
+
+width: 642px;
+height: 84px;
+
+background: #FFE033;
+border-radius: 42px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 搜索机票 */
+
+margin: 0 auto;
+width: 128px;
+height: 45px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+line-height: 140%;
+/* identical to box height, or 45px */
+text-align: justify;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Frame */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-end;
+padding: 2px 12px;
+gap: 10px;
+
+position: absolute;
+width: 180px;
+height: 36px;
+right: 0px;
+top: -10px;
+
+background: linear-gradient(91.13deg, #FF4B6C -3.42%, #FF1835 74.28%, #FF4A6C 100.65%);
+border-radius: 16px 19px 19px 2px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Frame */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 156px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 今日购票立减¥30 */
+
+width: 156px;
+height: 28px;
+
+/* 📁 20px/M_140%(captionBold) */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 140%;
+/* identical to box height, or 28px */
+text-align: justify;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 546 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+
+width: 642px;
+height: 22px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 544 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 36px;
+
+width: 598px;
+height: 22px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* 杭州-北京 07-01 */
+
+width: 170px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+text-align: justify;
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 杭州-北京 07-02 */
+
+width: 174px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+text-align: justify;
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 545 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 36px;
+
+width: 44px;
+height: 22px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 清除 */
+
+width: 44px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+text-align: justify;
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Sidebar section */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 0px;
+gap: 18px;
+
+width: 702px;
+height: 5684px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Sidebar section child */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 18px;
+
+width: 702px;
+height: 1976px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Low price reminder container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 18px 24px 22px;
+gap: 10px;
+
+width: 702px;
+height: 128px;
+
+background: #FFFFFF;
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Reminder options container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: flex-end;
+padding: 0px;
+gap: 51px;
+
+width: 654px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 1312318165 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+margin: 0 auto;
+width: 102px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Mask group */
+
+width: 60px;
+height: 60px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Rectangle 10876 */
+
+position: absolute;
+width: 60px;
+height: 60px;
+left: 21px;
+top: 0px;
+
+background: #D9D9D9;
+
+
+/* Group 723 */
+
+position: absolute;
+width: 32.15px;
+height: 34.32px;
+left: calc(50% - 32.15px/2 - 0px);
+top: 12.56px;
+
+
+
+/* Group 722 */
+
+position: absolute;
+width: 32.15px;
+height: 34.32px;
+left: 34.92px;
+top: 12.56px;
+
+
+
+/* Group */
+
+position: absolute;
+left: 39.55%;
+right: 34.24%;
+top: 14.27%;
+bottom: 46.73%;
+
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 39.55%;
+right: 34.24%;
+top: 14.27%;
+bottom: 46.73%;
+
+background: linear-gradient(103.84deg, #FF7364 -8.67%, #FF4545 90.61%);
+
+
+/* Group */
+
+position: absolute;
+left: 34.24%;
+right: 49.87%;
+top: 14.27%;
+bottom: 46.73%;
+
+backdrop-filter: blur(1.86543px);
+/* Note: backdrop-filter has minimal browser support */
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 34.24%;
+right: 49.87%;
+top: 14.27%;
+bottom: 46.73%;
+
+background: linear-gradient(171.28deg, rgba(255, 62, 87, 0.7) 9.45%, rgba(255, 155, 168, 0.7) 99.28%);
+
+
+/* Group */
+
+position: absolute;
+left: 42.04%;
+right: 47.01%;
+top: 19.86%;
+bottom: 60.35%;
+
+transform: matrix(1, 0, -0.16, 0.99, 0, 0);
+
+
+/* Vector */
+
+position: absolute;
+left: 42.04%;
+right: 47.01%;
+top: 19.86%;
+bottom: 60.35%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.16, 0.99, 0, 0);
+
+
+/* 全球低价 */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Reminder card */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+margin: 0 auto;
+width: 102px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 1312323467 */
+
+width: 60px;
+height: 60px;
+
+opacity: 0.94;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 680 */
+
+position: absolute;
+width: 40px;
+height: 29.57px;
+left: 10.68px;
+top: calc(50% - 29.57px/2 - 0.37px);
+
+
+
+/* Group 680 */
+
+position: absolute;
+width: 40px;
+height: 29.57px;
+left: 10.68px;
+top: 14.84px;
+
+
+
+/* Rectangle 960 */
+
+position: absolute;
+width: 33.91px;
+height: 24.35px;
+left: calc(50% - 33.91px/2 + 0.44px);
+top: calc(50% - 24.35px/2 - 0.14px);
+
+background: linear-gradient(264.1deg, #FF8A00 10.21%, #FFBF84 104.59%);
+border-radius: 3.44348px;
+
+
+/* Group 612 */
+
+position: absolute;
+width: 40px;
+height: 29.57px;
+left: 10.68px;
+top: 14.84px;
+
+backdrop-filter: blur(1.14783px);
+/* Note: backdrop-filter has minimal browser support */
+
+
+/* Rectangle 958 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 40px;
+height: 29.57px;
+left: 10.68px;
+top: 14.84px;
+
+background: linear-gradient(268.36deg, rgba(255, 138, 0, 0.55) -3.7%, rgba(255, 191, 132, 0.55) 89.61%);
+backdrop-filter: blur(1.72174px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 6px;
+
+
+/* Group 607 */
+
+position: absolute;
+width: 8.88px;
+height: 7.34px;
+left: 13.89px;
+top: 19.16px;
+
+
+
+/* Rectangle 960 */
+
+position: absolute;
+width: 8.7px;
+height: 2.61px;
+left: 14.08px;
+top: 19.16px;
+
+background: #FFFFFF;
+border-radius: 1.73913px;
+
+
+/* Rectangle 961 */
+
+position: absolute;
+width: 8.7px;
+height: 2.61px;
+left: 13.89px;
+top: 23.89px;
+
+background: #FFFFFF;
+border-radius: 1.73913px;
+
+
+/* Group 608 */
+
+position: absolute;
+width: 16.07px;
+height: 16.07px;
+left: 29.59px;
+top: 21.16px;
+
+
+
+/* Ellipse 38 */
+
+position: absolute;
+width: 16.07px;
+height: 16.07px;
+left: 29.59px;
+top: calc(50% - 16.07px/2 - 0.8px);
+
+background: linear-gradient(180deg, #FFFFFF 6.67%, #FFF3E4 52.87%, #FFDDB5 133.51%);
+
+
+/* Vector */
+
+position: absolute;
+width: 10.14px;
+height: 6.32px;
+left: 32.2px;
+top: 26.38px;
+
+background: #FFA030;
+
+
+/* 机票次卡 */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Low price alert card */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+margin: 0 auto;
+width: 102px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 抢票 */
+
+width: 60px;
+height: 60px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 578 */
+
+position: absolute;
+width: 44px;
+height: 33px;
+left: calc(50% - 44px/2);
+top: 15px;
+
+
+
+/* Group 1234 */
+
+position: absolute;
+width: 44px;
+height: 33px;
+left: 8px;
+top: 15px;
+
+opacity: 0.94;
+
+
+/* Rectangle 960 */
+
+position: absolute;
+width: 33.91px;
+height: 24.35px;
+left: calc(50% - 33.91px/2 - 2.49px);
+top: calc(50% - 24.35px/2 + 0.02px);
+
+background: linear-gradient(264.1deg, #FF8A00 10.21%, #FFBF84 104.59%);
+border-radius: 3.44348px;
+
+
+/* Rectangle 958 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 40px;
+height: 30px;
+left: 8px;
+top: 15px;
+
+background: linear-gradient(268.36deg, rgba(255, 138, 0, 0.55) -3.7%, rgba(255, 191, 132, 0.55) 89.61%);
+backdrop-filter: blur(1.72174px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 8px;
+
+
+/* Group 1233 */
+
+position: absolute;
+width: 24.43px;
+height: 12.21px;
+left: 13.02px;
+top: 23.07px;
+
+
+
+/* Frame 1312323574 */
+
+position: absolute;
+width: 24.43px;
+height: 12.21px;
+left: 13.02px;
+top: 23.07px;
+
+
+
+/* Exclude */
+
+position: absolute;
+width: 31.02px;
+height: 31.02px;
+left: -136.3px;
+top: 8.46px;
+
+background: #FFFFFF;
+
+
+/* Exclude */
+
+position: absolute;
+width: 31.02px;
+height: 31.02px;
+left: -136.3px;
+top: 8.46px;
+
+background: #FFFFFF;
+
+
+/* Ellipse 2138 */
+
+position: absolute;
+width: 31.02px;
+height: 31.02px;
+left: -136.3px;
+top: 8.46px;
+
+background: #FFFFFF;
+
+
+/* Group 1064 */
+
+position: absolute;
+width: 20.25px;
+height: 8.96px;
+left: 4.58px;
+top: 2.58px;
+
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Union */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 20.25px;
+height: 8.96px;
+left: 4.58px;
+top: 2.58px;
+
+background: #FFFFFF;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 73.6%;
+right: -5.44%;
+top: 23.97%;
+bottom: 53.89%;
+
+background: #0F131A;
+transform: matrix(-0.71, -0.71, -0.71, 0.71, 0, 0);
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 44.94%;
+right: 9.23%;
+top: 23.98%;
+bottom: 53.89%;
+
+background: #0F131A;
+transform: matrix(-0.81, 0.59, 0.59, 0.81, 0, 0);
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 16.47%;
+right: 36.23%;
+top: 16.56%;
+bottom: 61.3%;
+
+background: #0F131A;
+transform: matrix(-0.71, -0.71, -0.71, 0.71, 0, 0);
+
+
+/* Group 1232 */
+
+position: absolute;
+width: 16px;
+height: 16px;
+left: 36px;
+top: 32px;
+
+
+
+/* Group 1291 */
+
+position: absolute;
+width: 16px;
+height: 16px;
+left: 36px;
+top: 32px;
+
+
+
+/* Rectangle 10932 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 16px;
+height: 16px;
+left: 36px;
+top: 32px;
+
+background: linear-gradient(90deg, rgba(255, 138, 0, 0.363) -17.5%, rgba(255, 138, 0, 0.66) 100%);
+backdrop-filter: blur(1.41px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 31.4306px;
+
+
+/* Group 1231 */
+
+position: absolute;
+width: 10px;
+height: 10px;
+left: 39px;
+top: 35px;
+
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 65%;
+right: 18.33%;
+top: 64.34%;
+bottom: 31.66%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, 0, -1, 0, 0);
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 71.67%;
+right: 11.67%;
+top: 58.33%;
+bottom: 37.67%;
+
+background: #FFFFFF;
+transform: matrix(0, 1, 1, 0, 0, 0);
+
+
+/* 低价提醒 */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Enterprise card */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+margin: 0 auto;
+width: 102px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Group 547 */
+
+width: 60px;
+height: 60px;
+
+opacity: 0.84;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Rectangle 903 */
+
+position: absolute;
+width: 60px;
+height: 60px;
+left: 21px;
+top: 0px;
+
+
+
+/* Group 426 */
+
+position: absolute;
+width: 32px;
+height: 36px;
+left: calc(50% - 32px/2);
+top: 11px;
+
+
+
+/* Group 421 */
+
+position: absolute;
+width: 32px;
+height: 36px;
+left: 35px;
+top: 11px;
+
+
+
+/* Group 420 */
+
+position: absolute;
+width: 32px;
+height: 36px;
+left: 35px;
+top: 11px;
+
+
+
+/* Vector 21 */
+
+position: absolute;
+width: 10.9px;
+height: 6.4px;
+left: 48.37px;
+top: 11px;
+
+background: #389FFF;
+border-radius: 0.642864px;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Group 409 */
+
+position: absolute;
+width: 34px;
+height: 32px;
+left: 35px;
+top: 13px;
+
+transform: rotate(90deg);
+
+
+/* Rectangle 860 */
+
+position: absolute;
+width: 34px;
+height: 32px;
+left: 35px;
+top: 13px;
+
+background: linear-gradient(51.26deg, #007FFF 41.7%, #51A8FF 73.55%, #77BBFF 89.05%);
+border-radius: 6px;
+transform: rotate(90deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 46.91%;
+right: 46%;
+top: 26.68%;
+bottom: 65.45%;
+
+background: #FFFFFF;
+
+
+/* Vector */
+
+position: absolute;
+left: 45.56%;
+right: 44.88%;
+top: 32.18%;
+bottom: 61.33%;
+
+background: #FFFFFF;
+
+
+/* Group 413 */
+
+position: absolute;
+width: 3.15px;
+height: 14.47px;
+left: 44.39px;
+top: 15.4px;
+
+transform: rotate(90deg);
+
+
+/* Rectangle 861 */
+
+position: absolute;
+width: 3.15px;
+height: 14.47px;
+left: 44.39px;
+top: 15.4px;
+
+background: #FFFFFF;
+border-radius: 2.57146px;
+transform: rotate(90deg);
+
+
+/* Mask group */
+
+position: absolute;
+width: 16.99px;
+height: 3.15px;
+left: 42.51px;
+top: 15.4px;
+
+
+
+/* Rectangle 862 */
+
+position: absolute;
+width: 3.15px;
+height: 16.99px;
+left: 42.51px;
+top: 15.4px;
+
+background: #FFFFFF;
+border-radius: 2.57146px;
+transform: rotate(90deg);
+
+
+/* Vector 22 */
+
+position: absolute;
+width: 11.53px;
+height: 7.03px;
+left: 48.37px;
+top: 10.37px;
+
+background: #389FFF;
+border-radius: 0.642864px;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Vector 20 */
+
+position: absolute;
+width: 10.9px;
+height: 6.4px;
+left: 44.49px;
+top: 11px;
+
+background: #55ADFF;
+border-radius: 0.642864px;
+
+
+/* Rectangle 863 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 9px;
+height: 32px;
+left: 35px;
+top: 38px;
+
+background: linear-gradient(90deg, rgba(36, 146, 255, 0.5) -200%, rgba(81, 168, 255, 0.5) 100%);
+backdrop-filter: blur(1.28573px);
+/* Note: backdrop-filter has minimal browser support */
+transform: rotate(90deg);
+
+
+/* 企业认证 */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* All reminders card */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 4px;
+
+margin: 0 auto;
+width: 102px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* 订单 */
+
+width: 60px;
+height: 60px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 686 */
+
+position: absolute;
+width: 34px;
+height: 34px;
+left: 13px;
+top: 14px;
+
+
+
+/* Group 686 */
+
+position: absolute;
+width: 34px;
+height: 34px;
+left: 13px;
+top: 14px;
+
+
+
+/* Rectangle 960 */
+
+position: absolute;
+width: 28px;
+height: 28px;
+left: calc(50% - 28px/2);
+top: calc(50% - 28px/2 + 1px);
+
+background: linear-gradient(264.1deg, #FFB774 10.21%, #FF9E5B 104.59%);
+border-radius: 28px;
+
+
+/* Rectangle 958 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 34px;
+height: 34px;
+left: 13px;
+top: 14px;
+
+background: linear-gradient(268.36deg, rgba(255, 207, 152, 0.55) -3.7%, rgba(255, 165, 88, 0.55) 89.61%);
+backdrop-filter: blur(1.87308px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 34px;
+
+
+/* Group 685 */
+
+position: absolute;
+width: 14px;
+height: 12px;
+left: 23px;
+top: 25px;
+
+
+
+/* Frame 1312323478 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+position: absolute;
+width: 14px;
+height: 5.96px;
+left: calc(50% - 14px/2);
+top: calc(50% - 5.96px/2 + 4.02px);
+
+
+
+/* Group 567 */
+
+width: 11.82px;
+height: 6.09px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 568 */
+
+position: absolute;
+width: 11.82px;
+height: 6.09px;
+left: 1.09px;
+top: -0.07px;
+
+
+
+/* Rectangle 919 */
+
+position: absolute;
+width: 7.43px;
+height: 2.23px;
+left: 1.09px;
+top: -0.07px;
+
+background: #FFFFFF;
+border-radius: 4.45824px;
+transform: rotate(35deg);
+
+
+/* Rectangle 920 */
+
+position: absolute;
+width: 7.43px;
+height: 2.23px;
+left: 5.55px;
+top: -0.07px;
+
+background: #FFFFFF;
+border-radius: 4.45824px;
+transform: rotate(-35deg);
+
+
+/* Frame 1312323479 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+position: absolute;
+width: 14px;
+height: 5.96px;
+left: calc(50% - 14px/2);
+top: calc(50% - 5.96px/2 - 2.02px);
+
+
+
+/* Group 567 */
+
+width: 11.82px;
+height: 6.09px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 568 */
+
+position: absolute;
+width: 11.82px;
+height: 6.09px;
+left: 1.09px;
+top: -0.07px;
+
+
+
+/* Rectangle 919 */
+
+position: absolute;
+width: 7.43px;
+height: 2.23px;
+left: 1.09px;
+top: -0.07px;
+
+background: #FFFFFF;
+border-radius: 4.45824px;
+transform: rotate(35deg);
+
+
+/* Rectangle 920 */
+
+position: absolute;
+width: 7.43px;
+height: 2.23px;
+left: 5.55px;
+top: -0.07px;
+
+background: #FFFFFF;
+border-radius: 4.45824px;
+transform: rotate(-35deg);
+
+
+/* 全部 */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 省钱模块 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px 24px 24px;
+gap: 10px;
+
+width: 702px;
+height: 256px;
+
+background: #FFFFFF;
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Title Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 20px;
+
+width: 654px;
+height: 212px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Header Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 310px;
+
+width: 654px;
+height: 32px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Title */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+width: 235px;
+height: 32px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Title Text */
+
+width: 235px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+line-height: 100%;
+/* identical to box height, or 32px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* More Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 112px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* More Text */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* More Icon Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px 1px;
+gap: 10px;
+
+width: 10px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* More Icon Background */
+
+width: 8.47px;
+height: 14.52px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #D2D4D9;
+
+
+/* Content Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+width: 654px;
+height: 160px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Card-01 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 18px 30px 18px 16px;
+gap: 30px;
+isolation: isolate;
+
+width: 256px;
+height: 160px;
+
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* BG-1 */
+
+position: absolute;
+height: 160px;
+left: 0px;
+right: 0px;
+top: calc(50% - 160px/2);
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Background Shape */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #FFFBFB;
+border-radius: 12px;
+
+
+/* Ellipse 10 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 39%;
+right: -57.26%;
+top: -97.5%;
+bottom: 74.38%;
+
+background: #FFF4EF;
+border: 1px solid #FFFFFF;
+filter: blur(27.5px);
+
+
+/* Ellipse 13 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: -35.68%;
+right: 17.43%;
+top: -72.5%;
+bottom: 49.38%;
+
+background: #FFF4EF;
+border: 1px solid #FFFFFF;
+filter: blur(27.5px);
+
+
+/* Ellipse 12 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 24.07%;
+right: -42.32%;
+top: 62.5%;
+bottom: -85.62%;
+
+background: rgba(253, 222, 233, 0.32);
+border: 1px solid #FFFFFF;
+filter: blur(27.5px);
+
+
+/* Promo Icon */
+
+position: absolute;
+width: 80px;
+height: 80px;
+right: 0px;
+bottom: 0px;
+
+opacity: 0.84;
+
+
+/* Rectangle 904 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Group 431 */
+
+position: absolute;
+left: 12.5%;
+right: 20%;
+top: 11.25%;
+bottom: 18.75%;
+
+
+
+/* Rectangle 867 */
+
+position: absolute;
+left: 12.5%;
+right: 20%;
+top: 44.15%;
+bottom: 20%;
+
+background: linear-gradient(180deg, #FFC8CF 0%, #FFAEB8 100%);
+backdrop-filter: blur(0.570807px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 5.7024px;
+
+
+/* Group 450 */
+
+position: absolute;
+left: 16.11%;
+right: 23.63%;
+top: 11.25%;
+bottom: 23.6%;
+
+
+
+/* Group 414 */
+
+position: absolute;
+left: 16.11%;
+right: 23.63%;
+top: 11.25%;
+bottom: 23.6%;
+
+
+
+/* Group 540 */
+
+position: absolute;
+left: 16.11%;
+right: 23.63%;
+top: 11.25%;
+bottom: 23.6%;
+
+
+
+/* Rectangle 60 */
+
+position: absolute;
+left: 16.27%;
+right: 29.16%;
+top: 11.25%;
+bottom: 52.53%;
+
+background: linear-gradient(95.43deg, #FF9284 57.04%, #FF7B69 92.9%);
+border-radius: 5.4px;
+transform: matrix(0.99, 0.17, -0.17, 0.99, 0, 0);
+
+
+/* Rectangle 875 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 16.11%;
+right: 28.92%;
+top: 21.43%;
+bottom: 18.3%;
+
+background: linear-gradient(218.38deg, #FF6A6A 39.31%, #FF0928 82.41%);
+transform: rotate(90deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 38.25%;
+right: 46.08%;
+top: 31.47%;
+bottom: 48.21%;
+
+background: #FFFFFF;
+border: 0.9504px solid #FFFFFF;
+
+
+/* Rectangle 869 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 12.5%;
+right: 61.21%;
+top: 54.96%;
+bottom: -22.45%;
+
+background: linear-gradient(90deg, rgba(255, 219, 219, 0.5) -9.09%, rgba(255, 255, 255, 0.5) 100%);
+backdrop-filter: blur(1.56816px);
+/* Note: backdrop-filter has minimal browser support */
+transform: rotate(90deg);
+
+
+/* Offer Info */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 210px;
+min-width: 210px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Offer Title Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 210px;
+height: 26px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Offer Title */
+
+width: 162px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Offer Subtitle */
+
+width: 210px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Button Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 26px;
+
+width: 108px;
+height: 42px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Button Background */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 5px 14px;
+gap: 10px;
+
+width: 108px;
+height: 42px;
+
+background: #FF6666;
+border-radius: 24px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Button Text */
+
+width: 80px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Card-02 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 18px 30px 18px 16px;
+gap: 30px;
+isolation: isolate;
+
+width: 242px;
+height: 160px;
+
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* BG-2 */
+
+position: absolute;
+height: 160px;
+left: 0px;
+right: 0px;
+top: calc(50% - 160px/2);
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Background Shape */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #FFFFFF;
+border-radius: 12px;
+
+
+/* Background Shape */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #FFF6E7;
+border-radius: 12px;
+
+
+/* Ellipse 9 */
+
+position: absolute;
+left: -45.23%;
+right: 55.6%;
+top: -90%;
+bottom: 55%;
+
+background: rgba(255, 240, 215, 0.56);
+filter: blur(27.5px);
+
+
+/* Ellipse 11 */
+
+position: absolute;
+left: -49.38%;
+right: 75.1%;
+top: 95%;
+bottom: -106.88%;
+
+background: #FFE3B3;
+filter: blur(61.5px);
+
+
+/* Ellipse 12 */
+
+position: absolute;
+left: 58.44%;
+right: -106.15%;
+top: 7.5%;
+bottom: -135.62%;
+
+background: rgba(255, 234, 199, 0.66);
+filter: blur(117px);
+
+
+/* Ellipse 10 */
+
+position: absolute;
+left: 86.31%;
+right: -93.36%;
+top: -111.88%;
+bottom: 50.62%;
+
+background: #FFF6E6;
+filter: blur(27.5px);
+
+
+/* 钻石 */
+
+position: absolute;
+width: 80px;
+height: 80px;
+right: 0px;
+bottom: 0px;
+
+
+
+/* Vector */
+
+position: absolute;
+width: 87px;
+height: 75px;
+left: calc(50% - 87px/2 + 8.5px);
+top: calc(50% - 75px/2 + 1.5px);
+
+background: linear-gradient(189.24deg, rgba(230, 137, 86, 0.17) -2.96%, rgba(230, 137, 86, 0) 93.29%);
+background-blend-mode: screen;
+mix-blend-mode: normal;
+
+
+/* Promotion Title Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 196px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Promotion Title */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 196px;
+height: 26px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Promo Tag */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 1.71429px 6.85714px;
+
+width: 34px;
+height: 24px;
+
+background: linear-gradient(104.24deg, #5C727A -1.86%, #0F131A 137.61%);
+border-radius: 5.53846px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* F1iconfont */
+
+width: 20.57px;
+height: 20.57px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 10.53%;
+right: 11.7%;
+top: 17.36%;
+bottom: 15.86%;
+
+background: #FFFFFF;
+
+
+/* Promotion Title Text */
+
+width: 156px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Promotion Subtitle */
+
+width: 184px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Button Container */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 5px 14px;
+gap: 10px;
+
+width: 108px;
+height: 42px;
+
+border: 1px solid rgba(178, 95, 36, 0.32);
+border-radius: 22px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Button Text */
+
+width: 80px;
+height: 28px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 28px;
+/* identical to box height */
+
+color: #B25F24;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Card-03 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 18px 30px 18px 16px;
+gap: 30px;
+isolation: isolate;
+
+width: 182px;
+height: 160px;
+
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* BG-3 */
+
+position: absolute;
+height: 160px;
+left: 0px;
+right: 0px;
+top: calc(50% - 160px/2);
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Background Shape */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #FFFFFF;
+border-radius: 12px;
+
+
+/* Background Shape */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #FFF6E7;
+border-radius: 12px;
+
+
+/* Ellipse 9 */
+
+position: absolute;
+left: -45.23%;
+right: 55.6%;
+top: -90%;
+bottom: 55%;
+
+background: rgba(255, 240, 215, 0.56);
+filter: blur(27.5px);
+
+
+/* Ellipse 11 */
+
+position: absolute;
+left: -49.38%;
+right: 75.1%;
+top: 95%;
+bottom: -106.88%;
+
+background: #FFE3B3;
+filter: blur(61.5px);
+
+
+/* Ellipse 12 */
+
+position: absolute;
+left: 58.44%;
+right: -106.15%;
+top: 7.5%;
+bottom: -135.62%;
+
+background: rgba(255, 234, 199, 0.66);
+filter: blur(117px);
+
+
+/* Ellipse 10 */
+
+position: absolute;
+left: 86.31%;
+right: -93.36%;
+top: -111.88%;
+bottom: 50.62%;
+
+background: #FFF6E6;
+filter: blur(27.5px);
+
+
+/* Promotion Title Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 136px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Promotion Title */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 136px;
+height: 26px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Promotion Title Text */
+
+width: 136px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Promotion Subtitle */
+
+width: 110px;
+height: 22px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 22px;
+line-height: 100%;
+/* identical to box height, or 22px */
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Button Container */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 5px 14px;
+gap: 10px;
+
+width: 108px;
+height: 42px;
+
+border: 1px solid rgba(178, 95, 36, 0.32);
+border-radius: 22px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Button Text */
+
+width: 80px;
+height: 28px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 28px;
+/* identical to box height */
+
+color: #B25F24;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Main content container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 702px;
+height: 308px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Flight card header */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 20px 24px;
+
+width: 702px;
+height: 72px;
+
+background: #FFFFFF;
+border-radius: 18px 18px 0px 0px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Flight card title */
+
+width: 545px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+line-height: 100%;
+/* identical to box height, or 32px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+
+/* Manage card container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 109px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Manage card text */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame */
+
+width: 7px;
+height: 12px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #D2D4D9;
+
+
+/* Flight card image */
+
+width: 702px;
+height: 236px;
+
+background: url(image.png);
+border-radius: 0px 0px 18px 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Additional module */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 24px;
+gap: 10px;
+
+width: 702px;
+height: 1012px;
+
+background: linear-gradient(167.59deg, #F5F5FF 3.58%, #F8F8FF 70.17%);
+backdrop-filter: blur(4.07742px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Frame 1312323702 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 24px;
+
+width: 654px;
+height: 964px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 593 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 310px;
+
+width: 654px;
+height: 32px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 1312323505 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 18px;
+
+width: 272.38px;
+height: 32px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 125 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 4px 6px;
+gap: 10px;
+
+display: none;
+width: 83px;
+height: 28px;
+
+background: #FF3333;
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 特价机票 */
+
+width: 128px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+line-height: 100%;
+/* identical to box height, or 32px */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 1312323701 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 7px;
+
+width: 126.38px;
+height: 26px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 两字 */
+
+width: 104px;
+height: 26px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 26px;
+line-height: 100%;
+/* identical to box height, or 26px */
+text-align: right;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 路径 */
+
+width: 10px;
+height: 15.38px;
+
+background: #0F131A;
+border-radius: 1.19072px;
+transform: matrix(0, 1, 1, 0, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 579 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 109px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 更多特价 */
+
+width: 96px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 100%;
+/* identical to box height, or 24px */
+
+color: #5C5F66;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame */
+
+width: 7px;
+height: 12px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Group */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #D2D4D9;
+
+
+/* Frame 1312323704 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 12px;
+
+width: 678px;
+height: 908px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Mask group */
+
+width: 678px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Rectangle 10934 */
+
+position: absolute;
+width: 678px;
+height: 86px;
+left: 0px;
+top: 0px;
+
+background: #D9D9D9;
+
+
+/* 主题一级tab */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+gap: 12px;
+
+position: absolute;
+width: 750px;
+height: 85.5px;
+left: 0px;
+top: 0px;
+
+
+
+/* tab 已选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+
+width: 201.21px;
+height: 85.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 41 */
+
+width: 201.21px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+margin: -9px 0px;
+
+
+/* Frame 41 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 18px 15px;
+gap: 6px;
+
+position: absolute;
+width: 197.21px;
+height: 72px;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+border-radius: 12px;
+
+
+/* 低价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 矩形 24 */
+
+position: absolute;
+left: 9.38%;
+right: 2.23%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(99.6deg, #FF7364 4.79%, #FF4545 92.76%);
+
+
+/* 矩形 25 */
+
+position: absolute;
+left: 9.38%;
+right: 45.09%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(155.42deg, rgba(255, 64, 26, 0.5) 9.13%, rgba(255, 26, 26, 0.0001) 47.05%), #FF8066;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* ¥ */
+
+position: absolute;
+left: 27.2%;
+right: 35.3%;
+top: 12.5%;
+bottom: 32.19%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.14, 0.99, 0, 0);
+
+
+/* 低价任意飞 */
+
+width: 120px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+letter-spacing: -1px;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Rectangle 4 */
+
+width: 45.25px;
+height: 22.5px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 167.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 猜你喜欢 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 猜你喜欢 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* 路径 */
+
+box-sizing: border-box;
+
+position: absolute;
+visibility: hidden;
+left: 0%;
+right: 0%;
+top: 6.25%;
+bottom: 6.25%;
+
+border: 2.25px solid #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 6.25%;
+bottom: 6.25%;
+
+background: #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 6.25%;
+bottom: 6.25%;
+
+background: #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 6.25%;
+bottom: 6.25%;
+
+background: #0F131A;
+
+
+/* 椭圆形备份-2 */
+
+position: absolute;
+left: 23.44%;
+right: 65.62%;
+top: 39.06%;
+bottom: 50%;
+
+background: #0F131A;
+
+
+/* 椭圆形备份-3 */
+
+position: absolute;
+left: 65.63%;
+right: 23.44%;
+top: 39.06%;
+bottom: 50%;
+
+background: #0F131A;
+
+
+/* 路径 */
+
+position: absolute;
+left: 38.44%;
+right: 38.52%;
+top: 57.81%;
+bottom: 29.69%;
+
+background: #0F131A;
+
+
+/* 低价任意飞 */
+
+width: 96px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+letter-spacing: -1px;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 167.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 航司特价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 航司特价 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* 组 2613 */
+
+position: absolute;
+width: 33.07px;
+height: 18.36px;
+right: 1.24px;
+top: 4.89px;
+
+transform: rotate(-2.5deg);
+
+
+/* 路径 */
+
+position: absolute;
+visibility: hidden;
+width: 30px;
+height: 13.72px;
+right: 1.25px;
+top: 4.65px;
+
+border: 2px solid #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径（边框） */
+
+position: absolute;
+width: 31.99px;
+height: 15.69px;
+right: 2.29px;
+top: 5.64px;
+
+background: #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径（边框） */
+
+position: absolute;
+width: 32.01px;
+height: 15.73px;
+left: calc(50% - 32.01px/2 - 0.3px);
+top: calc(50% - 15.73px/2 - 4.54px);
+
+background: #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径（边框） */
+
+position: absolute;
+width: 32.01px;
+height: 15.73px;
+left: calc(50% - 32.01px/2 - 0.3px);
+top: calc(50% - 15.73px/2 - 4.54px);
+
+background: #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径（边框） */
+
+position: absolute;
+width: 9.92px;
+height: 9.24px;
+right: 8.26px;
+bottom: 12.44px;
+
+background: #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径（边框） */
+
+position: absolute;
+width: 9.92px;
+height: 9.27px;
+left: calc(50% - 9.92px/2 + 4.78px);
+top: calc(50% - 9.27px/2 + 0.94px);
+
+background: #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径（边框） */
+
+position: absolute;
+width: 9.92px;
+height: 9.27px;
+left: calc(50% - 9.92px/2 + 4.78px);
+top: calc(50% - 9.27px/2 + 0.94px);
+
+background: #0F131A;
+transform: rotate(-2.5deg);
+
+
+/* 路径 */
+
+position: absolute;
+width: 7.42px;
+height: 4.16px;
+right: 1.26px;
+top: 5.15px;
+
+background: #0F131A;
+transform: rotate(-0.5deg);
+
+
+/* 矩形 88 */
+
+position: absolute;
+left: 3.12%;
+right: 43.75%;
+top: 75%;
+bottom: 18.75%;
+
+background: #0F131A;
+border-radius: 216px;
+
+
+/* 矩形 89 */
+
+position: absolute;
+left: 40.62%;
+right: 15.62%;
+top: 87.5%;
+bottom: 6.25%;
+
+background: #0F131A;
+border-radius: 216px;
+
+
+/* 低价任意飞 */
+
+width: 96px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+letter-spacing: -1px;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 198.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* 免签落地签 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 免签落地签 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* 路径 */
+
+box-sizing: border-box;
+
+position: absolute;
+visibility: hidden;
+left: 4.69%;
+right: 4.69%;
+top: 0%;
+bottom: 0%;
+
+border: 2px solid #0F131A;
+border-radius: 6.17183px;
+
+
+/* 路径 2（边框） */
+
+position: absolute;
+left: 4.69%;
+right: 4.69%;
+top: 0%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* 路径 2（边框） */
+
+position: absolute;
+left: 4.69%;
+right: 4.69%;
+top: 0%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* 路径 2（边框） */
+
+position: absolute;
+left: 4.69%;
+right: 4.69%;
+top: 0%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* 路径 */
+
+position: absolute;
+visibility: hidden;
+width: nanpx;
+height: nanpx;
+left: calc(50% - nanpx/2 + nanpx);
+top: 5.5px;
+
+
+
+/* 路径 */
+
+box-sizing: border-box;
+
+position: absolute;
+visibility: hidden;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 */
+
+box-sizing: border-box;
+
+position: absolute;
+visibility: hidden;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+background: #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+background: #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+background: #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+background: #0F131A;
+
+
+/* 路径 1（边框） */
+
+position: absolute;
+left: 23.44%;
+right: 23.44%;
+top: 17.19%;
+bottom: 29.69%;
+
+background: #0F131A;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 28.12%;
+right: 28.12%;
+top: 76.56%;
+bottom: 17.19%;
+
+background: #0F131A;
+border-radius: 1.05634px;
+
+
+/* 低价任意飞 */
+
+width: 127px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+letter-spacing: -1px;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 252.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* 高舱 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* path-3（轮廓化） */
+
+position: absolute;
+left: 3.12%;
+right: 3.12%;
+top: 3.12%;
+bottom: 3.12%;
+
+background: #0F131A;
+
+
+/* path-3（轮廓化） */
+
+position: absolute;
+left: 3.12%;
+right: 3.12%;
+top: 3.12%;
+bottom: 3.12%;
+
+background: #0F131A;
+
+
+/* path-3（轮廓化） */
+
+position: absolute;
+left: 3.12%;
+right: 3.12%;
+top: 3.12%;
+bottom: 3.12%;
+
+background: #0F131A;
+
+
+/* path-3（边框） 1 */
+
+position: absolute;
+visibility: hidden;
+left: 3.12%;
+right: 3.12%;
+top: 3.12%;
+bottom: 3.12%;
+
+background: #258CE6;
+
+
+/* 填充 */
+
+position: absolute;
+left: 25.05%;
+right: 62.45%;
+top: 5.02%;
+bottom: 73.1%;
+
+background: #0F131A;
+transform: rotate(4.9deg);
+
+
+/* 低价任意飞 */
+
+width: 181px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 170.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 5;
+flex-grow: 0;
+
+
+/* 畅游全球 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 路径（边框） */
+
+position: absolute;
+left: 40.4%;
+right: 1.65%;
+top: 57.9%;
+bottom: 3.8%;
+
+background: #0F131A;
+
+
+/* 路径（边框） */
+
+position: absolute;
+left: 39.06%;
+right: 1.56%;
+top: 57.81%;
+bottom: 3.12%;
+
+background: #0F131A;
+
+
+/* 路径（边框） */
+
+position: absolute;
+left: 39.06%;
+right: 1.56%;
+top: 57.81%;
+bottom: 3.12%;
+
+background: #0F131A;
+
+
+/* 路径 轮廓化 */
+
+position: absolute;
+left: 1.56%;
+right: 1.56%;
+top: 1.56%;
+bottom: 1.56%;
+
+background: #0F131A;
+
+
+/* 路径 轮廓化 */
+
+position: absolute;
+left: 1.56%;
+right: 1.56%;
+top: 1.56%;
+bottom: 1.56%;
+
+background: #0F131A;
+
+
+/* 路径 轮廓化 */
+
+position: absolute;
+left: 1.56%;
+right: 1.56%;
+top: 1.56%;
+bottom: 1.56%;
+
+background: #0F131A;
+
+
+/* 低价任意飞 */
+
+width: 99px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 170.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 6;
+flex-grow: 0;
+
+
+/* 暖冬 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 路径 */
+
+position: absolute;
+visibility: hidden;
+left: 4.69%;
+right: 4.69%;
+top: 39.06%;
+bottom: 3.12%;
+
+border: 2px solid #0F131A;
+
+
+/* 椭圆 1（边框） */
+
+position: absolute;
+left: 1.56%;
+right: 1.56%;
+top: 35.94%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* 椭圆 1（边框） */
+
+position: absolute;
+left: 1.56%;
+right: 1.56%;
+top: 35.94%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* 椭圆 1（边框） */
+
+position: absolute;
+left: 1.56%;
+right: 1.56%;
+top: 35.94%;
+bottom: 0%;
+
+background: #0F131A;
+
+
+/* 圆形 33 */
+
+position: absolute;
+left: 44.49%;
+right: 44.49%;
+top: 53.12%;
+bottom: 35.94%;
+
+background: #0F131A;
+
+
+/* 圆形 34 */
+
+position: absolute;
+left: 44.49%;
+right: 44.49%;
+top: 68.75%;
+bottom: 20.31%;
+
+background: #0F131A;
+
+
+/* 组 2540 */
+
+position: absolute;
+width: 13.06px;
+height: 13.5px;
+right: 11.47px;
+top: 2px;
+
+
+
+/* 路径 92（边框） */
+
+position: absolute;
+width: 7.62px;
+height: 5.4px;
+right: 14.19px;
+top: 2px;
+
+background: #0F131A;
+
+
+/* 路径 92（边框） */
+
+position: absolute;
+width: 7.62px;
+height: 5.4px;
+left: calc(50% - 7.62px/2 + 0px);
+top: calc(50% - 5.4px/2 - 13.3px);
+
+background: #0F131A;
+
+
+/* 路径 92（边框） */
+
+position: absolute;
+width: 7.62px;
+height: 5.4px;
+left: calc(50% - 7.62px/2 + 0px);
+top: calc(50% - 5.4px/2 - 13.3px);
+
+background: #0F131A;
+
+
+/* 联集 9 */
+
+position: absolute;
+width: 13.06px;
+height: 10.26px;
+right: 11.47px;
+top: 5.24px;
+
+background: #0F131A;
+
+
+/* 联集 9 */
+
+position: absolute;
+width: 13.06px;
+height: 10.26px;
+left: calc(50% - 13.06px/2 + 0px);
+top: calc(50% - 10.26px/2 - 7.63px);
+
+background: #0F131A;
+
+
+/* 联集 9 */
+
+position: absolute;
+width: 13.06px;
+height: 10.26px;
+left: calc(50% - 13.06px/2 + 0px);
+top: calc(50% - 10.26px/2 - 7.63px);
+
+background: #0F131A;
+
+
+/* 低价任意飞 */
+
+width: 99px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 170.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 7;
+flex-grow: 0;
+
+
+/* 吃货 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 42 */
+
+position: absolute;
+width: 31.49px;
+height: 14.89px;
+left: 1.96px;
+top: 2.81px;
+
+
+
+/* 路径 */
+
+position: absolute;
+left: 5.45%;
+right: 7.07%;
+top: 7.81%;
+bottom: 50.82%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 */
+
+position: absolute;
+left: 5.45%;
+right: 7.07%;
+top: 7.81%;
+bottom: 50.82%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 */
+
+position: absolute;
+left: 5.45%;
+right: 7.07%;
+top: 7.81%;
+bottom: 50.82%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 */
+
+position: absolute;
+left: 5.45%;
+right: 7.07%;
+top: 7.81%;
+bottom: 50.82%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 */
+
+position: absolute;
+left: 5.45%;
+right: 7.07%;
+top: 7.81%;
+bottom: 50.82%;
+
+border: 2px solid #0F131A;
+
+
+/* 路径 2（边框） */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 5.45%;
+right: 5.48%;
+top: 47.59%;
+bottom: 4.69%;
+
+border: 2px solid #0F131A;
+transform: matrix(1, 0, 0, -1, 0, 0);
+
+
+/* 低价任意飞 */
+
+width: 99px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 170.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 8;
+flex-grow: 0;
+
+
+/* 温泉 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 减去顶层 41 */
+
+position: absolute;
+width: 27.57px;
+height: 15.5px;
+left: 1.06px;
+top: 19.25px;
+
+background: #0F131A;
+
+
+/* 路径-49 1 */
+
+position: absolute;
+left: 5.74%;
+right: 19.47%;
+top: 56.25%;
+bottom: 6.25%;
+
+border: 2px solid #0F131A;
+
+
+/* 椭圆形备份-2 */
+
+position: absolute;
+left: 4.69%;
+right: 79.45%;
+top: 62.22%;
+bottom: 26.34%;
+
+background: #FFFFFF;
+border: 2px solid #0F131A;
+
+
+/* 椭圆形备份-5 */
+
+position: absolute;
+left: 66.99%;
+right: 4.69%;
+top: 62.25%;
+bottom: 11.32%;
+
+background: #FFFFFF;
+border: 2px solid #0F131A;
+
+
+/* 椭圆形备份-3 */
+
+position: absolute;
+left: 56.8%;
+right: 27.34%;
+top: 78.38%;
+bottom: 10.18%;
+
+background: #FFFFFF;
+border: 2px solid #0F131A;
+
+
+/* 椭圆形备份-2 */
+
+position: absolute;
+left: 4.69%;
+right: 79.45%;
+top: 62.22%;
+bottom: 26.34%;
+
+border: 2px solid #0F131A;
+
+
+/* 椭圆形备份-5 */
+
+position: absolute;
+left: 66.99%;
+right: 4.69%;
+top: 62.25%;
+bottom: 11.32%;
+
+border: 2px solid #0F131A;
+
+
+/* 椭圆形备份-3 1 */
+
+position: absolute;
+left: 56.8%;
+right: 27.34%;
+top: 78.38%;
+bottom: 10.18%;
+
+border: 2px solid #0F131A;
+
+
+/* 组 2559 */
+
+position: absolute;
+width: 16px;
+height: 12px;
+left: 9px;
+top: 2.5px;
+
+
+
+/* 路径-30 */
+
+position: absolute;
+width: 1.82px;
+height: 12px;
+left: 9px;
+top: 2.5px;
+
+border: 2px solid #0F131A;
+
+
+/* 路径-30备份 */
+
+position: absolute;
+width: 1.82px;
+height: 12px;
+left: 14.09px;
+top: 2.5px;
+
+border: 2px solid #0F131A;
+
+
+/* 路径-30备份-2 */
+
+position: absolute;
+width: 1.82px;
+height: 12px;
+right: 11px;
+top: 2.5px;
+
+border: 2px solid #0F131A;
+
+
+/* 低价任意飞 */
+
+width: 99px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* tab 未选 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px;
+gap: 6px;
+
+width: 170.21px;
+height: 60px;
+
+background: rgba(255, 255, 255, 0.7);
+border-radius: 12px;
+
+/* Inside auto layout */
+flex: none;
+order: 9;
+flex-grow: 0;
+
+
+/* 滑雪 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 路径 83 */
+
+position: absolute;
+width: 27.76px;
+height: 8.14px;
+left: 1.36px;
+bottom: 1.5px;
+
+border: 2px solid #0F131A;
+
+
+/* 编组-18备份 */
+
+position: absolute;
+width: 32.25px;
+height: 20.03px;
+left: 1.71px;
+top: 2.67px;
+
+
+
+/* 椭圆形 */
+
+position: absolute;
+width: 5.5px;
+height: 5.5px;
+right: 2.57px;
+top: 2.67px;
+
+border: 2px solid #0F131A;
+transform: rotate(-5.86deg);
+
+
+/* 路径-2 */
+
+position: absolute;
+width: 23.96px;
+height: 16.16px;
+right: 3.68px;
+top: 4.18px;
+
+border: 2px solid #0F131A;
+transform: rotate(-5.86deg);
+
+
+/* 路径-3 */
+
+position: absolute;
+width: 23.99px;
+height: 7.35px;
+left: 1.71px;
+top: 10.72px;
+
+border: 2px solid #0F131A;
+
+
+/* 低价任意飞 */
+
+width: 99px;
+height: 30px;
+
+font-family: 'FZJunHeiS-B-GB';
+font-style: normal;
+font-weight: 400;
+font-size: 30px;
+line-height: 30px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #0F131A;
+
+mix-blend-mode: normal;
+transform: matrix(1, 0, -0.17, 0.98, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Group 1265 */
+
+width: 654px;
+height: 810px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 2 国内最低 */
+
+position: absolute;
+width: 654px;
+height: 80px;
+left: 0px;
+top: 98px;
+
+
+
+/* 矩形 47 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 7.5%;
+bottom: 0.01%;
+
+background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, #FFFFFF 100%);
+border-radius: 24px 24px 0px 0px;
+
+
+/* 组 2154 */
+
+position: absolute;
+width: 345px;
+height: 80px;
+left: 0px;
+top: calc(50% - 80px/2 + 0px);
+
+filter: drop-shadow(4px 0px 12px rgba(0, 0, 0, 0.05));
+
+
+/* 矩形 */
+
+position: absolute;
+width: 345px;
+height: 80px;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+
+
+/* 直线 11 */
+
+position: absolute;
+width: 29.5px;
+height: 26.06px;
+right: 319.5px;
+bottom: 0px;
+
+background: #FFFFFF;
+
+
+/* 容器 108 */
+
+position: absolute;
+height: 32px;
+left: 0%;
+right: 50%;
+top: 27px;
+
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: flex-end;
+padding: 0px;
+gap: 2px;
+
+position: absolute;
+width: 345px;
+height: 32px;
+left: 0px;
+top: 27px;
+
+
+
+/* 国内最低 */
+
+width: 112px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 28px;
+line-height: 32px;
+/* identical to box height, or 114% */
+text-align: center;
+
+color: #000000;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* ¥99起 */
+
+width: 56px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+/* identical to box height, or 120% */
+text-align: center;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 容器 106 */
+
+position: absolute;
+height: 32px;
+left: 50%;
+right: 0%;
+top: 27px;
+
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: flex-end;
+padding: 0px;
+gap: 2px;
+
+position: absolute;
+width: 345px;
+height: 32px;
+left: 345px;
+top: 27px;
+
+
+
+/* 国际最低 */
+
+width: 112px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 28px;
+line-height: 32px;
+/* identical to box height, or 114% */
+text-align: center;
+
+color: #000000;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* ¥499起 */
+
+width: 68px;
+height: 24px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+/* identical to box height, or 120% */
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 43 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 6px 0px 0px;
+gap: 6px;
+
+position: absolute;
+width: 654px;
+height: 730px;
+left: 0px;
+top: 178px;
+
+background: #FFFFFF;
+border-radius: 0px 0px 24px 24px;
+
+
+/* 组 2212 */
+
+width: 654px;
+height: 60px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 组 2212 */
+
+position: absolute;
+width: 690px;
+height: 60px;
+left: calc(50% - 690px/2);
+top: calc(50% - 60px/2);
+
+background: #000000;
+
+
+/* 单程往返 */
+
+position: absolute;
+width: 168px;
+height: 60px;
+left: 24px;
+top: calc(50% - 60px/2);
+
+
+
+/* 单程 */
+
+position: absolute;
+width: 168px;
+height: 60px;
+left: calc(50% - 168px/2);
+top: calc(50% - 60px/2);
+
+background: #F2F3F5;
+border-radius: 6px;
+
+
+/* 2 */
+
+position: absolute;
+width: 86px;
+height: 32px;
+right: -1px;
+top: calc(50% - 32px/2);
+
+
+
+/* 矩形 1 */
+
+position: absolute;
+visibility: hidden;
+width: 72px;
+height: 48px;
+right: 6px;
+top: calc(50% - 48px/2);
+
+background: #FFFFFF;
+border-radius: 4px;
+
+
+/* 往返 */
+
+position: absolute;
+width: 86px;
+height: 32px;
+right: -1px;
+top: calc(50% - 32px/2);
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+text-align: center;
+
+color: #0F131A;
+
+
+
+/* 1 */
+
+position: absolute;
+width: 86px;
+height: 48px;
+left: -1px;
+bottom: 6px;
+
+
+
+/* 矩形 */
+
+position: absolute;
+width: 72px;
+height: 48px;
+left: 6px;
+bottom: 6px;
+
+background: #FFFFFF;
+border-radius: 4px;
+
+
+/* 单程 */
+
+position: absolute;
+width: 86px;
+height: 32px;
+left: -1px;
+bottom: 14px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+text-align: center;
+
+color: #0F131A;
+
+
+
+/* Frame 46 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+isolation: isolate;
+
+position: absolute;
+width: 172px;
+height: 42px;
+left: 469px;
+top: 9px;
+
+
+
+/* 两字 */
+
+width: 172px;
+height: 42px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 26px;
+line-height: 42px;
+/* identical to box height, or 162% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 机票小下拉 */
+
+position: absolute;
+width: 20px;
+height: 20px;
+right: 3px;
+top: calc(50% - 20px/2);
+
+transform: matrix(1, 0, 0, -1, 0, 0);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* Rectangle */
+
+position: absolute;
+width: 20px;
+height: 20px;
+left: calc(50% - 20px/2);
+top: calc(50% - 20px/2);
+
+background: #000000;
+mix-blend-mode: normal;
+opacity: 0;
+transform: matrix(1, 0, 0, -1, 0, 0);
+
+
+/* 路径 */
+
+position: absolute;
+width: 10px;
+height: 15.38px;
+left: calc(50% - 10px/2 - 2.69px);
+bottom: -0.06px;
+
+background: #0F131A;
+border-radius: 1.19072px;
+transform: matrix(0, 1, 1, 0, 0, 0);
+
+
+/* Frame 42 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+
+width: 654px;
+height: 570px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 国内低价 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 17px 24px;
+gap: 113px;
+isolation: isolate;
+
+width: 654px;
+height: 114px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 53 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 24px;
+
+margin: 0 auto;
+width: 282px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 蒙版备份 2 */
+
+width: 108px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 蒙版备份 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: calc(50% - 108px/2);
+top: calc(50% - 80px/2);
+
+background: #000000;
+border-radius: 12px;
+
+
+/* 蒙版备份@3x 1 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: 0px;
+top: 0px;
+
+background: url(蒙版备份@3x.png);
+
+
+/* 次卡角标 */
+
+position: absolute;
+visibility: hidden;
+width: 66px;
+height: 24px;
+left: 0px;
+top: 0px;
+
+
+
+/* Frame 52 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 150px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 9px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 杭州 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 程段icon */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 联集 2 */
+
+position: absolute;
+width: 19.19px;
+height: 4.34px;
+left: 2.29px;
+bottom: 9.71px;
+
+background: #0F131A;
+border: 0.4px solid #0F131A;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 9.52%;
+right: 19.05%;
+top: 52.38%;
+bottom: 40.48%;
+
+background: #0F131A;
+border-radius: 0.857143px;
+
+
+/* 路径 2 */
+
+position: absolute;
+left: 71.43%;
+right: 7.14%;
+top: 38.1%;
+bottom: 40.48%;
+
+background: #0F131A;
+
+
+/* 青岛 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 日本 */
+
+display: none;
+width: 48px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 报价日期 */
+
+width: 121px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 08.02 周三 */
+
+position: absolute;
+left: -0.83%;
+right: 1.65%;
+top: 0%;
+bottom: 0%;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 28px;
+/* identical to box height, or 117% */
+
+color: #919499;
+
+
+
+/* Frame 51 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+padding: 0px;
+gap: 8px;
+
+margin: 0 auto;
+width: 106px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* 人均单次价格 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 2px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 人均 */
+
+display: none;
+width: 80px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 1px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 低价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 矩形 24 */
+
+position: absolute;
+left: 9.38%;
+right: 2.23%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(99.6deg, #FF7364 4.79%, #FF4545 92.76%);
+
+
+/* 矩形 25 */
+
+position: absolute;
+left: 9.38%;
+right: 45.09%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(155.42deg, rgba(255, 64, 26, 0.5) 9.13%, rgba(255, 26, 26, 0.0001) 47.05%), #FF8066;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* ¥ */
+
+position: absolute;
+left: 27.2%;
+right: 35.3%;
+top: 12.5%;
+bottom: 32.19%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.14, 0.99, 0, 0);
+
+
+/* 109 */
+
+width: 69px;
+height: 36px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 42px;
+line-height: 36px;
+/* identical to box height, or 86% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 优惠标 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 4px 6px;
+
+width: 96px;
+height: 28px;
+
+background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 无需换票 */
+
+width: 84px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* OD */
+
+position: absolute;
+width: 0px;
+height: 0px;
+left: 156px;
+top: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+position: absolute;
+visibility: hidden;
+width: 150px;
+height: 36px;
+left: 0px;
+top: 0px;
+
+
+
+/* 日本 */
+
+position: absolute;
+visibility: hidden;
+width: 48px;
+height: 32px;
+left: 160px;
+top: 2px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+
+/* 排行角标 */
+
+position: absolute;
+width: 37.12px;
+height: 42px;
+left: 14px;
+top: 17px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+z-index: 3;
+
+
+/* 矩形 24 */
+
+position: absolute;
+width: 37.12px;
+height: 42px;
+left: calc(50% - 37.12px/2);
+top: calc(50% - 42px/2);
+
+background: #EFD0A4;
+
+
+/* 矩形 25 */
+
+position: absolute;
+width: 19.12px;
+height: 42px;
+left: 0px;
+top: calc(50% - 42px/2);
+
+background: linear-gradient(155.42deg, #EFD0A4 9.13%, rgba(239, 208, 164, 0.0001) 47.05%), #FFE5CC;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* 组 2053 */
+
+position: absolute;
+width: 13px;
+height: 23.84px;
+left: 9.5px;
+top: 1.87px;
+
+
+
+/* 1 */
+
+position: absolute;
+width: 10px;
+height: 15px;
+left: 10.5px;
+top: 10.72px;
+
+font-family: 'Alibaba Sans 102';
+font-style: normal;
+font-weight: 700;
+font-size: 18px;
+line-height: 14px;
+/* identical to box height, or 79% */
+text-align: center;
+
+color: #6B3513;
+
+
+
+/* top */
+
+position: absolute;
+width: 13px;
+height: 10px;
+left: 9.5px;
+top: 1.87px;
+
+font-family: 'Alibaba PuHuiTi 2.0';
+font-style: normal;
+font-weight: 500;
+font-size: 8px;
+line-height: 10px;
+/* identical to box height, or 125% */
+
+color: #6B3513;
+
+
+
+/* 直线 */
+
+position: absolute;
+display: none;
+width: 602.64px;
+height: 1px;
+left: 44.42px;
+top: 114px;
+
+border: 1px solid #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+z-index: 4;
+
+
+/* 国内低价 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 17px 24px;
+gap: 113px;
+isolation: isolate;
+
+width: 654px;
+height: 114px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 53 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 24px;
+
+margin: 0 auto;
+width: 282px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 蒙版备份 2 */
+
+width: 108px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 蒙版备份 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: calc(50% - 108px/2);
+top: calc(50% - 80px/2);
+
+background: #000000;
+border-radius: 12px;
+
+
+/* 蒙版备份@3x 1 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: 0px;
+top: 0px;
+
+background: url(蒙版备份@2x.png);
+
+
+/* 次卡角标 */
+
+position: absolute;
+visibility: hidden;
+width: 66px;
+height: 24px;
+left: 0px;
+top: 0px;
+
+
+
+/* Frame 52 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 150px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 9px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 杭州 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 程段icon */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 联集 2 */
+
+position: absolute;
+width: 19.19px;
+height: 4.34px;
+left: 2.29px;
+bottom: 9.71px;
+
+background: #0F131A;
+border: 0.4px solid #0F131A;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 9.52%;
+right: 19.05%;
+top: 52.38%;
+bottom: 40.48%;
+
+background: #0F131A;
+border-radius: 0.857143px;
+
+
+/* 路径 2 */
+
+position: absolute;
+left: 71.43%;
+right: 7.14%;
+top: 38.1%;
+bottom: 40.48%;
+
+background: #0F131A;
+
+
+/* 青岛 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 日本 */
+
+display: none;
+width: 48px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 报价日期 */
+
+width: 121px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 08.02 周三 */
+
+position: absolute;
+left: -0.83%;
+right: 1.65%;
+top: 0%;
+bottom: 0%;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 28px;
+/* identical to box height, or 117% */
+
+color: #919499;
+
+
+
+/* Frame 51 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+padding: 0px;
+gap: 8px;
+
+margin: 0 auto;
+width: 106px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* 人均单次价格 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 2px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 人均 */
+
+display: none;
+width: 80px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 1px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 低价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 矩形 24 */
+
+position: absolute;
+left: 9.38%;
+right: 2.23%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(99.6deg, #FF7364 4.79%, #FF4545 92.76%);
+
+
+/* 矩形 25 */
+
+position: absolute;
+left: 9.38%;
+right: 45.09%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(155.42deg, rgba(255, 64, 26, 0.5) 9.13%, rgba(255, 26, 26, 0.0001) 47.05%), #FF8066;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* ¥ */
+
+position: absolute;
+left: 27.2%;
+right: 35.3%;
+top: 12.5%;
+bottom: 32.19%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.14, 0.99, 0, 0);
+
+
+/* 109 */
+
+width: 69px;
+height: 36px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 42px;
+line-height: 36px;
+/* identical to box height, or 86% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 优惠标 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 4px 6px;
+
+width: 96px;
+height: 28px;
+
+background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 无需换票 */
+
+width: 84px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* OD */
+
+position: absolute;
+width: 0px;
+height: 0px;
+left: 156px;
+top: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+position: absolute;
+visibility: hidden;
+width: 150px;
+height: 36px;
+left: 0px;
+top: 0px;
+
+
+
+/* 日本 */
+
+position: absolute;
+visibility: hidden;
+width: 48px;
+height: 32px;
+left: 160px;
+top: 2px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+
+/* 排行角标 */
+
+position: absolute;
+width: 37.12px;
+height: 42px;
+left: 14px;
+top: 17px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+z-index: 3;
+
+
+/* 矩形 24 */
+
+position: absolute;
+width: 37.12px;
+height: 42px;
+left: calc(50% - 37.12px/2);
+top: calc(50% - 42px/2);
+
+background: #EFD0A4;
+
+
+/* 矩形 25 */
+
+position: absolute;
+width: 19.12px;
+height: 42px;
+left: 0px;
+top: calc(50% - 42px/2);
+
+background: linear-gradient(155.42deg, #EFD0A4 9.13%, rgba(239, 208, 164, 0.0001) 47.05%), #FFE5CC;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* 组 2053 */
+
+position: absolute;
+width: 13px;
+height: 23.84px;
+left: 9.5px;
+top: 1.87px;
+
+
+
+/* 1 */
+
+position: absolute;
+width: 10px;
+height: 15px;
+left: 10.5px;
+top: 10.72px;
+
+font-family: 'Alibaba Sans 102';
+font-style: normal;
+font-weight: 700;
+font-size: 18px;
+line-height: 14px;
+/* identical to box height, or 79% */
+text-align: center;
+
+color: #6B3513;
+
+
+
+/* top */
+
+position: absolute;
+width: 13px;
+height: 10px;
+left: 9.5px;
+top: 1.87px;
+
+font-family: 'Alibaba PuHuiTi 2.0';
+font-style: normal;
+font-weight: 500;
+font-size: 8px;
+line-height: 10px;
+/* identical to box height, or 125% */
+
+color: #6B3513;
+
+
+
+/* 直线 */
+
+position: absolute;
+display: none;
+width: 602.64px;
+height: 1px;
+left: 44.42px;
+top: 114px;
+
+border: 1px solid #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+z-index: 4;
+
+
+/* 国内低价 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 17px 24px;
+gap: 113px;
+isolation: isolate;
+
+width: 654px;
+height: 114px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Frame 53 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 24px;
+
+margin: 0 auto;
+width: 282px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 蒙版备份 2 */
+
+width: 108px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 蒙版备份 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: calc(50% - 108px/2);
+top: calc(50% - 80px/2);
+
+background: #000000;
+border-radius: 12px;
+
+
+/* 蒙版备份@3x 1 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: 0px;
+top: 0px;
+
+background: url(蒙版份@2x.png);
+
+
+/* 次卡角标 */
+
+position: absolute;
+visibility: hidden;
+width: 66px;
+height: 24px;
+left: 0px;
+top: 0px;
+
+
+
+/* Frame 52 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 150px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 9px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 杭州 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 程段icon */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 联集 2 */
+
+position: absolute;
+width: 19.19px;
+height: 4.34px;
+left: 2.29px;
+bottom: 9.71px;
+
+background: #0F131A;
+border: 0.4px solid #0F131A;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 9.52%;
+right: 19.05%;
+top: 52.38%;
+bottom: 40.48%;
+
+background: #0F131A;
+border-radius: 0.857143px;
+
+
+/* 路径 2 */
+
+position: absolute;
+left: 71.43%;
+right: 7.14%;
+top: 38.1%;
+bottom: 40.48%;
+
+background: #0F131A;
+
+
+/* 青岛 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 日本 */
+
+display: none;
+width: 48px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 报价日期 */
+
+width: 121px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 08.02 周三 */
+
+position: absolute;
+left: -0.83%;
+right: 1.65%;
+top: 0%;
+bottom: 0%;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 28px;
+/* identical to box height, or 117% */
+
+color: #919499;
+
+
+
+/* Frame 51 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+padding: 0px;
+gap: 8px;
+
+margin: 0 auto;
+width: 106px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* 人均单次价格 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 2px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 人均 */
+
+display: none;
+width: 80px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 1px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 低价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 矩形 24 */
+
+position: absolute;
+left: 9.38%;
+right: 2.23%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(99.6deg, #FF7364 4.79%, #FF4545 92.76%);
+
+
+/* 矩形 25 */
+
+position: absolute;
+left: 9.38%;
+right: 45.09%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(155.42deg, rgba(255, 64, 26, 0.5) 9.13%, rgba(255, 26, 26, 0.0001) 47.05%), #FF8066;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* ¥ */
+
+position: absolute;
+left: 27.2%;
+right: 35.3%;
+top: 12.5%;
+bottom: 32.19%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.14, 0.99, 0, 0);
+
+
+/* 109 */
+
+width: 69px;
+height: 36px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 42px;
+line-height: 36px;
+/* identical to box height, or 86% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 优惠标 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 4px 6px;
+
+width: 96px;
+height: 28px;
+
+background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 无需换票 */
+
+width: 84px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* OD */
+
+position: absolute;
+width: 0px;
+height: 0px;
+left: 156px;
+top: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+position: absolute;
+visibility: hidden;
+width: 150px;
+height: 36px;
+left: 0px;
+top: 0px;
+
+
+
+/* 日本 */
+
+position: absolute;
+visibility: hidden;
+width: 48px;
+height: 32px;
+left: 160px;
+top: 2px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+
+/* 排行角标 */
+
+position: absolute;
+width: 37.12px;
+height: 42px;
+left: 14px;
+top: 17px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+z-index: 3;
+
+
+/* 矩形 24 */
+
+position: absolute;
+width: 37.12px;
+height: 42px;
+left: calc(50% - 37.12px/2);
+top: calc(50% - 42px/2);
+
+background: #EFD0A4;
+
+
+/* 矩形 25 */
+
+position: absolute;
+width: 19.12px;
+height: 42px;
+left: 0px;
+top: calc(50% - 42px/2);
+
+background: linear-gradient(155.42deg, #EFD0A4 9.13%, rgba(239, 208, 164, 0.0001) 47.05%), #FFE5CC;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* 组 2053 */
+
+position: absolute;
+width: 13px;
+height: 23.84px;
+left: 9.5px;
+top: 1.87px;
+
+
+
+/* 1 */
+
+position: absolute;
+width: 10px;
+height: 15px;
+left: 10.5px;
+top: 10.72px;
+
+font-family: 'Alibaba Sans 102';
+font-style: normal;
+font-weight: 700;
+font-size: 18px;
+line-height: 14px;
+/* identical to box height, or 79% */
+text-align: center;
+
+color: #6B3513;
+
+
+
+/* top */
+
+position: absolute;
+width: 13px;
+height: 10px;
+left: 9.5px;
+top: 1.87px;
+
+font-family: 'Alibaba PuHuiTi 2.0';
+font-style: normal;
+font-weight: 500;
+font-size: 8px;
+line-height: 10px;
+/* identical to box height, or 125% */
+
+color: #6B3513;
+
+
+
+/* 直线 */
+
+position: absolute;
+display: none;
+width: 602.64px;
+height: 1px;
+left: 44.42px;
+top: 114px;
+
+border: 1px solid #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+z-index: 4;
+
+
+/* 国内低价 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 17px 24px;
+gap: 113px;
+isolation: isolate;
+
+width: 654px;
+height: 114px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Frame 53 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 24px;
+
+margin: 0 auto;
+width: 282px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 蒙版备份 2 */
+
+width: 108px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 蒙版备份 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: calc(50% - 108px/2);
+top: calc(50% - 80px/2);
+
+background: #000000;
+border-radius: 12px;
+
+
+/* 蒙版备份@3x 1 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: 0px;
+top: 0px;
+
+background: url(版份@3x.png);
+
+
+/* 次卡角标 */
+
+position: absolute;
+visibility: hidden;
+width: 66px;
+height: 24px;
+left: 0px;
+top: 0px;
+
+
+
+/* Frame 52 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 150px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 9px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 杭州 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 程段icon */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 联集 2 */
+
+position: absolute;
+width: 19.19px;
+height: 4.34px;
+left: 2.29px;
+bottom: 9.71px;
+
+background: #0F131A;
+border: 0.4px solid #0F131A;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 9.52%;
+right: 19.05%;
+top: 52.38%;
+bottom: 40.48%;
+
+background: #0F131A;
+border-radius: 0.857143px;
+
+
+/* 路径 2 */
+
+position: absolute;
+left: 71.43%;
+right: 7.14%;
+top: 38.1%;
+bottom: 40.48%;
+
+background: #0F131A;
+
+
+/* 青岛 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 日本 */
+
+display: none;
+width: 48px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 报价日期 */
+
+width: 121px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 08.02 周三 */
+
+position: absolute;
+left: -0.83%;
+right: 1.65%;
+top: 0%;
+bottom: 0%;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 28px;
+/* identical to box height, or 117% */
+
+color: #919499;
+
+
+
+/* Frame 51 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+padding: 0px;
+gap: 8px;
+
+margin: 0 auto;
+width: 106px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* 人均单次价格 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 2px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 人均 */
+
+display: none;
+width: 80px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 1px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 低价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 矩形 24 */
+
+position: absolute;
+left: 9.38%;
+right: 2.23%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(99.6deg, #FF7364 4.79%, #FF4545 92.76%);
+
+
+/* 矩形 25 */
+
+position: absolute;
+left: 9.38%;
+right: 45.09%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(155.42deg, rgba(255, 64, 26, 0.5) 9.13%, rgba(255, 26, 26, 0.0001) 47.05%), #FF8066;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* ¥ */
+
+position: absolute;
+left: 27.2%;
+right: 35.3%;
+top: 12.5%;
+bottom: 32.19%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.14, 0.99, 0, 0);
+
+
+/* 109 */
+
+width: 69px;
+height: 36px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 42px;
+line-height: 36px;
+/* identical to box height, or 86% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 优惠标 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 4px 6px;
+
+width: 96px;
+height: 28px;
+
+background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 无需换票 */
+
+width: 84px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* OD */
+
+position: absolute;
+width: 0px;
+height: 0px;
+left: 156px;
+top: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+position: absolute;
+visibility: hidden;
+width: 150px;
+height: 36px;
+left: 0px;
+top: 0px;
+
+
+
+/* 日本 */
+
+position: absolute;
+visibility: hidden;
+width: 48px;
+height: 32px;
+left: 160px;
+top: 2px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+
+/* 排行角标 */
+
+position: absolute;
+display: none;
+width: 37.12px;
+height: 42px;
+left: 14px;
+top: 17px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+z-index: 3;
+
+
+/* 直线 */
+
+position: absolute;
+display: none;
+width: 602.64px;
+height: 1px;
+left: 44.42px;
+top: 114px;
+
+border: 1px solid #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+z-index: 4;
+
+
+/* 国内低价 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 17px 24px;
+gap: 113px;
+isolation: isolate;
+
+width: 654px;
+height: 114px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* Frame 53 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 24px;
+
+margin: 0 auto;
+width: 282px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 蒙版备份 2 */
+
+width: 108px;
+height: 80px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 蒙版备份 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: calc(50% - 108px/2);
+top: calc(50% - 80px/2);
+
+background: #000000;
+border-radius: 12px;
+
+
+/* 蒙版备份@3x 1 */
+
+position: absolute;
+width: 108px;
+height: 80px;
+left: 0px;
+top: 0px;
+
+background: url(蒙份@2x.png);
+
+
+/* 次卡角标 */
+
+position: absolute;
+visibility: hidden;
+width: 66px;
+height: 24px;
+left: 0px;
+top: 0px;
+
+
+
+/* Frame 52 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 150px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* OD */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-end;
+padding: 0px;
+gap: 9px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+width: 150px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 杭州 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 程段icon */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 联集 2 */
+
+position: absolute;
+width: 19.19px;
+height: 4.34px;
+left: 2.29px;
+bottom: 9.71px;
+
+background: #0F131A;
+border: 0.4px solid #0F131A;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 9.52%;
+right: 19.05%;
+top: 52.38%;
+bottom: 40.48%;
+
+background: #0F131A;
+border-radius: 0.857143px;
+
+
+/* 路径 2 */
+
+position: absolute;
+left: 71.43%;
+right: 7.14%;
+top: 38.1%;
+bottom: 40.48%;
+
+background: #0F131A;
+
+
+/* 青岛 */
+
+width: 60px;
+height: 36px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+/* identical to box height, or 120% */
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* 日本 */
+
+display: none;
+width: 48px;
+height: 32px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 报价日期 */
+
+width: 121px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 08.02 周三 */
+
+position: absolute;
+left: -0.83%;
+right: 1.65%;
+top: 0%;
+bottom: 0%;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 28px;
+/* identical to box height, or 117% */
+
+color: #919499;
+
+
+
+/* Frame 51 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+padding: 0px;
+gap: 8px;
+
+margin: 0 auto;
+width: 106px;
+height: 72px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* 人均单次价格 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 2px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 人均 */
+
+display: none;
+width: 80px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 1px;
+
+width: 106px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 低价 */
+
+width: 36px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 矩形 24 */
+
+position: absolute;
+left: 9.38%;
+right: 2.23%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(99.6deg, #FF7364 4.79%, #FF4545 92.76%);
+
+
+/* 矩形 25 */
+
+position: absolute;
+left: 9.38%;
+right: 45.09%;
+top: 0%;
+bottom: 0%;
+
+background: linear-gradient(155.42deg, rgba(255, 64, 26, 0.5) 9.13%, rgba(255, 26, 26, 0.0001) 47.05%), #FF8066;
+mix-blend-mode: normal;
+opacity: 0.8;
+
+
+/* ¥ */
+
+position: absolute;
+left: 27.2%;
+right: 35.3%;
+top: 12.5%;
+bottom: 32.19%;
+
+background: #FFFFFF;
+transform: matrix(1, 0, -0.14, 0.99, 0, 0);
+
+
+/* 109 */
+
+width: 69px;
+height: 36px;
+
+font-family: 'Fliggy Sans 102';
+font-style: normal;
+font-weight: 400;
+font-size: 42px;
+line-height: 36px;
+/* identical to box height, or 86% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 优惠标 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 4px 6px;
+
+width: 96px;
+height: 28px;
+
+background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 无需换票 */
+
+width: 84px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% */
+text-align: right;
+
+color: #FF5533;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* OD */
+
+position: absolute;
+width: 0px;
+height: 0px;
+left: 156px;
+top: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Frame 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 3px;
+
+position: absolute;
+visibility: hidden;
+width: 150px;
+height: 36px;
+left: 0px;
+top: 0px;
+
+
+
+/* 日本 */
+
+position: absolute;
+visibility: hidden;
+width: 48px;
+height: 32px;
+left: 160px;
+top: 2px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #919499;
+
+
+
+/* 排行角标 */
+
+position: absolute;
+display: none;
+width: 37.12px;
+height: 42px;
+left: 14px;
+top: 17px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+z-index: 3;
+
+
+/* 直线 */
+
+position: absolute;
+display: none;
+width: 602.64px;
+height: 1px;
+left: 44.42px;
+top: 114px;
+
+border: 1px solid #F2F3F5;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+z-index: 4;
+
+
+/* 模块更多 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 6px 230px 24px;
+
+width: 654px;
+height: 82px;
+
+background: #FFFFFF;
+border-radius: 0px 0px 24px 24px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Frame 4 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 30px;
+gap: 10px;
+
+width: 194px;
+height: 52px;
+
+background: #F5F5FF;
+border-radius: 117px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Frame 4 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 170px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 更多拼价方案 */
+
+width: 144px;
+height: 28px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 28px;
+/* identical to box height, or 117% */
+
+color: #6666FF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* 编组 17 */
+
+width: 20px;
+height: 20px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 椭圆形 */
+
+position: absolute;
+width: 20px;
+height: 20px;
+left: calc(50% - 20px/2);
+top: calc(50% - 20px/2);
+
+background: #6666FF;
+
+
+/* Path 9 Copy */
+
+position: absolute;
+width: 6.03px;
+height: 10.06px;
+right: 5.98px;
+top: calc(50% - 10.06px/2);
+
+background: #FFFFFF;
+
+
+/* IMG_2736 */
+
+width: 702px;
+height: 200px;
+
+background: url(IMG_2736.png);
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* Flight image */
+
+width: 702px;
+height: 1110px;
+
+background: url(image.png);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* IMG_2734 */
+
+width: 702px;
+height: 1121px;
+
+background: url(IMG_2734.png);
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* IMG_2735 */
+
+width: 702px;
+height: 565px;
+
+background: url(IMG_2735.png);
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Advertisement image */
+
+width: 702px;
+height: 840px;
+
+background: url(image.png);
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* IMG_2738 1 */
+
+width: 702px;
+height: 476px;
+
+background: url(IMG_2738.png);
+border-radius: 18px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Footer notice */
+
+width: 750px;
+height: 160px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 1312323725 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 3.75%;
+bottom: 3.75%;
+
+
+
+/* 安心票背书-机票&汽车票 */
+
+width: 750px;
+height: 116px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 矩形 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* 编组 3 */
+
+position: absolute;
+width: 479px;
+height: 84px;
+left: calc(50% - 479px/2 - 0.5px);
+top: 14px;
+
+
+
+/* 编组 2 */
+
+position: absolute;
+width: 281.85px;
+height: 41px;
+left: 99px;
+top: 0px;
+
+
+
+/* 编组 */
+
+position: absolute;
+width: 86.85px;
+height: 28.2px;
+right: 0px;
+top: 6px;
+
+
+
+/* Fill 1 */
+
+position: absolute;
+left: 51.32%;
+right: 35.25%;
+top: 2.47%;
+bottom: 33.73%;
+
+background: #212121;
+
+
+/* 编组 */
+
+position: absolute;
+width: 29.03px;
+height: 28.2px;
+left: 0px;
+top: calc(50% - 28.2px/2);
+
+
+
+/* Clip 4 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Clip 4 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #000000;
+
+
+/* Fill 3 */
+
+position: absolute;
+width: 29.03px;
+height: 28.2px;
+left: 0px;
+bottom: 0px;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 32.44%;
+right: 30.46%;
+top: 48.93%;
+bottom: 30.04%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 13.95%;
+right: 0%;
+top: 0%;
+bottom: 69.1%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 0%;
+right: 0.86%;
+top: 22.75%;
+bottom: 0%;
+
+background: #212121;
+
+
+/* Fill 5 */
+
+position: absolute;
+left: 33.51%;
+right: 56.74%;
+top: 31.18%;
+bottom: 29.34%;
+
+background: #212121;
+
+
+/* Fill 7 */
+
+position: absolute;
+left: 41.44%;
+right: 40.69%;
+top: 20.87%;
+bottom: 2.03%;
+
+background: #212121;
+
+
+/* 编组 */
+
+position: absolute;
+width: 29.49px;
+height: 26.45px;
+right: 0px;
+bottom: 0.62px;
+
+
+
+/* Clip 10 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Clip 10 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #000000;
+
+
+/* Fill 9 */
+
+position: absolute;
+width: 29.49px;
+height: 26.45px;
+left: 0px;
+top: 0px;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 70.6%;
+right: 17.24%;
+top: 26.15%;
+bottom: 66.49%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 59.02%;
+right: 9.22%;
+top: 74.7%;
+bottom: 1.84%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 47.91%;
+right: 39.94%;
+top: 26.15%;
+bottom: 66.49%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 50.4%;
+right: 37.72%;
+top: 10.58%;
+bottom: 83.97%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 25.72%;
+right: 62.63%;
+top: 26.15%;
+bottom: 66.49%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 13.5%;
+right: 12.08%;
+top: 47.56%;
+bottom: 41.86%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 14.18%;
+right: 0%;
+top: 0%;
+bottom: 56.37%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 2.64%;
+right: 5.55%;
+top: 62.74%;
+bottom: 0%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 0%;
+right: 67.06%;
+top: 74.7%;
+bottom: 1.84%;
+
+background: #212121;
+
+
+/* Fill 1 */
+
+position: absolute;
+left: 64.1%;
+right: 34.41%;
+top: 43.61%;
+bottom: 45.95%;
+
+background: #212121;
+
+
+/* 编组 */
+
+position: absolute;
+width: 170px;
+height: 41px;
+left: 0px;
+top: calc(50% - 41px/2);
+
+
+
+/* 编组 */
+
+position: absolute;
+width: 49.73px;
+height: 41px;
+left: 0px;
+top: calc(50% - 41px/2);
+
+
+
+/* Clip 2 */
+
+position: absolute;
+width: 49.73px;
+height: 41px;
+left: 0px;
+top: calc(50% - 41px/2);
+
+
+
+/* Clip 2 */
+
+position: absolute;
+width: 49.73px;
+height: 41px;
+left: 0px;
+top: calc(50% - 41px/2);
+
+background: #000000;
+
+
+/* Fill 1 */
+
+position: absolute;
+width: 49.73px;
+height: 41px;
+left: 0px;
+bottom: 0px;
+
+background: #FFD800;
+
+
+/* Fill 3 */
+
+position: absolute;
+left: 8.74%;
+right: 83.76%;
+top: 41.08%;
+bottom: 36.13%;
+
+background: #ED6B6B;
+
+
+/* Fill 5 */
+
+position: absolute;
+left: 10.43%;
+right: 88.2%;
+top: 47.99%;
+bottom: 44.05%;
+
+background: #B74846;
+
+
+/* Fill 7 */
+
+position: absolute;
+left: 13.21%;
+right: 85.43%;
+top: 48.21%;
+bottom: 43.83%;
+
+background: #B74846;
+
+
+/* Fill 9 */
+
+position: absolute;
+left: 7.17%;
+right: 90.91%;
+top: 30.36%;
+bottom: 58.46%;
+
+background: #212121;
+
+
+/* Fill 11 */
+
+position: absolute;
+left: 15.52%;
+right: 81.47%;
+top: 34.34%;
+bottom: 59.55%;
+
+background: #212121;
+
+
+/* Fill 13 */
+
+position: absolute;
+left: 90.82%;
+right: 0.23%;
+top: 18.88%;
+bottom: 73.79%;
+
+background: #212121;
+
+
+/* Fill 15 */
+
+position: absolute;
+left: 89.26%;
+right: 0%;
+top: 38.25%;
+bottom: 17.38%;
+
+background: #212121;
+
+
+/* Fill 17 */
+
+position: absolute;
+left: 64.91%;
+right: 25.8%;
+top: 17.17%;
+bottom: 16.44%;
+
+background: #212121;
+
+
+/* Fill 19 */
+
+position: absolute;
+left: 73.18%;
+right: 16.38%;
+top: 16.16%;
+bottom: 60.41%;
+
+background: #212121;
+
+
+/* Fill 21 */
+
+position: absolute;
+left: 83.91%;
+right: 10.12%;
+top: 17.17%;
+bottom: 59.19%;
+
+background: #212121;
+
+
+/* Fill 23 */
+
+position: absolute;
+left: 82.95%;
+right: 10.97%;
+top: 36.54%;
+bottom: 17.7%;
+
+background: #212121;
+
+
+/* Fill 25 */
+
+position: absolute;
+width: 16.58px;
+height: 20.96px;
+right: 29.27px;
+bottom: 6.85px;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 78.41%;
+right: 20.3%;
+top: 53.46%;
+bottom: 34.22%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 73.03%;
+right: 17.22%;
+top: 32.16%;
+bottom: 16.71%;
+
+background: #212121;
+
+
+/* Fill 27 */
+
+position: absolute;
+width: 29.62px;
+height: 27.55px;
+right: 57.42px;
+top: 6.64px;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 57.29%;
+right: 37.56%;
+top: 57.49%;
+bottom: 37.23%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 56.9%;
+right: 37.95%;
+top: 70.09%;
+bottom: 24.47%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 60.86%;
+right: 37.17%;
+top: 30.06%;
+bottom: 62.86%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 48.8%;
+right: 33.78%;
+top: 16.2%;
+bottom: 16.59%;
+
+background: #212121;
+
+
+/* Fill 29 */
+
+position: absolute;
+width: 28.34px;
+height: 26.96px;
+left: 53.6px;
+bottom: 6.96px;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 44.73%;
+right: 53.66%;
+top: 37.91%;
+bottom: 45.05%;
+
+background: #212121;
+
+
+/* 路径 */
+
+position: absolute;
+left: 31.53%;
+right: 51.81%;
+top: 17.29%;
+bottom: 16.96%;
+
+background: #212121;
+
+
+/* 编组 33 */
+
+position: absolute;
+width: 479px;
+height: 32px;
+left: calc(50% - 479px/2);
+bottom: 0px;
+
+
+
+/* Group */
+
+position: absolute;
+width: 407.2px;
+height: 32px;
+left: 0px;
+top: calc(50% - 32px/2);
+
+
+
+/* Group */
+
+position: absolute;
+width: 407.2px;
+height: 32px;
+left: calc(50% - 407.2px/2);
+top: calc(50% - 32px/2);
+
+
+
+/* Group */
+
+position: absolute;
+width: 407.2px;
+height: 32px;
+left: calc(50% - 407.2px/2);
+top: calc(50% - 32px/2);
+
+
+
+/* 出票安心 出行安心 服务安心 */
+
+position: absolute;
+width: 338px;
+height: 32px;
+left: calc(50% - 338px/2 + 35.6px);
+top: calc(50% - 32px/2);
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 32px;
+/* identical to box height, or 133% */
+
+color: #212121;
+
+
+
+/* 椭圆形 */
+
+position: absolute;
+left: 43.79%;
+right: 55.23%;
+top: 43.75%;
+bottom: 43.75%;
+
+background: #212121;
+
+
+/* 椭圆形 */
+
+position: absolute;
+left: 73.09%;
+right: 25.93%;
+top: 43.75%;
+bottom: 43.75%;
+
+background: #212121;
+
+
+/* 直线 3 */
+
+position: absolute;
+left: 0%;
+right: 84.77%;
+top: 46.88%;
+bottom: 53.12%;
+
+mix-blend-mode: normal;
+opacity: 0.5;
+
+
+/* 直线 3 */
+
+position: absolute;
+left: 87.06%;
+right: 0%;
+top: 46.88%;
+bottom: 53.12%;
+
+mix-blend-mode: normal;
+opacity: 0.5;
+transform: rotate(180deg);
+
+
+/* Frame 67 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 6px;
+
+width: 226px;
+height: 20px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* 飞猪机票投诉受理方式 */
+
+width: 200px;
+height: 20px;
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+
+color: #919499;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group 9 */
+
+width: 10px;
+height: 20px;
+
+transform: rotate(90deg);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame */
+
+position: absolute;
+width: 10px;
+height: 20px;
+left: 206px;
+top: 5px;
+
+transform: rotate(90deg);
+
+
+/* Group */
+
+position: absolute;
+width: 7.43px;
+right: -0.69px;
+top: 10%;
+bottom: 22.33%;
+
+opacity: 0.5;
+transform: rotate(90deg);
+
+
+/* Group */
+
+position: absolute;
+left: 32.62%;
+right: -6.95%;
+top: 10%;
+bottom: 22.33%;
+
+transform: rotate(90deg);
+
+
+/* Vector */
+
+position: absolute;
+width: 7.43px;
+left: calc(50% - 7.43px/2 + 1.98px);
+top: 10%;
+bottom: 22.33%;
+
+background: #5C5F66;
+transform: rotate(90deg);
+
+
+/* Flight bottom bar */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: center;
+padding: 0px;
+gap: 18px;
+
+position: absolute;
+width: 750px;
+height: 150px;
+left: 0px;
+bottom: 0px;
+
+
+
+/* 底Bar · Tab Bar */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 750px;
+height: 150px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 底Bar · Tab Bar */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 750px;
+height: 150px;
+
+background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Tab */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+
+width: 750px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Tab01 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 0px 0px;
+gap: 6px;
+isolation: isolate;
+
+width: 150px;
+max-width: 150px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* shoucangjia */
+
+width: 48px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 14.58%;
+right: 14.59%;
+top: 5.42%;
+bottom: 8.33%;
+
+background: #0F131A;
+
+
+/* 12306账号 */
+
+width: 150px;
+height: 20px;
+
+/* 📁 20px/Regular_100% */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+text-align: center;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* _气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+display: none;
+width: 92px;
+height: 33px;
+left: 98px;
+top: 0px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Tab01 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 0px 0px;
+gap: 6px;
+isolation: isolate;
+
+width: 150px;
+max-width: 150px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Clip path group */
+
+width: 48px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* master_svg1_782_110742/733_111231 */
+
+position: absolute;
+left: 34%;
+right: 34%;
+top: 13.95%;
+bottom: 30.23%;
+
+
+
+/* Vector */
+
+position: absolute;
+height: 48px;
+left: 34%;
+right: 34%;
+bottom: 26px;
+
+background: #000000;
+
+
+/* Group */
+
+position: absolute;
+left: 32.63%;
+right: 33.89%;
+top: 20.35%;
+bottom: 32.6%;
+
+
+
+/* Group */
+
+position: absolute;
+left: 32.63%;
+right: 34.51%;
+top: 23.58%;
+bottom: 58.91%;
+
+transform: rotate(30deg);
+
+
+/* Vector */
+
+position: absolute;
+height: 14.87px;
+left: 32.63%;
+right: 34.54%;
+bottom: 50.66px;
+
+background: #0F131A;
+transform: matrix(0.87, 0.5, -0.5, 0.86, 0, 0);
+
+
+/* Group */
+
+position: absolute;
+left: 37%;
+right: 37%;
+top: 20.35%;
+bottom: 34.3%;
+
+
+
+/* Vector */
+
+position: absolute;
+height: 39px;
+left: 37%;
+right: 37%;
+bottom: 29.5px;
+
+background: #0F131A;
+
+
+/* Group */
+
+position: absolute;
+left: 36.18%;
+right: 39.14%;
+top: 36.39%;
+bottom: 57.05%;
+
+transform: rotate(30deg);
+
+
+/* Vector */
+
+position: absolute;
+height: 5.56px;
+left: 36.18%;
+right: 39.15%;
+bottom: 49.06px;
+
+background: #0F131A;
+transform: matrix(0.87, 0.5, -0.5, 0.86, 0, 0);
+
+
+/* 12306账号 */
+
+width: 150px;
+height: 20px;
+
+/* 📁 20px/Regular_100% */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+text-align: center;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* _气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+display: none;
+width: 92px;
+height: 33px;
+left: 98px;
+top: 0px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Tab01 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 0px 0px;
+gap: 6px;
+isolation: isolate;
+
+width: 150px;
+max-width: 150px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* xuanzuo */
+
+width: 48px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 6.47%;
+right: 6.47%;
+top: 12.72%;
+bottom: 9.6%;
+
+background: #0F131A;
+
+
+/* 12306账号 */
+
+width: 150px;
+height: 20px;
+
+/* 📁 20px/Regular_100% */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+text-align: center;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* _气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+display: none;
+width: 92px;
+height: 33px;
+left: 98px;
+top: 0px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Tab01 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 0px 0px;
+gap: 6px;
+isolation: isolate;
+
+width: 150px;
+max-width: 150px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Clip path group */
+
+width: 48px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* master_svg2_782_110742/733_111201 */
+
+position: absolute;
+left: 34%;
+right: 34%;
+top: 13.95%;
+bottom: 30.23%;
+
+
+
+/* Vector */
+
+position: absolute;
+height: 48px;
+left: 34%;
+right: 34%;
+bottom: 26px;
+
+background: #000000;
+
+
+/* Group */
+
+position: absolute;
+left: 37%;
+right: 37%;
+top: 21.51%;
+bottom: 40.12%;
+
+
+
+/* Group */
+
+position: absolute;
+left: 37%;
+right: 37%;
+top: 21.51%;
+bottom: 40.12%;
+
+
+
+/* Vector */
+
+position: absolute;
+height: 33px;
+left: 37%;
+right: 37%;
+bottom: 34.5px;
+
+background: #0F131A;
+
+
+/* Group */
+
+position: absolute;
+left: 44.67%;
+right: 44.67%;
+top: 32.56%;
+bottom: 51.16%;
+
+
+
+/* Vector */
+
+position: absolute;
+height: 14px;
+left: 44.67%;
+right: 44.67%;
+bottom: 44px;
+
+background: #0F131A;
+
+
+/* 12306账号 */
+
+width: 150px;
+height: 20px;
+
+/* 📁 20px/Regular_100% */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+text-align: center;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* _气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+display: none;
+width: 92px;
+height: 33px;
+left: 98px;
+top: 0px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* Tab01 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 0px 0px;
+gap: 6px;
+isolation: isolate;
+
+width: 150px;
+max-width: 150px;
+height: 86px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* 图标/常用 */
+
+width: 48px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* 行程 */
+
+position: absolute;
+width: 48px;
+height: 48px;
+left: calc(50% - 48px/2);
+top: calc(50% - 48px/2);
+
+
+
+/* Group 2 */
+
+position: absolute;
+width: 37px;
+height: 41px;
+left: calc(50% - 37px/2);
+top: calc(50% - 41px/2);
+
+
+
+/* 矩形 (Stroke) */
+
+position: absolute;
+width: 37px;
+height: 41px;
+left: calc(50% - 37px/2);
+top: calc(50% - 41px/2);
+
+background: #0F131A;
+
+
+/* 路径 27 (Stroke) */
+
+position: absolute;
+width: 17px;
+height: 3px;
+left: calc(50% - 17px/2);
+top: 18.5px;
+
+background: #0F131A;
+
+
+/* 路径 27备份 (Stroke) */
+
+position: absolute;
+width: 17px;
+height: 3px;
+left: calc(50% - 17px/2);
+bottom: 17.5px;
+
+background: #0F131A;
+
+
+/* 路径 22 (Stroke) */
+
+position: absolute;
+width: 3px;
+height: 7px;
+left: 16.5px;
+top: 4.5px;
+
+background: #0F131A;
+
+
+/* 路径 22备份 (Stroke) */
+
+position: absolute;
+width: 3px;
+height: 7px;
+right: 16.5px;
+top: 4.5px;
+
+background: #0F131A;
+
+
+/* 12306账号 */
+
+width: 150px;
+height: 20px;
+
+/* 📁 20px/Regular_100% */
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 100%;
+/* identical to box height, or 20px */
+text-align: center;
+
+color: #0F131A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+z-index: 1;
+
+
+/* _气泡 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+display: none;
+width: 92px;
+height: 33px;
+left: 98px;
+top: 0px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+z-index: 2;
+
+
+/* iPhone-status-bar(lower) */
+
+width: 750px;
+height: 64px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Bar
+
+Bar Appearance
+*/
+
+position: absolute;
+width: 268px;
+height: 10px;
+left: calc(50% - 268px/2 + 1px);
+top: calc(50% - 10px/2 + 15px);
+
+
+
+/* Base */
+
+position: absolute;
+left: 0px;
+right: 0px;
+top: 0px;
+bottom: 0px;
+
+background: #000000;
+border-radius: 20px;

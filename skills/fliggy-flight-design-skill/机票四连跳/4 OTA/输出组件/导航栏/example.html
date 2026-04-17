@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>导航栏示例</title>
+  <style>
+    :root {
+      --color-surface: #ffffff;
+      --color-text-primary: #0e131b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #f2f3f5;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--color-text-primary);
+    }
+
+    img { display: block; }
+
+    .stage {
+      width: 750px;
+      margin: 0 auto;
+      background: var(--color-surface);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 88px;
+      padding: 0 28px 0 34px;
+    }
+
+    .status-time {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 600;
+    }
+
+    .status-right {
+      width: 134px;
+      height: 24px;
+    }
+
+    .nav-bar {
+      position: relative;
+      height: 88px;
+      padding: 0 24px;
+    }
+
+    .nav-back {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      width: 48px;
+      height: 48px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .nav-back img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .nav-title {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      width: 190px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translateX(-50%);
+    }
+
+    .nav-route {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 190px;
+      height: 48px;
+    }
+
+    .nav-city {
+      min-width: 68px;
+      font-size: 34px;
+      line-height: 48px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .nav-route-icon {
+      width: 42px;
+      height: 42px;
+      flex: none;
+    }
+
+    .nav-actions {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      width: 168px;
+      height: 48px;
+    }
+
+    .nav-action {
+      width: 48px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--color-text-primary);
+    }
+
+    .nav-action img {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-action span {
+      margin-top: 3px;
+      font-size: 12px;
+      line-height: 17px;
+      white-space: nowrap;
+      transform: scale(0.92);
+      transform-origin: center top;
+    }
+
+    .nav-action.nav-action-more img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .nav-action.nav-action-more span {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="status-bar">
+      <div class="status-time">9:41</div>
+      <img class="status-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01fDXHWq1je1wcx12ia_!!6000000004572-2-tps-134-24.png" alt="状态栏">
+    </div>
+    <div class="nav-bar">
+      <button class="nav-back" aria-label="返回">
+        <img src="https://gw.alicdn.com/imgextra/i1/O1CN01DTmWga1piVVizwK8x_!!6000000005394-2-tps-48-48.png" alt="">
+      </button>
+      <div class="nav-title">
+        <div class="nav-route" aria-label="杭州到北京">
+          <span class="nav-city">杭州</span>
+          <img class="nav-route-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN015RbuWn1af6KRGgKmO_!!6000000003356-2-tps-42-42.png" alt="">
+          <span class="nav-city">北京</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-action" aria-label="低价提醒">
+          <img src="https://gw.alicdn.com/imgextra/i1/O1CN015uzCtj1heN0PLsbOK_!!6000000004302-2-tps-36-36.png" alt="">
+          <span>低价提醒</span>
+        </button>
+        <button class="nav-action" aria-label="我的收藏">
+          <img src="https://gw.alicdn.com/imgextra/i4/O1CN01x00HtJ1vG0YmOniAx_!!6000000006144-2-tps-36-36.png" alt="">
+          <span>我的收藏</span>
+        </button>
+        <button class="nav-action nav-action-more" aria-label="更多">
+          <img src="https://gw.alicdn.com/imgextra/i1/O1CN014bSFyZ1xCv7asQHR9_!!6000000006408-2-tps-48-48.png" alt="">
+          <span>更多</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

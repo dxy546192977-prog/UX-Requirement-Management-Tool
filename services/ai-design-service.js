@@ -33,6 +33,7 @@ const jobs = new Map();
  * @property {string|null}  last_error
  * @property {string}       created_at
  * @property {string}       updated_at
+ * @property {string}       skill_key — 'default' | 'prd_html_decompose'
  */
 
 /**
@@ -42,18 +43,20 @@ const jobs = new Map();
  * @property {string} intent
  * @property {'reuse'|'modify'|'create'} change_type
  * @property {string} notes
+ * @property {string} [html_brief] — 供单文件 HTML 生成用的分条要点（可选）
  * @property {'pending'|'confirmed'|'skipped'} status
  */
 
 function _now() { return new Date().toISOString(); }
 
-function _newJob(reqId, prdUrl) {
+function _newJob(reqId, prdUrl, skillKey) {
   const id = 'job-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
   /** @type {AiDesignJob} */
   const job = {
     id,
     req_id:     reqId,
     prd_url:    prdUrl,
+    skill_key:  skillKey || 'default',
     status:     'queued',
     stage:      null,
     summary:    null,
@@ -79,10 +82,12 @@ function _updateJob(job, patch) {
  * @param {string} prdUrl
  * @param {object} config  — 来自 config.json
  * @param {object} yuqueSvc — yuque-service 模块引用
+ * @param {{ skillKey?: string }} [opts]
  * @returns {AiDesignJob}  — 立即返回（状态为 queued），任务在后台运行
  */
-function createJob(reqId, prdUrl, config, yuqueSvc) {
-  const job = _newJob(reqId, prdUrl);
+function createJob(reqId, prdUrl, config, yuqueSvc, opts) {
+  const skillKey = (opts && opts.skillKey) || 'default';
+  const job = _newJob(reqId, prdUrl, skillKey);
   // 异步执行，不阻塞 HTTP 响应
   _runJob(job, config, yuqueSvc).catch((err) => {
     console.error(`[AiDesign] Job ${job.id} uncaught error:`, err.message);
@@ -150,7 +155,7 @@ async function _runJob(job, config, yuqueSvc) {
 
   let decomposeResult;
   try {
-    decomposeResult = await _callAi(config, _buildDecomposePrompt(prdContent.title, bodyText));
+    decomposeResult = await _callAi(config, _buildDecomposePrompt(prdContent.title, bodyText, job.skill_key));
   } catch (err) {
     throw new Error('需求拆解失败: ' + err.message);
   }
@@ -163,12 +168,12 @@ async function _runJob(job, config, yuqueSvc) {
 
   let planResult;
   try {
-    planResult = await _callAi(config, _buildPlanPrompt(prdContent.title, bodyText, parsed));
+    planResult = await _callAi(config, _buildPlanPrompt(prdContent.title, bodyText, parsed, job.skill_key));
   } catch (err) {
     throw new Error('设计方案生成失败: ' + err.message);
   }
 
-  const modules = _parsePlanResult(planResult, parsed.pages);
+  const modules = _parsePlanResult(planResult, parsed.pages, job.skill_key);
 
   _updateJob(job, {
     status:  'needs_confirmation',
@@ -218,7 +223,7 @@ async function _runJobMock(job, config, yuqueSvc) {
   _updateJob(job, { stage: 'planning' });
   await _sleep(1000);
 
-  const modules = _buildMockModules(pages, prdTitle);
+  const modules = _buildMockModules(pages, prdTitle, job.skill_key);
 
   _updateJob(job, {
     status:  'needs_confirmation',
@@ -248,7 +253,8 @@ function _inferPagesFromTitle(title) {
 }
 
 /** 为每个页面生成示例模块 */
-function _buildMockModules(pages, prdTitle) {
+function _buildMockModules(pages, prdTitle, skillKey) {
+  const htmlSkill = skillKey === 'prd_html_decompose';
   const templatesByPage = {
     '首页':      [
       { name: '搜索入口模块', intent: '优化用户搜索起点的交互体验，提升首屏点击率', change_type: 'modify', notes: '注意与首屏氛围图的层叠关系，搜索框需固定在视口上方' },
@@ -284,7 +290,16 @@ function _buildMockModules(pages, prdTitle) {
       { name: `${page} — 主体内容模块`, intent: `承载 ${prdTitle} 的核心需求改动`, change_type: 'modify', notes: 'Mock 模式下无法精确拆解，接入 AI Key 后将自动生成详细方案' }
     ];
     templates.forEach((t) => {
-      modules.push({ ...t, page, status: 'pending' });
+      const row = { ...t, page, status: 'pending' };
+      if (htmlSkill) {
+        row.html_brief = [
+          '1. 页面标题与面包屑占位',
+          '2. 主内容区：' + (t.name || '模块') + ' 的布局骨架（区块标题 + 正文/列表）',
+          '3. 关键交互：按钮/链接的文案占位与禁用态说明',
+          '4. 空态与加载态各一句占位说明'
+        ].join('\n');
+      }
+      modules.push(row);
     });
   });
   return modules;
@@ -292,19 +307,31 @@ function _buildMockModules(pages, prdTitle) {
 
 // ---------- Prompt 构建 ----------
 
-function _buildDecomposePrompt(title, bodyText) {
-  return [
-    {
-      role: 'system',
-      content: `你是资深 UX 设计师，专注于移动端电商/旅行类 App。
-你的任务是把产品经理的 PRD 文档拆解成可执行的设计任务清单。
+const PRD_HTML_SKILL_USER_LINE = '帮我将上传的prd文档拆解成能够生成html的分条信息';
+
+function _buildDecomposePrompt(title, bodyText, skillKey) {
+  const htmlSkill = skillKey === 'prd_html_decompose';
+  const systemBase = htmlSkill
+    ? `你是资深前端信息架构师，专注于把 PRD 拆成「可逐条喂给 HTML 单页生成器」的结构化输入。
+用户意图（必须对齐）：${PRD_HTML_SKILL_USER_LINE}
+你的输出要便于后续为每个页面/模块生成独立或组合的静态 HTML 草稿（含区块标题、列表、表单占位、状态说明）。
 **必须用 JSON 格式输出，不要添加任何 Markdown 代码块标记，直接输出 JSON 对象。**`
-    },
+    : `你是资深 UX 设计师，专注于移动端电商/旅行类 App。
+你的任务是把产品经理的 PRD 文档拆解成可执行的设计任务清单。
+**必须用 JSON 格式输出，不要添加任何 Markdown 代码块标记，直接输出 JSON 对象。**`;
+
+  const userExtra = htmlSkill
+    ? `\n注意：pages 尽量拆到「一个 URL/一个主界面」粒度，便于每个页面对应一份 HTML 说明。`
+    : '';
+
+  return [
+    { role: 'system', content: systemBase },
     {
       role: 'user',
       content: `请分析以下 PRD，输出 JSON 对象，包含：
 - summary: 字符串，一句话说明核心诉求（≤80字）
 - pages: 字符串数组，涉及的页面名称列表（如"首页"、"列表页"、"下单页"等）
+${userExtra}
 
 PRD 标题：${title}
 
@@ -317,14 +344,33 @@ ${bodyText.slice(0, 6000)}
   ];
 }
 
-function _buildPlanPrompt(title, bodyText, decomposed) {
-  return [
-    {
-      role: 'system',
-      content: `你是资深 UX 设计师，专注于移动端电商/旅行类 App。
-你的任务是为每个涉及的页面拆解出具体的 UI 模块，并给出设计意图与建议处理方式。
+function _buildPlanPrompt(title, bodyText, decomposed, skillKey) {
+  const htmlSkill = skillKey === 'prd_html_decompose';
+  const systemBase = htmlSkill
+    ? `你是资深前端信息架构师。用户已通过技能触发语请求拆解：${PRD_HTML_SKILL_USER_LINE}
+为每个模块输出「可直接用于编写单文件 HTML」的分条信息：区块结构、必备文案占位、主要交互与状态（含空态/错误态若 PRD 有提）。
 **必须用 JSON 格式输出，不要添加任何 Markdown 代码块标记，直接输出 JSON 数组。**`
-    },
+    : `你是资深 UX 设计师，专注于移动端电商/旅行类 App。
+你的任务是为每个涉及的页面拆解出具体的 UI 模块，并给出设计意图与建议处理方式。
+**必须用 JSON 格式输出，不要添加任何 Markdown 代码块标记，直接输出 JSON 数组。**`;
+
+  const fieldsHtml = htmlSkill
+    ? `请为每个页面拆解出需要新增或修改的 UI 模块，输出 JSON 数组，每项包含：
+- name: 模块名称（如"低价日历模块"）
+- page: 所属页面
+- intent: 该模块在 PRD 中的目标（≤60字）
+- change_type: "create" / "modify" / "reuse"
+- notes: 设计与数据依赖备注（≤100字）
+- html_brief: 字符串，使用多行文本，每行一条，至少 4 条；每条对应生成 HTML 时要覆盖的一块信息（例如：「区块：标题栏」「列表：字段 A/B/C」「按钮：主操作文案占位」「状态：加载中骨架」）。不要输出完整 HTML 代码，只输出结构化要点。`
+    : `请为每个页面拆解出需要新增或修改的 UI 模块，输出 JSON 数组，每项包含：
+- name: 模块名称（如"低价日历模块"）
+- page: 所属页面
+- intent: 设计意图（≤60字，说明这个模块要解决什么问题）
+- change_type: "create"（新建）/ "modify"（改现有）/ "reuse"（直接复用，无需改动）
+- notes: 给设计师的备注（≤100字，注意事项、参考方向、数据依赖等）`;
+
+  return [
+    { role: 'system', content: systemBase },
     {
       role: 'user',
       content: `需求摘要：${decomposed.summary}
@@ -334,12 +380,7 @@ PRD 标题：${title}
 PRD 正文：
 ${bodyText.slice(0, 5000)}
 
-请为每个页面拆解出需要新增或修改的 UI 模块，输出 JSON 数组，每项包含：
-- name: 模块名称（如"低价日历模块"）
-- page: 所属页面
-- intent: 设计意图（≤60字，说明这个模块要解决什么问题）
-- change_type: "create"（新建）/ "modify"（改现有）/ "reuse"（直接复用，无需改动）
-- notes: 给设计师的备注（≤100字，注意事项、参考方向、数据依赖等）
+${fieldsHtml}
 
 直接输出 JSON 数组，不要有任何其他内容。`
     }
@@ -449,34 +490,47 @@ function _parseDecomposeResult(text) {
   }
 }
 
-function _parsePlanResult(text, pages) {
+function _parsePlanResult(text, pages, skillKey) {
   try {
     const clean = text.replace(/```json|```/g, '').trim();
     const arr   = JSON.parse(clean);
-    if (!Array.isArray(arr)) return _fallbackModules(pages);
+    if (!Array.isArray(arr)) return _fallbackModules(pages, skillKey);
 
-    return arr.map((item) => ({
-      name:        String(item.name        || '未命名模块').slice(0, 60),
-      page:        String(item.page        || '').slice(0, 40),
-      intent:      String(item.intent      || '').slice(0, 200),
-      change_type: ['create', 'modify', 'reuse'].includes(item.change_type) ? item.change_type : 'create',
-      notes:       String(item.notes       || '').slice(0, 400),
-      status:      'pending'
-    }));
+    return arr.map((item) => {
+      const row = {
+        name:        String(item.name        || '未命名模块').slice(0, 60),
+        page:        String(item.page        || '').slice(0, 40),
+        intent:      String(item.intent      || '').slice(0, 200),
+        change_type: ['create', 'modify', 'reuse'].includes(item.change_type) ? item.change_type : 'create',
+        notes:       String(item.notes       || '').slice(0, 400),
+        status:      'pending'
+      };
+      if (item.html_brief != null && String(item.html_brief).trim()) {
+        row.html_brief = String(item.html_brief).slice(0, 4000);
+      }
+      return row;
+    });
   } catch {
-    return _fallbackModules(pages);
+    return _fallbackModules(pages, skillKey);
   }
 }
 
-function _fallbackModules(pages) {
-  return pages.map((page) => ({
-    name:        `${page} — 待进一步拆解`,
-    page,
-    intent:      'AI 无法自动拆解，请手工补充模块意图',
-    change_type: 'create',
-    notes:       '自动拆解失败，建议重跑或手动填写模块清单',
-    status:      'pending'
-  }));
+function _fallbackModules(pages, skillKey) {
+  const htmlSkill = skillKey === 'prd_html_decompose';
+  return pages.map((page) => {
+    const row = {
+      name:        `${page} — 待进一步拆解`,
+      page,
+      intent:      'AI 无法自动拆解，请手工补充模块意图',
+      change_type: 'create',
+      notes:       '自动拆解失败，建议重跑或手动填写模块清单',
+      status:      'pending'
+    };
+    if (htmlSkill) {
+      row.html_brief = '1. 页面根容器与主标题\n2. 主内容占位\n3. 主操作按钮占位\n4. 加载/空态说明占位';
+    }
+    return row;
+  });
 }
 
 // ---------- 工具函数 ----------

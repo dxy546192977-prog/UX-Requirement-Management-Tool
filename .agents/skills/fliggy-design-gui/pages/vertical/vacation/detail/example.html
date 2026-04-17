@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no, viewport-fit=cover">
+  <title>门票商详 — 整页串联 · vertical.vacation.detail</title>
+  <style>
+    :root {
+      --color-bg: #f2f3f5;
+      --color-midgray: #5c5f66;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--color-bg);
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 0;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    .page-container {
+      width: 750px;
+      max-width: 100%;
+      margin: 0 auto;
+      background: var(--color-bg);
+      position: relative;
+      padding-bottom: 172px;
+    }
+
+    /* ========== Header（与 line-detail 一致：头图 + 叠层状态栏/导航） ========== */
+    .header-section {
+      position: relative;
+      width: 750px;
+      height: 750px;
+      max-width: 100%;
+    }
+
+    .media-container {
+      width: 750px;
+      max-width: 100%;
+      height: 750px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-container .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gradient-overlay {
+      position: absolute;
+      width: 750px;
+      max-width: 100%;
+      height: 120px;
+      left: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.15) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .header-bg-scrim {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100%;
+      height: 176px;
+      background: #ffffff;
+      opacity: 0;
+      z-index: 108;
+      pointer-events: none;
+      transition: opacity 0.16s ease-out;
+    }
+
+    .status-overlay {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100%;
+      height: 176px;
+      z-index: 110;
+      --header-bg-progress: 0;
+      transition: box-shadow 0.16s ease-out;
+    }
+
+    .status-overlay.is-scrolled {
+      box-shadow: 0 1px 0 rgba(210, 212, 217, 0.8);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 30px;
+      width: 750px;
+      max-width: 100%;
+      height: 88px;
+      background: transparent;
+      transition: background-color 0.16s ease-out;
+    }
+
+    .status-time {
+      font-family: 'SF Pro', 'PingFang SC', sans-serif;
+      font-weight: 590;
+      font-size: 32px;
+      color: #ffffff;
+      transition: color 0.16s ease-out;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      transition: color 0.16s ease-out;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      width: 750px;
+      max-width: 100%;
+      height: 88px;
+      transition: color 0.16s ease-out;
+    }
+
+    .nav-bar__action {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.16s ease-out;
+    }
+
+    .status-overlay.is-scrolled .status-bar {
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .status-overlay.is-scrolled .status-time,
+    .status-overlay.is-scrolled .status-icons,
+    .status-overlay.is-scrolled .nav-bar,
+    .status-overlay.is-scrolled .nav-bar__action {
+      color: #0f131a;
+    }
+
+    .nav-bar__actions-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* Tab（与 line-detail tab-indicator 一致） */
+    .tab-indicator-section {
+      display: flex;
+      justify-content: center;
+      padding: 18px 0;
+    }
+
+    .tab-indicator {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      height: 48px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 24px;
+      padding: 4px;
+    }
+
+    .tab-indicator__list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .tab-indicator__button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 24px;
+      white-space: nowrap;
+      background-color: transparent;
+      color: #ffffff;
+      border-radius: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tab-indicator__button.is-active {
+      background-color: #ffe033;
+      color: #0f131a;
+    }
+
+    /* 正文卡片 */
+    .vd-stack { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 0 18px 24px; }
+    .vd-card714 {
+      width: 714px;
+      max-width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .vd-bi { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+    .vd-bi-price { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; color: #ff5533; }
+    .vd-bi-price .n { font-size: 42px; font-weight: 700; font-family: 'Alibaba Sans 102', sans-serif; }
+    .vd-bi-title { font-size: 32px; font-weight: 600; line-height: 44px; color: #0f131a; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .vd-shelf-h { padding: 24px 24px 0; font-size: 36px; font-weight: 500; margin: 0; color: #0f131a; }
+    .vd-shelf-row { display: flex; justify-content: space-between; padding: 24px; border-top: 1px solid #f1f2f4; }
+    .vd-shelf-row:first-of-type { border-top: none; }
+    .vd-book { width: 84px; height: 84px; background: #ff7300; border: none; border-radius: 12px; color: #fff; font-size: 36px; font-weight: 600; }
+    .vd-poi-h { padding: 24px; font-size: 36px; font-weight: 500; margin: 0; }
+    .vd-poi-sub { padding: 0 24px 24px; font-size: 24px; color: #5c5f66; }
+    .vd-rich-h { padding: 24px; font-size: 36px; font-weight: 500; margin: 0; }
+    .vd-rich-body { position: relative; max-height: 400px; overflow: hidden; }
+    .vd-rich-body img { width: 100%; display: block; vertical-align: middle; }
+    .vd-rich-fade {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 72px;
+      background: linear-gradient(to top, #fff 55%, rgba(255, 255, 255, 0));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vd-rich-fade button { border: none; background: none; font-size: 26px; font-weight: 500; color: #292c33; cursor: pointer; }
+
+    /* ========== Bottom Action Bar（与 line-detail 一致） ========== */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100%;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      z-index: 100;
+    }
+
+    .bottom-bar__divider {
+      width: 750px;
+      max-width: 100%;
+      height: 1px;
+      background: #d2d4d9;
+    }
+
+    .bottom-bar__main {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 12px 24px 12px 36px;
+      gap: 36px;
+      width: 750px;
+      max-width: 100%;
+      height: 108px;
+    }
+
+    .icon-nav {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 42px;
+      flex-grow: 1;
+    }
+
+    .icon-nav__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .icon-nav__icon {
+      width: 42px;
+      height: 42px;
+    }
+
+    .icon-nav__label {
+      font-size: 20px;
+      line-height: 20px;
+      color: #5c5f66;
+      white-space: nowrap;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 400px;
+      height: 84px;
+      flex-shrink: 0;
+    }
+
+    .action-buttons__button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 84px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 36px;
+      color: #ffffff;
+    }
+
+    .action-buttons__button--add-to-cart {
+      background: #ffb300;
+      border-radius: 42px 0 0 42px;
+    }
+
+    .action-buttons__button--buy-now {
+      background: #ff6200;
+      border-radius: 0 42px 42px 0;
+    }
+
+    .bottom-bar__safe-area {
+      width: 750px;
+      max-width: 100%;
+      height: 64px;
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 12px;
+    }
+
+    .bottom-bar__home-indicator {
+      width: 268px;
+      height: 10px;
+      background: #000000;
+      border-radius: 20px;
+      opacity: 0.25;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <div class="header-section">
+      <div class="media-container">
+        <!-- 素材库：共享池（度假/目的地），与 foundations/image-library.md 一致 -->
+        <img class="hero-img" src="https://fli.alicdn.com/upload/creative-platform/8nzmEcX0yD4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="商品头图">
+        <div class="gradient-overlay"></div>
+        <div class="header-bg-scrim" aria-hidden="true"></div>
+        <div class="status-overlay">
+          <div class="status-bar">
+            <div class="status-time">9:41</div>
+            <div class="status-icons">
+              <svg width="36" height="24" viewBox="0 0 17 11" fill="none" aria-hidden="true"><path d="M0 10.7V10.7C0.03 10.73 0.06 10.76 0.1 10.79V10.7H0ZM3.4 10.7V5.5C3.4 5.47 3.43 5.43 3.47 5.4V10.7H3.4ZM6.8 10.7V2.93C6.8 2.9 6.83 2.87 6.87 2.83V10.7H6.8ZM10.2 10.7V0.37C10.2 0.33 10.23 0.3 10.27 0.27V10.7H10.2Z" fill="currentColor"/><path d="M13.6 10.7H17V10.7C17.03 10.73 17.07 10.76 17.1 10.79V10.7H13.6Z" fill-opacity="0.4" fill="currentColor"/></svg>
+              <svg width="32" height="24" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M15.4 1.63C13.07 -0.53 9.53 -0.53 7.17 1.63L8 2.53C9.93 0.77 12.63 0.77 14.57 2.53L15.4 1.63Z" fill="currentColor"/><path d="M12.93 3.97C11.53 2.67 9.97 2.67 8.63 3.97L8 4.7L7.43 3.97C6.07 2.67 4.53 2.67 3.13 3.97L2.33 3.23C4.13 1.57 6.47 1.57 8.23 3.23L8 3.5L7.77 3.23C9.53 1.57 11.87 1.57 13.67 3.23L12.93 3.97Z" fill="currentColor"/></svg>
+              <div style="width: 48px; height: 24px; border: 2px solid currentColor; border-radius: 6px; position: relative;" aria-hidden="true">
+                <div style="position: absolute; left: 2px; top: 2px; bottom: 2px; width: 70%; background: currentColor; border-radius: 3px;"></div>
+              </div>
+            </div>
+          </div>
+          <nav class="nav-bar" aria-label="页面导航">
+            <a href="#" class="nav-bar__action" aria-label="返回">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M33.56 39.44C34.15 40.03 34.15 40.97 33.56 41.56C32.97 42.15 32.03 42.15 31.44 41.56L15.44 25.56C14.85 24.97 14.85 24.03 15.44 23.44L31.44 7.44C32.03 6.85 32.97 6.85 33.56 7.44C34.15 8.03 34.15 8.97 33.56 9.56L18.62 24.5L33.56 39.44Z" fill="currentColor"/></svg>
+            </a>
+            <div class="nav-bar__actions-right">
+              <a href="#" class="nav-bar__action" aria-label="分享">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M23.58 6L23.73 6C24.55 6 25.33 6.28 25.97 6.79L42.68 20.29C43.09 20.62 43.42 21.03 43.64 21.5C43.87 21.97 43.99 22.49 44 23.01C44.01 23.54 43.9 24.06 43.68 24.53C43.46 25.01 43.14 25.43 42.74 25.77L26.03 39.91C25.51 40.35 24.88 40.63 24.21 40.72C23.54 40.81 22.85 40.71 22.24 40.42C21.62 40.14 21.1 39.68 20.73 39.11C20.37 38.54 20.18 37.87 20.18 37.19V31.35L20 31.37C15.84 31.88 11.86 34.39 8.03 38.99L7.79 39.29C7.51 39.64 7.12 39.89 6.69 40.01C6.26 40.13 5.8 40.1 5.38 39.95C4.96 39.79 4.6 39.5 4.35 39.13C4.11 38.75 3.98 38.31 4 37.86C4.54 24.91 9.97 17.4 20.15 15.8L20.18 15.79V9.56C20.18 8.64 20.53 7.76 21.16 7.1C21.8 6.43 22.66 6.04 23.58 6.01V6ZM24.18 9C24.08 8.92 23.95 8.87 23.82 8.85C23.68 8.84 23.55 8.86 23.43 8.92C23.31 8.97 23.2 9.06 23.13 9.18C23.06 9.29 23.02 9.42 23.02 9.56V17.04C23.02 17.77 22.47 18.38 21.75 18.46C12.83 19.39 7.96 25.05 6.98 35.85L6.98 35.87L7.14 35.7C11.51 30.97 16.24 28.52 21.3 28.43L21.6 28.42C22.39 28.42 23.02 29.06 23.02 29.85V37.2C23.02 37.33 23.06 37.46 23.13 37.58C23.21 37.69 23.31 37.78 23.43 37.84C23.56 37.9 23.69 37.92 23.83 37.9C23.96 37.88 24.09 37.83 24.19 37.74L40.9 23.6C40.98 23.53 41.05 23.45 41.09 23.35C41.13 23.25 41.16 23.15 41.15 23.05C41.15 22.94 41.13 22.84 41.08 22.74C41.04 22.65 40.97 22.57 40.89 22.5L24.18 9Z" fill="currentColor"/></svg>
+              </a>
+              <a href="#" class="nav-bar__action" aria-label="收藏">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M12.56 37.56C12.16 37.72 11.73 37.77 11.31 37.72C10.89 37.66 10.49 37.5 10.14 37.25C9.8 37 9.52 36.67 9.34 36.29C9.16 35.9 9.08 35.48 9.1 35.06L9.65 26L3.89 18.99C3.62 18.67 3.43 18.28 3.36 17.86C3.28 17.44 3.3 17.01 3.44 16.61C3.57 16.2 3.8 15.84 4.11 15.55C4.42 15.26 4.79 15.05 5.2 14.94L13.98 12.65L18.87 5.01C19.1 4.65 19.41 4.36 19.78 4.15C20.16 3.95 20.57 3.84 21 3.84C21.42 3.84 21.84 3.95 22.22 4.15C22.59 4.36 22.9 4.65 23.13 5.01L28.02 12.65L36.8 14.94C37.21 15.04 37.58 15.25 37.89 15.55C38.2 15.84 38.43 16.2 38.56 16.61C38.7 17.01 38.72 17.44 38.64 17.86C38.57 18.28 38.38 18.67 38.11 18.99L32.35 26L32.89 35.06C32.92 35.48 32.84 35.9 32.66 36.29C32.47 36.67 32.2 37 31.86 37.25C31.51 37.5 31.11 37.66 30.69 37.72C30.27 37.77 29.84 37.72 29.44 37.56L21 34.25L12.56 37.56ZM21.44 31.81L30.33 35.29C30.35 35.3 30.36 35.3 30.37 35.3C30.4 35.3 30.42 35.29 30.44 35.27C30.45 35.25 30.46 35.23 30.46 35.2L29.89 25.67C29.88 25.36 29.97 25.06 30.17 24.82L36.23 17.45C36.24 17.43 36.25 17.42 36.25 17.4C36.25 17.39 36.25 17.37 36.25 17.36C36.24 17.34 36.23 17.33 36.22 17.32C36.21 17.31 36.2 17.3 36.18 17.3L26.94 14.89C26.64 14.81 26.39 14.63 26.22 14.37L21.08 6.32C21.07 6.31 21.06 6.3 21.04 6.29C21.03 6.28 21.02 6.28 21 6.28C20.98 6.28 20.97 6.28 20.95 6.29C20.94 6.3 20.93 6.31 20.92 6.32L15.78 14.37C15.61 14.63 15.36 14.81 15.06 14.89L5.82 17.3C5.8 17.3 5.79 17.31 5.78 17.32C5.77 17.33 5.76 17.34 5.75 17.36C5.75 17.37 5.75 17.39 5.75 17.4C5.76 17.42 5.76 17.43 5.77 17.45L11.83 24.82C12.03 25.06 12.12 25.36 12.11 25.67L11.54 35.2C11.54 35.22 11.54 35.23 11.55 35.25C11.55 35.26 11.56 35.27 11.58 35.28C11.59 35.29 11.6 35.3 11.62 35.3C11.63 35.3 11.65 35.3 11.67 35.29L20.55 31.81C20.84 31.7 21.16 31.7 21.44 31.81Z" fill="currentColor"/></svg>
+              </a>
+              <a href="#" class="nav-bar__action" aria-label="更多">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M26 20.54C26.92 21.07 27.59 21.94 27.86 22.96C28.14 23.99 28 25.08 27.46 26C26.93 26.92 26.06 27.59 25.04 27.86C24.01 28.14 22.92 28 22 27.47C21.08 26.93 20.41 26.06 20.14 25.04C19.86 24.01 20 22.92 20.53 22C21.07 21.08 21.94 20.41 22.96 20.14C23.99 19.86 25.08 20 26 20.54ZM38 20C39.06 20 40.08 20.42 40.83 21.17C41.58 21.92 42 22.94 42 24C42 25.06 41.58 26.08 40.83 26.83C40.08 27.58 39.06 28 38 28C36.94 28 35.92 27.58 35.17 26.83C34.42 26.08 34 25.06 34 24C34 22.94 34.42 21.92 35.17 21.17C35.92 20.42 36.94 20 38 20ZM12 20.54C12.47 20.79 12.88 21.14 13.21 21.56C13.54 21.97 13.78 22.45 13.93 22.97C14.07 23.48 14.11 24.02 14.04 24.54C13.97 25.07 13.8 25.58 13.54 26.04C13.27 26.5 12.92 26.91 12.49 27.23C12.07 27.55 11.58 27.79 11.07 27.92C10.55 28.05 10.01 28.08 9.49 28C8.96 27.92 8.45 27.74 8 27.46C7.1 26.92 6.46 26.05 6.2 25.04C5.94 24.02 6.09 22.95 6.61 22.04C7.13 21.14 7.99 20.47 9 20.19C10 19.91 11.08 20.03 12 20.54Z" fill="currentColor"/></svg>
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="vd-stack">
+      <div class="tab-indicator-section">
+        <div class="tab-indicator" role="tablist">
+          <div class="tab-indicator__list">
+            <button type="button" class="tab-indicator__button is-active" role="tab" aria-selected="true">图片</button>
+            <button type="button" class="tab-indicator__button" role="tab" aria-selected="false">VR全景</button>
+            <button type="button" class="tab-indicator__button" role="tab" aria-selected="false">视频</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="vd-card714 vd-bi" aria-label="基础信息">
+        <div class="vd-bi-price"><span style="font-size:24px">券后价</span><span>¥</span><span class="n">190.28</span><span style="font-size:24px">起</span></div>
+        <p style="margin:0;font-size:24px;color:#919499">¥103 划线价 · 已售 2102</p>
+        <h1 class="vd-bi-title">北京环球影城指定日门票 成人票 官方直连</h1>
+      </section>
+
+      <section class="vd-card714" aria-label="货架">
+        <h2 class="vd-shelf-h">1日票</h2>
+        <div class="vd-shelf-row">
+          <div>
+            <div style="font-size:30px;font-weight:500;color:#0F131A">成人票</div>
+            <div style="font-size:24px;color:#5C5F66;margin-top:6px">有条件退 · 无需取票</div>
+          </div>
+          <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+            <div style="color:#FF5533"><span style="font-size:24px">¥</span><span style="font-size:42px;font-weight:700">349</span><span style="font-size:24px">起</span></div>
+            <button type="button" class="vd-book">订</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="vd-card714" aria-label="POI">
+        <h2 class="vd-poi-h">所属景区</h2>
+        <p class="vd-poi-sub">北京环球度假区 · 今日开放 08:00–22:00</p>
+      </section>
+
+      <section class="vd-card714" aria-label="图文详情">
+        <h2 class="vd-rich-h">图文详情</h2>
+        <div class="vd-rich-body">
+          <img src="https://fli.alicdn.com/upload/creative-platform/MXzrOt8y8C4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="图文详情">
+          <div class="vd-rich-fade"><button type="button">展开全部 ˅</button></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="bottom-bar" aria-label="底部操作">
+    <div class="bottom-bar__divider"></div>
+    <div class="bottom-bar__main">
+      <nav class="icon-nav" aria-label="辅助操作">
+        <a href="#" class="icon-nav__item">
+          <div class="icon-nav__icon">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none" aria-hidden="true"><path d="M6.27 2.63C8.65 2.63 10.84 3.4 12.5 4.83C15.13 3.47 18.04 2.75 21 2.76C31.13 2.76 39.38 10.97 39.38 21.07C39.38 31.16 31.13 39.38 21 39.38C10.87 39.38 2.63 31.16 2.63 21.07C2.63 18.49 3.16 15.98 4.2 13.64C4.27 13.49 4.82 12.49 4.95 12.25L5.11 11.94C5.26 11.63 5.38 11.37 5.46 11.17C5.48 11.1 5.5 11.05 5.51 11.06L5.52 11.08L5.46 10.6C5.34 9.77 5.14 8.95 4.86 8.16L4.7 7.71C4.54 7.3 4.35 6.9 4.14 6.52C3.89 6.14 3.75 5.69 3.74 5.23C3.72 4.78 3.83 4.33 4.05 3.93C4.27 3.53 4.59 3.2 4.98 2.97C5.37 2.75 5.81 2.63 6.27 2.63ZM6.44 5.25C6.62 5.56 6.89 6.11 7.14 6.75C7.63 7.98 7.98 9.36 8.13 10.86C8.2 11.48 7.96 12.1 7.45 13.12C7.39 13.23 7.33 13.35 7.27 13.47C7.1 13.8 6.61 14.68 6.6 14.71C5.7 16.71 5.25 18.88 5.25 21.07C5.25 29.71 12.32 36.75 21 36.75C29.68 36.75 36.75 29.71 36.75 21.07C36.75 12.42 29.68 5.38 21 5.38C18.15 5.38 15.4 6.14 12.96 7.58C12.7 7.73 12.4 7.79 12.1 7.75C11.8 7.71 11.53 7.56 11.33 7.34C10.13 6.04 8.41 5.29 6.44 5.25ZM21.66 15.75C22.18 15.75 22.68 15.96 23.05 16.33C23.42 16.7 23.63 17.2 23.63 17.72V20.34C23.63 20.87 23.42 21.37 23.05 21.74C22.68 22.11 22.18 22.31 21.66 22.31C21.13 22.31 20.63 22.11 20.26 21.74C19.89 21.37 19.69 20.87 19.69 20.34V17.72C19.69 17.2 19.89 16.7 20.26 16.33C20.63 15.96 21.13 15.75 21.66 15.75ZM29.53 15.75C30.05 15.75 30.55 15.96 30.92 16.33C31.29 16.7 31.5 17.2 31.5 17.72V20.34C31.5 20.87 31.29 21.37 30.92 21.74C30.55 22.11 30.05 22.31 29.53 22.31C29.01 22.31 28.51 22.11 28.14 21.74C27.77 21.37 27.56 20.87 27.56 20.34V17.72C27.56 17.2 27.77 16.7 28.14 16.33C28.51 15.96 29.01 15.75 29.53 15.75Z" fill="#5C5F66"/></svg>
+          </div>
+          <span class="icon-nav__label">咨询</span>
+        </a>
+        <a href="#" class="icon-nav__item">
+          <div class="icon-nav__icon">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none" aria-hidden="true"><path d="M10.15 3.94H31.95C33.67 3.94 35.15 4.86 35.75 6.37L35.84 6.61L38.94 14.57C38.98 14.66 39.01 14.76 39.02 14.85C39.25 15.58 39.38 16.37 39.38 17.16C39.38 18.25 39.15 19.34 38.69 20.33C38.24 21.33 37.58 22.22 36.75 22.93V34.13C36.75 35.17 36.34 36.17 35.6 36.91C34.86 37.65 33.86 38.06 32.81 38.06H9.19C8.14 38.06 7.14 37.65 6.4 36.91C5.66 36.17 5.25 35.17 5.25 34.13V22.95C4.42 22.24 3.76 21.35 3.31 20.36C2.85 19.36 2.62 18.28 2.63 17.19C2.63 16.4 2.75 15.61 2.99 14.84C3 14.8 3.01 14.75 3.02 14.71L3.04 14.65L6.38 6.53C6.87 5.02 8.17 4.04 9.88 3.95L10.15 3.94ZM26.52 21.94C25.86 22.77 25.02 23.43 24.07 23.89C23.12 24.36 22.07 24.6 21.01 24.61C19.95 24.6 18.91 24.36 17.95 23.9C16.99 23.44 16.15 22.77 15.48 21.95C14.81 22.78 13.96 23.45 13 23.91C12.04 24.38 10.99 24.62 9.92 24.62C9.23 24.63 8.54 24.54 7.88 24.37V34.13C7.88 34.47 8.01 34.81 8.26 35.05C8.51 35.3 8.84 35.44 9.19 35.44H32.81C33.16 35.44 33.49 35.3 33.74 35.05C33.99 34.81 34.13 34.47 34.13 34.13L34.13 24.34C33.46 24.52 32.78 24.61 32.09 24.61C31.03 24.61 29.97 24.37 29.01 23.91C28.04 23.44 27.19 22.77 26.52 21.94ZM31.95 6.67H10.14C9.19 6.67 8.95 7.21 8.86 7.45L8.85 7.5L5.56 15.51C5.55 15.55 5.54 15.59 5.53 15.63C5.36 16.13 5.27 16.66 5.27 17.19C5.27 18 5.47 18.8 5.86 19.51C6.24 20.22 6.8 20.82 7.49 21.26L7.73 21.41H7.73L7.96 21.52C8.51 21.77 9.17 21.9 9.92 21.9C11.52 21.89 12.99 21.04 13.85 19.63C13.92 19.47 14.02 19.25 14.22 19.02C14.77 18.36 16.16 18.32 16.78 19.08C16.94 19.26 17.04 19.47 17.1 19.6C17.95 21.02 19.41 21.87 21.01 21.88C22.59 21.87 24.05 21.02 24.9 19.6C24.97 19.45 25.07 19.25 25.25 19.04C25.52 18.7 26 18.48 26.52 18.48C27.18 18.48 27.58 18.77 27.79 19.03C27.99 19.24 28.09 19.47 28.15 19.6C29.01 21.03 30.48 21.88 32.09 21.88C32.96 21.87 33.71 21.7 34.31 21.36C35.05 20.94 35.66 20.32 36.09 19.59C36.51 18.85 36.73 18.01 36.73 17.16C36.73 16.64 36.64 16.12 36.47 15.61L36.45 15.53L36.43 15.45L33.35 7.55C33.09 6.77 32.37 6.7 31.95 6.67ZM30.19 11.81H11.81C11.46 11.81 11.13 11.95 10.88 12.2C10.64 12.44 10.5 12.77 10.5 13.13C10.5 13.47 10.64 13.81 10.88 14.05C11.13 14.3 11.46 14.44 11.81 14.44H30.19C30.54 14.44 30.87 14.3 31.12 14.05C31.36 13.81 31.5 13.47 31.5 13.13C31.5 12.77 31.36 12.44 31.12 12.2C30.87 11.95 30.54 11.81 30.19 11.81Z" fill="#5C5F66"/></svg>
+          </div>
+          <span class="icon-nav__label">店铺</span>
+        </a>
+        <a href="#" class="icon-nav__item">
+          <div class="icon-nav__icon">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none" aria-hidden="true"><path d="M12.56 37.56C12.16 37.72 11.73 37.77 11.31 37.72C10.89 37.66 10.49 37.5 10.14 37.25C9.8 37 9.52 36.67 9.34 36.29C9.16 35.9 9.08 35.48 9.1 35.06L9.65 26L3.89 18.99C3.62 18.67 3.43 18.28 3.36 17.86C3.28 17.44 3.3 17.01 3.44 16.61C3.57 16.2 3.8 15.84 4.11 15.55C4.42 15.26 4.79 15.05 5.2 14.94L13.98 12.65L18.87 5.01C19.1 4.65 19.41 4.36 19.78 4.15C20.16 3.95 20.57 3.84 21 3.84C21.42 3.84 21.84 3.95 22.22 4.15C22.59 4.36 22.9 4.65 23.13 5.01L28.02 12.65L36.8 14.94C37.21 15.04 37.58 15.25 37.89 15.55C38.2 15.84 38.43 16.2 38.56 16.61C38.7 17.01 38.72 17.44 38.64 17.86C38.57 18.28 38.38 18.67 38.11 18.99L32.35 26L32.89 35.06C32.92 35.48 32.84 35.9 32.66 36.29C32.47 36.67 32.2 37 31.86 37.25C31.51 37.5 31.11 37.66 30.69 37.72C30.27 37.77 29.84 37.72 29.44 37.56L21 34.25L12.56 37.56ZM21.44 31.81L30.33 35.29C30.35 35.3 30.36 35.3 30.37 35.3C30.4 35.3 30.42 35.29 30.44 35.27C30.45 35.25 30.46 35.23 30.46 35.2L29.89 25.67C29.88 25.36 29.97 25.06 30.17 24.82L36.23 17.45C36.24 17.43 36.25 17.42 36.25 17.4C36.25 17.39 36.25 17.37 36.25 17.36C36.24 17.34 36.23 17.33 36.22 17.32C36.21 17.31 36.2 17.3 36.18 17.3L26.94 14.89C26.64 14.81 26.39 14.63 26.22 14.37L21.08 6.32C21.07 6.31 21.06 6.3 21.04 6.29C21.03 6.28 21.02 6.28 21 6.28C20.98 6.28 20.97 6.28 20.95 6.29C20.94 6.3 20.93 6.31 20.92 6.32L15.78 14.37C15.61 14.63 15.36 14.81 15.06 14.89L5.82 17.3C5.8 17.3 5.79 17.31 5.78 17.32C5.77 17.33 5.76 17.34 5.75 17.36C5.75 17.37 5.75 17.39 5.75 17.4C5.76 17.42 5.76 17.43 5.77 17.45L11.83 24.82C12.03 25.06 12.12 25.36 12.11 25.67L11.54 35.2C11.54 35.22 11.54 35.23 11.55 35.25C11.55 35.26 11.56 35.27 11.58 35.28C11.59 35.29 11.6 35.3 11.62 35.3C11.63 35.3 11.65 35.3 11.67 35.29L20.55 31.81C20.84 31.7 21.16 31.7 21.44 31.81Z" fill="#5C5F66"/></svg>
+          </div>
+          <span class="icon-nav__label">收藏</span>
+        </a>
+      </nav>
+      <div class="action-buttons">
+        <button type="button" class="action-buttons__button action-buttons__button--add-to-cart">加入购物车</button>
+        <button type="button" class="action-buttons__button action-buttons__button--buy-now">立即购买</button>
+      </div>
+    </div>
+    <div class="bottom-bar__safe-area">
+      <div class="bottom-bar__home-indicator"></div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.status-overlay');
+      var scrim = document.querySelector('.header-bg-scrim');
+      var THRESHOLD = 220;
+
+      function syncHeader() {
+        var y = window.scrollY || document.documentElement.scrollTop || 0;
+        var progress = Math.min(Math.max(y / THRESHOLD, 0), 1);
+        if (scrim) scrim.style.opacity = String(progress);
+        if (header) header.classList.toggle('is-scrolled', progress > 0.6);
+      }
+
+      document.querySelectorAll('.tab-indicator__button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.tab-indicator__button').forEach(function (b) {
+            b.classList.remove('is-active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-selected', 'true');
+        });
+      });
+
+      window.addEventListener('scroll', syncHeader, { passive: true });
+      syncHeader();
+    })();
+  </script>
+</body>
+</html>

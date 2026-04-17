@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <style>
+/* ---- inlined: modules/car-home-search/az-search-module.css ---- */
+/* 安心租首页 · 搜索模块 2-1～2-8 */
+.az-search-module {
+  position: relative;
+  width: 702px;
+  min-height: 865px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.az-search-switch {
+  position: relative;
+  width: 702px;
+  height: 84px;
+}
+.az-search-switch-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8px;
+  bottom: 0;
+  border-width: 2px 2px 0;
+  border-style: solid;
+  border-color: var(--az-white);
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(180deg, rgba(242, 243, 245, 0.6) -48.68%, #F2F3F5 62.83%);
+  backdrop-filter: blur(12px);
+}
+.az-switch-unselected {
+  position: absolute;
+  left: 24px;
+  top: 33px;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+  width: 416px;
+  height: 27px;
+  color: var(--az-gray-1);
+  font-size: 27px;
+  line-height: 1;
+}
+.az-switch-flight {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 190px;
+  height: 27px;
+}
+.az-switch-divider {
+  width: 2px;
+  height: 22px;
+  background: var(--az-gray-3);
+}
+.az-switch-selected {
+  position: absolute;
+  left: 450px;
+  top: 0;
+  width: 252px;
+  height: 84px;
+  z-index: 2;
+  border-radius: 24px 24px 0 0;
+  background: var(--az-white);
+}
+.az-switch-selected-line {
+  position: absolute;
+  left: 46px;
+  top: 48px;
+  width: 182px;
+  height: 24px;
+  border-radius: 24px;
+  background: linear-gradient(90deg, var(--az-yellow) 4.35%, rgba(255, 224, 51, 0) 97.28%);
+}
+.az-switch-selected-label {
+  position: absolute;
+  left: 58px;
+  top: 26px;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--az-black);
+  white-space: nowrap;
+}
+.az-rent-tab-wrap {
+  position: relative;
+  width: 702px;
+  height: 98px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-width: 0 2px;
+  border-style: solid;
+  border-color: var(--az-white);
+  background: var(--az-page-bg);
+  overflow: hidden;
+}
+.az-rent-tab-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 98px;
+  padding: 0 24px 18px;
+  background: var(--az-white);
+  border-radius: 30px 0 0 0;
+}
+.az-rent-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 163.5px;
+  height: 80px;
+}
+.az-rent-tab-top {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 120px;
+  height: 62px;
+}
+.az-rent-tab.small .az-rent-tab-top { width: 60px; }
+.az-rent-tab.medium .az-rent-tab-top { width: 90px; }
+.az-rent-tab-label {
+  width: 100%;
+  margin-top: 32px;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 500;
+  text-align: center;
+  color: var(--az-gray-2);
+  white-space: nowrap;
+}
+.az-rent-tab-bubble {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 92px;
+  height: 28px;
+  padding: 4px 6px;
+  border-radius: 14px 14px 14px 2px;
+  background: var(--az-pay);
+  color: var(--az-white);
+  font-size: 20px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+.az-rent-tab.has-bubble .az-rent-tab-bubble { display: flex; }
+.az-rent-tab-line {
+  width: 54px;
+  height: 6px;
+  border-radius: 3px;
+  background: transparent;
+}
+.az-rent-tab.active .az-rent-tab-label { color: var(--az-black); }
+.az-rent-tab.active .az-rent-tab-line {
+  width: 46px;
+  background: var(--az-black);
+}
+.az-search-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 702px;
+  flex: 1;
+  padding: 0 30px 24px;
+  border-radius: 0 0 24px 24px;
+  background: var(--az-white);
+  border-width: 0 2px 2px;
+  border-style: solid;
+  border-color: var(--az-white);
+  box-sizing: border-box;
+}
+.az-scene-tabs {
+  display: flex;
+  width: 642px;
+  height: 66px;
+  border-radius: 59px;
+  overflow: hidden;
+  background: var(--az-page-bg);
+}
+.az-scene-tab {
+  width: 321px;
+  height: 66px;
+  padding: 6px;
+  background: var(--az-page-bg);
+  box-sizing: border-box;
+}
+.az-scene-tab-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 309px;
+  height: 54px;
+  border-radius: 51px;
+  color: var(--az-black);
+  font-size: 24px;
+  line-height: 1.4;
+}
+.az-scene-tab.active .az-scene-tab-inner {
+  background: var(--az-yellow);
+  font-weight: 500;
+}
+.az-search-notice {
+  position: relative;
+  width: 642px;
+  height: 72px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.az-search-notice img {
+  display: block;
+  width: 642px;
+  height: 72px;
+  object-fit: cover;
+}
+.az-location-block, .az-time-block { width: 642px; }
+.az-location-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 642px;
+  height: 50px;
+  color: var(--az-gray-2);
+  font-size: 24px;
+  line-height: 1.4;
+}
+.az-location-switch-wrap {
+  position: relative;
+  width: 188px;
+  height: 50px;
+}
+.az-location-switch-text {
+  position: absolute;
+  right: 92px;
+  top: 8px;
+}
+.az-location-switch {
+  position: absolute;
+  left: 108px;
+  top: 0;
+  width: 80px;
+  height: 50px;
+  padding: 3px;
+  border-radius: 25px;
+  background: var(--az-gray-3);
+  box-sizing: border-box;
+}
+.az-location-switch::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--az-white);
+}
+.az-location-values {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 642px;
+  height: 59px;
+  margin-top: 6px;
+}
+.az-location-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 42px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--az-black);
+}
+.az-location-value.placeholder { color: var(--az-gray-2); }
+.az-location-arrow {
+  width: 30px;
+  height: 42px;
+  object-fit: contain;
+  opacity: 0.75;
+}
+.az-divider { width: 642px; border-top: 1px solid var(--az-line); }
+.az-time-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 642px;
+  height: 88px;
+}
+.az-time-col { display: flex; flex-direction: column; gap: 6px; }
+.az-time-col.end { align-items: flex-end; }
+.az-time-caption {
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--az-gray-2);
+}
+.az-time-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--az-black);
+}
+.az-time-main .num {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 48px;
+  line-height: 1;
+}
+.az-time-main .txt { font-size: 28px; line-height: 1.4; }
+.az-time-gap {
+  padding-bottom: 4px;
+  font-size: 28px;
+  line-height: 1.4;
+  color: var(--az-black);
+  white-space: nowrap;
+}
+.az-filter-row {
+  display: flex;
+  gap: 12px;
+  width: 642px;
+  height: 60px;
+}
+.az-filter-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 132px;
+  height: 60px;
+  border-radius: 6px;
+  background: #F7F8FA;
+  color: var(--az-black);
+  font-size: 24px;
+  line-height: 1.4;
+  text-align: center;
+}
+.az-filter-chip.active {
+  position: relative;
+  border: 1px solid var(--az-yellow);
+  background: var(--az-yellow-card);
+  font-weight: 500;
+}
+.az-filter-chip.active img {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 21px;
+}
+.az-search-cta-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 642px;
+  min-height: 132px;
+  gap: 24px;
+  margin-top: auto;
+}
+.az-search-cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 642px;
+  height: 84px;
+  border-radius: 42px;
+  background: var(--az-yellow);
+}
+.az-search-cta-title {
+  font-size: 32px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--az-black);
+}
+.az-search-cta-badge {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 180px;
+  height: 34px;
+  padding: 2px 12px;
+  border-radius: 16px 19px 19px 2px;
+  background: linear-gradient(91.13deg, #FF4B6C -3.42%, #FF1835 74.28%, #FF4A6C 100.65%);
+  color: var(--az-white);
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+.az-benefits-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 479px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 1;
+  font-style: italic;
+  white-space: nowrap;
+}
+.az-benefits-main { color: var(--az-black); }
+.az-benefits-sub { color: var(--az-gray-1); }
+.az-benefits-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--az-gray-2);
+}
+.az-benefits-arrow {
+  width: 12px;
+  height: 12px;
+  position: relative;
+}
+.az-benefits-arrow::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid var(--az-gray-1);
+  border-right: 2px solid var(--az-gray-1);
+  transform: rotate(45deg);
+}
+
+
+/* ---- inlined: modules/car-home-marketing/az-marketing-module.css ---- */
+.az-marketing-module {
+  position: relative;
+  width: 702px;
+  height: 235px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #FFF0F0 0%, #FFFFFF 100%);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.az-marketing-title {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  margin: 0;
+  color: var(--az-red);
+  font-size: 36px;
+  line-height: 1;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+}
+.az-marketing-action {
+  position: absolute;
+  right: 24px;
+  top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 156px;
+  height: 48px;
+  padding: 10px 30px;
+  border-radius: 42px;
+  background: var(--az-red);
+  color: var(--az-white);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+.az-coupon-rail {
+  position: absolute;
+  left: 24px;
+  right: 0;
+  top: 84px;
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding-right: 24px;
+  scrollbar-width: none;
+}
+.az-coupon-rail::-webkit-scrollbar { display: none; }
+.az-coupon-card {
+  flex: 0 0 461px;
+  width: 461px;
+  height: 127px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.az-coupon-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* ---- inlined: modules/car-home-list/az-list-module.css ---- */
+.az-list-module {
+  width: 702px;
+  margin: 0 auto;
+  padding: 0 0 24px;
+  background: var(--az-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.az-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  padding: 0 24px;
+}
+.az-list-header h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--az-black);
+}
+.az-more {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--az-black);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.az-list-inner {
+  width: 654px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.az-list-top-tabs {
+  display: flex;
+  gap: 6px;
+  height: 60px;
+}
+.az-list-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 124px;
+  border-radius: 12px 12px 0 0;
+  font-size: 26px;
+  color: var(--az-black);
+}
+.az-list-tab.is-active {
+  background: linear-gradient(180deg, #FFE866 0%, rgba(255, 232, 102, 0) 100%);
+  font-weight: 600;
+}
+.az-guide-rail {
+  display: flex;
+  width: 654px;
+  height: 318px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.az-guide-rail img {
+  display: block;
+  width: 741px;
+  height: 318px;
+  object-fit: cover;
+  object-position: left center;
+  flex-shrink: 0;
+}
+.az-car-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.az-car-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 654px;
+  min-height: 151px;
+  padding: 12px 0;
+  border-radius: 12px;
+  background: var(--az-white);
+  box-sizing: border-box;
+}
+.az-car-badge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 120px;
+  height: 36px;
+  border-radius: 12px 0;
+  overflow: hidden;
+  z-index: 1;
+}
+.az-car-badge img {
+  display: block;
+  width: 120px;
+  height: 36px;
+  object-fit: cover;
+}
+.az-car-figure {
+  position: relative;
+  width: 190px;
+  height: 127px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--az-white);
+}
+.az-car-figure img {
+  display: block;
+  max-width: 188px;
+  max-height: 90px;
+  object-fit: contain;
+}
+.az-car-content {
+  width: 440px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.az-car-top, .az-car-bottom {
+  display: flex;
+  align-items: center;
+  width: 440px;
+  gap: 12px;
+}
+.az-car-top {
+  min-height: 42px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+.az-car-price {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.az-car-bottom {
+  min-height: 48px;
+  gap: 6px;
+}
+.az-car-top h3 {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 30px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--az-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.az-car-sell {
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--az-gray-2);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.az-car-price-current {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+  white-space: nowrap;
+}
+.az-car-price .currency {
+  font-family: 'Alibaba Sans 102', 'PingFang SC', sans-serif;
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: 700;
+  color: var(--az-pay);
+}
+.az-car-price .major {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 36px;
+  line-height: 23px;
+  color: var(--az-pay);
+}
+.az-car-price .suffix {
+  font-size: 24px;
+  line-height: 24px;
+  color: var(--az-pay);
+}
+.az-car-action {
+  width: 120px;
+  height: 48px;
+  border-radius: 42px;
+  background: var(--az-pay);
+  color: var(--az-white);
+  font-size: 24px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+
+/* ---- bottom bar (fixed) ---- */
+.az-bottom-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+  gap: 18px;
+  position: relative;
+  width: 750px;
+  height: 150px;
+}
+.az-tabbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  width: 750px;
+  height: 150px;
+  background: #FFFFFF;
+}
+.az-tabbar__nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  width: 750px;
+  height: 86px;
+}
+.az-tabbar__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0 0;
+  gap: 6px;
+  width: 150px;
+  max-width: 150px;
+  height: 86px;
+}
+.az-tabbar__item img {
+  width: 48px;
+  height: 48px;
+}
+.az-tabbar__item span {
+  width: 150px;
+  height: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 100%;
+  text-align: center;
+  color: #0F131A;
+}
+.az-tabbar__safe {
+  width: 750px;
+  height: 64px;
+  position: relative;
+  background: #FFFFFF;
+}
+.az-home-indicator {
+  position: absolute;
+  width: 268px;
+  height: 10px;
+  left: calc(50% - 268px / 2 + 1px);
+  top: calc(50% - 10px / 2 + 15px);
+  background: #000000;
+  border-radius: 20px;
+}
+
+
+/* ---- inlined: modules/car-home-hero/az-hero.css ---- */
+/* 安心租首页 · 顶部氛围 750×267 */
+.az-hero {
+  position: relative;
+  width: 750px;
+  height: 267px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--az-page-bg, #f2f3f5);
+}
+.az-hero-slice {
+  display: block;
+  width: 750px;
+  height: 267px;
+  object-fit: cover;
+}
+
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>安心租首页 — 整页串联预览</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alibaba Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+:root {
+  --az-black: #0F131A;
+  --az-gray-1: #5C5F66;
+  --az-gray-2: #919499;
+  --az-gray-3: #D2D4D9;
+  --az-line: #F2F3F5;
+  --az-page-bg: #F2F3F5;
+  --az-white: #FFFFFF;
+  --az-yellow: #FFE033;
+  --az-yellow-soft: #FFF5EB;
+  --az-yellow-card: #FFFCEB;
+  --az-red: #FF3333;
+  --az-pay: #FF5533;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin: 0;
+  background: var(--az-page-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  color: var(--az-black);
+}
+.az-page {
+  position: relative;
+  width: 750px;
+  min-height: 2763px;
+  margin: 0 auto;
+  background: var(--az-page-bg);
+  overflow-x: hidden;
+  padding-bottom: 150px;
+}
+.az-hero-slot {
+  position: relative;
+  z-index: 1;
+}
+.az-main-stack {
+  position: relative;
+  z-index: 2;
+  width: 702px;
+  margin: -41px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 180px;
+}
+.az-bottom-slot {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 750px;
+  z-index: 3;
+  left: 50%;
+  transform: translateX(-50%);
+}
+  </style>
+</head>
+<body>
+  <div class="az-page">
+    <div class="az-hero-slot">
+      <div class="az-hero">
+        <img class="az-hero-slice" src="https://gw.alicdn.com/imgextra/i1/O1CN01CW9RnY1SNgL4XF1in_!!6000000002235-2-tps-1502-534.png" alt="安心租顶部氛围">
+      </div>
+    </div>
+
+    <div class="az-main-stack">
+      <div class="az-search-module">
+        <div class="az-search-switch">
+          <div class="az-search-switch-bar"></div>
+          <div class="az-switch-unselected">
+            <div class="az-switch-flight">
+              <span>机票</span><span class="az-switch-divider"></span><span>特价机票</span>
+            </div>
+            <span>火车票</span>
+            <span>汽车票</span>
+          </div>
+          <div class="az-switch-selected">
+            <div class="az-switch-selected-line"></div>
+            <div class="az-switch-selected-label">租车/接送</div>
+          </div>
+        </div>
+        <div class="az-rent-tab-wrap">
+          <div class="az-rent-tab-bar">
+            <div class="az-rent-tab active small has-bubble">
+              <div class="az-rent-tab-top">
+                <div class="az-rent-tab-bubble">限时特惠</div>
+                <div class="az-rent-tab-label">租车</div>
+              </div>
+              <div class="az-rent-tab-line"></div>
+            </div>
+            <div class="az-rent-tab medium"><div class="az-rent-tab-top"><div class="az-rent-tab-bubble">气泡</div><div class="az-rent-tab-label">接送机</div></div><div class="az-rent-tab-line"></div></div>
+            <div class="az-rent-tab"><div class="az-rent-tab-top"><div class="az-rent-tab-bubble">气泡</div><div class="az-rent-tab-label">接送火车</div></div><div class="az-rent-tab-line"></div></div>
+            <div class="az-rent-tab small"><div class="az-rent-tab-top"><div class="az-rent-tab-bubble">气泡</div><div class="az-rent-tab-label">打车</div></div><div class="az-rent-tab-line"></div></div>
+          </div>
+        </div>
+        <div class="az-search-panel">
+          <div class="az-scene-tabs">
+            <div class="az-scene-tab active"><div class="az-scene-tab-inner">国内(含港澳台)</div></div>
+            <div class="az-scene-tab"><div class="az-scene-tab-inner">国际</div></div>
+          </div>
+          <div class="az-search-notice"><img src="https://gw.alicdn.com/imgextra/i4/O1CN012dQlxH1Pw5F0iatfa_!!6000000001904-2-tps-1284-144.png" alt="营销条"></div>
+          <div class="az-location-block">
+            <div class="az-location-head">
+              <span>取车城市</span>
+              <div class="az-location-switch-wrap">
+                <span class="az-location-switch-text">异地还车</span>
+                <div class="az-location-switch"></div>
+              </div>
+            </div>
+            <div class="az-location-values">
+              <div class="az-location-value">上海<img class="az-location-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01z3MQMx1o8Ukj6MD6Z_!!6000000005180-2-tps-60-84.png" alt=""></div>
+              <div class="az-location-value placeholder">选择地点<img class="az-location-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01z3MQMx1o8Ukj6MD6Z_!!6000000005180-2-tps-60-84.png" alt=""></div>
+            </div>
+          </div>
+          <div class="az-divider"></div>
+          <div class="az-time-block">
+            <div class="az-time-card">
+              <div class="az-time-col">
+                <span class="az-time-caption">周四</span>
+                <div class="az-time-main">
+                  <span class="num">7</span><span class="txt">月</span><span class="num">17</span><span class="txt">日</span><span class="txt">10:00</span>
+                </div>
+              </div>
+              <div class="az-time-gap">2天</div>
+              <div class="az-time-col end">
+                <span class="az-time-caption">周六</span>
+                <div class="az-time-main">
+                  <span class="num">7</span><span class="txt">月</span><span class="num">19</span><span class="txt">日</span><span class="txt">10:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="az-divider"></div>
+          <div class="az-filter-row">
+            <div class="az-filter-chip">送车上门</div>
+            <div class="az-filter-chip active"><span>小伤免赔</span><img src="https://gw.alicdn.com/imgextra/i3/O1CN017TpZFm1uY2XOzksdd_!!6000000006048-2-tps-48-42.png" alt=""></div>
+          </div>
+          <div class="az-search-cta-wrap">
+            <div class="az-search-cta">
+              <div class="az-search-cta-badge">今日下单立减¥30</div>
+              <div class="az-search-cta-title">搜索租车</div>
+            </div>
+            <div class="az-benefits-row">
+              <span class="az-benefits-main">租车安心</span>
+              <span class="az-benefits-dot"></span>
+              <span class="az-benefits-sub">出行安心</span>
+              <span class="az-benefits-dot"></span>
+              <span class="az-benefits-sub">服务安心</span>
+              <span class="az-benefits-dot"></span>
+              <span class="az-benefits-sub">洗车交付</span>
+              <span class="az-benefits-arrow"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="az-marketing-module">
+        <h2 class="az-marketing-title">超值优惠</h2>
+        <div class="az-marketing-action">一键领取</div>
+        <div class="az-coupon-rail">
+          <div class="az-coupon-card"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01Q4CXmU25Y0HP5bwdb_!!6000000007537-2-tps-922-254.png" alt="券"></div>
+          <div class="az-coupon-card"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01Q4CXmU25Y0HP5bwdb_!!6000000007537-2-tps-922-254.png" alt="券"></div>
+        </div>
+      </div>
+
+      <div class="az-list-module">
+        <div class="az-list-header">
+          <h2>飞猪带你自驾 尽览秋日风光</h2>
+          <div class="az-more">更多<span aria-hidden="true">&gt;</span></div>
+        </div>
+        <div class="az-list-inner">
+          <div class="az-list-top-tabs">
+            <div class="az-list-tab is-active">昆明</div>
+            <div class="az-list-tab">大理</div>
+            <div class="az-list-tab">丽江</div>
+            <div class="az-list-tab">腾冲</div>
+            <div class="az-list-tab">香格里拉</div>
+          </div>
+          <div class="az-guide-rail">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01Wmf6F21ZRzNEuHUkC_!!6000000003192-2-tps-1482-636.png" alt="视频组">
+          </div>
+          <div class="az-car-list">
+<div class="az-car-card">
+          <div class="az-car-badge"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01CYwdNC1gOy4W80MeX_!!6000000004133-2-tps-240-72.png" alt=""></div>
+          <div class="az-car-figure"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01MXrfTJ1tw1fF1UxPQ_!!6000000005965-2-tps-380-254.png" alt=""></div>
+          <div class="az-car-content">
+            <div class="az-car-top">
+              <h3>特斯拉Model3</h3>
+              <div class="az-car-price">
+                <div class="az-car-price-current">
+                  <span class="currency">¥</span><span class="major">150</span><span class="suffix">/天起</span>
+                </div>
+              </div>
+            </div>
+            <div class="az-car-bottom">
+              <span class="az-car-sell">经济实用，卓越驾控</span>
+              <div class="az-car-action">马上抢</div>
+            </div>
+          </div>
+        </div>
+<div class="az-car-card">
+          <div class="az-car-badge"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01CYwdNC1gOy4W80MeX_!!6000000004133-2-tps-240-72.png" alt=""></div>
+          <div class="az-car-figure"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01VmXhDo1tvZGgRbXsJ_!!6000000005964-2-tps-380-254.png" alt=""></div>
+          <div class="az-car-content">
+            <div class="az-car-top">
+              <h3>AITO问界M7</h3>
+              <div class="az-car-price">
+                <div class="az-car-price-current">
+                  <span class="currency">¥</span><span class="major">188</span><span class="suffix">/天起</span>
+                </div>
+              </div>
+            </div>
+            <div class="az-car-bottom">
+              <span class="az-car-sell">空间舒展，智能出行</span>
+              <div class="az-car-action">马上抢</div>
+            </div>
+          </div>
+        </div>
+<div class="az-car-card">
+          <div class="az-car-badge"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01CYwdNC1gOy4W80MeX_!!6000000004133-2-tps-240-72.png" alt=""></div>
+          <div class="az-car-figure"><img src="https://gw.alicdn.com/imgextra/i3/O1CN019moKQm1LTuPhSbUEL_!!6000000001301-2-tps-380-254.png" alt=""></div>
+          <div class="az-car-content">
+            <div class="az-car-top">
+              <h3>小米SU7</h3>
+              <div class="az-car-price">
+                <div class="az-car-price-current">
+                  <span class="currency">¥</span><span class="major">169</span><span class="suffix">/天起</span>
+                </div>
+              </div>
+            </div>
+            <div class="az-car-bottom">
+              <span class="az-car-sell">科技新潮，驾控轻快</span>
+              <div class="az-car-action">马上抢</div>
+            </div>
+          </div>
+        </div>
+<div class="az-car-card">
+          <div class="az-car-badge"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01CYwdNC1gOy4W80MeX_!!6000000004133-2-tps-240-72.png" alt=""></div>
+          <div class="az-car-figure"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01xCDDzp1kKANnNPSUu_!!6000000004664-2-tps-380-254.png" alt=""></div>
+          <div class="az-car-content">
+            <div class="az-car-top">
+              <h3>大众朗逸</h3>
+              <div class="az-car-price">
+                <div class="az-car-price-current">
+                  <span class="currency">¥</span><span class="major">109</span><span class="suffix">/天起</span>
+                </div>
+              </div>
+            </div>
+            <div class="az-car-bottom">
+              <span class="az-car-sell">省心好开，通勤首选</span>
+              <div class="az-car-action">马上抢</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="az-bottom-slot">
+      <div class="az-bottom-bar">
+      <div class="az-tabbar">
+        <nav class="az-tabbar__nav" aria-label="底部导航">
+          <div class="az-tabbar__item">
+            <img src="https://img.alicdn.com/imgextra/i2/O1CN01xTb4te1Gt23wjCbtP_!!6000000000679-55-tps-48-48.svg" alt="租车指南">
+            <span>租车指南</span>
+          </div>
+          <div class="az-tabbar__item">
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN011j5UT31TJqdp19Upn_!!6000000002362-55-tps-48-48.svg" alt="芝麻免押">
+            <span>芝麻免押</span>
+          </div>
+          <div class="az-tabbar__item">
+            <img src="https://img.alicdn.com/imgextra/i4/O1CN01yfXh8E22OtYdMwxML_!!6000000007111-55-tps-48-48.svg" alt="租车次卡">
+            <span>租车次卡</span>
+          </div>
+          <div class="az-tabbar__item">
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01smjKqg1E3cMxeSp5S_!!6000000000296-55-tps-48-48.svg" alt="立即领券">
+            <span>立即领券</span>
+          </div>
+          <div class="az-tabbar__item">
+            <img src="https://img.alicdn.com/imgextra/i2/O1CN01FC5spc1VyGpSCn3jH_!!6000000002721-55-tps-48-48.svg" alt="我的订单">
+            <span>我的订单</span>
+          </div>
+        </nav>
+        <div class="az-tabbar__safe">
+          <div class="az-home-indicator"></div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

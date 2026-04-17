@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>订单信息模块预览</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-page-bg: #F2F3F5;
+      --color-white: #FFFFFF;
+      --color-emphasis: #FFE033;
+      --color-shadow-line: rgba(151, 151, 151, 0.14);
+      --radius-pill: 42px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--color-page-bg);
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .module {
+      width: 750px;
+      background: var(--color-white);
+      display: flex;
+      flex-direction: column;
+    }
+    .order-info-header {
+      padding: 24px;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .order-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 0 24px 30px;
+    }
+    .order-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      font-size: 24px;
+    }
+    .label {
+      width: 120px;
+      color: var(--color-midgray);
+      flex-shrink: 0;
+    }
+    .value {
+      flex: 1;
+      color: var(--color-darkgray);
+    }
+    .mileage-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+    .mileage-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--color-darkgray);
+    }
+    .mileage-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-darkgray);
+    }
+    .claim-btn {
+      width: 108px;
+      height: 48px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      background: var(--color-emphasis);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .line {
+      border-top: 1px solid var(--color-shadow-line);
+    }
+  </style>
+</head>
+<body>
+  <div class="module">
+    <div class="order-info-header">订单信息</div>
+    <div class="order-info-list">
+      <div class="order-info-row">
+        <div class="label">下单时间</div>
+        <div class="value">2024-03-26 20:16:20</div>
+      </div>
+
+      <div class="order-info-row mileage-row">
+        <div class="mileage-main">
+          <span>订单完成，可领取 300 飞猪里程</span>
+          <span class="mileage-icon"></span>
+        </div>
+        <button class="claim-btn">去领取</button>
+      </div>
+
+      <div class="line"></div>
+
+      <div class="order-info-row">
+        <div class="label">供应商</div>
+        <div class="value">阿斯兰航空服务（上海）有限公司</div>
+      </div>
+
+      <div class="order-info-row">
+        <div class="label">支付单号</div>
+        <div class="value">202406272220011915814200007630</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

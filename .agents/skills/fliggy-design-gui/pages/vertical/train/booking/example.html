@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车票下单页</title>
+    <style>
+        @font-face {
+            font-family: 'Alibaba Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 700;
+            font-display: swap;
+        }
+
+
+
+        :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-auxiliary: #D2D4D9;
+      --color-bg: #F2F3F5;
+      --color-label: #F7F8FA;
+      --color-white: #FFFFFF;
+      --color-brand-1: #FFE033;
+      --color-brand-2: #FFFCEB;
+      --color-brand-4: #FFF7CC;
+      --color-indigo-1: #6666FF;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #FF3333;
+      --color-pay-1: #FF5533;
+      --color-pay-2: #FF8C1A;
+      --color-notice-tint: #FFF6EE;
+      --color-promo-1: #FF0036;
+      --color-promo-2: #9537FD;
+      --color-green-0: #149AA8;
+      --color-safeguard-4: #FEF5EC;
+      --color-safeguard-5: #5D3521;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+    
+      --color-local-1: #FF6666;
+      --color-local-2: #292C33;
+      --color-local-3: #ABAEB3;
+      --color-local-4: #ECEFF3;
+      --color-local-5: #C9D1E1;
+      --color-local-6: #9CA4B3;
+      --color-local-7: #D9DFE9;
+      --color-local-8: #CED2DC;
+      --color-local-9: #B9BEC9;
+      --color-local-10: #EBECEE;
+      --color-local-11: #FFF0E2;
+      --color-local-12: #4D3D2F;
+      --color-local-13: rgba(0,0,0,0.1);
+      --color-local-14: rgba(0, 0, 0, 0.03);
+      --color-local-15: rgba(255, 85, 51, 0.5);
+    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-bg);
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            width: 750px;
+            margin: 0 auto;
+        }
+
+        /* ========== 整体容器 ========== */
+        .page {
+            width: 750px;
+            min-height: 2414px;
+            position: relative;
+            padding-bottom: 180px;
+        }
+
+        /* 顶部蓝色背景图 */
+        .top-bg {
+            position: absolute;
+            width: 750px;
+            height: 396px;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            background: linear-gradient(180deg, var(--color-brand-1) 0%, transparent 100%);
+        }
+
+        /* ========== 1. 顶部导航栏 ========== */
+        .status-bar {
+            height: 88px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .status-bar img {
+            width: 750px;
+            height: 88px;
+        }
+
+        .nav-bar {
+            height: 88px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-btn {
+            width: 48px;
+            height: 48px;
+        }
+
+        .back-btn img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .nav-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 500;
+            font-size: 36px;
+            line-height: 40px;
+            color: var(--color-darkgray);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-notice {
+            font-size: 22px;
+            line-height: 26px;
+            color: var(--color-darkgray);
+            text-align: right;
+            width: 44px;
+        }
+
+        .more-btn {
+            width: 48px;
+            height: 48px;
+        }
+
+        .more-btn img {
+            width: 48px;
+            height: 48px;
+        }
+
+        /* ========== 2. 内容区容器 ========== */
+        .content-area {
+            position: relative;
+            z-index: 1;
+            width: 714px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding-top: 12px;
+        }
+
+        /* ========== 3. 下单页条（权益胶囊） ========== */
+        .benefit-bar {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px 6px 6px;
+            gap: 6px;
+            width: 386px;
+            height: 48px;
+            background: var(--color-white);
+            border: 1px solid var(--color-white);
+            border-radius: 27px;
+        }
+
+        .benefit-badge {
+            width: 80px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .benefit-badge img {
+            width: 80px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .benefit-text {
+            font-size: 22px;
+            line-height: 22px;
+            color: var(--color-darkgray);
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .benefit-arrow {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-arrow svg {
+            width: 7px;
+            height: 14px;
+        }
+
+        /* ========== 4. 单程卡 ========== */
+        .trip-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px;
+            gap: 18px;
+            width: 714px;
+            background: var(--color-white);
+            border-radius: 12px;
+        }
+
+        /* 行程信息区 */
+        .trip-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+        }
+
+        .trip-side {
+            width: 181px;
+        }
+
+        .trip-side-right {
+            text-align: right;
+        }
+
+        .trip-time {
+            font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 48px;
+            color: var(--color-darkgray);
+        }
+
+        .trip-station {
+            font-size: 26px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+            margin-top: 12px;
+        }
+
+        .trip-middle {
+            width: 245px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .trip-duration {
+            font-size: 24px;
+            line-height: 22px;
+            color: var(--color-midgray);
+            text-align: center;
+        }
+
+        .trip-arrow-img {
+            width: 245px;
+            height: auto;
+        }
+
+        .trip-train {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            margin-top: 6px;
+        }
+
+        .trip-train-text {
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-midgray);
+        }
+
+        .trip-train-arrow {
+            width: 7px;
+            height: 12px;
+        }
+
+        /* 分割线 */
+        .divider {
+            width: 100%;
+            height: 0;
+            border: none;
+            border-top: 1px solid var(--color-bg);
+        }
+
+        /* 座席信息 */
+        .seat-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .seat-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .seat-type-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .seat-type-text {
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .seat-check {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .seat-checkbox {
+            width: 42px;
+            height: 42px;
+            position: relative;
+        }
+
+        .seat-checkbox-circle {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            border: 3px solid var(--color-auxiliary);
+            position: absolute;
+            left: 2.5px;
+            top: 2.5px;
+        }
+
+        .seat-more-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .seat-more-text {
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .seat-divider-v {
+            width: 1px;
+            height: 24px;
+            background: var(--color-bg);
+        }
+
+        /* ========== 5. 乘车人模块 ========== */
+        .passenger-module {
+            width: 714px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 积分头部 */
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            width: 714px;
+            height: 90px;
+            background: var(--color-label);
+            border: 2px solid var(--color-white);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .points-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .points-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--color-brand-1);
+            border-radius: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .points-icon-inner {
+            width: 31px;
+            height: 31px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .points-icon-inner svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .points-text {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 36px;
+            color: var(--color-darkgray);
+        }
+
+        /* Switch 开关 */
+        .switch-wrap {
+            width: 57.6px;
+            height: 36px;
+            position: relative;
+        }
+
+        .switch-track {
+            width: 57.6px;
+            height: 36px;
+            background: var(--color-auxiliary);
+            border-radius: 18px;
+        }
+
+        .switch-handle {
+            width: 31.68px;
+            height: 31.68px;
+            background: var(--color-white);
+            border-radius: 50%;
+            position: absolute;
+            left: 2.16px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 1px 3px var(--color-local-13);
+        }
+
+        /* 乘车人内容区 */
+        .passenger-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px 24px 0;
+            gap: 18px;
+            background: var(--color-white);
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* 已选标题 + 类型选择 */
+        .passenger-select-area {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .passenger-title {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 34px;
+            color: var(--color-darkgray);
+        }
+
+        /* 类型选择行 */
+        .type-select-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            position: relative;
+        }
+
+        .type-chip {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .type-chip-inner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px;
+            height: 72px;
+            border-radius: 6px;
+        }
+
+        .type-chip-selected {
+            background: var(--color-brand-4);
+        }
+
+        .type-chip-normal {
+            background: var(--color-label);
+        }
+
+        .type-chip-text {
+            font-size: 26px;
+            line-height: 140%;
+            text-align: center;
+            color: var(--color-darkgray);
+        }
+
+        .type-chip-text-bold {
+            font-weight: 500;
+        }
+
+        .type-check-mark {
+            position: absolute;
+            right: -2px;
+            bottom: -2px;
+            width: 24px;
+            height: 21px;
+        }
+
+        .type-check-mark img {
+            width: 24px;
+            height: 21px;
+        }
+
+        /* 添加更多按钮（右侧渐隐） */
+        .type-more-btn {
+            position: absolute;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .type-more-shadow {
+            width: 17px;
+            height: 48px;
+            background: var(--color-auxiliary);
+            filter: blur(5px);
+            border-radius: 1101px;
+            position: absolute;
+            left: -17px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .type-more-bg {
+            width: 102px;
+            height: 72px;
+            background: var(--color-white);
+            position: absolute;
+            right: 0;
+        }
+
+        .type-add-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .type-add-icon img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .type-add-text {
+            font-size: 24px;
+            line-height: 28px;
+            color: var(--color-indigo-1);
+        }
+
+        /* 乘客列表 */
+        .passenger-list {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .passenger-item {
+            display: flex;
+            align-items: center;
+            padding: 24px 0;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .passenger-delete {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .passenger-delete-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--color-local-1);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .passenger-delete-line {
+            width: 18px;
+            height: 3.6px;
+            background: var(--color-local-1);
+            border-radius: 1.8px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .passenger-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .passenger-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .passenger-name {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .passenger-tag {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: 28px;
+            background: var(--color-brand-4);
+        }
+
+        .passenger-tag-text {
+            font-size: 20px;
+            line-height: 24px;
+            color: var(--color-darkgray);
+        }
+
+        .passenger-id {
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-lightgray);
+            margin-top: 0;
+        }
+
+        /* 添加乘车人按钮 */
+        .add-passenger-wrap {
+            padding: 12px 42px;
+            width: 100%;
+        }
+
+        .add-passenger-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 90px;
+            gap: 4px;
+            width: 100%;
+            height: 60px;
+            background: var(--color-brand-4);
+            border-radius: 42px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-icon {
+            width: 32px;
+            height: 32px;
+            position: relative;
+        }
+
+        .add-icon-h {
+            width: 20px;
+            height: 3px;
+            background: var(--color-darkgray);
+            border-radius: 1.5px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .add-icon-v {
+            width: 3px;
+            height: 20px;
+            background: var(--color-darkgray);
+            border-radius: 1.5px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .add-passenger-text {
+            font-weight: 500;
+            font-size: 28px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        /* 联系手机 */
+        .contact-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            height: 90px;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 28px;
+            line-height: 32px;
+            color: var(--color-lightgray);
+        }
+
+        .contact-phone {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 34px;
+            color: var(--color-darkgray);
+        }
+
+        .contact-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-icon svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* ========== 6. 选座选车厢模块 ========== */
+        .seat-select-module {
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 24px;
+            width: 714px;
+            background: var(--color-white);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .seat-select-deco {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 250px;
+            height: auto;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 模块标题行 */
+        .module-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .module-title {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: var(--color-local-2);
+        }
+
+        .module-more-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .module-more-text {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-indigo-1);
+        }
+
+        .module-more-arrow {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .module-more-arrow svg {
+            width: 7px;
+            height: 14px;
+        }
+
+        /* 选座/选车厢内容区 */
+        .seat-select-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* 选座类型卡 */
+        .berth-card {
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 24px;
+            background: var(--color-label);
+            border-radius: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .berth-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .berth-label {
+            font-size: 28px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .berth-price {
+            font-size: 28px;
+            line-height: 140%;
+            color: var(--color-midgray);
+            text-align: right;
+        }
+
+        /* 座位布局 */
+        .seat-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .seat-layout-label {
+            font-size: 22px;
+            line-height: 22px;
+            color: var(--color-local-3);
+            text-align: center;
+            width: 25px;
+        }
+
+        .seat-icon {
+            width: 66px;
+            height: 84px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .seat-icon-body {
+            width: 59.71px;
+            height: 67.85px;
+            position: absolute;
+            left: 3.14px;
+            top: 0;
+            background: linear-gradient(180deg, var(--color-local-4) 61.41%, var(--color-local-5) 91.68%);
+            box-shadow: inset 0px 0px 6px var(--color-local-14);
+            border-radius: 9.72px;
+        }
+
+        .seat-icon-bottom {
+            width: 66px;
+            height: 29.08px;
+            position: absolute;
+            left: 0;
+            top: 54.92px;
+            background: linear-gradient(270deg, var(--color-auxiliary) 0%, var(--color-local-6) 50.3%, var(--color-auxiliary) 100%);
+        }
+
+        .seat-icon-bottom-inner {
+            width: 66px;
+            height: 22.62px;
+            position: absolute;
+            left: 0;
+            top: 54.92px;
+            background: linear-gradient(180deg, var(--color-local-4) 0.02%, var(--color-local-7) 100%);
+            box-shadow: inset 0px 0px 6px var(--color-local-14);
+            border-radius: 12px;
+        }
+
+        .seat-icon-arm-l {
+            width: 7.86px;
+            height: 22.62px;
+            position: absolute;
+            left: 0;
+            top: 35.54px;
+            background: linear-gradient(270deg, var(--color-local-8) 0.07%, var(--color-local-9) 99.99%);
+            border-radius: 3.93px;
+        }
+
+        .seat-icon-arm-r {
+            width: 7.86px;
+            height: 22.62px;
+            position: absolute;
+            right: 0;
+            top: 35.54px;
+            background: linear-gradient(270deg, var(--color-local-8) 0.07%, var(--color-local-9) 99.99%);
+            border-radius: 3.93px;
+        }
+
+        .seat-icon-head {
+            width: 39.29px;
+            height: 17.77px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            background: linear-gradient(270deg, var(--color-local-8) 0.07%, var(--color-local-9) 99.99%);
+            opacity: 0.42;
+            border-radius: 0 0 8.88px 8.88px;
+        }
+
+        .seat-icon-letter {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 21px;
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: var(--color-darkgray);
+            opacity: 0.6;
+        }
+
+        /* 选车厢卡 */
+        .coach-card {
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 24px;
+            background: var(--color-label);
+            border-radius: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coach-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--color-label);
+        }
+
+        .coach-label {
+            font-size: 28px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .coach-price {
+            font-size: 28px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+            text-align: right;
+        }
+
+        /* 车厢号选择 */
+        .coach-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .coach-num {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px;
+            width: 78px;
+            height: 72px;
+            background: var(--color-local-10);
+            box-shadow: inset 0px 0px 6px var(--color-local-14);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .coach-num-text {
+            font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 140%;
+            text-align: center;
+            color: var(--color-darkgray);
+        }
+
+        .coach-num-selected {
+            position: relative;
+        }
+
+        .coach-num-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px 6px;
+            background: var(--color-white);
+            border: 1px solid var(--color-green-0);
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .coach-num-badge-text {
+            font-size: 20px;
+            line-height: 24px;
+            color: var(--color-green-0);
+        }
+
+        .coach-num-split {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 18px;
+            width: 78px;
+            height: 72px;
+            background: var(--color-local-10);
+            box-shadow: inset 0px 0px 6px var(--color-local-14);
+            border-radius: 6px;
+        }
+
+        .coach-num-main {
+            font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 100%;
+            color: var(--color-darkgray);
+        }
+
+        .coach-num-sub {
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            white-space: nowrap;
+            line-height: 100%;
+            color: var(--color-darkgray);
+            opacity: 0.3;
+        }
+
+        .coach-num-dim {
+            opacity: 0.5;
+        }
+
+        .coach-num-dim .coach-num-text {
+            opacity: 0.3;
+        }
+
+        /* ========== 7. 优惠信息模块 ========== */
+        .coupon-module {
+            display: flex;
+            flex-direction: column;
+            width: 714px;
+            background: var(--color-white);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .coupon-header {
+            width: 100%;
+            height: 90px;
+            position: relative;
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+        }
+
+        .coupon-header-bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-local-11) 0%, var(--color-white) 100%);
+        }
+
+        .coupon-header-text {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 42px;
+            color: var(--color-local-12);
+        }
+
+        /* 优惠行 */
+        .coupon-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            width: 100%;
+            height: 90px;
+            min-height: 90px;
+        }
+
+        .coupon-row-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .coupon-tag {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            border: 1px solid var(--color-local-15);
+            border-radius: 6px;
+        }
+
+        .coupon-tag-text {
+            font-size: 22px;
+            line-height: 20px;
+            color: var(--color-pay-1);
+            white-space: nowrap;
+        }
+
+        .coupon-desc {
+            font-size: 28px;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .coupon-row-right {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .coupon-use-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: 36px;
+            background: var(--color-pay-1);
+            border-radius: 6px;
+            margin-right: -10px;
+        }
+
+        .coupon-use-text {
+            font-size: 26px;
+            line-height: 30px;
+            color: var(--color-white);
+        }
+
+        .coupon-use-arrow {
+            width: 20px;
+            height: 20px;
+            background: var(--color-pay-1);
+            border-radius: 2px;
+            transform: rotate(90deg);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .coupon-check {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coupon-expand-arrow {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coupon-expand-arrow svg {
+            width: 9px;
+            height: 16px;
+        }
+
+        /* ========== 8. 底部法务说明 ========== */
+        .legal-section {
+            display: flex;
+            flex-direction: column;
+            padding: 30px 0;
+            gap: 30px;
+            width: 714px;
+        }
+
+        .legal-text {
+            font-size: 22px;
+            line-height: 140%;
+            color: var(--color-lightgray);
+        }
+
+        /* ========== 9. 底部预订栏 ========== */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 750px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom-bar-content {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 24px;
+            gap: 18px;
+            width: 750px;
+            height: 132px;
+            background: var(--color-white);
+        }
+
+        .price-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .price-original {
+            font-size: 24px;
+            line-height: 100%;
+            color: var(--color-lightgray);
+            text-decoration: line-through;
+            text-align: right;
+        }
+
+        .price-current {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .price-symbol {
+            font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 24px;
+            color: var(--color-pay-1);
+        }
+
+        .price-value {
+            font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 31px;
+            color: var(--color-pay-1);
+        }
+
+        .detail-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-text {
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-lightgray);
+        }
+
+        .detail-arrow {
+            width: 12px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-arrow svg {
+            width: 7px;
+            height: 5px;
+        }
+
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 90px;
+            width: 270px;
+            height: 84px;
+            background: var(--color-pay-1);
+            border-radius: 42px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .submit-text {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: var(--color-white);
+            white-space: nowrap;
+        }
+
+        .home-indicator {
+            width: 750px;
+            height: 48px;
+            background: var(--color-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .home-indicator-bar {
+            width: 234px;
+            height: 9px;
+            background: var(--color-darkgray);
+            border-radius: 4.5px;
+        }
+
+        /* ========== 联订优惠模块（隐藏） ========== */
+        .bundle-module {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- 顶部蓝色背景 -->
+        <div class="top-bg"></div>
+
+        <!-- 1. iPhone 状态栏 -->
+        <div class="status-bar">
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN01deGvLF1vPATvevmnO_!!6000000006164-2-tps-1500-176.png" alt="status bar">
+        </div>
+
+        <!-- 2. 导航栏 -->
+        <div class="nav-bar">
+            <div class="back-btn">
+                <img src="https://img.alicdn.com/imgextra/i3/O1CN01s3eQyy1ZB2il1sAXb_!!6000000003155-2-tps-96-96.png" alt="返回">
+            </div>
+            <span class="nav-title">6月25日 周四</span>
+            <div class="nav-right">
+                <span class="nav-notice">购买<br>须知</span>
+                <div class="more-btn">
+                    <img src="https://img.alicdn.com/imgextra/i2/O1CN017NNZ6C1FVqOTlDnIa_!!6000000000493-2-tps-96-96.png" alt="更多">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 内容区 -->
+        <div class="content-area">
+
+            <!-- 3.1 下单页条（权益胶囊） -->
+            <div class="benefit-bar">
+                <div class="benefit-badge">
+                    <img src="https://img.alicdn.com/imgextra/i1/O1CN01x7D7Yu1C5n10tf4fK_!!6000000000030-2-tps-160-72.png" alt="飞猪">
+                </div>
+                <span class="benefit-text">5元优惠券23:59:59后失效</span>
+                <div class="benefit-arrow">
+                    <svg viewBox="0 0 7 14" fill="none">
+                        <path d="M1 1L6 7L1 13" stroke="var(--color-darkgray)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 3.2 单程卡 -->
+            <div class="trip-card">
+                <!-- 行程信息 -->
+                <div class="trip-info">
+                    <div class="trip-side">
+                        <div class="trip-time">12:00</div>
+                        <div class="trip-station">杭州东</div>
+                    </div>
+                    <div class="trip-middle">
+                        <div class="trip-duration">11时30分</div>
+                        <img class="trip-arrow-img" src="https://img.alicdn.com/imgextra/i2/O1CN01ncg4Hq1SAOqxZXacR_!!6000000002206-2-tps-490-19.png" alt="箭头">
+                        <div class="trip-train">
+                            <span class="trip-train-text">G1234·时刻表</span>
+                            <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+                                <path d="M1 1L5.5 6L1 11" stroke="var(--color-midgray)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-side trip-side-right">
+                        <div class="trip-time">21:30</div>
+                        <div class="trip-station">北京南</div>
+                    </div>
+                </div>
+
+                <!-- 分割线 -->
+                <hr class="divider">
+
+                <!-- 座席信息 -->
+                <div class="seat-info">
+                    <div class="seat-left">
+                        <div class="seat-type-row">
+                            <span class="seat-type-text">二等座¥420</span>
+                        </div>
+                    </div>
+                    <div class="seat-check" style="display: flex; align-items: center; gap: 12px;">
+                        <div class="seat-checkbox">
+                            <div class="seat-checkbox-circle"></div>
+                        </div>
+                        <span class="seat-type-text">接受无座</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.3 乘车人模块 -->
+            <div class="passenger-module">
+                <!-- 积分头部 -->
+                <div class="points-header">
+                    <div class="points-left">
+                        <img src="https://img.alicdn.com/imgextra/i2/O1CN01NDfr171raNiWT20Yt_!!6000000005647-2-tps-84-84.png" alt="积分" style="width: 42px; height: 42px;">
+                        <span class="points-text">积分余额20144，最高可兑换<span style="color: var(--color-indigo-1);">201</span>元车票</span>
+                    </div>
+                    <div class="switch-wrap">
+                        <div class="switch-track"></div>
+                        <div class="switch-handle"></div>
+                    </div>
+                </div>
+
+                <!-- 乘车人内容区 -->
+                <div class="passenger-content">
+                    <!-- 已选标题 + 类型选择 -->
+                    <div class="passenger-select-area">
+                        <div class="passenger-title">已选：2成人</div>
+                        <div class="type-select-row">
+                            <!-- 李雷（选中） -->
+                            <div class="type-chip">
+                                <div class="type-chip-inner type-chip-selected" style="width: 88px;">
+                                    <span class="type-chip-text type-chip-text-bold">李雷</span>
+                                </div>
+                                <div class="type-check-mark">
+                                    <img src="https://gw.alicdn.com/imgextra/i2/O1CN01yETKoa1ecacVOX8Lc_!!6000000003892-2-tps-47-42.png" alt="✓">
+                                </div>
+                            </div>
+                            <!-- 韩梅梅（选中） -->
+                            <div class="type-chip">
+                                <div class="type-chip-inner type-chip-selected" style="width: 114px;">
+                                    <span class="type-chip-text type-chip-text-bold">韩梅梅</span>
+                                </div>
+                                <div class="type-check-mark">
+                                    <img src="https://gw.alicdn.com/imgextra/i2/O1CN01yETKoa1ecacVOX8Lc_!!6000000003892-2-tps-47-42.png" alt="✓">
+                                </div>
+                            </div>
+                            <!-- 赵钱孙（未选） -->
+                            <div class="type-chip">
+                                <div class="type-chip-inner type-chip-normal" style="width: 114px;">
+                                    <span class="type-chip-text">赵钱孙</span>
+                                </div>
+                            </div>
+                            <!-- 李周武（未选） -->
+                            <div class="type-chip">
+                                <div class="type-chip-inner type-chip-normal" style="width: 114px;">
+                                    <span class="type-chip-text">李周武</span>
+                                </div>
+                            </div>
+                            <!-- 赵钱孙（未选，被遮挡） -->
+                            <div class="type-chip">
+                                <div class="type-chip-inner type-chip-normal" style="width: 114px;">
+                                    <span class="type-chip-text">赵钱孙</span>
+                                </div>
+                            </div>
+                            <!-- 更多按钮（右侧浮层） -->
+                            <div class="type-more-btn" style="height: 72px; display: flex; align-items: center; z-index: 2;">
+                                <div class="type-more-shadow"></div>
+                                <div class="type-more-bg"></div>
+                                <div style="display: flex; align-items: center; gap: 6px; position: relative; z-index: 1;">
+                                    <div class="type-add-icon">
+                                        <img src="https://gw.alicdn.com/imgextra/i1/O1CN01EUrtwB1PbTQ4jvTCr_!!6000000001859-2-tps-60-60.png" alt="加">
+                                    </div>
+                                    <span class="type-add-text">更多</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 乘客列表 -->
+                    <div class="passenger-list">
+                        <!-- 乘客1 -->
+                        <div class="passenger-item">
+                            <div class="passenger-delete">
+                                <div class="passenger-delete-circle"></div>
+                                <div class="passenger-delete-line"></div>
+                            </div>
+                            <div class="passenger-info">
+                                <div class="passenger-name-row">
+                                    <span class="passenger-name">李雷</span>
+                                    <div class="passenger-tag">
+                                        <span class="passenger-tag-text">成人票</span>
+                                    </div>
+                                </div>
+                                <span class="passenger-id">身份证 3101***********911</span>
+                            </div>
+                        </div>
+
+                        <!-- 乘客2 -->
+                        <div class="passenger-item">
+                            <div class="passenger-delete">
+                                <div class="passenger-delete-circle"></div>
+                                <div class="passenger-delete-line"></div>
+                            </div>
+                            <div class="passenger-info">
+                                <div class="passenger-name-row">
+                                    <span class="passenger-name">韩梅梅</span>
+                                    <div class="passenger-tag">
+                                        <span class="passenger-tag-text">成人票</span>
+                                    </div>
+                                </div>
+                                <span class="passenger-id">身份证 3101***********911</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 添加乘车人按钮 -->
+                    <div class="add-passenger-wrap">
+                        <button class="add-passenger-btn">
+                            <img src="https://gw.alicdn.com/imgextra/i1/O1CN01OhJdKm1XNI54WZOQg_!!6000000002911-2-tps-64-64.png" alt="添加" style="width: 32px; height: 32px;">
+                            <span class="add-passenger-text">添加乘客（成人/学生/儿童）</span>
+                        </button>
+                    </div>
+
+                    <!-- 联系手机 -->
+                    <div class="contact-section">
+                        <hr class="divider">
+                        <div class="contact-row">
+                            <div class="contact-info">
+                                <span class="contact-label">联系手机</span>
+                                <span class="contact-phone">137 8965 4780</span>
+                            </div>
+                            <img src="https://img.alicdn.com/imgextra/i4/O1CN01P3Vo6J1jibuHCE0Xa_!!6000000004582-2-tps-84-84.png" alt="电话" style="width: 42px; height: 42px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.4 选座选车厢模块 -->
+            <div class="seat-select-module">
+                <!-- 飞猪装饰图（底部右下角） -->
+                <img class="seat-select-deco" src="https://img.alicdn.com/imgextra/i1/O1CN01tz8aS31FpzowetWHX_!!6000000000537-2-tps-516-290.png" alt="">
+                <!-- 标题行 -->
+                <div class="module-title-row" style="position: relative; z-index: 1;">
+                    <span class="module-title">座席随心选</span>
+                    <div class="module-more-link">
+                        <span class="module-more-text">座席图示</span>
+                        <div class="module-more-arrow">
+                            <svg viewBox="0 0 7 14" fill="none">
+                                <path d="M1 1L6 7L1 13" stroke="var(--color-indigo-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 选座/选车厢内容 -->
+                <div class="seat-select-content">
+                    <!-- 选座类型 -->
+                    <div class="berth-card">
+                        <div class="berth-title-row">
+                            <span class="berth-label">免费在线选座</span>
+                            <span class="berth-price">0/1</span>
+                        </div>
+                        <div class="seat-layout">
+                            <span class="seat-layout-label">窗<br>户</span>
+                            <div class="seat-icon">
+                                <div class="seat-icon-body"></div>
+                                <div class="seat-icon-bottom"></div>
+                                <div class="seat-icon-bottom-inner"></div>
+                                <div class="seat-icon-arm-l"></div>
+                                <div class="seat-icon-arm-r"></div>
+                                <div class="seat-icon-head"></div>
+                                <span class="seat-icon-letter">A</span>
+                            </div>
+                            <div class="seat-icon">
+                                <div class="seat-icon-body"></div>
+                                <div class="seat-icon-bottom"></div>
+                                <div class="seat-icon-bottom-inner"></div>
+                                <div class="seat-icon-arm-l"></div>
+                                <div class="seat-icon-arm-r"></div>
+                                <div class="seat-icon-head"></div>
+                                <span class="seat-icon-letter">B</span>
+                            </div>
+                            <div class="seat-icon">
+                                <div class="seat-icon-body"></div>
+                                <div class="seat-icon-bottom"></div>
+                                <div class="seat-icon-bottom-inner"></div>
+                                <div class="seat-icon-arm-l"></div>
+                                <div class="seat-icon-arm-r"></div>
+                                <div class="seat-icon-head"></div>
+                                <span class="seat-icon-letter">C</span>
+                            </div>
+                            <span class="seat-layout-label">过<br>道</span>
+                            <div class="seat-icon">
+                                <div class="seat-icon-body"></div>
+                                <div class="seat-icon-bottom"></div>
+                                <div class="seat-icon-bottom-inner"></div>
+                                <div class="seat-icon-arm-l"></div>
+                                <div class="seat-icon-arm-r"></div>
+                                <div class="seat-icon-head"></div>
+                                <span class="seat-icon-letter">D</span>
+                            </div>
+                            <div class="seat-icon">
+                                <div class="seat-icon-body"></div>
+                                <div class="seat-icon-bottom"></div>
+                                <div class="seat-icon-bottom-inner"></div>
+                                <div class="seat-icon-arm-l"></div>
+                                <div class="seat-icon-arm-r"></div>
+                                <div class="seat-icon-head"></div>
+                                <span class="seat-icon-letter">F</span>
+                            </div>
+                            <span class="seat-layout-label">窗<br>户</span>
+                        </div>
+                    </div>
+
+                    <!-- 选车厢 -->
+                    <div class="coach-card">
+                        <div class="coach-title-row">
+                            <span class="coach-label">选车厢</span>
+                            <span class="coach-price">¥10/人</span>
+                        </div>
+                        <div class="coach-row">
+                            <div class="coach-num">
+                                <span class="coach-num-text">01</span>
+                            </div>
+                            <div class="coach-num">
+                                <span class="coach-num-text">02</span>
+                            </div>
+                            <div class="coach-num">
+                                <span class="coach-num-text">03</span>
+                            </div>
+                            <div class="coach-num coach-num-selected">
+                                <span class="coach-num-text">04</span>
+                                <div class="coach-num-badge">
+                                    <span class="coach-num-badge-text">有余票</span>
+                                </div>
+                            </div>
+                            <div class="coach-num-split">
+                                <span class="coach-num-main">05</span>
+                                <span class="coach-num-sub">餐车</span>
+                            </div>
+                            <div class="coach-num coach-num-selected">
+                                <span class="coach-num-text">06</span>
+                                <div class="coach-num-badge">
+                                    <span class="coach-num-badge-text">有余票</span>
+                                </div>
+                            </div>
+                            <div class="coach-num coach-num-dim">
+                                <span class="coach-num-text">07</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.5 联订优惠模块（隐藏） -->
+            <div class="bundle-module"></div>
+
+            <!-- 3.6 优惠信息模块 -->
+            <div class="coupon-module">
+                <!-- 会员标题 -->
+                <div class="coupon-header">
+                    <div class="coupon-header-bg"></div>
+                    <span class="coupon-header-text">F4会员·本单可享</span>
+                </div>
+
+                <!-- 优惠行1：里程赠送 -->
+                <div class="coupon-row">
+                    <div class="coupon-row-left">
+                        <div class="coupon-tag">
+                            <span class="coupon-tag-text">里程赠送</span>
+                        </div>
+                        <span class="coupon-desc">出行后可获得<span style="color: var(--color-pay-1);">35</span>里程</span>
+                    </div>
+                    <div class="coupon-row-right" style="gap: 0;">
+                        <div class="coupon-expand-arrow">
+                            <svg viewBox="0 0 9 16" fill="none">
+                                <path d="M1 1L7 8L1 15" stroke="var(--color-darkgray)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 优惠行2：12306积分 -->
+                <div class="coupon-row">
+                    <div class="coupon-row-left">
+                        <div class="coupon-tag">
+                            <span class="coupon-tag-text">12306积分</span>
+                        </div>
+                        <span class="coupon-desc">本单出票后可获得<span style="color: var(--color-pay-1);">3580</span>积分</span>
+                    </div>
+                    <div class="coupon-row-right" style="gap: 0;">
+                        <div class="coupon-expand-arrow">
+                            <svg viewBox="0 0 9 16" fill="none">
+                                <path d="M1 1L7 8L1 15" stroke="var(--color-darkgray)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.7 底部法务说明 -->
+            <div class="legal-section">
+                <p class="legal-text">火车票无法保证100%出票，如出票失败将短信通知，退款将退回到你的付款账户，请你谅解</p>
+                <p class="legal-text">购买即视为同意《铁路旅客运输规程》及相关服务协议</p>
+            </div>
+        </div>
+
+        <!-- 4. 底部预订栏 -->
+        <div class="bottom-bar">
+            <div class="bottom-bar-content">
+                <div class="price-area">
+                    <div class="price-row">
+                        <span class="price-original">¥1010</span>
+                        <div class="price-current">
+                            <span class="price-symbol">¥</span>
+                            <span class="price-value">694</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-btn">
+                    <span class="detail-text">明细</span>
+                    <div class="detail-arrow">
+                        <svg viewBox="0 0 12 7" fill="none">
+                            <path d="M1 1L6 6L11 1" stroke="var(--color-lightgray)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <button class="submit-btn">
+                    <span class="submit-text">立即支付</span>
+                </button>
+            </div>
+            <div class="home-indicator">
+                <div class="home-indicator-bar"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

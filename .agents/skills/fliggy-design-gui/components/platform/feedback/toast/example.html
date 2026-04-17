@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — 轻提示 Toast 示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --color-notice-tint: #fff6ee;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-toast-demo__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 750px;
+  margin: 0 auto 32px;
+}
+
+.fdl-toast-demo__trigger {
+  padding: 12px 24px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  background: var(--color-white);
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-toast-demo__trigger:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-toast-demo__trigger:hover {
+  background: var(--color-label);
+}
+
+/* ========== fdl-toast ========== */
+.fdl-toast {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 36px;
+  border-radius: var(--radius-l);
+  background: color-mix(in srgb, var(--color-darkgray) 80%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.95);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+.fdl-toast--visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.fdl-toast__text {
+  min-width: 180px;
+  max-width: 360px;
+  margin: 0;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.7;
+  text-align: center;
+  color: var(--color-white);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-toast-demo__toolbar">
+    <button type="button" class="fdl-toast-demo__trigger" data-fdl-toast-text="已复制到剪贴板">短提示</button>
+    <button
+      type="button"
+      class="fdl-toast-demo__trigger"
+      data-fdl-toast-text="网络连接失败，请检查您的网络设置后重试。"
+    >
+      长提示
+    </button>
+  </div>
+
+  <div
+    class="fdl-toast"
+    id="fdl-toast-demo"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    aria-hidden="true"
+  >
+    <p class="fdl-toast__text" id="fdl-toast-demo-text"></p>
+  </div>
+
+  <script>
+(function () {
+  var root = document.getElementById("fdl-toast-demo");
+  var textEl = document.getElementById("fdl-toast-demo-text");
+  var timer;
+
+  function show(message) {
+    if (!root || !textEl) return;
+    clearTimeout(timer);
+    textEl.textContent = message;
+    root.classList.add("fdl-toast--visible");
+    root.setAttribute("aria-hidden", "false");
+    timer = setTimeout(function () {
+      root.classList.remove("fdl-toast--visible");
+      root.setAttribute("aria-hidden", "true");
+    }, 3000);
+  }
+
+  document.querySelectorAll("[data-fdl-toast-text]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      show(btn.getAttribute("data-fdl-toast-text") || "");
+    });
+  });
+})();
+  </script>
+</body>
+</html>

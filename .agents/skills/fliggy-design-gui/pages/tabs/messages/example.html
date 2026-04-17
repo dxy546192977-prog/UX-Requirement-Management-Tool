@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>tabs.messages — 消息 Tab</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-auxiliary: #d2d4d9;
+      --color-bg: #f2f3f5;
+      --color-white: #ffffff;
+      --color-indigo-1: #6666ff;
+      --color-warning-1: #ff3333;
+      --color-pay-1: #ff5533;
+      --radius-s: 6px;
+      --space-page-gutter: 4px;
+      --msgs-fixed-header-h: 176px;
+      --msgs-content-offset-top: var(--msgs-fixed-header-h);
+      --msgs-content-max-w: 742px;
+      --font-body: "PingFang SC", "SimHei", sans-serif;
+      --fdl-tabbar-nav-h: 102px;
+      --fdl-tabbar-safe-h: 64px;
+      --color-text-primary: var(--color-darkgray);
+      --color-text-secondary: var(--color-lightgray);
+      --msgs-tag-bg: #feebd8;
+      --msgs-tag-text: #805540;
+      --msgs-row-border: #f0f1f3;
+    }
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      font-family: var(--font-body);
+      padding-bottom: calc(
+        var(--fdl-tabbar-nav-h) + var(--fdl-tabbar-safe-h) + env(safe-area-inset-bottom, 0px)
+      );
+    }
+
+    .messages-page__status-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      width: 750px;
+      max-width: 100vw;
+      height: 88px;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: #ffffff;
+    }
+    .messages-page__status-bar .status-bar {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #ffffff;
+    }
+
+    .messages-page__head {
+      position: fixed;
+      top: 88px;
+      left: 50%;
+      width: 750px;
+      max-width: 100vw;
+      height: 88px;
+      transform: translateX(-50%);
+      z-index: 99;
+      background: var(--color-white);
+      box-shadow: 0 1px 0 rgba(15, 19, 26, 0.06);
+    }
+
+    /* 顶栏 Tab：对齐 tabs.member 的 nav-cluster / title-block / mile / underline */
+    .fdl-msgs-nav {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      padding: 0 24px;
+      gap: 24px;
+      box-sizing: border-box;
+    }
+    .fdl-msgs-nav__tabs {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 36px;
+      min-width: 0;
+      flex: 1;
+    }
+    .fdl-msgs-nav__mile {
+      display: flex;
+      align-items: flex-end;
+      padding: 0;
+      font-family: "PingFang SC", var(--font-body);
+      font-style: normal;
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 140%;
+      color: #0f131a;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-msgs-nav__mile:focus-visible {
+      outline: 2px solid var(--color-indigo-1);
+      outline-offset: 2px;
+    }
+    .fdl-msgs-nav__title-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      gap: 4px;
+      width: 96px;
+      flex: 0 0 auto;
+    }
+    .fdl-msgs-nav__h1 {
+      margin: 0;
+      width: 96px;
+      font-family: "PingFang SC", var(--font-body);
+      font-style: normal;
+      font-weight: 500;
+      font-size: 48px;
+      line-height: 140%;
+      color: #0f131a;
+      text-align: center;
+    }
+    .fdl-msgs-nav__underline {
+      width: 54px;
+      height: 6px;
+      background: #0f131a;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .fdl-msgs-nav__actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .fdl-msgs-nav__icon-btn {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-msgs-nav__icon-btn:focus-visible {
+      outline: 2px solid var(--color-indigo-1);
+      outline-offset: 2px;
+    }
+    .fdl-msgs-nav__icon-btn img {
+      width: 48px;
+      height: 48px;
+      display: block;
+    }
+
+    .messages-page__main {
+      padding-top: var(--msgs-content-offset-top);
+      width: 750px;
+      max-width: 100vw;
+      margin: 0 auto;
+      min-height: 40vh;
+      background: var(--color-white);
+    }
+
+    .fdl-msgs-list {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: var(--msgs-content-max-w);
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .fdl-msgs-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      min-height: 148px;
+      padding: 0 var(--space-page-gutter);
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 1px solid var(--msgs-row-border);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-msgs-item:focus-visible {
+      outline: 2px solid var(--color-indigo-1);
+      outline-offset: -2px;
+    }
+    .fdl-msgs-item__avatar-wrap {
+      width: 124px;
+      height: 148px;
+      padding: 24px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex: 0 0 auto;
+    }
+    .fdl-msgs-item__avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #e9e9e9;
+    }
+    .fdl-msgs-item__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .fdl-msgs-item__badge {
+      position: absolute;
+      right: 10px;
+      top: 18px;
+      min-width: 30px;
+      height: 30px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-pay-1);
+      border-radius: 24px;
+      color: #fff;
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 400;
+      z-index: 1;
+    }
+    .fdl-msgs-item__badge--dot {
+      min-width: 18px;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      font-size: 0;
+    }
+    .fdl-msgs-item__badge.is-hidden {
+      display: none;
+    }
+    .fdl-msgs-item__body {
+      flex: 1;
+      min-width: 0;
+      padding: 18px 12px 18px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+    .fdl-msgs-item__row-top {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 42px;
+    }
+    .fdl-msgs-item__title-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .fdl-msgs-item__title {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.4;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .fdl-msgs-item__tag {
+      flex-shrink: 0;
+      height: 28px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--msgs-tag-bg);
+      border-radius: 4px;
+      color: var(--msgs-tag-text);
+      font-size: 20px;
+      line-height: 1.4;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+    .fdl-msgs-item__tag.is-hidden {
+      display: none;
+    }
+    .fdl-msgs-item__time {
+      flex-shrink: 0;
+      font-size: 26px;
+      line-height: 1.4;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+    .fdl-msgs-item__preview {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.4;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    /* ========== FDG 一级底部导航（与 tabs.home 一致） ========== */
+    .fdl-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100vw;
+      z-index: 1000;
+    }
+    .fdl-tabbar__nav {
+      height: var(--fdl-tabbar-nav-h);
+      background: var(--color-white);
+      box-shadow: 0 -1px 0 var(--color-bg);
+    }
+    .fdl-tabbar__list {
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+    }
+    .fdl-tabbar__item {
+      flex: 1;
+      position: relative;
+    }
+    .fdl-tabbar__link {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      gap: 6px;
+      text-decoration: none;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fdl-tabbar__link:focus-visible {
+      outline: 2px solid var(--color-indigo-1);
+      outline-offset: 2px;
+    }
+    .fdl-tabbar__icon {
+      width: 48px;
+      height: 48px;
+      position: relative;
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+    .fdl-tabbar__icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .fdl-tabbar__icon .fdl-tabbar__icon-img--active {
+      display: none;
+    }
+    .fdl-tabbar__icon .fdl-tabbar__icon-img--inactive {
+      display: block;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__icon .fdl-tabbar__icon-img--active {
+      display: block;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__icon .fdl-tabbar__icon-img--inactive {
+      display: none;
+    }
+    .fdl-tabbar__label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1;
+      text-align: center;
+      color: var(--color-darkgray);
+      transition: font-weight 0.2s ease;
+    }
+    .fdl-tabbar__item--active .fdl-tabbar__label {
+      font-weight: 500;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active .fdl-tabbar__icon {
+      width: 102px;
+      height: 102px;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active::before {
+      content: "";
+      position: absolute;
+      width: 35px;
+      height: 25px;
+      background: #ffe033;
+      filter: blur(12.5px);
+      border-radius: 50%;
+      left: 50%;
+      bottom: 15%;
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+    .fdl-tabbar__item--fliggy.fdl-tabbar__item--active .fdl-tabbar__label {
+      display: none;
+    }
+    .fdl-tabbar__safe-area {
+      min-height: var(--fdl-tabbar-safe-h);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: var(--color-white);
+    }
+  </style>
+</head>
+<body>
+  <div class="messages-page">
+    <div class="messages-page__status-bar" aria-hidden="true">
+      <img
+        class="status-bar"
+        src="https://gw.alicdn.com/imgextra/i3/O1CN01pjMeFr1E44lRvyCyE_!!6000000000297-2-tps-750-88.png"
+        width="750"
+        height="88"
+        alt=""
+        decoding="async"
+      />
+    </div>
+
+    <header class="messages-page__head">
+      <nav class="fdl-msgs-nav" aria-label="消息页一级导航">
+        <div class="fdl-msgs-nav__tabs">
+          <a href="#" class="fdl-msgs-nav__mile">群聊广场</a>
+          <div class="fdl-msgs-nav__title-block" aria-current="page">
+            <h1 class="fdl-msgs-nav__h1">消息</h1>
+            <span class="fdl-msgs-nav__underline" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="fdl-msgs-nav__actions">
+          <button type="button" class="fdl-msgs-nav__icon-btn" aria-label="设置">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01cz5mJU1XUA1MlXFh1_!!6000000002926-2-tps-96-96.png" width="96" height="96" alt="" />
+          </button>
+          <button type="button" class="fdl-msgs-nav__icon-btn" aria-label="清除">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01UHa0CN1dMGtS9Itv5_!!6000000003721-2-tps-96-96.png" width="96" height="96" alt="" />
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="messages-page__main" id="main">
+      <div class="fdl-msgs-list" role="list">
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01OHN9V51JuoRqZ9SMn_!!6000000001089-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge">1</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">1月·日本出行群</p>
+                <span class="fdl-msgs-item__tag">无需换票</span>
+              </div>
+              <span class="fdl-msgs-item__time">11:11</span>
+            </div>
+            <p class="fdl-msgs-item__preview">黄河路停车攻略，我做了一份是搜索</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01OHN9V51JuoRqZ9SMn_!!6000000001089-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge">1</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">1月·日本出行群</p>
+                <span class="fdl-msgs-item__tag">无需换票</span>
+              </div>
+              <span class="fdl-msgs-item__time">11:11</span>
+            </div>
+            <p class="fdl-msgs-item__preview">黄河路停车攻略，我做了一份是搜索</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01OHN9V51JuoRqZ9SMn_!!6000000001089-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge">1</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">1月·日本出行群</p>
+                <span class="fdl-msgs-item__tag">无需换票</span>
+              </div>
+              <span class="fdl-msgs-item__time">11:11</span>
+            </div>
+            <p class="fdl-msgs-item__preview">黄河路停车攻略，我做了一份是搜索</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01OHN9V51JuoRqZ9SMn_!!6000000001089-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge">1</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">1月·日本出行群</p>
+                <span class="fdl-msgs-item__tag">无需换票</span>
+              </div>
+              <span class="fdl-msgs-item__time">11:11</span>
+            </div>
+            <p class="fdl-msgs-item__preview">黄河路停车攻略，我做了一份是搜索</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01O7xrUB1oO4Dg9RPuK_!!6000000005214-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge fdl-msgs-item__badge--dot" aria-label="有未读"></span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">折叠的消息</p>
+                <span class="fdl-msgs-item__tag is-hidden">无需换票</span>
+              </div>
+              <span class="fdl-msgs-item__time">08:20</span>
+            </div>
+            <p class="fdl-msgs-item__preview">长白山雪季年卡9折开售，万达雪场套票年卡开售</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN016l4Ajz1op5aP0lkO5_!!6000000005273-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge is-hidden">0</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">行程服务</p>
+                <span class="fdl-msgs-item__tag is-hidden">标签</span>
+              </div>
+              <span class="fdl-msgs-item__time">昨天</span>
+            </div>
+            <p class="fdl-msgs-item__preview">退票成功</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i2/O1CN01OhYts21HHJ3KrFghY_!!6000000000732-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge is-hidden">0</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">订阅消息</p>
+                <span class="fdl-msgs-item__tag is-hidden">标签</span>
+              </div>
+              <span class="fdl-msgs-item__time">昨天</span>
+            </div>
+            <p class="fdl-msgs-item__preview">里程签到提醒：您有120里程待领取 &gt;&gt;</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i2/O1CN013qEhOG1DJolH5nDfE_!!6000000000196-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge is-hidden">0</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">互动消息</p>
+                <span class="fdl-msgs-item__tag is-hidden">标签</span>
+              </div>
+              <span class="fdl-msgs-item__time">昨天</span>
+            </div>
+            <p class="fdl-msgs-item__preview">有用户求助：🍃离开杭州时，哪些地方会让你去第二...</p>
+          </div>
+        </a>
+        <a href="#" class="fdl-msgs-item" role="listitem">
+          <div class="fdl-msgs-item__avatar-wrap">
+            <div class="fdl-msgs-item__avatar">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01b3bN1F1rDwJDCMN0I_!!6000000005598-2-tps-200-200.png" width="100" height="100" alt="" />
+            </div>
+            <span class="fdl-msgs-item__badge is-hidden">0</span>
+          </div>
+          <div class="fdl-msgs-item__body">
+            <div class="fdl-msgs-item__row-top">
+              <div class="fdl-msgs-item__title-group">
+                <p class="fdl-msgs-item__title">上海懒猫旅行专营店</p>
+                <span class="fdl-msgs-item__tag">无需换票</span>
+              </div>
+              <span class="fdl-msgs-item__time">24/09/12</span>
+            </div>
+            <p class="fdl-msgs-item__preview">欢迎您光临本店</p>
+          </div>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <div class="fdl-tabbar">
+    <nav class="fdl-tabbar__nav" aria-label="底部主导航">
+      <ul class="fdl-tabbar__list">
+        <li class="fdl-tabbar__item fdl-tabbar__item--fliggy">
+          <a class="fdl-tabbar__link" href="#" aria-label="首页">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i4/O1CN01C1KZp61fkfDbhqDGb_!!6000000004045-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN01eNqqfN2803m2U1a3R_!!6000000007869-2-tps-204-214.png" width="204" height="214" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">首页</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#" aria-label="会员">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i3/O1CN018WSOmF1geXXRCSdee_!!6000000004167-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN010oGY6j1iNiDYeKlL0_!!6000000004401-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">会员</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item fdl-tabbar__item--active">
+          <a class="fdl-tabbar__link" href="#" aria-label="消息" aria-current="page">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i4/O1CN01Hn4QVN1MnQuj2rkYr_!!6000000001479-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i2/O1CN012vS02w1kkGxVWS4hE_!!6000000004721-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">消息</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#" aria-label="行程">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i2/O1CN01x0SUcY1O2NS7urI3g_!!6000000001647-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i4/O1CN01P27V8t1uN324l68EU_!!6000000006024-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">行程</span>
+          </a>
+        </li>
+        <li class="fdl-tabbar__item">
+          <a class="fdl-tabbar__link" href="#" aria-label="我的">
+            <div class="fdl-tabbar__icon">
+              <img class="fdl-tabbar__icon-img--inactive" src="https://gw.alicdn.com/imgextra/i1/O1CN01VLEq8s1CUWOysFWgi_!!6000000000084-2-tps-96-96.png" width="96" height="96" alt="" />
+              <img class="fdl-tabbar__icon-img--active" src="https://gw.alicdn.com/imgextra/i1/O1CN01u12TM81hqHIyW5bc4_!!6000000004328-2-tps-96-96.png" width="96" height="96" alt="" />
+            </div>
+            <span class="fdl-tabbar__label">我的</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="fdl-tabbar__safe-area" aria-hidden="true"></div>
+  </div>
+</body>
+</html>

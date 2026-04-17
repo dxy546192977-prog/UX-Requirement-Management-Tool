@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>机票首页/特价机票</title>
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("../Fonts/Fliggy Sans 102-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "FZJunHeiS-B-GB";
+      src: url("../Fonts/FZJunHJW_Cu.TTF") format("truetype");
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-white: #ffffff;
+      --color-bg: #f2f3f5;
+      --color-separator: #d2d4d9;
+      --color-orange: #ff5533;
+      --color-indigo: #6666ff;
+      --color-indigo-bg: #f5f5ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-darkgray);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    /* @homepage-module-styles:start */
+    /* ===== 特价机票 外层容器 ===== */
+    .deal-flights {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-white: #ffffff;
+      --color-separator: #d2d4d9;
+      --color-orange: #ff5533;
+      --color-indigo: #6666ff;
+      --color-indigo-bg: #f5f5ff;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 24px;
+      gap: 10px;
+      width: 702px;
+      background: linear-gradient(167.59deg, #f5f5ff 3.58%, #f8f8ff 70.17%);
+      backdrop-filter: blur(4px);
+      border-radius: 18px;
+    }
+
+    .deal-flights__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+      width: 654px;
+    }
+
+    /* ===== Header ===== */
+    .deal-flights__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 654px;
+      height: 32px;
+    }
+
+    .deal-flights__header-info {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      height: 32px;
+    }
+
+    .deal-flights__title {
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+
+    .deal-flights__dropdown {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 26px;
+      cursor: pointer;
+    }
+
+    .deal-flights__dropdown-text {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 100%;
+      text-align: right;
+      color: var(--color-darkgray);
+    }
+
+    .deal-flights__dropdown-arrow {
+      width: 13px;
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deal-flights__dropdown-arrow img {
+      width: 13px;
+      height: 10px;
+      display: block;
+    }
+
+    .deal-flights__more {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .deal-flights__more-text {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 100%;
+      color: var(--color-midgray);
+    }
+
+    .deal-flights__more-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 7px;
+      height: 12px;
+    }
+
+    .deal-flights__more-icon svg {
+      display: block;
+      width: 7px;
+      height: 12px;
+    }
+
+    /* ===== Main Container ===== */
+    .deal-flights__main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      width: 654px;
+    }
+
+    /* ===== 主题一级 Tab ===== */
+    .deal-flights__tabs {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 0;
+      gap: 12px;
+      width: 654px;
+      height: 85.5px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .deal-flights__tabs::-webkit-scrollbar { display: none; }
+
+    /* 未选中态 Tab */
+    .deal-flights__tab {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 12px;
+      gap: 6px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      flex: none;
+      flex-grow: 0;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    /* 选中态 Tab — 外层纵向容器 */
+    .deal-flights__tab.deal-flights__tab--active {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0;
+      height: 85.5px;
+      background: none;
+      border-radius: 0;
+    }
+
+    /* 选中态 Tab — 内部白色卡片（Frame 41） */
+    .deal-flights__tab--active .deal-flights__tab-inner {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 18px 15px;
+      gap: 6px;
+      height: 72px;
+      background: var(--color-white);
+      border-radius: 12px;
+      margin-bottom: -9px;
+    }
+
+    /* 选中态 Tab — 底部白色指示条（Rectangle 4） */
+    .deal-flights__tab--active .deal-flights__tab-indicator {
+      width: 45.25px;
+      height: 22.5px;
+      background: var(--color-white);
+      flex-shrink: 0;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    .deal-flights__tab-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deal-flights__tab-icon img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .deal-flights__tab-label {
+      font-family: "FZJunHeiS-B-GB", "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 30px;
+      text-align: center;
+      letter-spacing: -1px;
+      color: var(--color-darkgray);
+      white-space: nowrap;
+      transform: skewX(-8deg);
+    }
+
+    /* ===== Content Container ===== */
+    .deal-flights__content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 654px;
+    }
+
+    /* ===== 国内/国际 二级 Tab（切图） ===== */
+    .deal-flights__region-tabs {
+      position: relative;
+      width: 100%;
+      height: 80px;
+      border-radius: 24px 24px 0 0;
+      overflow: hidden;
+    }
+
+    .deal-flights__region-bg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 74px;
+      display: block;
+      object-fit: fill;
+      z-index: 1;
+    }
+
+    .deal-flights__region-active-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 370.5px;
+      height: 80px;
+      display: block;
+      filter: drop-shadow(5px 2px 6px rgba(15, 19, 26, 0.05));
+      z-index: 2;
+    }
+
+    .deal-flights__region-option {
+      position: absolute;
+      top: 27px;
+      width: 345px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 2px;
+      z-index: 3;
+      color: var(--color-darkgray);
+    }
+
+    .deal-flights__region-option--domestic {
+      left: 0;
+    }
+
+    .deal-flights__region-option--international {
+      left: 345px;
+    }
+
+    .deal-flights__region-label {
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 32px;
+      color: var(--color-darkgray);
+    }
+
+    .deal-flights__region-price {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 24px;
+      color: var(--color-orange);
+    }
+
+    /* ===== Content List（白色底部区域） ===== */
+    .deal-flights__list-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 6px;
+      width: 654px;
+      position: relative;
+      z-index: 2;
+      background: var(--color-white);
+      border-radius: 0 0 24px 24px;
+    }
+
+    /* ===== 筛选行：单程/往返 + 日期 ===== */
+    .deal-flights__filter-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 13px;
+      width: 654px;
+      height: 60px;
+      background: var(--color-white);
+    }
+
+    /* 单程/往返切换 */
+    .deal-flights__trip-toggle {
+      position: relative;
+      width: 168px;
+      height: 60px;
+    }
+
+    .deal-flights__trip-toggle-bg {
+      position: absolute;
+      width: 168px;
+      height: 60px;
+      left: 0;
+      top: 0;
+      background: var(--color-bg);
+      border-radius: 6px;
+    }
+
+    .deal-flights__trip-btn {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 86px;
+      height: 32px;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 32px;
+      text-align: center;
+      color: var(--color-darkgray);
+      cursor: pointer;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .deal-flights__trip-btn--left {
+      left: -1px;
+    }
+
+    .deal-flights__trip-btn--right {
+      right: -1px;
+    }
+
+    .deal-flights__trip-btn--active {
+      font-weight: 500;
+    }
+
+    .deal-flights__trip-btn--active::before {
+      content: "";
+      position: absolute;
+      width: 72px;
+      height: 48px;
+      background: var(--color-white);
+      border-radius: 4px;
+      z-index: -1;
+    }
+
+    .deal-flights__trip-btn--left.deal-flights__trip-btn--active::before {
+      left: 6px;
+      bottom: -8px;
+    }
+
+    /* 日期下拉 */
+    .deal-flights__date-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 42px;
+      cursor: pointer;
+    }
+
+    .deal-flights__date-text {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 42px;
+      color: var(--color-darkgray);
+    }
+
+    .deal-flights__date-arrow {
+      width: 13px;
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deal-flights__date-arrow img {
+      width: 13px;
+      height: 10px;
+      display: block;
+    }
+
+    /* ===== 航班列表 ===== */
+    .deal-flights__flight-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 654px;
+    }
+
+    /* ===== 单条航班 ===== */
+    .deal-flights__flight-item {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 17px 24px;
+      width: 654px;
+      height: 114px;
+      background: var(--color-white);
+    }
+
+    .deal-flights__flight-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    /* 航班图片 */
+    .deal-flights__flight-img {
+      width: 108px;
+      height: 80px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #e8e8e8;
+    }
+
+    .deal-flights__flight-img img {
+      width: 108px;
+      height: 80px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 航班信息 */
+    .deal-flights__flight-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* OD 行 */
+    .deal-flights__flight-od {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .deal-flights__flight-city {
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 36px;
+      color: var(--color-darkgray);
+    }
+
+    .deal-flights__flight-arrow-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deal-flights__flight-arrow-icon svg {
+      display: block;
+    }
+
+    /* 日期 */
+    .deal-flights__flight-date {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 28px;
+      color: var(--color-lightgray);
+    }
+
+    /* 右侧价格区 */
+    .deal-flights__flight-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .deal-flights__flight-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1px;
+    }
+
+    /* 低价 icon（使用切图） */
+    .deal-flights__price-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .deal-flights__price-icon img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .deal-flights__flight-amount {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 700;
+      font-size: 42px;
+      line-height: 36px;
+      text-align: right;
+      color: var(--color-orange);
+    }
+
+    /* 优惠标签 */
+    .deal-flights__flight-tag {
+      display: flex;
+      align-items: center;
+      padding: 4px 6px;
+      background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #ffe6e0 100%);
+      border-radius: 4px;
+    }
+
+    .deal-flights__flight-tag-text {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 20px;
+      text-align: right;
+      color: var(--color-orange);
+    }
+
+    /* 排行角标 */
+    .deal-flights__rank-badge {
+      position: absolute;
+      width: 37.12px;
+      height: 42px;
+      left: 14px;
+      top: 17px;
+      flex: none;
+      order: 3;
+      flex-grow: 0;
+      z-index: 3;
+    }
+
+    .deal-flights__rank-badge-bg {
+      display: block;
+      width: 37.12px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .deal-flights__rank-badge-bg--1 {
+      content: url("https://gw.alicdn.com/imgextra/i2/O1CN01An6DfI23pHzqHG8GI_!!6000000007304-2-tps-75-84.png");
+    }
+
+    .deal-flights__rank-badge-bg--2 {
+      content: url("https://gw.alicdn.com/imgextra/i3/O1CN01bS4lCX1jHaXOFzryd_!!6000000004523-2-tps-75-84.png");
+    }
+
+    .deal-flights__rank-badge-bg--3 {
+      content: url("https://gw.alicdn.com/imgextra/i2/O1CN01N9u3L41kfgzvJVm0u_!!6000000004711-2-tps-75-84.png");
+    }
+
+    /* ===== 底部按钮 ===== */
+    .deal-flights__footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 0 24px;
+      width: 654px;
+      background: var(--color-white);
+      border-radius: 0 0 24px 24px;
+    }
+
+    .deal-flights__more-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 30px;
+      gap: 6px;
+      height: 52px;
+      background: var(--color-indigo-bg);
+      border-radius: 117px;
+      cursor: pointer;
+    }
+
+    .deal-flights__more-btn-text {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 28px;
+      color: var(--color-indigo);
+    }
+
+    .deal-flights__more-btn-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--color-indigo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .deal-flights__more-btn-icon svg {
+      display: block;
+    }
+    /* @homepage-module-styles:end */
+  </style>
+</head>
+<body>
+
+<!-- @homepage-module-markup:start -->
+<section class="deal-flights" aria-label="特价机票">
+  <div class="deal-flights__inner">
+
+    <!-- ===== Header ===== -->
+    <div class="deal-flights__header">
+      <div class="deal-flights__header-info">
+        <span class="deal-flights__title">特价机票</span>
+        <div class="deal-flights__dropdown">
+          <span class="deal-flights__dropdown-text">杭州出发</span>
+          <span class="deal-flights__dropdown-arrow">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01jeJOe426pEnbctYCa_!!6000000007710-55-tps-13-10.svg" alt="" />
+          </span>
+        </div>
+      </div>
+      <div class="deal-flights__more">
+        <span class="deal-flights__more-text">查看更多</span>
+        <span class="deal-flights__more-icon">
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+            <path d="M1 1L6 6L1 11" stroke="#D2D4D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- ===== Main Container ===== -->
+    <div class="deal-flights__main">
+
+      <!-- 主题一级 Tab -->
+      <div class="deal-flights__tabs">
+        <!-- 选中态 Tab -->
+        <div class="deal-flights__tab deal-flights__tab--active">
+          <div class="deal-flights__tab-inner">
+            <span class="deal-flights__tab-icon">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="低价" />
+            </span>
+            <span class="deal-flights__tab-label">低价任意飞</span>
+          </div>
+          <div class="deal-flights__tab-indicator"></div>
+        </div>
+        <!-- 未选中 Tab -->
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i3/O1CN01SKbxyI1JemaM1GxcJ_!!6000000001054-2-tps-72-72.png" alt="猜你喜欢" />
+          </span>
+          <span class="deal-flights__tab-label">猜你喜欢</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01Z2Iifj1T9lvTFIajl_!!6000000002340-2-tps-72-72.png" alt="航司特价" />
+          </span>
+          <span class="deal-flights__tab-label">航司特价</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01ANuOcQ1kEfd7Q65rG_!!6000000004652-2-tps-72-72.png" alt="免签落地签" />
+          </span>
+          <span class="deal-flights__tab-label">免签落地签</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01Z2Iifj1T9lvTFIajl_!!6000000002340-2-tps-72-72.png" alt="头等商务舱" />
+          </span>
+          <span class="deal-flights__tab-label">头等/商务舱特惠</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i3/O1CN01SKbxyI1JemaM1GxcJ_!!6000000001054-2-tps-72-72.png" alt="畅游全球" />
+          </span>
+          <span class="deal-flights__tab-label">畅游全球</span>
+        </div>
+      </div>
+
+      <!-- ===== Content Container ===== -->
+      <div class="deal-flights__content">
+
+        <!-- 国内/国际 二级 Tab（切图） -->
+        <div class="deal-flights__region-tabs">
+          <img
+            class="deal-flights__region-bg"
+            src="https://gw.alicdn.com/imgextra/i3/O1CN01UxwTjF1NtDWyfmHKH_!!6000000001627-2-tps-1308-148.png"
+            alt=""
+          />
+          <img
+            class="deal-flights__region-active-bg"
+            src="https://gw.alicdn.com/imgextra/i2/O1CN01tQGYHL20A7Y1lpIph_!!6000000006808-55-tps-371-80.svg"
+            alt=""
+          />
+          <div class="deal-flights__region-option deal-flights__region-option--domestic">
+            <span class="deal-flights__region-label">国内最低</span>
+            <span class="deal-flights__region-price">¥99起</span>
+          </div>
+          <div class="deal-flights__region-option deal-flights__region-option--international">
+            <span class="deal-flights__region-label">国际最低</span>
+            <span class="deal-flights__region-price">¥499起</span>
+          </div>
+        </div>
+
+        <!-- Content List -->
+        <div class="deal-flights__list-wrap">
+
+          <!-- 筛选行 -->
+          <div class="deal-flights__filter-row">
+            <div class="deal-flights__trip-toggle">
+              <div class="deal-flights__trip-toggle-bg"></div>
+              <span class="deal-flights__trip-btn deal-flights__trip-btn--left deal-flights__trip-btn--active">单程</span>
+              <span class="deal-flights__trip-btn deal-flights__trip-btn--right">往返</span>
+            </div>
+            <div class="deal-flights__date-dropdown">
+              <span class="deal-flights__date-text">近一周出发</span>
+              <span class="deal-flights__date-arrow">
+                <img src="https://gw.alicdn.com/imgextra/i4/O1CN01jeJOe426pEnbctYCa_!!6000000007710-55-tps-13-10.svg" alt="" />
+              </span>
+            </div>
+          </div>
+
+          <!-- 航班列表 -->
+          <div class="deal-flights__flight-list">
+
+            <!-- Flight Item 1 -->
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__rank-badge">
+                <img class="deal-flights__rank-badge-bg deal-flights__rank-badge-bg--1" alt="排行第1" />
+              </div>
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img">
+                  <img src="https://gw.alicdn.com/imgextra/i1/O1CN01RXfFLT277YdqRmW8n_!!6000000007750-2-tps-216-160.png" alt="青岛" />
+                </div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon">
+                      <img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="→" />
+                    </span>
+                    <span class="deal-flights__flight-city">青岛</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.02 周三</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="¥" />
+                  </span>
+                  <span class="deal-flights__flight-amount">109</span>
+                </div>
+                <div class="deal-flights__flight-tag">
+                  <span class="deal-flights__flight-tag-text">30天低价</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flight Item 2 -->
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__rank-badge">
+                <img class="deal-flights__rank-badge-bg deal-flights__rank-badge-bg--2" alt="排行第2" />
+              </div>
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img">
+                  <img src="https://gw.alicdn.com/imgextra/i4/O1CN01i0pq1g1hyWQxZfqJL_!!6000000004346-2-tps-216-160.png" alt="成都" />
+                </div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon">
+                      <img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="→" />
+                    </span>
+                    <span class="deal-flights__flight-city">成都</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.03 周四</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="¥" />
+                  </span>
+                  <span class="deal-flights__flight-amount">199</span>
+                </div>
+                <div class="deal-flights__flight-tag">
+                  <span class="deal-flights__flight-tag-text">30天低价</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flight Item 3 -->
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__rank-badge">
+                <img class="deal-flights__rank-badge-bg deal-flights__rank-badge-bg--3" alt="排行第3" />
+              </div>
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img">
+                  <img src="https://gw.alicdn.com/imgextra/i4/O1CN019NKgfB1gdALfmDujP_!!6000000004164-2-tps-216-160.png" alt="北京" />
+                </div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon">
+                      <img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="→" />
+                    </span>
+                    <span class="deal-flights__flight-city">北京</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.04 周五</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="¥" />
+                  </span>
+                  <span class="deal-flights__flight-amount">259</span>
+                </div>
+                <div class="deal-flights__flight-tag">
+                  <span class="deal-flights__flight-tag-text">30天低价</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flight Item 4 -->
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN01DlrqRE1qaYFLZxgQv_!!6000000005512-2-tps-216-160.png" alt="上海" />
+                </div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon">
+                      <img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="→" />
+                    </span>
+                    <span class="deal-flights__flight-city">上海</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.05 周六</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="¥" />
+                  </span>
+                  <span class="deal-flights__flight-amount">99</span>
+                </div>
+                <div class="deal-flights__flight-tag">
+                  <span class="deal-flights__flight-tag-text">30天低价</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flight Item 5 -->
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img">
+                  <img src="https://gw.alicdn.com/imgextra/i1/O1CN01SwfHNc1Werf31EAPA_!!6000000002814-2-tps-216-160.png" alt="广州" />
+                </div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon">
+                      <img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="→" />
+                    </span>
+                    <span class="deal-flights__flight-city">广州</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.06 周日</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="¥" />
+                  </span>
+                  <span class="deal-flights__flight-amount">329</span>
+                </div>
+                <div class="deal-flights__flight-tag">
+                  <span class="deal-flights__flight-tag-text">30天低价</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 底部按钮 -->
+          <div class="deal-flights__footer">
+            <div class="deal-flights__more-btn">
+              <span class="deal-flights__more-btn-text">更多低价方案</span>
+              <span class="deal-flights__more-btn-icon">
+                <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
+                  <path d="M1 1L5 5L1 9" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- @homepage-module-markup:end -->
+
+</body>
+</html>

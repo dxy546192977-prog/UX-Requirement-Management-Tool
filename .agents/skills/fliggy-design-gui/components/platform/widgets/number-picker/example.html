@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — number-picker（数字加减器）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+  padding: 36px 18px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-stepper-demo__caption {
+  font-size: 24px;
+  color: var(--color-midgray);
+  margin-bottom: 12px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.fdl-stepper-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ========== fdl-number-picker ========== */
+.fdl-number-picker {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+  gap: 6px;
+  width: 190px;
+  height: 54px;
+  background: var(--color-label);
+  border-radius: 27px;
+  box-sizing: border-box;
+}
+
+.fdl-number-picker__button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 2px;
+  border-color: currentColor;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--color-indigo-1);
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.fdl-number-picker__button:disabled {
+  color: var(--color-auxiliary);
+  cursor: not-allowed;
+}
+
+.fdl-number-picker__value {
+  flex-grow: 1;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--color-darkgray);
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-stepper-demo">
+    <p class="fdl-stepper-demo__caption">完全可用</p>
+    <div class="fdl-number-picker" role="group" aria-label="数量" data-number-picker data-min="1" data-max="99">
+      <button type="button" class="fdl-number-picker__button" aria-label="减少数量">
+        <svg width="16" height="2" viewBox="0 0 16 2" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1H15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+      <span class="fdl-number-picker__value">1</span>
+      <button type="button" class="fdl-number-picker__button" aria-label="增加数量">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 1V15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M1 8H15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="fdl-stepper-demo">
+    <p class="fdl-stepper-demo__caption">禁用减少（已达最小）</p>
+    <div class="fdl-number-picker" role="group" aria-label="数量" data-number-picker data-min="1" data-max="99">
+      <button type="button" class="fdl-number-picker__button" disabled aria-label="减少数量">
+        <svg width="16" height="2" viewBox="0 0 16 2" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1H15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+      <span class="fdl-number-picker__value">1</span>
+      <button type="button" class="fdl-number-picker__button" aria-label="增加数量">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 1V15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M1 8H15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="fdl-stepper-demo">
+    <p class="fdl-stepper-demo__caption">禁用增加（已达最大）</p>
+    <div class="fdl-number-picker" role="group" aria-label="数量" data-number-picker data-min="1" data-max="99">
+      <button type="button" class="fdl-number-picker__button" aria-label="减少数量">
+        <svg width="16" height="2" viewBox="0 0 16 2" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1H15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+      <span class="fdl-number-picker__value">99</span>
+      <button type="button" class="fdl-number-picker__button" disabled aria-label="增加数量">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 1V15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M1 8H15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var pickers = document.querySelectorAll("[data-number-picker]");
+      if (!pickers.length) return;
+
+      pickers.forEach(function (picker) {
+        var buttons = picker.querySelectorAll(".fdl-number-picker__button");
+        var valueEl = picker.querySelector(".fdl-number-picker__value");
+        if (buttons.length < 2 || !valueEl) return;
+
+        var minusBtn = buttons[0];
+        var plusBtn = buttons[1];
+        var min = Number(picker.getAttribute("data-min") || 1);
+        var max = Number(picker.getAttribute("data-max") || 99);
+
+        function getValue() {
+          var n = Number(valueEl.textContent);
+          return Number.isFinite(n) ? n : min;
+        }
+
+        function setValue(next) {
+          var value = Math.max(min, Math.min(max, next));
+          valueEl.textContent = String(value);
+          minusBtn.disabled = value <= min;
+          plusBtn.disabled = value >= max;
+          picker.setAttribute("aria-valuemin", String(min));
+          picker.setAttribute("aria-valuemax", String(max));
+          picker.setAttribute("aria-valuenow", String(value));
+        }
+
+        minusBtn.addEventListener("click", function () {
+          setValue(getValue() - 1);
+        });
+
+        plusBtn.addEventListener("click", function () {
+          setValue(getValue() + 1);
+        });
+
+        setValue(getValue());
+      });
+    })();
+  </script>
+</body>
+</html>

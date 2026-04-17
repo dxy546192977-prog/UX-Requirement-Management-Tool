@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — info-tag 示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+/* 预览区：居中（对齐供稿预览习惯） */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-preview-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+  padding: 18px;
+}
+
+/* 信息标签（与供稿 .info-tag 一致，类名 BEM 化为 fdl-info-tag） */
+.fdl-info-tag {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 92px;
+  height: 28px;
+  padding: 4px 6px;
+  background: var(--color-pay-1);
+  color: var(--color-white);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  /* 左上、右上、右下大圆角；左下小圆角（供稿语义：左下为「直角侧」的视觉收口） */
+  border-radius: 14px 14px 14px 2px;
+}
+
+/* 卡片内绝对定位用法 */
+.fdl-demo-below {
+  padding: 0 18px 48px;
+}
+
+.fdl-demo-title {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+  margin: 0 0 18px;
+  line-height: 1.4;
+}
+
+.fdl-demo-card {
+  position: relative;
+  width: 100%;
+  max-width: 714px;
+  min-height: 160px;
+  margin: 0 auto;
+  background: var(--color-white);
+  border-radius: var(--radius-m);
+  padding: 24px 18px;
+  box-shadow: 0 2px 12px rgba(15, 19, 26, 0.06);
+}
+
+.fdl-demo-card .fdl-info-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.fdl-demo-card__body {
+  font-size: 26px;
+  color: var(--color-midgray);
+  line-height: 1.4;
+  padding-top: 36px;
+}
+  </style>
+</head>
+<body>
+  <section class="fdl-preview-stage" aria-label="组件居中预览">
+    <div class="fdl-info-tag" role="status">热销爆款</div>
+  </section>
+
+  <section class="fdl-demo-below">
+    <h1 class="fdl-demo-title">卡片角标用法</h1>
+    <div class="fdl-demo-card">
+      <span class="fdl-info-tag" role="status">限时优惠</span>
+      <p class="fdl-demo-card__body">同一套尺寸与圆角，由页面决定 position；文案仍建议 ≤4 字。</p>
+    </div>
+  </section>
+</body>
+</html>

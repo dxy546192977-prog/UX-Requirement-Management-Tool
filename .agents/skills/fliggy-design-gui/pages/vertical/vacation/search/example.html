@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>度假小搜</title>
+    <style>
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 500;
+            font-display: swap;
+        }
+        :root {
+            --color-darkgray: #0F131A;
+            --color-midgray: #5C5F66;
+            --color-lightgray: #919499;
+            --color-auxiliary: #D2D4D9;
+            --color-bg: #F2F3F5;
+            --color-white: #FFFFFF;
+            --color-brand-1: #FFE033;
+            --color-brand-4: #FFF7CC;
+            --color-indigo-1: #6666FF;
+            --color-pay-1: #FF5533;
+        }
+
+        /* =========================================
+         * 全局样式
+         * ========================================= */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'FliggyFont', 'Fliggy Fonts', sans-serif;
+            width: 750px;
+            min-height: 1624px;
+            background: var(--color-bg);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================================
+         * 卡片列表容器
+         * ========================================= */
+        .card-list {
+            position: fixed;
+            top: 438px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 750px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: var(--color-white);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .card-list::-webkit-scrollbar {
+            display: none;
+        }
+        .card-list {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* =========================================
+         * 1. 顶部搜索框 (#section-header)
+         * ========================================= */
+        #section-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 750px;
+            z-index: 100;
+        }
+
+        #section-header .search-page-header {
+            width: 750px;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+        }
+
+        #section-header .status-bar {
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 88px;
+            padding: 12px 24px;
+            color: var(--color-darkgray);
+        }
+
+        #section-header .status-bar__time {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        #section-header .status-bar__icons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #section-header .status-bar__icon {
+            height: 22px;
+            fill: currentColor;
+        }
+
+        #section-header .secondary-nav {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            padding-bottom: 12px;
+        }
+
+        #section-header .nav-button {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        #section-header .nav-button svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        #section-header .search-box {
+            box-sizing: border-box;
+            flex-grow: 1;
+            height: 72px;
+            margin: 0 12px;
+            background: var(--color-white);
+            border: 3px solid var(--color-brand-1);
+            border-radius: 36px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 8px;
+        }
+
+        #section-header .search-box__icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        #section-header .search-box__text {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 32px;
+            color: var(--color-darkgray);
+        }
+
+        /* =========================================
+         * 2. 类目导航 (#section-category)
+         * ========================================= */
+        #section-category {
+            position: fixed;
+            top: 188px;
+            left: 0;
+            width: 750px;
+            z-index: 99;
+        }
+
+        #section-category .category-nav {
+            position: relative;
+            width: 750px;
+            height: 106px;
+        }
+
+        #section-category .category-nav__bg {
+            position: absolute;
+            width: 750px;
+            height: 100px;
+            top: 6px;
+            left: 0;
+            background: linear-gradient(180deg, rgba(242, 243, 245, 0.8) 50%, #FFFFFF 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px 24px 0 0;
+        }
+
+        #section-category .category-nav__list {
+            position: relative;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            z-index: 1;
+        }
+
+        #section-category .category-nav__list li {
+            position: relative;
+            width: 188px;
+            height: 100px;
+            top: 6px;
+        }
+
+        #section-category .category-nav__list li.is-active {
+            height: 106px;
+            top: 0;
+        }
+
+        #section-category .nav-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #section-category .is-active .nav-item {
+            background: var(--color-white);
+            border-radius: 24px 24px 0 0;
+        }
+
+        #section-category .nav-item__transition {
+            display: none;
+        }
+
+        #section-category .is-active .nav-item__transition {
+            display: block;
+            position: absolute;
+            right: -24px;
+            bottom: 0;
+            width: 24px;
+            height: 24px;
+            z-index: 2;
+        }
+
+        #section-category .is-active .nav-item__transition::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #FFFFFF;
+        }
+
+        #section-category .is-active .nav-item__transition::after {
+            content: '';
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, rgba(242, 243, 245, 0.8) 50%, #FFFFFF 100%);
+            right: -24px;
+            bottom: -24px;
+        }
+
+        #section-category .nav-item__icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        #section-category .nav-item__icon svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        #section-category .nav-item__label {
+            font-size: 30px;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.06em;
+            color: var(--color-midgray);
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        #section-category .is-active .nav-item__label {
+            font-size: 36px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+        }
+
+        /* =========================================
+         * 3. 下拉筛选 (#section-dropdown)
+         * ========================================= */
+        #section-dropdown {
+            position: fixed;
+            top: 294px;
+            left: 0;
+            width: 750px;
+            z-index: 98;
+            background: #FFFFFF;
+        }
+
+        #section-dropdown .filter-bar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 750px;
+            height: 72px;
+            background: #FFFFFF;
+        }
+
+        #section-dropdown .filter-item {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+            height: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #section-dropdown .filter-item:hover {
+            background-color: #F7F8FA;
+        }
+
+        #section-dropdown .filter-item--wide {
+            flex-grow: 0;
+            width: 187.5px;
+        }
+
+        #section-dropdown .filter-item__text {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 26px;
+            line-height: 42px;
+            color: var(--color-darkgray);
+            white-space: nowrap;
+        }
+
+        #section-dropdown .filter-item__icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* =========================================
+         * 4. 快筛 (#section-quickfilter)
+         * ========================================= */
+        #section-quickfilter {
+            position: fixed;
+            top: 366px;
+            left: 0;
+            width: 750px;
+            z-index: 97;
+            background: #FFFFFF;
+        }
+
+        #section-quickfilter .filter-bar {
+            box-sizing: border-box;
+            width: 750px;
+            height: 72px;
+            background: #FFFFFF;
+            padding: 6px 0 6px 18px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        #section-quickfilter .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+        #section-quickfilter .filter-bar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #section-quickfilter .filter-bar__list {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #section-quickfilter .filter-bar__list::-webkit-scrollbar {
+            display: none;
+        }
+        #section-quickfilter .filter-bar__list {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #section-quickfilter .filter-button {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 18px;
+            height: 60px;
+            background: #F7F8FA;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            flex-shrink: 0;
+            white-space: nowrap;
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 32px;
+            color: var(--color-darkgray);
+            transition: background-color 0.2s ease;
+        }
+
+        #section-quickfilter .filter-button.is-active {
+            background-color: var(--color-brand-4);
+            color: var(--color-darkgray);
+        }
+
+        /* =========================================
+         * 5. 跟团游卡 (.section-tour-card)
+         * ========================================= */
+        .section-tour-card .product-card-large {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 12px 18px;
+            gap: 18px;
+            width: 750px;
+            background: #FFFFFF;
+        }
+
+        .section-tour-card .card-image {
+            position: relative;
+            width: 226px;
+            height: 330px;
+            background: url('https://picsum.photos/id/1015/226/330') center/cover no-repeat;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .section-tour-card .card-image__badge {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 6px;
+            width: 176px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 12px 0px;
+            box-sizing: border-box;
+            font-size: 20px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .section-tour-card .card-image__caption {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 38px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 0px 0px 12px 12px;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .section-tour-card .card-info {
+            display: flex;
+            flex-direction: column;
+            width: 470px;
+            height: 330px;
+        }
+
+        .section-tour-card .info-title {
+            font-size: 30px;
+            font-weight: 500;
+            line-height: 42px;
+            color: var(--color-darkgray);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .section-tour-card .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .section-tour-card .rating__badge {
+            padding: 2px 5px;
+            background: var(--color-indigo-1);
+            border-radius: 8px;
+            font-family: 'Fliggy Sans 102';
+            font-size: 26px;
+            color: #FFFFFF;
+        }
+
+        .section-tour-card .rating__text {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--color-indigo-1);
+        }
+
+        .section-tour-card .rating__comment {
+            font-size: 24px;
+            color: var(--color-indigo-1);
+        }
+
+        .section-tour-card .highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 14px 0 4px;
+        }
+
+        .section-tour-card .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-tour-card .highlight-item__label {
+            font-family: 'Fliggy Fonts', sans-serif;
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 28px;
+            color: var(--color-darkgray);
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .section-tour-card .highlight-item__text {
+            font-size: 24px;
+            line-height: 28px;
+            color: var(--color-darkgray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .section-tour-card .tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .section-tour-card .tag {
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            height: 28px;
+            border: 1px solid rgba(92, 95, 102, 0.5);
+            border-radius: 4px;
+            font-size: 20px;
+            color: var(--color-midgray);
+        }
+
+        .section-tour-card .tag--composite {
+            padding: 0;
+            display: flex;
+        }
+
+        .section-tour-card .tag--composite span {
+            padding: 0 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-tour-card .tag--composite .divider {
+            width: 1px;
+            height: 24px;
+            border-left: 1px dashed #979797;
+        }
+
+        .section-tour-card .tag--composite .highlight {
+            background: #FFEFD7;
+        }
+
+        .section-tour-card .store {
+            margin-top: auto;
+            padding-top: 10px;
+            font-size: 24px;
+            line-height: 28px;
+            color: var(--color-lightgray);
+        }
+
+        .section-tour-card .pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .section-tour-card .pricing__sales {
+            font-size: 24px;
+            color: var(--color-lightgray);
+        }
+
+        .section-tour-card .pricing__main {
+            text-align: right;
+        }
+
+        .section-tour-card .price {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            color: var(--color-pay-1);
+        }
+
+        .section-tour-card .price .currency {
+            font-size: 24px;
+            line-height: 28px;
+        }
+
+        .section-tour-card .price .amount {
+            font-family: 'Alibaba Sans 102';
+            font-weight: 700;
+            font-size: 42px;
+            line-height: 42px;
+        }
+
+        .section-tour-card .price .suffix {
+            font-size: 24px;
+            line-height: 28px;
+        }
+
+        .section-tour-card .discount-banner {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 2px 6px;
+            gap: 6px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.0001) 0%, #FFE6E0 100%);
+            border-radius: 4px;
+            margin-top: 6px;
+        }
+
+        .section-tour-card .discount-banner__text {
+            font-size: 20px;
+            color: var(--color-pay-1);
+        }
+
+        .section-tour-card .discount-banner__divider {
+            width: 1px;
+            height: 20px;
+            border-left: 1px dashed #FFB2A3;
+        }
+
+        .section-tour-card .discount-banner__arrow {
+            width: 7px;
+            height: 13px;
+        }
+
+        /* =========================================
+         * 6. POI卡 (.section-poi-card)
+         * ========================================= */
+        .section-poi-card .poi-card {
+            box-sizing: border-box;
+            display: flex;
+            gap: 18px;
+            width: 750px;
+            padding: 9px 18px;
+            background: #FFFFFF;
+        }
+
+        .section-poi-card .poi-card__image {
+            flex-shrink: 0;
+            width: 226px;
+            height: 266px;
+            background-color: var(--color-auxiliary);
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+        }
+
+        .section-poi-card .poi-card__info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 6px 0;
+            min-width: 0;
+        }
+
+        .section-poi-card .info-main {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-poi-card .poi-card__title {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 500;
+            line-height: 42px;
+            color: var(--color-darkgray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .section-poi-card .poi-card__meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            line-height: 32px;
+            color: var(--color-darkgray);
+        }
+
+        .section-poi-card .rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-poi-card .rating__score {
+            display: inline-block;
+            padding: 0 6px;
+            background: var(--color-indigo-1);
+            border-radius: 8px;
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+            color: #FFFFFF;
+            line-height: 28px;
+        }
+
+        .section-poi-card .rating__text {
+            font-weight: 600;
+            color: var(--color-indigo-1);
+        }
+
+        .section-poi-card .meta__separator {
+            width: 1px;
+            height: 24px;
+            background: var(--color-auxiliary);
+        }
+
+        .section-poi-card .poi-card__subtitle {
+            margin: 4px 0 0 0;
+            font-size: 24px;
+            line-height: 32px;
+            color: var(--color-midgray);
+        }
+
+        .section-poi-card .highlight-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .section-poi-card .highlight-tag {
+            display: flex;
+            align-items: center;
+            height: 28px;
+            padding: 0 8px;
+            background: #FEF5EC;
+            border-radius: 4px;
+            font-size: 20px;
+            line-height: 28px;
+            color: #805540;
+        }
+
+        .section-poi-card .highlight-tag .icon {
+            margin-right: 6px;
+        }
+
+        .section-poi-card .service-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .section-poi-card .service-tag {
+            box-sizing: border-box;
+            padding: 4px 6px;
+            height: 28px;
+            border: 1px solid rgba(92, 95, 102, 0.5);
+            border-radius: 4px;
+            font-size: 20px;
+            line-height: 20px;
+            color: var(--color-midgray);
+        }
+
+        .section-poi-card .info-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .section-poi-card .price {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            color: var(--color-pay-1);
+        }
+
+        .section-poi-card .price__currency {
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .section-poi-card .price__amount {
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-weight: 700;
+            font-size: 42px;
+            line-height: 1;
+        }
+
+        .section-poi-card .price__suffix {
+            font-size: 24px;
+            color: var(--color-pay-1);
+        }
+
+        .section-poi-card .discount-bar {
+            display: flex;
+            align-items: center;
+            padding: 2px 6px;
+            gap: 6px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #FFE6E0 100%);
+            border-radius: 4px;
+            font-size: 20px;
+            line-height: 24px;
+            color: var(--color-pay-1);
+        }
+
+        .section-poi-card .discount-bar__separator {
+            width: 1px;
+            height: 14px;
+            border-left: 1px dashed #FFB2A3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 顶部搜索框 -->
+    <div id="section-header">
+        <header class="search-page-header">
+            <div class="status-bar">
+                <span class="status-bar__time">9:41</span>
+                <div class="status-bar__icons">
+                    <svg class="status-bar__icon" viewBox="0 0 17 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 10.6667V10.6667C0.0333333 10.7 0.0666667 10.7333 0.1 10.7667V10.6667H0ZM3.4 10.6667V5.5C3.4 5.46667 3.43333 5.43333 3.46667 5.4V10.6667H3.4ZM6.8 10.6667V2.93333C6.8 2.9 6.83333 2.86667 6.86667 2.83333V10.6667H6.8ZM10.2 10.6667V0.366667C10.2 0.333333 10.2333 0.3 10.2667 0.266667V10.6667H10.2Z" fill="currentColor"/><path d="M13.6 10.6667H17V10.6667C17.0333 10.7 17.0667 10.7333 17.1 10.7667V10.6667H13.6Z" fill-opacity="0.4" fill="currentColor"/></svg>
+                    <svg class="status-bar__icon" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.4 1.63337C13.0667 -0.533292 9.53325 -0.533292 7.16659 1.63337L8 2.53337C9.93325 0.766708 12.6333 0.766708 14.5666 2.53337L15.4 1.63337Z" fill="currentColor"/><path d="M12.9333 3.96671C11.5333 2.66671 9.96659 2.66671 8.63325 3.96671L8 4.70004L7.43325 3.96671C6.06659 2.66671 4.53325 2.66671 3.13325 3.96671L2.33325 3.23337C4.13325 1.56671 6.46659 1.56671 8.23325 3.23337L8 3.50004L7.76659 3.23337C9.53325 1.56671 11.8666 1.56671 13.6666 3.23337L12.9333 3.96671Z" fill="currentColor"/><path d="M0.6 0.466708C3.13333 -1.53329 7.03333 -1.53329 9.53333 0.466708L8 2.06671L6.46667 0.466708C4.73333 -0.966625 2.83333 -0.966625 1.13333 0.466708L8 6.83337L10.5 4.53337C9.56667 3.66671 8.86667 3.66671 8 4.53337L4.83333 1.56671C6.06667 0.533375 7.43333 0.533375 8.63333 1.56671L8 2.13337L7.36667 1.56671C6.16667 0.533375 4.76667 0.533375 3.56667 1.56671L0.6 0.466708Z" fill="currentColor"/></svg>
+                    <svg class="status-bar__icon" viewBox="0 0 25 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M22 3.33331H20.6667V1.79998C20.6667 1.33331 20.2667 0.966645 19.8 0.966645H0.866667C0.4 0.966645 0 1.33331 0 1.79998V9.86665C0 10.3333 0.4 10.7 0.866667 10.7H19.8C20.2667 10.7 20.6667 10.3333 20.6667 9.86665V8.33331H22C22.6333 8.33331 23.1333 7.83331 23.1333 7.19998V4.46665C23.1333 3.83331 22.6333 3.33331 22 3.33331Z" fill="currentColor"/><path d="M2.66675 8.13333H18.0001V3.53333H2.66675V8.13333Z" fill="currentColor"/></svg>
+                </div>
+            </div>
+            <nav class="secondary-nav">
+                <a href="#" class="nav-button">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M33.5607 39.4393C34.1464 40.0251 34.1464 40.9749 33.5607 41.5607C32.9749 42.1464 32.0251 42.1464 31.4393 41.5607L15.4393 25.5607C14.8536 24.9749 14.8536 24.0251 15.4393 23.4393L31.4393 7.43934C32.0251 6.85355 32.9749 6.85355 33.5607 7.43934C34.1464 8.02513 34.1464 8.97487 33.5607 9.56066L18.6213 24.5L33.5607 39.4393Z" fill="#292C33"/></svg>
+                </a>
+                <form class="search-box">
+                    <div class="search-box__icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3333 3.3335C21.9607 3.3335 27.3333 8.70608 27.3333 15.3335C27.3333 18.2872 26.2661 20.9918 24.4963 23.0825L28.1418 26.728C28.5324 27.1186 28.5324 27.7516 28.1418 28.1421C27.7513 28.5326 27.1183 28.5326 26.7278 28.1421L23.0823 24.4966C20.9916 26.2664 18.287 27.3335 15.3333 27.3335C8.70583 27.3335 3.33325 21.9609 3.33325 15.3335C3.33325 8.70608 8.70583 3.3335 15.3333 3.3335ZM15.3333 5.3335C9.8104 5.3335 5.33325 9.81065 5.33325 15.3335C5.33325 20.8563 9.8104 25.3335 15.3333 25.3335C17.7329 25.3335 19.9971 24.4882 21.7903 22.9702L22.429 22.4292L22.97 21.7905C24.4879 19.9974 25.3333 17.7331 25.3333 15.3335C25.3333 9.81065 20.8561 5.3335 15.3333 5.3335Z" fill="#292C33"/></svg>
+                    </div>
+                    <span class="search-box__text">云南</span>
+                </form>
+                <a href="#" class="nav-button">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 20.5361C9.2376 19.8216 10.7624 19.8216 12 20.5361C13.2375 21.2507 14 22.571 14 24C14 25.429 13.2375 26.7493 12 27.4639C10.7624 28.1784 9.2376 28.1784 8 27.4639C6.76246 26.7493 6 25.429 6 24C6 22.571 6.76246 21.2507 8 20.5361ZM22 20.5361C23.2376 19.8216 24.7624 19.8216 26 20.5361C27.2375 21.2507 28 22.571 28 24C28 26.2091 26.2091 28 24 28C21.7909 28 20 26.2091 20 24C20 22.571 20.7625 21.2507 22 20.5361ZM38 20C40.2091 20 42 21.7909 42 24C42 26.2091 40.2091 28 38 28C35.7909 28 34 26.2091 34 24C34 21.7909 35.7909 20 38 20Z" fill="#3D3D3D"/></svg>
+                </a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- 2. 类目导航 -->
+    <div id="section-category">
+        <nav class="category-nav">
+            <div class="category-nav__bg"></div>
+            <ul class="category-nav__list">
+                <li class="is-active">
+                    <a href="#" class="nav-item">
+                        <div class="nav-item__icon">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 27.5C18.7251 27.5 16.4599 21.96 18.75 19.375C20.704 17.1693 27.5 18.1785 27.5 15C27.5 8.09644 21.9036 2.5 15 2.5C8.09644 2.5 2.5 8.09644 2.5 15C2.5 21.9036 8.09644 27.5 15 27.5Z" fill="url(#paint0_active)" stroke="#0F131A" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M17.5 10.625C18.5356 10.625 19.375 9.78556 19.375 8.75C19.375 7.71444 18.5356 6.875 17.5 6.875C16.4644 6.875 15.625 7.71444 15.625 8.75C15.625 9.78556 16.4644 10.625 17.5 10.625Z" stroke="#0F131A" stroke-width="3" stroke-linejoin="round"/>
+                                <path d="M10 13.125C11.0356 13.125 11.875 12.2856 11.875 11.25C11.875 10.2144 11.0356 9.375 10 9.375C8.96444 9.375 8.125 10.2144 8.125 11.25C8.125 12.2856 8.96444 13.125 10 13.125Z" stroke="#0F131A" stroke-width="3" stroke-linejoin="round"/>
+                                <path d="M10.625 21.25C11.6606 21.25 12.5 20.4106 12.5 19.375C12.5 18.3394 11.6606 17.5 10.625 17.5C9.58944 17.5 8.75 18.3394 8.75 19.375C8.75 20.4106 9.58944 21.25 10.625 21.25Z" stroke="#0F131A" stroke-width="3" stroke-linejoin="round"/>
+                                <defs>
+                                    <linearGradient id="paint0_active" x1="15" y1="2.5" x2="15" y2="27.5" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FFE033"/>
+                                        <stop offset="1" stop-color="#FFF7CC"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="nav-item__label">综合</span>
+                    </a>
+                    <div class="nav-item__transition"></div>
+                </li>
+                <li>
+                    <a href="#" class="nav-item">
+                        <div class="nav-item__icon">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.875 3.75V26.25" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6.875 5.625H15.625L20 7.5H24.375C25.0654 7.5 25.625 8.05963 25.625 8.75V19.375C25.625 20.0654 25.0654 20.625 24.375 20.625H20L15.625 18.75H6.875V5.625Z" stroke="#5C5F66" stroke-width="3" stroke-linejoin="round"/>
+                                <path d="M4.375 26.25H9.375" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-item__label">跟团游</span>
+                    </a>
+                    <div class="nav-item__transition"></div>
+                </li>
+                <li>
+                    <a href="#" class="nav-item">
+                        <div class="nav-item__icon">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.75 8.75H6.25C5.55964 8.75 5 9.30964 5 10V23.75C5 24.4404 5.55964 25 6.25 25H23.75C24.4404 25 25 24.4404 25 23.75V10C25 9.30964 24.4404 8.75 23.75 8.75Z" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12.5 14.375V19.375" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9.375 25V27.5" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20.625 25V27.5" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17.5 14.375V19.375" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M11.875 2.5H18.125" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15 2.5V8.75" stroke="#5C5F66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-item__label">自由行</span>
+                    </a>
+                    <div class="nav-item__transition"></div>
+                </li>
+                <li>
+                    <a href="#" class="nav-item">
+                        <div class="nav-item__icon">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 27.5C21.9036 27.5 27.5 21.9036 27.5 15C27.5 8.09644 21.9036 2.5 15 2.5C8.09644 2.5 2.5 8.09644 2.5 15C2.5 21.9036 8.09644 27.5 15 27.5Z" stroke="#5C5F66" stroke-width="3"/>
+                                <path d="M2.5 13.0249C4.38428 12.1352 5.77791 12.0113 6.68087 12.6531C8.03537 13.6159 8.20519 17.5397 11.2859 15.6644C14.3667 13.7891 9.96669 13.0249 10.9219 10.3084C11.8771 7.59182 15.0052 9.70201 15.3162 6.72638C15.5234 4.74258 13.1505 3.98353 8.19725 4.4492" stroke="#5C5F66" stroke-width="3"/>
+                                <path d="M22.5008 5C18.9293 8.11787 17.6819 10.0007 18.7587 10.6483C20.3738 11.6198 21.0591 10.2521 23.0299 10.6483C25.0008 11.0446 24.5741 13.7161 23.5374 13.7161C22.5008 13.7161 17.132 13.0324 17.4024 16.1656C17.6728 19.2988 20.9021 19.7627 20.9021 21.5132C20.9021 22.6802 20.1876 24.4663 18.7587 26.8714" stroke="#5C5F66" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M3.81641 20.5798C4.38609 20.3313 4.81432 20.1492 5.10109 20.0333C7.50554 19.0619 9.28966 18.8329 10.4534 19.3464C12.5112 20.2545 11.72 22.0884 12.3646 22.764C13.0091 23.4396 14.6186 23.2431 14.6186 24.5283C14.6186 25.3852 14.3308 26.3531 13.7552 27.4321" stroke="#5C5F66" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-item__label">出境必备</span>
+                    </a>
+                    <div class="nav-item__transition"></div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 3. 下拉筛选 -->
+    <div id="section-dropdown">
+        <div class="filter-bar">
+            <div class="filter-item filter-item--wide">
+                <span class="filter-item__text">杭州出发</span>
+                <svg class="filter-item__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5L10 13.5L16 7.5" stroke="#0F131A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="filter-item">
+                <span class="filter-item__text">筛选</span>
+                <svg class="filter-item__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5L10 13.5L16 7.5" stroke="#0F131A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="filter-item">
+                <span class="filter-item__text">日期/天数</span>
+                <svg class="filter-item__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5L10 13.5L16 7.5" stroke="#0F131A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="filter-item">
+                <span class="filter-item__text">人数</span>
+                <svg class="filter-item__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5L10 13.5L16 7.5" stroke="#0F131A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="filter-item">
+                <span class="filter-item__text">排序</span>
+                <svg class="filter-item__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5L10 13.5L16 7.5" stroke="#0F131A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 快筛 -->
+    <div id="section-quickfilter">
+        <nav class="filter-bar">
+            <ul class="filter-bar__list">
+                <li><button class="filter-button">只看目的地参团</button></li>
+                <li><button class="filter-button">私家团</button></li>
+                <li><button class="filter-button">精品小团</button></li>
+                <li><button class="filter-button">一日游</button></li>
+                <li><button class="filter-button">15人及以下</button></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 5. 混合卡片列表 -->
+    <div class="card-list">
+
+        <!-- 跟团游卡 1 -->
+        <div class="section-tour-card">
+            <article class="product-card-large">
+                <div class="card-image">
+                    <div class="card-image__badge">多日游 · 独立成团</div>
+                    <div class="card-image__caption">杭州出发</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="info-title">日本东京4天3晚私家团</h3>
+                    <div class="rating">
+                        <span class="rating__badge">4.8</span>
+                        <strong class="rating__text">很好</strong>
+                        <span class="rating__comment">"整个旅程安排的特别棒"</span>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">游玩</span>
+                            <span class="highlight-item__text">富士山·箱根·镰仓·银座·山间寻风</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">住行</span>
+                            <span class="highlight-item__text">24小时接机·全程陆地头等舱·5晚高...</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div class="tag tag--composite">
+                            <span>飞猪小团</span>
+                            <div class="divider"></div>
+                            <span class="highlight">私家团</span>
+                        </div>
+                        <div class="tag">纯玩无购物</div>
+                        <div class="tag">提前1天全额退</div>
+                    </div>
+                    <div class="store">重庆嗨游记旅游专营店</div>
+                    <div class="pricing">
+                        <div class="pricing__sales">已售1000+</div>
+                        <div class="pricing__main">
+                            <div class="price">
+                                <span class="currency">¥</span>
+                                <strong class="amount">8888</strong>
+                                <span class="suffix">起</span>
+                            </div>
+                            <div class="discount-banner">
+                                <span class="discount-banner__text">度假补贴</span>
+                                <div class="discount-banner__divider"></div>
+                                <span class="discount-banner__text">优惠¥5</span>
+                                <svg class="discount-banner__arrow" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999999 1L6 6.5L1 12" stroke="#FF5533" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 跟团游卡 2 -->
+        <div class="section-tour-card">
+            <article class="product-card-large">
+                <div class="card-image" style="background-image: url('https://picsum.photos/id/1029/226/330');">
+                    <div class="card-image__badge">多日游 · 精品小团</div>
+                    <div class="card-image__caption">上海出发</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="info-title">云南大理丽江6天5晚跟团游</h3>
+                    <div class="rating">
+                        <span class="rating__badge">4.9</span>
+                        <strong class="rating__text">非常好</strong>
+                        <span class="rating__comment">"导游很专业，行程安排合理"</span>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">游玩</span>
+                            <span class="highlight-item__text">洱海·玉龙雪山·古城·蓝月谷</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">住行</span>
+                            <span class="highlight-item__text">含机票·4晚五星酒店·专车接送</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div class="tag tag--composite">
+                            <span>飞猪小团</span>
+                            <div class="divider"></div>
+                            <span class="highlight">精品团</span>
+                        </div>
+                        <div class="tag">纯玩无购物</div>
+                    </div>
+                    <div class="store">云南旅游官方旗舰店</div>
+                    <div class="pricing">
+                        <div class="pricing__sales">已售2000+</div>
+                        <div class="pricing__main">
+                            <div class="price">
+                                <span class="currency">¥</span>
+                                <strong class="amount">3999</strong>
+                                <span class="suffix">起</span>
+                            </div>
+                            <div class="discount-banner">
+                                <span class="discount-banner__text">度假补贴</span>
+                                <div class="discount-banner__divider"></div>
+                                <span class="discount-banner__text">优惠¥100</span>
+                                <svg class="discount-banner__arrow" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999999 1L6 6.5L1 12" stroke="#FF5533" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- POI卡 1 -->
+        <div class="section-poi-card">
+            <div class="poi-card">
+                <div class="poi-card__image" style="background-image: url('https://picsum.photos/id/1018/226/266');"></div>
+                <div class="poi-card__info">
+                    <div class="info-main">
+                        <h3 class="poi-card__title">北京环球度假区</h3>
+                        <div class="poi-card__meta">
+                            <div class="rating">
+                                <span class="rating__score">4.8</span>
+                                <span class="rating__text">很好</span>
+                                <span>314条点评</span>
+                            </div>
+                            <div class="meta__separator"></div>
+                            <span>北京 通州</span>
+                        </div>
+                        <p class="poi-card__subtitle">坐霸天虎过山车，体验魔法世界</p>
+                        <div class="highlight-tags">
+                            <div class="highlight-tag"><span class="icon">🏆</span>北京网红打卡榜·第1名</div>
+                            <div class="highlight-tag"><span class="icon">🔥</span>1.2万人感兴趣</div>
+                        </div>
+                        <div class="service-tags">
+                            <span class="service-tag">条件退</span>
+                        </div>
+                    </div>
+                    <div class="info-footer">
+                        <div class="price">
+                            <span class="price__currency">¥</span>
+                            <span class="price__amount">200</span>
+                            <span class="price__suffix">起</span>
+                        </div>
+                        <div class="discount-bar">
+                            <span>优惠¥50</span>
+                            <div class="discount-bar__separator"></div>
+                            <span>优惠券</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 跟团游卡 3 -->
+        <div class="section-tour-card">
+            <article class="product-card-large">
+                <div class="card-image" style="background-image: url('https://picsum.photos/id/1039/226/330');">
+                    <div class="card-image__badge">多日游 · 跟团游</div>
+                    <div class="card-image__caption">北京出发</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="info-title">泰国曼谷芭提雅5天4晚品质团</h3>
+                    <div class="rating">
+                        <span class="rating__badge">4.7</span>
+                        <strong class="rating__text">很好</strong>
+                        <span class="rating__comment">"性价比超高，玩得很开心"</span>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">游玩</span>
+                            <span class="highlight-item__text">大皇宫·四面佛·芭提雅海滩·夜市</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">住行</span>
+                            <span class="highlight-item__text">含往返机票·4晚四星酒店·中文导游</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div class="tag">品质团</div>
+                        <div class="tag">含机票</div>
+                        <div class="tag">提前3天免费退</div>
+                    </div>
+                    <div class="store">泰国旅游旗舰店</div>
+                    <div class="pricing">
+                        <div class="pricing__sales">已售3500+</div>
+                        <div class="pricing__main">
+                            <div class="price">
+                                <span class="currency">¥</span>
+                                <strong class="amount">2599</strong>
+                                <span class="suffix">起</span>
+                            </div>
+                            <div class="discount-banner">
+                                <span class="discount-banner__text">度假补贴</span>
+                                <div class="discount-banner__divider"></div>
+                                <span class="discount-banner__text">优惠¥80</span>
+                                <svg class="discount-banner__arrow" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999999 1L6 6.5L1 12" stroke="#FF5533" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 跟团游卡 4 -->
+        <div class="section-tour-card">
+            <article class="product-card-large">
+                <div class="card-image" style="background-image: url('https://picsum.photos/id/1040/226/330');">
+                    <div class="card-image__badge">多日游 · 独立成团</div>
+                    <div class="card-image__caption">广州出发</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="info-title">新疆伊犁7天6晚深度纯玩团</h3>
+                    <div class="rating">
+                        <span class="rating__badge">4.9</span>
+                        <strong class="rating__text">极好</strong>
+                        <span class="rating__comment">"风景绝美，不虚此行"</span>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">游玩</span>
+                            <span class="highlight-item__text">那拉提·赛里木湖·独库公路·薰衣草</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">住行</span>
+                            <span class="highlight-item__text">全程越野车·6晚特色民宿·含早餐</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div class="tag tag--composite">
+                            <span>飞猪小团</span>
+                            <div class="divider"></div>
+                            <span class="highlight">私家团</span>
+                        </div>
+                        <div class="tag">纯玩无购物</div>
+                    </div>
+                    <div class="store">新疆自驾旅行专营店</div>
+                    <div class="pricing">
+                        <div class="pricing__sales">已售860+</div>
+                        <div class="pricing__main">
+                            <div class="price">
+                                <span class="currency">¥</span>
+                                <strong class="amount">5680</strong>
+                                <span class="suffix">起</span>
+                            </div>
+                            <div class="discount-banner">
+                                <span class="discount-banner__text">度假补贴</span>
+                                <div class="discount-banner__divider"></div>
+                                <span class="discount-banner__text">优惠¥200</span>
+                                <svg class="discount-banner__arrow" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999999 1L6 6.5L1 12" stroke="#FF5533" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- POI卡 2 -->
+        <div class="section-poi-card">
+            <div class="poi-card">
+                <div class="poi-card__image" style="background-image: url('https://picsum.photos/id/1036/226/266');"></div>
+                <div class="poi-card__info">
+                    <div class="info-main">
+                        <h3 class="poi-card__title">上海迪士尼乐园</h3>
+                        <div class="poi-card__meta">
+                            <div class="rating">
+                                <span class="rating__score">4.9</span>
+                                <span class="rating__text">极好</span>
+                                <span>1280条点评</span>
+                            </div>
+                            <div class="meta__separator"></div>
+                            <span>上海 浦东</span>
+                        </div>
+                        <p class="poi-card__subtitle">与米奇米妮共度奇幻时光</p>
+                        <div class="highlight-tags">
+                            <div class="highlight-tag"><span class="icon">🏆</span>上海必玩榜·第1名</div>
+                            <div class="highlight-tag"><span class="icon">🔥</span>5.8万人感兴趣</div>
+                        </div>
+                        <div class="service-tags">
+                            <span class="service-tag">随时退</span>
+                            <span class="service-tag">极速入园</span>
+                        </div>
+                    </div>
+                    <div class="info-footer">
+                        <div class="price">
+                            <span class="price__currency">¥</span>
+                            <span class="price__amount">399</span>
+                            <span class="price__suffix">起</span>
+                        </div>
+                        <div class="discount-bar">
+                            <span>优惠¥30</span>
+                            <div class="discount-bar__separator"></div>
+                            <span>优惠券</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 跟团游卡 5 -->
+        <div class="section-tour-card">
+            <article class="product-card-large">
+                <div class="card-image" style="background-image: url('https://picsum.photos/id/1047/226/330');">
+                    <div class="card-image__badge">多日游 · 精品小团</div>
+                    <div class="card-image__caption">成都出发</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="info-title">西藏拉萨林芝8天7晚深度游</h3>
+                    <div class="rating">
+                        <span class="rating__badge">4.8</span>
+                        <strong class="rating__text">很好</strong>
+                        <span class="rating__comment">"一生必去一次的地方"</span>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">游玩</span>
+                            <span class="highlight-item__text">布达拉宫·纳木错·林芝桃花·羊卓雍措</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">住行</span>
+                            <span class="highlight-item__text">含氧气瓶·7晚藏式酒店·专属管家</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div class="tag tag--composite">
+                            <span>飞猪小团</span>
+                            <div class="divider"></div>
+                            <span class="highlight">精品团</span>
+                        </div>
+                        <div class="tag">含机票</div>
+                    </div>
+                    <div class="store">西藏天路旅行社旗舰店</div>
+                    <div class="pricing">
+                        <div class="pricing__sales">已售520+</div>
+                        <div class="pricing__main">
+                            <div class="price">
+                                <span class="currency">¥</span>
+                                <strong class="amount">6999</strong>
+                                <span class="suffix">起</span>
+                            </div>
+                            <div class="discount-banner">
+                                <span class="discount-banner__text">度假补贴</span>
+                                <div class="discount-banner__divider"></div>
+                                <span class="discount-banner__text">优惠¥150</span>
+                                <svg class="discount-banner__arrow" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999999 1L6 6.5L1 12" stroke="#FF5533" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- POI卡 3 -->
+        <div class="section-poi-card">
+            <div class="poi-card">
+                <div class="poi-card__image" style="background-image: url('https://picsum.photos/id/1057/226/266');"></div>
+                <div class="poi-card__info">
+                    <div class="info-main">
+                        <h3 class="poi-card__title">长隆野生动物世界</h3>
+                        <div class="poi-card__meta">
+                            <div class="rating">
+                                <span class="rating__score">4.7</span>
+                                <span class="rating__text">很好</span>
+                                <span>856条点评</span>
+                            </div>
+                            <div class="meta__separator"></div>
+                            <span>广州 番禺</span>
+                        </div>
+                        <p class="poi-card__subtitle">亲子遛娃首选，近距离接触国宝大熊猫</p>
+                        <div class="highlight-tags">
+                            <div class="highlight-tag"><span class="icon">🏆</span>广州亲子榜·第1名</div>
+                            <div class="highlight-tag"><span class="icon">🔥</span>3.6万人感兴趣</div>
+                        </div>
+                        <div class="service-tags">
+                            <span class="service-tag">随时退</span>
+                        </div>
+                    </div>
+                    <div class="info-footer">
+                        <div class="price">
+                            <span class="price__currency">¥</span>
+                            <span class="price__amount">350</span>
+                            <span class="price__suffix">起</span>
+                        </div>
+                        <div class="discount-bar">
+                            <span>优惠¥20</span>
+                            <div class="discount-bar__separator"></div>
+                            <span>优惠券</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 跟团游卡 6 -->
+        <div class="section-tour-card">
+            <article class="product-card-large">
+                <div class="card-image" style="background-image: url('https://picsum.photos/id/1059/226/330');">
+                    <div class="card-image__badge">多日游 · 跟团游</div>
+                    <div class="card-image__caption">深圳出发</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="info-title">三亚亚龙湾5天4晚半自由行</h3>
+                    <div class="rating">
+                        <span class="rating__badge">4.6</span>
+                        <strong class="rating__text">很好</strong>
+                        <span class="rating__comment">"酒店超棒，沙滩很美"</span>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">游玩</span>
+                            <span class="highlight-item__text">亚龙湾·天涯海角·南山寺·蜈支洲岛</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-item__label">住行</span>
+                            <span class="highlight-item__text">含往返机票·4晚海景房·接送机</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div class="tag">半自由行</div>
+                        <div class="tag">含机票</div>
+                        <div class="tag">提前5天免费退</div>
+                    </div>
+                    <div class="store">三亚阳光海岸旅行社</div>
+                    <div class="pricing">
+                        <div class="pricing__sales">已售4200+</div>
+                        <div class="pricing__main">
+                            <div class="price">
+                                <span class="currency">¥</span>
+                                <strong class="amount">3288</strong>
+                                <span class="suffix">起</span>
+                            </div>
+                            <div class="discount-banner">
+                                <span class="discount-banner__text">度假补贴</span>
+                                <div class="discount-banner__divider"></div>
+                                <span class="discount-banner__text">优惠¥120</span>
+                                <svg class="discount-banner__arrow" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999999 1L6 6.5L1 12" stroke="#FF5533" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- POI卡 4 -->
+        <div class="section-poi-card">
+            <div class="poi-card">
+                <div class="poi-card__image" style="background-image: url('https://picsum.photos/id/1069/226/266');"></div>
+                <div class="poi-card__info">
+                    <div class="info-main">
+                        <h3 class="poi-card__title">杭州西湖风景区</h3>
+                        <div class="poi-card__meta">
+                            <div class="rating">
+                                <span class="rating__score">4.9</span>
+                                <span class="rating__text">极好</span>
+                                <span>2360条点评</span>
+                            </div>
+                            <div class="meta__separator"></div>
+                            <span>杭州 西湖</span>
+                        </div>
+                        <p class="poi-card__subtitle">泛舟西湖，赏断桥残雪与三潭印月</p>
+                        <div class="highlight-tags">
+                            <div class="highlight-tag"><span class="icon">🏆</span>杭州必去景点·第1名</div>
+                            <div class="highlight-tag"><span class="icon">🔥</span>8.9万人感兴趣</div>
+                        </div>
+                        <div class="service-tags">
+                            <span class="service-tag">免费入园</span>
+                            <span class="service-tag">随时退</span>
+                        </div>
+                    </div>
+                    <div class="info-footer">
+                        <div class="price">
+                            <span class="price__currency">¥</span>
+                            <span class="price__amount">60</span>
+                            <span class="price__suffix">起</span>
+                        </div>
+                        <div class="discount-bar">
+                            <span>优惠¥10</span>
+                            <div class="discount-bar__separator"></div>
+                            <span>优惠券</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 类目导航点击切换
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryItems = document.querySelectorAll('#section-category .category-nav__list li');
+            categoryItems.forEach(item => {
+                item.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    categoryItems.forEach(el => el.classList.remove('is-active'));
+                    item.classList.add('is-active');
+                    updateCategoryIconColors();
+                });
+            });
+
+            function updateCategoryIconColors() {
+                categoryItems.forEach(li => {
+                    const svg = li.querySelector('svg');
+                    if (!svg) return;
+                    const paths = svg.querySelectorAll('path');
+                    if (li.classList.contains('is-active')) {
+                        paths.forEach(path => {
+                            if (path.getAttribute('stroke')) {
+                                path.setAttribute('stroke', '#0F131A');
+                            }
+                            if (path.getAttribute('fill') && path.getAttribute('fill').includes('url')) {
+                                path.setAttribute('fill', 'url(#paint0_active)');
+                            }
+                        });
+                    } else {
+                        paths.forEach(path => {
+                            if (path.getAttribute('stroke')) {
+                                path.setAttribute('stroke', '#5C5F66');
+                            }
+                            if (path.getAttribute('fill') && path.getAttribute('fill').includes('url')) {
+                                path.setAttribute('fill', 'none');
+                            }
+                        });
+                    }
+                });
+            }
+
+            // 快筛按钮点击切换
+            const filterButtons = document.querySelectorAll('#section-quickfilter .filter-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('is-active'));
+                    button.classList.add('is-active');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

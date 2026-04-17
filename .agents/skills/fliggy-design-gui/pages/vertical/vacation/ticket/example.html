@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>门票·玩乐频道 — 整页串联</title>
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+    body { margin: 0; background: #F2F3F5; font-family: 'SF Pro Text', 'PingFang SC', sans-serif; padding-bottom: 48px; }
+    .ticket-shell { max-width: 750px; margin: 0 auto; position: relative; background: #F2F3F5; }
+
+    /* Banner */
+    .ticket-banner {
+      box-sizing: border-box; width: 750px; max-width: 100%; height: 359px;
+      background:
+        linear-gradient(135deg, rgba(8, 12, 24, 0.78) 0%, rgba(30, 28, 63, 0.58) 52%, rgba(245, 154, 35, 0.35) 100%),
+        url('https://fli.alicdn.com/upload/creative-platform/XWaoHy36RH4bd1d0434df0165a.png?x-oss-process=image/format,webp') center/cover no-repeat;
+      position: relative; overflow: hidden;
+    }
+    .ticket-banner__content { position: absolute; left: 32px; bottom: 48px; right: 32px; color: #fff; }
+    .ticket-banner__title { margin: 0; font-size: 44px; font-weight: 700; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    .ticket-banner__sub { margin: 12px 0 0; font-size: 26px; opacity: 0.95; }
+    .ticket-banner__dots { display: flex; gap: 8px; margin-top: 20px; }
+    .ticket-banner__dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+    .ticket-banner__dot.is-active { background: #FFE033; }
+
+    /* Fixed immersive nav */
+    .main-header {
+      position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 100;
+      width: 750px; max-width: 100%; height: 176px;
+      background-color: rgba(255, 255, 255, 0);
+      transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease;
+    }
+    .main-header.is-scrolled { background-color: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .status-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 88px;
+      display: flex; justify-content: space-between; align-items: center; padding: 0 24px; box-sizing: border-box;
+      color: #FFFFFF; transition: color 0.3s ease-in-out;
+    }
+    .main-header.is-scrolled .status-bar { color: #0F131A; }
+    .status-bar__time { font-size: 28px; font-weight: 700; }
+    .status-bar__icons { display: flex; align-items: center; gap: 10px; }
+    .status-bar__icon { height: 22px; fill: currentColor; }
+    .nav-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 88px;
+      display: flex; justify-content: space-between; align-items: center; padding: 0 24px; box-sizing: border-box;
+    }
+    .nav-bar__icon {
+      width: 48px; height: 48px; display: flex; justify-content: center; align-items: center;
+      color: #FFFFFF; transition: color 0.3s ease-in-out;
+    }
+    .main-header.is-scrolled .nav-bar__icon { color: #0F131A; }
+    .nav-bar__icon svg { width: 48px; height: 48px; fill: currentColor; }
+    .nav-bar__title {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      font-size: 36px; font-weight: 600; white-space: nowrap; opacity: 0; color: #0F131A; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    .main-header.is-scrolled .nav-bar__title { opacity: 1; transform: translate(-50%, calc(-50% - 24px)); }
+    .nav-bar__actions { display: flex; align-items: center; gap: 24px; }
+
+    /* Main: search 50px below banner end, 18 side */
+    .ticket-main { box-sizing: border-box; width: 750px; max-width: 100%; }
+    .ticket-search-wrap { margin-top: 50px; margin-bottom: 18px; padding: 0 18px; display: flex; justify-content: center; }
+    .search-bar {
+      box-sizing: border-box; display: flex; align-items: center; padding: 0 8px 0 20px; gap: 18px;
+      width: 714px; max-width: 100%; height: 72px; background: #FFFFFF; border: 2px solid #FFE033; border-radius: 36px;
+    }
+    .search-bar__input-wrapper { flex-grow: 1; display: flex; align-items: center; gap: 6px; height: 36px; }
+    .search-bar__icon { flex-shrink: 0; width: 32px; height: 32px; color: #0F131A; }
+    .search-bar__input {
+      flex-grow: 1; width: 100%; height: 100%; border: none; background: none; outline: none; padding: 0;
+      font-family: inherit; font-size: 26px; color: #0F131A;
+    }
+    .search-bar__input::placeholder { color: #919499; }
+    .search-bar__button {
+      flex-shrink: 0; display: flex; justify-content: center; align-items: center;
+      width: 116px; height: 56px; background: #FFE033; border-radius: 42px; border: none; cursor: pointer;
+      font-weight: 500; font-size: 28px; color: #0F131A;
+    }
+
+    .ticket-recommend-wrap { margin-bottom: 18px; padding: 0 18px; display: flex; justify-content: center; }
+    a.ticket-plain { text-decoration: none; color: inherit; }
+
+    .recommendation-section {
+      box-sizing: border-box; width: 714px; max-width: 100%; padding: 12px 18px 18px;
+      background: linear-gradient(0deg, #FFFFFF 80.31%, #FFF0F0 100%); border-radius: 12px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .section-header-row { display: flex; align-items: flex-start; gap: 18px; }
+    .column-header { flex: 1; display: flex; justify-content: space-between; align-items: center; height: 42px; }
+    .column-header__title-wrapper { display: flex; justify-content: center; align-items: center; gap: 12px; flex-grow: 1; }
+    .column-header__title { margin: 0; font-size: 30px; font-weight: 500; line-height: 42px; color: #0F131A; }
+    .more-link { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 500; color: #0F131A; }
+    .card-content-row { display: flex; gap: 23px; }
+    .item-card { flex: 1; display: flex; gap: 12px; min-width: 0; }
+    .item-card__image {
+      flex-shrink: 0; width: 107px; height: 107px; background: #ddd center/cover; border-radius: 6px; position: relative;
+    }
+    .rank-badge {
+      position: absolute; top: 0; left: 0; width: 28px; height: 33px;
+      background: linear-gradient(145.14deg, #FFF0DB -1.79%, #FDD1A7 98.37%); color: #805540;
+      display: flex; flex-direction: column; align-items: center; font-weight: 700;
+    }
+    .rank-badge.rank-2 { background: linear-gradient(145.14deg, #EFF1FD -1.79%, #D5DBF3 98.37%); color: #61677D; }
+    .rank-badge__top-text { font-size: 8px; line-height: 1; padding-top: 2px; }
+    .rank-badge__number { font-size: 21px; line-height: 22px; }
+    .item-card__info { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+    .item-card__title {
+      margin: 0; font-size: 24px; line-height: 1.4; font-weight: 400; color: #0F131A;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 68px;
+    }
+    .item-card__footer { display: flex; justify-content: flex-end; align-items: center; padding-top: 12px; }
+    .price-info { display: flex; align-items: flex-end; gap: 5px; }
+    .item-card__subtext { font-size: 20px; color: #919499; }
+    .fdl-price {
+      display: inline-flex; flex-direction: row; align-items: flex-end; color: #FF5533; white-space: nowrap;
+    }
+    .fdl-price__currency,
+    .fdl-price__integer,
+    .fdl-price__decimal,
+    .fdl-price__suffix { padding: 0 1px; }
+    .fdl-price__currency { font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif; font-weight: 600; }
+    .fdl-price__integer,
+    .fdl-price__decimal { font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif; font-weight: 600; }
+    .fdl-price__suffix { font-family: 'PingFang SC', sans-serif; font-weight: 600; }
+    .fdl-price__label {
+      font-family: 'PingFang SC', sans-serif; font-weight: 400; color: #FF5533; margin-right: 5px;
+    }
+    .fdl-price--medium .fdl-price__currency { font-size: 24px; line-height: 24px; }
+    .fdl-price--medium .fdl-price__integer { font-size: 42px; line-height: 27px; }
+    .fdl-price--medium .fdl-price__decimal { font-size: 28px; line-height: 18px; }
+    .fdl-price--medium .fdl-price__suffix { font-size: 20px; line-height: 20px; }
+    .fdl-price--medium .fdl-price__label { font-size: 20px; line-height: 20px; }
+    .fdl-price--small .fdl-price__currency { font-size: 24px; line-height: 24px; }
+    .fdl-price--small .fdl-price__integer { font-size: 36px; line-height: 23px; }
+    .fdl-price--small .fdl-price__decimal { font-size: 24px; line-height: 16px; }
+    .fdl-price--small .fdl-price__suffix { font-size: 18px; line-height: 18px; }
+    .fdl-price--small .fdl-price__label { font-size: 20px; line-height: 20px; }
+
+    /* White stack: 0 vertical gap between blocks */
+    .ticket-white-stack { background: #FFFFFF; }
+    .top-nav {
+      box-sizing: border-box; position: relative; width: 100%; padding: 18px 18px 0;
+      background: #FFFFFF; border-radius: 24px 24px 0 0;
+      display: flex; align-items: flex-start; gap: 18px; box-shadow: none;
+    }
+    .top-nav::before {
+      content: ''; position: absolute; left: 0; top: -15px; width: 200px; height: 80px;
+      background: radial-gradient(50.91% 45.24% at 25.46% 54.76%, #F2F3F5 0%, rgba(247, 248, 250, 0) 100%); z-index: 0;
+    }
+    .top-nav > * { position: relative; z-index: 1; }
+    .location-selector {
+      flex-shrink: 0; display: flex; align-items: center; gap: 4px; padding: 0; border: none; background: none; cursor: pointer; height: 50px;
+    }
+    .location-selector__icon { font-size: 24px; }
+    .location-selector__city { font-size: 30px; font-weight: 600; color: #6666FF; line-height: 1.4; }
+    .location-selector__arrow { font-size: 16px; color: #6666FF; }
+    .separator { flex-shrink: 0; width: 1px; height: 30px; background: #D2D4D9; margin-top: 10px; }
+    .tab-nav {
+      flex-grow: 1; display: flex; align-items: center; gap: 24px; list-style: none; margin: 0; padding: 0; height: 62px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-nav__item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 5px 0; }
+    .tab-nav__text { font-size: 26px; line-height: 1.4; color: #0F131A; font-weight: 400; white-space: nowrap; }
+    .tab-nav__item.is-active .tab-nav__text { font-weight: 500; }
+    .tab-nav__item.is-active::after {
+      content: ''; display: block; width: 54px; height: 6px; background: #0F131A; border-radius: 3px;
+    }
+
+    .filter-nav {
+      display: flex; width: 100%; height: 60px; background: #FFFFFF; border-bottom: 1px solid #eaeaea;
+    }
+    .filter-nav__button {
+      flex: 1; display: flex; justify-content: center; align-items: center; gap: 11px;
+      padding: 9px 0; border: none; background: none; cursor: pointer;
+      font-size: 26px; font-weight: 400; line-height: 42px; color: #0F131A;
+    }
+    .filter-nav__arrow { font-size: 16px; transition: transform 0.2s; }
+    .filter-nav__button.is-active .filter-nav__arrow { transform: rotate(180deg); }
+
+    .quick-filters {
+      box-sizing: border-box; display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 18px;
+      background: #FFFFFF; overflow-x: auto; scrollbar-width: none;
+    }
+    .quick-filters::-webkit-scrollbar { display: none; }
+    .quick-filters__tag {
+      flex-shrink: 0; display: flex; justify-content: center; align-items: center; gap: 6px;
+      height: 60px; padding: 10px 18px; border: none; border-radius: 6px; background: #F7F8FA; cursor: pointer;
+      font-size: 24px; color: #0F131A; white-space: nowrap; transition: background-color 0.2s, color 0.2s;
+    }
+    .quick-filters__tag.is-active { background: #FFF2F0; color: #FF5533; font-weight: 500; }
+    .check-icon { font-weight: bold; }
+
+    .poi-card {
+      box-sizing: border-box; display: flex; gap: 18px; width: 100%; padding: 9px 18px; background: #FFFFFF;
+    }
+    .poi-card__image { flex-shrink: 0; width: 226px; height: 266px; background: #ddd center/cover; border-radius: 12px; }
+    .poi-card__info {
+      flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0; min-width: 0;
+    }
+    .info-main { display: flex; flex-direction: column; gap: 8px; }
+    .poi-card__title {
+      margin: 0; font-size: 30px; font-weight: 500; line-height: 42px; color: #0F131A;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .poi-card__meta { display: flex; align-items: center; gap: 12px; font-size: 24px; line-height: 32px; color: #0F131A; }
+    .rating { display: flex; align-items: center; gap: 6px; }
+    .rating__score {
+      display: inline-block; padding: 0 6px; background: #6666FF; border-radius: 8px;
+      font-weight: 700; font-size: 26px; color: #FFFFFF; line-height: 28px;
+    }
+    .rating__text { font-weight: 600; color: #6666FF; }
+    .meta__separator { width: 1px; height: 24px; background: #D2D4D9; }
+    .poi-card__subtitle { margin: 4px 0 0; font-size: 24px; line-height: 32px; color: #5C5F66; }
+    .highlight-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .highlight-tag {
+      display: flex; align-items: center; height: 28px; padding: 0 8px; background: #FEF5EC; border-radius: 4px;
+      font-size: 20px; line-height: 28px; color: #805540;
+    }
+    .highlight-tag .icon { margin-right: 6px; }
+    .service-tags { display: flex; gap: 6px; margin-top: 4px; }
+    .service-tag {
+      box-sizing: border-box; padding: 4px 6px; height: 28px; border: 1px solid rgba(92, 95, 102, 0.5); border-radius: 4px;
+      font-size: 20px; line-height: 20px; color: #5C5F66;
+    }
+    .info-footer { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .price { display: flex; align-items: baseline; gap: 6px; color: #FF5533; }
+    .discount-bar {
+      display: flex; align-items: center; padding: 2px 6px; gap: 6px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #FFE6E0 100%); border-radius: 4px;
+      font-size: 20px; color: #FF5533;
+    }
+    .discount-bar__separator { width: 1px; height: 14px; border-left: 1px dashed #FFB2A3; }
+  </style>
+</head>
+<body>
+  <div class="ticket-shell">
+    <section class="ticket-banner" aria-label="活动 Banner">
+      <div class="ticket-banner__content">
+        <h1 class="ticket-banner__title">门票·玩乐狂欢节</h1>
+        <p class="ticket-banner__sub">爆款直降 · 限时神券</p>
+        <div class="ticket-banner__dots">
+          <span class="ticket-banner__dot is-active"></span>
+          <span class="ticket-banner__dot"></span>
+          <span class="ticket-banner__dot"></span>
+        </div>
+      </div>
+    </section>
+
+    <header class="main-header" id="mainHeader">
+      <div class="status-bar">
+        <span class="status-bar__time">9:41</span>
+        <div class="status-bar__icons">
+          <svg class="status-bar__icon" viewBox="0 0 17 11" aria-hidden="true"><path d="M0 10.6667H0.1V10.6667H0ZM3.4 10.6667V5.5H3.46667V10.6667H3.4ZM6.8 10.6667V2.93333H6.86667V10.6667H6.8ZM10.2 10.6667V0.366667H10.2667V10.6667H10.2ZM13.6 10.6667H13.7V10.6667H13.6ZM17 10.6667H17.1V10.6667H17Z" fill="currentColor"/></svg>
+          <svg class="status-bar__icon" viewBox="0 0 16 11" aria-hidden="true"><path d="M15.3999 1.63337L14.5666 2.53337C12.6333 0.766708 9.93325 0.766708 7.99992 2.53337L7.16659 1.63337C9.53325 -0.533292 13.0666 -0.533292 15.3999 1.63337ZM12.9333 3.96671L13.6666 3.23337C11.8666 1.56671 9.53325 1.56671 7.76659 3.23337L7.99992 3.50004L8.23325 3.23337C6.46659 1.56671 4.13325 1.56671 2.33325 3.23337L3.13325 3.96671C4.53325 2.66671 6.06659 2.66671 7.43325 3.96671L7.99992 4.70004L8.63325 3.96671C9.96659 2.66671 11.5333 2.66671 12.9333 3.96671ZM10.5 6.20004L7.99992 8.83337L0.599918 0.466708C3.13325 -1.53329 7.03325 -1.53329 9.53325 0.466708L7.99992 2.06671L6.46659 0.466708C4.73325 -0.966625 2.83325 -0.966625 1.13325 0.466708L10.5 6.20004Z" fill="currentColor"/></svg>
+          <svg class="status-bar__icon" viewBox="0 0 25 12" aria-hidden="true"><path d="M22.0001 3.33334H20.6667V1.8C20.6667 1.33334 20.2667 0.966675 19.8001 0.966675H0.866748C0.400082 0.966675 0.0000816601 1.33334 0.0000816601 1.8V9.86667C0.0000816601 10.3333 0.400082 10.7 0.866748 10.7H19.8001C20.2667 10.7 20.6667 10.3333 20.6667 9.86667V8.33334H22.0001C22.6334 8.33334 23.1334 7.83334 23.1334 7.2V4.46667C23.1334 3.83334 22.6334 3.33334 22.0001 3.33334ZM1.33341 9.4V2.26667H19.3334V9.4H1.33341Z" fill="currentColor" fill-opacity="0.4"/><path d="M2.66675 8.13333H18.0001V3.53333H2.66675V8.13333Z" fill="currentColor"/></svg>
+        </div>
+      </div>
+      <nav class="nav-bar" aria-label="页面导航">
+        <a href="#" class="nav-bar__icon" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z"/></svg></a>
+        <h1 class="nav-bar__title">门票·玩乐</h1>
+        <div class="nav-bar__actions">
+          <a href="#" class="nav-bar__icon" aria-label="更多"><svg viewBox="0 0 24 24"><path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"/></svg></a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="ticket-main">
+      <div class="ticket-search-wrap">
+        <form class="search-bar" role="search" aria-label="景点搜索" onsubmit="return false;">
+          <div class="search-bar__input-wrapper">
+            <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <input class="search-bar__input" type="search" placeholder="搜索景点、玩乐、演出">
+          </div>
+          <button class="search-bar__button" type="submit">搜索</button>
+        </form>
+      </div>
+
+      <div class="ticket-recommend-wrap">
+        <section class="recommendation-section" aria-label="推荐">
+          <div class="section-header-row">
+            <header class="column-header">
+              <div class="column-header__title-wrapper"><h2 class="column-header__title">玩乐推荐</h2></div>
+              <a href="#" class="more-link"><span>更多</span><span>&gt;</span></a>
+            </header>
+            <header class="column-header">
+              <div class="column-header__title-wrapper"><h2 class="column-header__title">套餐推荐</h2></div>
+              <a href="#" class="more-link"><span>更多</span><span>&gt;</span></a>
+            </header>
+          </div>
+          <div class="card-content-row">
+            <a href="#" class="item-card ticket-plain">
+              <div class="item-card__image" style="background-image:url('https://fli.alicdn.com/upload/creative-platform/8nzmEcX0yD4bd1d0434df0165a.png?x-oss-process=image/format,webp')">
+                <div class="rank-badge"><span class="rank-badge__top-text">TOP</span><span class="rank-badge__number">1</span></div>
+              </div>
+              <div class="item-card__info">
+                <h3 class="item-card__title">北京环球度假区：开启超凡之旅</h3>
+                <div class="item-card__footer">
+                  <div class="price-info">
+                    <span class="fdl-price fdl-price--small">
+                      <span class="fdl-price__label">会员价</span>
+                      <span class="fdl-price__currency">¥</span>
+                      <span class="fdl-price__integer">694</span>
+                      <span class="fdl-price__suffix">起</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="item-card ticket-plain">
+              <div class="item-card__image" style="background-image:url('https://fli.alicdn.com/upload/creative-platform/MXzrOt8y8C4bd1d0434df0165a.png?x-oss-process=image/format,webp')"></div>
+              <div class="item-card__info">
+                <h3 class="item-card__title">三亚海棠湾豪华酒店2晚套餐</h3>
+                <div class="item-card__footer">
+                  <div class="price-info">
+                    <span class="fdl-price fdl-price--small">
+                      <span class="fdl-price__currency">¥</span>
+                      <span class="fdl-price__integer">1299</span>
+                      <span class="fdl-price__suffix">起</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <div class="ticket-white-stack">
+        <header class="top-nav" aria-label="城市与类目">
+          <button type="button" class="location-selector">
+            <span class="location-selector__icon" aria-hidden="true">📍</span>
+            <span class="location-selector__city">杭州</span>
+            <span class="location-selector__arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="separator" role="presentation"></div>
+          <nav>
+            <ul class="tab-nav">
+              <li class="tab-nav__item is-active"><span class="tab-nav__text">国内</span></li>
+              <li class="tab-nav__item"><span class="tab-nav__text">周边</span></li>
+              <li class="tab-nav__item"><span class="tab-nav__text">全球</span></li>
+              <li class="tab-nav__item"><span class="tab-nav__text">亲子</span></li>
+              <li class="tab-nav__item"><span class="tab-nav__text">必体验</span></li>
+            </ul>
+          </nav>
+        </header>
+
+        <nav class="filter-nav" aria-label="排序与筛选">
+          <button type="button" class="filter-nav__button"><span class="filter-nav__text">智能排序</span><span class="filter-nav__arrow">▼</span></button>
+          <button type="button" class="filter-nav__button is-active"><span class="filter-nav__text">景点类型</span><span class="filter-nav__arrow">▼</span></button>
+          <button type="button" class="filter-nav__button"><span class="filter-nav__text">筛选</span><span class="filter-nav__arrow">▼</span></button>
+        </nav>
+
+        <div class="quick-filters" role="toolbar" aria-label="快筛">
+          <button type="button" class="quick-filters__tag is-active"><span class="check-icon">✓</span><span>门票膨胀神券</span></button>
+          <button type="button" class="quick-filters__tag"><span>热门必打卡</span></button>
+          <button type="button" class="quick-filters__tag"><span>大牌乐园</span></button>
+          <button type="button" class="quick-filters__tag"><span>亲子/家庭</span></button>
+        </div>
+
+        <article class="poi-card" aria-label="景点卡片">
+          <div class="poi-card__image" style="background-image:url('https://fli.alicdn.com/upload/creative-platform/gjWiY0Nujd4bd1d0434df0165a.png?x-oss-process=image/format,webp')"></div>
+          <div class="poi-card__info">
+            <div class="info-main">
+              <h3 class="poi-card__title">北京环球度假区</h3>
+              <div class="poi-card__meta">
+                <div class="rating"><span class="rating__score">4.8</span><span class="rating__text">很好</span><span>314条点评</span></div>
+                <div class="meta__separator"></div><span>距你3.7公里</span>
+              </div>
+              <p class="poi-card__subtitle">坐霸天虎过山车，体验魔法世界</p>
+              <div class="highlight-tags">
+                <div class="highlight-tag"><span class="icon">🏆</span>北京网红打卡榜·第1名</div>
+                <div class="highlight-tag"><span class="icon">🔥</span>1.2万人感兴趣</div>
+              </div>
+              <div class="service-tags"><span class="service-tag">可订今日</span><span class="service-tag">条件退</span></div>
+            </div>
+            <div class="info-footer">
+              <div class="price">
+                <span>门票</span>
+                <span class="fdl-price fdl-price--medium">
+                  <span class="fdl-price__currency">¥</span>
+                  <span class="fdl-price__integer">200</span>
+                  <span class="fdl-price__suffix">起</span>
+                </span>
+              </div>
+              <div class="discount-bar"><span>优惠¥50</span><div class="discount-bar__separator"></div><span>领券</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="poi-card" aria-label="景点卡片">
+          <div class="poi-card__image" style="background-image:url('https://fli.alicdn.com/upload/creative-platform/mm-8Z5nl9K4bd1d0434df0165a.png?x-oss-process=image/format,webp')"></div>
+          <div class="poi-card__info">
+            <div class="info-main">
+              <h3 class="poi-card__title">杭州西溪国家湿地公园</h3>
+              <div class="poi-card__meta">
+                <div class="rating"><span class="rating__score">4.7</span><span class="rating__text">超棒</span><span>2.1万+点评</span></div>
+                <div class="meta__separator"></div><span>距你8.2公里</span>
+              </div>
+              <p class="poi-card__subtitle">非诚勿扰取景地 杭州绿肺</p>
+              <div class="highlight-tags">
+                <div class="highlight-tag"><span class="icon">🏆</span>杭州游山玩水榜·第2名</div>
+              </div>
+              <div class="service-tags"><span class="service-tag">随时退</span></div>
+            </div>
+            <div class="info-footer">
+              <div class="price">
+                <span>门票</span>
+                <span class="fdl-price fdl-price--medium">
+                  <span class="fdl-price__currency">¥</span>
+                  <span class="fdl-price__integer">80</span>
+                  <span class="fdl-price__suffix">起</span>
+                </span>
+              </div>
+              <div class="discount-bar"><span>优惠¥5</span><div class="discount-bar__separator"></div><span>领券</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="poi-card" aria-label="景点卡片">
+          <div class="poi-card__image" style="background-image:url('https://fli.alicdn.com/upload/creative-platform/PQMMicXUIk4bd1d0434df0165a.png?x-oss-process=image/format,webp')"></div>
+          <div class="poi-card__info">
+            <div class="info-main">
+              <h3 class="poi-card__title">上海迪士尼乐园</h3>
+              <div class="poi-card__meta">
+                <div class="rating"><span class="rating__score">4.9</span><span class="rating__text">超棒</span><span>5.6万+点评</span></div>
+                <div class="meta__separator"></div><span>上海 浦东</span>
+              </div>
+              <p class="poi-card__subtitle">全家出游热门目的地</p>
+              <div class="service-tags"><span class="service-tag">可订明日</span></div>
+            </div>
+            <div class="info-footer">
+              <div class="price">
+                <span>门票</span>
+                <span class="fdl-price fdl-price--medium">
+                  <span class="fdl-price__currency">¥</span>
+                  <span class="fdl-price__integer">399</span>
+                  <span class="fdl-price__suffix">起</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.getElementById('mainHeader');
+      function onScroll() {
+        header.classList.toggle('is-scrolled', window.scrollY > 180);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
+</body>
+</html>

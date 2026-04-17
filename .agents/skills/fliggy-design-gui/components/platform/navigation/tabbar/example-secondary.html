@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — tabbar 二级（多功能底部栏）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-bottom-bar-demo-page {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.fdl-bottom-bar-demo__heading {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-bottom-bar-demo__heading:not(:first-child) {
+  margin-top: 48px;
+}
+
+.fdl-bottom-bar-demo__card {
+  margin-bottom: 24px;
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-darkgray) 8%, transparent);
+}
+
+/* ========== fdl-bottom-bar ========== */
+.fdl-bottom-bar {
+  position: relative;
+  width: 100%;
+  background: var(--color-white);
+}
+
+.fdl-bottom-bar__strip {
+  height: 102px;
+  box-shadow: 0 -1px 0 var(--color-bg);
+}
+
+.fdl-bottom-bar__list {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.fdl-bottom-bar__item {
+  flex: 1;
+}
+
+.fdl-bottom-bar__link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-bottom-bar__link:hover {
+  opacity: 0.7;
+}
+
+.fdl-bottom-bar__link:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.fdl-bottom-bar__icon {
+  width: 48px;
+  height: 48px;
+}
+
+.fdl-bottom-bar__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fdl-bottom-bar__label {
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1;
+  text-align: center;
+  color: var(--color-darkgray);
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.fdl-bottom-bar__strip--nav .fdl-bottom-bar__icon-img--active {
+  display: none;
+}
+
+.fdl-bottom-bar__strip--nav .fdl-bottom-bar__icon-img--inactive {
+  display: block;
+}
+
+.fdl-bottom-bar__strip--nav .fdl-bottom-bar__item--active .fdl-bottom-bar__icon-img--active {
+  display: block;
+}
+
+.fdl-bottom-bar__strip--nav .fdl-bottom-bar__item--active .fdl-bottom-bar__icon-img--inactive {
+  display: none;
+}
+
+.fdl-bottom-bar__strip--nav .fdl-bottom-bar__item--active .fdl-bottom-bar__label {
+  color: var(--color-indigo-1);
+  font-weight: 500;
+}
+
+.fdl-bottom-bar__safe-area {
+  min-height: 64px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  width: 100%;
+  background: var(--color-white);
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-bottom-bar-demo-page">
+    <h2 class="fdl-bottom-bar-demo__heading">模式一 · 动作栏（无选中态）</h2>
+    <div class="fdl-bottom-bar-demo__card">
+      <div class="fdl-bottom-bar">
+        <div class="fdl-bottom-bar__strip" role="toolbar" aria-label="列表操作">
+          <ul class="fdl-bottom-bar__list" id="fdl-bottom-bar-action-demo"></ul>
+        </div>
+        <div class="fdl-bottom-bar__safe-area" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <h2 class="fdl-bottom-bar-demo__heading">模式二 · 导航栏（有选中态）</h2>
+    <div class="fdl-bottom-bar-demo__card">
+      <div class="fdl-bottom-bar">
+        <nav class="fdl-bottom-bar__strip fdl-bottom-bar__strip--nav" aria-label="子页面导航">
+          <ul class="fdl-bottom-bar__list" id="fdl-bottom-bar-nav-demo"></ul>
+        </nav>
+        <div class="fdl-bottom-bar__safe-area" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var placeholderIcon = "https://gw.alicdn.com/imgextra/i2/O1CN01x0SUcY1O2NS7urI3g_!!6000000001647-2-tps-96-96.png";
+  var placeholderIconActive = "https://gw.alicdn.com/imgextra/i4/O1CN01P27V8t1uN324l68EU_!!6000000006024-2-tps-96-96.png";
+
+  var actionBarData = [
+    { icon: placeholderIcon, text: "筛选" },
+    { icon: placeholderIcon, text: "排序" },
+    { icon: placeholderIcon, text: "地图" }
+  ];
+
+  var navBarData = [
+    { text: "详情", iconInactive: placeholderIcon, iconActive: placeholderIconActive },
+    { text: "评价", iconInactive: placeholderIcon, iconActive: placeholderIconActive },
+    { text: "推荐", iconInactive: placeholderIcon, iconActive: placeholderIconActive }
+  ];
+
+  function generateTabs(targetId, data, isNav) {
+    var listElement = document.getElementById(targetId);
+    if (!listElement) return;
+    listElement.innerHTML = "";
+
+    data.forEach(function (itemData, index) {
+      var listItem = document.createElement("li");
+      listItem.className = "fdl-bottom-bar__item";
+
+      if (isNav && index === 0) {
+        listItem.classList.add("fdl-bottom-bar__item--active");
+      }
+
+      var iconHtml = isNav
+        ? "<img class=\"fdl-bottom-bar__icon-img--inactive\" src=\"" + itemData.iconInactive + "\" width=\"96\" height=\"96\" alt=\"\" />" +
+          "<img class=\"fdl-bottom-bar__icon-img--active\" src=\"" + itemData.iconActive + "\" width=\"96\" height=\"96\" alt=\"\" />"
+        : "<img class=\"fdl-bottom-bar__icon-img\" src=\"" + itemData.icon + "\" width=\"96\" height=\"96\" alt=\"\" />";
+
+      var link = document.createElement("a");
+      link.className = "fdl-bottom-bar__link";
+      link.href = "#";
+      link.innerHTML =
+        "<div class=\"fdl-bottom-bar__icon\">" + iconHtml + "</div>" +
+        "<span class=\"fdl-bottom-bar__label\">" + itemData.text + "</span>";
+
+      if (isNav && index === 0) {
+        link.setAttribute("aria-current", "page");
+      }
+
+      listItem.appendChild(link);
+      listElement.appendChild(listItem);
+    });
+  }
+
+  generateTabs("fdl-bottom-bar-action-demo", actionBarData, false);
+  generateTabs("fdl-bottom-bar-nav-demo", navBarData, true);
+
+  var actionList = document.getElementById("fdl-bottom-bar-action-demo");
+  if (actionList) {
+    actionList.addEventListener("click", function (e) {
+      if (e.target.closest(".fdl-bottom-bar__link")) e.preventDefault();
+    });
+  }
+
+  var navList = document.getElementById("fdl-bottom-bar-nav-demo");
+  if (navList) {
+    navList.addEventListener("click", function (e) {
+      var link = e.target.closest(".fdl-bottom-bar__link");
+      if (!link) return;
+      e.preventDefault();
+      var item = link.closest(".fdl-bottom-bar__item");
+      if (!item) return;
+
+      navList.querySelectorAll(".fdl-bottom-bar__item").forEach(function (i) {
+        i.classList.remove("fdl-bottom-bar__item--active");
+        var a = i.querySelector(".fdl-bottom-bar__link");
+        if (a) a.removeAttribute("aria-current");
+      });
+
+      item.classList.add("fdl-bottom-bar__item--active");
+      link.setAttribute("aria-current", "page");
+    });
+  }
+})();
+  </script>
+
+</body>
+</html>

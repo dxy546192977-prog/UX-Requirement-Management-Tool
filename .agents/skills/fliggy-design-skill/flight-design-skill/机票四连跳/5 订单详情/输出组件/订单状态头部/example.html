@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>订单状态头部预览</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-page-bg: #F2F3F5;
+      --color-emphasis-soft: #FFFCEB;
+      --radius-pill: 42px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--color-page-bg);
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .preview {
+      width: 750px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .status-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 36px;
+    }
+    .status-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .status-title {
+      font-size: 42px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--color-darkgray);
+    }
+    .status-arrow {
+      width: 12px;
+      height: 21px;
+      display: block;
+      object-fit: contain;
+    }
+    .status-desc {
+      width: 678px;
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-darkgray);
+    }
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      padding: 0 24px;
+      overflow-x: auto;
+    }
+    .quick-pill {
+      flex: 0 0 auto;
+      min-width: 166px;
+      height: 72px;
+      padding: 10px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-emphasis-soft);
+      border-radius: var(--radius-pill);
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview">
+    <section class="status-hero">
+      <div class="status-title-row">
+        <div class="status-title">出票成功</div>
+        <img class="status-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01oHJ2D029WrlEV5Vat_!!6000000008076-2-tps-24-42.png" alt="箭头">
+      </div>
+      <p class="status-desc">请至少提前 3 小时到达机场，以免误机。</p>
+    </section>
+
+    <div class="quick-actions">
+      <div class="quick-pill">退改签</div>
+      <div class="quick-pill">选座</div>
+      <div class="quick-pill">行李额</div>
+      <div class="quick-pill">产品说明</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — tag-discount（优惠类 / 券形标签）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 48px 24px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-tag-discount-demo__title {
+  margin: 32px 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-tag-discount-demo__title:first-child {
+  margin-top: 0;
+}
+
+.fdl-tag-discount-demo__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ========== fdl-tag-discount ========== */
+.fdl-tag-discount {
+  --fdl-tag-discount-edge: color-mix(in srgb, var(--color-pay-1) 50%, transparent);
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid var(--fdl-tag-discount-edge);
+  color: var(--color-pay-1);
+  border-radius: 4px;
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.fdl-tag-discount--with-description {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.fdl-tag-discount--with-description .fdl-tag-discount__main,
+.fdl-tag-discount--with-description .fdl-tag-discount__description {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 6px;
+  color: var(--color-pay-1);
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.fdl-tag-discount--with-description .fdl-tag-discount__main {
+  background-color: color-mix(in srgb, var(--color-pay-1) 8%, transparent);
+  border: 1px solid var(--fdl-tag-discount-edge);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+}
+
+.fdl-tag-discount--with-description .fdl-tag-discount__description {
+  background-color: var(--color-white);
+  border: 1px solid var(--fdl-tag-discount-edge);
+  border-left: 1px dashed var(--fdl-tag-discount-edge);
+  border-radius: 0 4px 4px 0;
+}
+  </style>
+</head>
+<body>
+
+  <h2 class="fdl-tag-discount-demo__title">独立标签（宽度自适应）</h2>
+  <div class="fdl-tag-discount-demo__row">
+    <span class="fdl-tag-discount">券</span>
+    <span class="fdl-tag-discount">无需换票</span>
+    <span class="fdl-tag-discount">跨店满减</span>
+  </div>
+
+  <h2 class="fdl-tag-discount-demo__title">组合标签</h2>
+  <div class="fdl-tag-discount-demo__row">
+    <span class="fdl-tag-discount fdl-tag-discount--with-description">
+      <span class="fdl-tag-discount__main">跨店满减</span>
+      <span class="fdl-tag-discount__description">每满300减50</span>
+    </span>
+  </div>
+
+</body>
+</html>

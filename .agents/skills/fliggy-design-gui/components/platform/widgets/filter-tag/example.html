@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — filter-tag（选项标签）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+  padding: 36px 18px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-filter-tag-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fdl-filter-tag-demo__caption {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-midgray);
+  line-height: 1.4;
+}
+
+/* ========== fdl-filter-tag ========== */
+.fdl-filter-tag {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 230px;
+  height: 72px;
+  padding: 0 18px;
+  margin: 0;
+  background: var(--color-label);
+  border: 1px solid transparent;
+  border-radius: var(--radius-s);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-filter-tag__text {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.fdl-filter-tag__badge {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 21px;
+  pointer-events: none;
+}
+
+.fdl-filter-tag__badge svg {
+  display: block;
+}
+
+.fdl-filter-tag--radio {
+  background: var(--color-brand-2);
+  border-color: var(--color-brand-1);
+  font-weight: 500;
+  font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-filter-tag--multi {
+  background: var(--color-brand-4);
+  border-color: transparent;
+  font-weight: 500;
+  font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-filter-tag--multi .fdl-filter-tag__badge {
+  display: block;
+}
+
+.fdl-filter-tag:disabled {
+  background: var(--color-label);
+  border-color: transparent;
+  color: var(--color-auxiliary);
+  font-weight: 400;
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  cursor: not-allowed;
+}
+
+.fdl-filter-tag:disabled .fdl-filter-tag__badge {
+  display: none;
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-filter-tag-demo">
+    <div class="fdl-filter-tag-demo__caption">未选</div>
+    <button type="button" class="fdl-filter-tag" aria-pressed="false">
+      <span class="fdl-filter-tag__text">选项文本</span>
+    </button>
+  </div>
+
+  <div class="fdl-filter-tag-demo">
+    <div class="fdl-filter-tag-demo__caption">单选（选中）</div>
+    <button type="button" class="fdl-filter-tag fdl-filter-tag--radio" aria-pressed="true" data-toggleable>
+      <span class="fdl-filter-tag__text">选项文本</span>
+    </button>
+  </div>
+
+  <div class="fdl-filter-tag-demo">
+    <div class="fdl-filter-tag-demo__caption">复选（选中）</div>
+    <button type="button" class="fdl-filter-tag fdl-filter-tag--multi" aria-pressed="true" data-toggleable>
+      <span class="fdl-filter-tag__text">选项文本</span>
+      <span class="fdl-filter-tag__badge" aria-hidden="true">
+        <svg width="24" height="21" viewBox="0 0 24 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#fdl-filter-tag-clip)">
+            <path d="M0 21H18C21.3137 21 24 18.3137 24 15V0H21C9.40202 0 0 9.40202 0 21Z" fill="var(--color-brand-1)"/>
+            <path d="M20.0055 7.36822C19.8171 7.19151 19.5199 7.19994 19.3432 7.38885L13.0919 14.0446L9.67708 10.6799C9.4924 10.4981 9.19568 10.4999 9.0138 10.6846C8.83193 10.8688 8.83427 11.166 9.01896 11.3474L12.776 15.0487C12.7774 15.0501 12.7793 15.0506 12.7807 15.052C12.7821 15.0534 12.7826 15.0553 12.784 15.0567C12.8135 15.0848 12.8491 15.1007 12.8833 15.1195C12.9002 15.1293 12.9147 15.1438 12.9326 15.1509C12.9879 15.1724 13.0465 15.1837 13.1046 15.1837C13.166 15.1837 13.2274 15.1715 13.2846 15.1471C13.3038 15.1392 13.3188 15.1228 13.3366 15.1124C13.3718 15.0918 13.4083 15.0745 13.4383 15.044C13.4397 15.0426 13.4402 15.0403 13.4416 15.0388C13.4426 15.0374 13.4444 15.037 13.4458 15.0356L20.0257 8.03057C20.2038 7.8426 20.194 7.54588 20.0055 7.36822Z" fill="var(--color-darkgray)" stroke="var(--color-darkgray)"/>
+          </g>
+          <defs>
+            <clipPath id="fdl-filter-tag-clip">
+              <rect width="24" height="21" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </span>
+    </button>
+  </div>
+
+  <div class="fdl-filter-tag-demo">
+    <div class="fdl-filter-tag-demo__caption">不可选</div>
+    <button type="button" class="fdl-filter-tag" disabled>
+      <span class="fdl-filter-tag__text">选项文本</span>
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      var toggleableTags = document.querySelectorAll(".fdl-filter-tag[data-toggleable]");
+      if (!toggleableTags.length) return;
+
+      toggleableTags.forEach(function (tag) {
+        tag.addEventListener("click", function () {
+          var isSelected = tag.classList.contains("fdl-filter-tag--radio") || tag.classList.contains("fdl-filter-tag--multi");
+          if (isSelected) {
+            tag.classList.remove("fdl-filter-tag--radio", "fdl-filter-tag--multi");
+            tag.setAttribute("aria-pressed", "false");
+            return;
+          }
+
+          if (tag.querySelector(".fdl-filter-tag__badge")) {
+            tag.classList.add("fdl-filter-tag--multi");
+          } else {
+            tag.classList.add("fdl-filter-tag--radio");
+          }
+          tag.setAttribute("aria-pressed", "true");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

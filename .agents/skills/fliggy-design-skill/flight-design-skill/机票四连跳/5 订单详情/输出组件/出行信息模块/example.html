@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>出行信息模块预览</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-page-bg: #F2F3F5;
+      --color-white: #FFFFFF;
+      --color-brand: #6666FF;
+      --color-shadow-line: rgba(151, 151, 151, 0.14);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--color-page-bg);
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .module {
+      width: 750px;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-white);
+    }
+    .travel-info-header {
+      padding: 24px;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      border-bottom: 1px solid var(--color-shadow-line);
+    }
+    .info-row {
+      display: flex;
+      gap: 24px;
+      padding: 24px;
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-shadow-line);
+    }
+    .info-label {
+      width: 96px;
+      flex-shrink: 0;
+      font-size: 24px;
+      color: var(--color-midgray);
+    }
+    .info-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      font-size: 24px;
+      color: var(--color-darkgray);
+    }
+    .inline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .subtle {
+      color: var(--color-lightgray);
+    }
+    .action-link {
+      color: var(--color-brand);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .action-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+    .action-icon,
+    .send-image {
+      display: block;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+    .action-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .send-itinerary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      background: var(--color-white);
+    }
+    .send-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .send-image {
+      width: 38px;
+      height: 38px;
+    }
+  </style>
+</head>
+<body>
+  <div class="module">
+    <div class="travel-info-header">出行信息</div>
+
+    <div class="info-row">
+      <div class="info-label">乘机人</div>
+      <div class="info-content">
+        <div class="inline-row">
+          <span>HAN/MEIMEI 成人 女</span>
+          <span class="action-group"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN013XVzRW1kaedurIc1p_!!6000000004700-2-tps-48-48.png" alt="修改"><span class="action-link">修改姓名/证件</span></span>
+        </div>
+        <div>护照：E12****78</div>
+        <div class="inline-row">
+          <span>票号：00391873987298</span>
+          <span class="action-group"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01Zz2Bgr1rI3sHW9j14_!!6000000005607-2-tps-48-48.png" alt="复制"><span class="action-link">复制</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">航司编码</div>
+      <div class="info-content">
+        <div class="inline-row">
+          <span>WANERD（上海 - 中国香港）</span>
+          <span class="action-group"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01Zz2Bgr1rI3sHW9j14_!!6000000005607-2-tps-48-48.png" alt="复制"><span class="action-link">复制</span></span>
+        </div>
+        <div class="subtle">可用于在线选座、加购行李等事宜</div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">联系手机</div>
+      <div class="info-content">
+        <div class="inline-row">
+          <span>134****3454</span>
+          <span class="action-group"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN013XVzRW1kaedurIc1p_!!6000000004700-2-tps-48-48.png" alt="修改"><span class="action-link">修改</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">联系邮箱</div>
+      <div class="info-content">
+        <div class="inline-row">
+          <span>72*******@qq.com</span>
+          <span class="action-group"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN013XVzRW1kaedurIc1p_!!6000000004700-2-tps-48-48.png" alt="修改"><span class="action-link">修改</span></span>
+        </div>
+        <div class="subtle">请确保手机畅通，并随时关注邮件通知，以便卖家在航班变动时通知到您。</div>
+      </div>
+    </div>
+
+    <div class="send-itinerary-row">
+      <div class="send-left">
+        <img class="send-image" src="https://gw.alicdn.com/imgextra/i4/O1CN01OpI8691yK4vfxZKnP_!!6000000006559-2-tps-76-76.png" alt="发送行程确认单">
+        <span>发送行程确认单</span>
+      </div>
+      <div class="action-link">去发送</div>
+    </div>
+  </div>
+</body>
+</html>

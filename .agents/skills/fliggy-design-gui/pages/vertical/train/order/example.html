@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车票订单详情页</title>
+    <style>
+        @font-face {
+            font-family: 'Alibaba Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 700;
+            font-display: swap;
+        }
+
+
+
+        :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-auxiliary: #D2D4D9;
+      --color-bg: #F2F3F5;
+      --color-label: #F7F8FA;
+      --color-white: #FFFFFF;
+      --color-brand-1: #FFE033;
+      --color-brand-2: #FFFCEB;
+      --color-brand-4: #FFF7CC;
+      --color-indigo-1: #6666FF;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #FF3333;
+      --color-pay-1: #FF5533;
+      --color-pay-2: #FF8C1A;
+      --color-notice-tint: #FFF6EE;
+      --color-promo-1: #FF0036;
+      --color-promo-2: #9537FD;
+      --color-green-0: #149AA8;
+      --color-safeguard-4: #FEF5EC;
+      --color-safeguard-5: #5D3521;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+    
+      --color-local-1: rgba(0, 0, 0, 0.1);
+    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-bg);
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            width: 750px;
+            margin: 0 auto;
+        }
+
+        /* ========== 整体容器 ========== */
+        .page {
+            width: 750px;
+            position: relative;
+        }
+
+        /* 黄色背景层 */
+        .yellow-bg {
+            position: absolute;
+            width: 750px;
+            height: 467.92px;
+            background: var(--color-brand-1);
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* ========== 1. 出票成功区 ========== */
+
+        /* 状态栏 */
+        .status-bar {
+            height: 88px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-bar img {
+            width: 750px;
+            height: 88px;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            height: 88px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-btn {
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+        }
+
+        .back-btn img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .more-btn {
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+        }
+
+        .more-btn img {
+            width: 48px;
+            height: 48px;
+        }
+
+        /* 出票成功文案区 */
+        .success-section {
+            padding: 30px 24px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-inner {
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .success-title {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 48px;
+            color: var(--color-darkgray);
+        }
+
+        .success-desc {
+            font-size: 26px;
+            font-weight: 400;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        /* ========== 2. 内容区（灰色背景） ========== */
+        .content-area {
+            background: var(--color-bg);
+            border-radius: 24px 24px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 白色背景容器（已出票卡片 + 快捷服务栏） */
+        .ticket-services-wrap {
+            width: 750px;
+            background: var(--color-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 18px;
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* ========== 2.1 已出票卡片 ========== */
+        .ticket-card {
+            width: 714px;
+            height: 570px;
+            border-radius: 18px;
+            box-shadow: 0px 0px 22.8px var(--color-local-1);
+            position: relative;
+            overflow: hidden;
+            background: var(--color-white);
+        }
+
+        /* 灰色头部 - 检票口信息 */
+        .ticket-header {
+            width: 714px;
+            height: 116px;
+            background: var(--color-label);
+            border: 3px solid var(--color-white);
+            border-radius: 18px 18px 0 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .check-label {
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--color-darkgray);
+        }
+
+        .check-value {
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+        }
+
+        .check-tip {
+            font-size: 20px;
+            color: var(--color-lightgray);
+        }
+
+        .header-right {
+            font-size: 26px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+        }
+
+        /* 车票信息区 */
+        .ticket-info {
+            position: absolute;
+            top: 116px;
+            left: 0;
+            width: 714px;
+            height: 206px;
+        }
+
+        .ticket-no {
+            position: absolute;
+            left: 24px;
+            top: 30px;
+            font-size: 26px;
+            color: var(--color-lightgray);
+        }
+
+        .trip-section {
+            position: absolute;
+            bottom: 0;
+            left: 24px;
+            width: 666px;
+        }
+
+        /* 日期行 */
+        .trip-date-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .trip-date {
+            display: flex;
+            gap: 4px;
+        }
+
+        .trip-date-num {
+            font-size: 24px;
+            color: var(--color-midgray);
+        }
+
+        .trip-date-day {
+            font-size: 24px;
+            color: var(--color-midgray);
+        }
+
+        /* 行程 OD */
+        .trip-od {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .station {
+            width: 170px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .station-right {
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .station-time {
+            font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 42px;
+            color: var(--color-darkgray);
+        }
+
+        .station-name {
+            font-size: 24px;
+            line-height: 24px;
+            color: var(--color-darkgray);
+        }
+
+        /* 中间行程信息 */
+        .trip-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .trip-duration {
+            font-size: 24px;
+            line-height: 22px;
+            color: var(--color-midgray);
+            text-align: center;
+        }
+
+        .trip-arrow-wrap {
+            width: 245px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .trip-arrow-img {
+            width: 245px;
+            height: 9.34px;
+            object-fit: contain;
+        }
+
+        .trip-train {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .trip-train-no {
+            font-size: 24px;
+            color: var(--color-darkgray);
+            text-align: center;
+        }
+
+        .trip-train-arrow {
+            width: 7px;
+            height: 12px;
+        }
+
+        .trip-train-arrow img {
+            width: 7px;
+            height: 12px;
+        }
+
+        /* ========== 撕票分割线 ========== */
+        .ticket-tear {
+            position: absolute;
+            bottom: 188px;
+            left: 0;
+            width: 714px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .tear-circle-left {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-bg);
+            position: absolute;
+            left: -12px;
+            z-index: 3;
+        }
+
+        .tear-circle-right {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-bg);
+            position: absolute;
+            right: -12px;
+            z-index: 3;
+        }
+
+        .tear-dashed {
+            width: 666px;
+            margin: 0 auto;
+            border-top: 1px dashed var(--color-auxiliary);
+        }
+
+        /* ========== 乘客信息区 ========== */
+        .ticket-passenger {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 714px;
+            height: 188px;
+            padding: 0 24px;
+        }
+
+        .passenger-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 24px;
+        }
+
+        .passenger-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .passenger-name {
+            font-size: 30px;
+            font-weight: 500;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .passenger-id {
+            font-size: 24px;
+            line-height: 28px;
+            color: var(--color-midgray);
+        }
+
+        .seat-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .seat-top-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-tag {
+            padding: 0 6px;
+            height: 28px;
+            border: 1px solid var(--color-auxiliary);
+            border-radius: 4px;
+            font-size: 20px;
+            line-height: 26px;
+            color: var(--color-lightgray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seat-number {
+            font-size: 30px;
+            font-weight: 500;
+            line-height: 34px;
+            color: var(--color-darkgray);
+            text-align: right;
+        }
+
+        .seat-class-price {
+            font-size: 24px;
+            line-height: 28px;
+            color: var(--color-midgray);
+            text-align: right;
+        }
+
+        /* 操作按钮 */
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 14px;
+        }
+
+        .action-btn {
+            height: 60px;
+            background: var(--color-brand-1);
+            border-radius: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+            cursor: pointer;
+        }
+
+        .action-btn-sm {
+            width: 116px;
+            padding: 10px 30px;
+        }
+
+        .action-btn-lg {
+            width: 160px;
+            padding: 10px 24px;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .qr-icon {
+            width: 26px;
+            height: 26px;
+        }
+
+        .qr-icon img {
+            width: 26px;
+            height: 26px;
+        }
+
+        /* ========== 2.2 快捷服务栏 ========== */
+        .quick-services {
+            width: 714px;
+            height: 116px;
+            background: var(--color-white);
+            padding: 18px 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        .service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .service-icon img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .service-text {
+            font-size: 24px;
+            line-height: 26px;
+            color: var(--color-darkgray);
+            text-align: center;
+        }
+
+        .service-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--color-auxiliary);
+            flex-shrink: 0;
+        }
+
+        /* ========== 2.3 关注公众号 ========== */
+        .follow-card {
+            width: 750px;
+            height: 130px;
+            background: var(--color-white);
+            border-radius: 0;
+            padding: 24px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .follow-left {
+            display: flex;
+            align-items: center;
+            gap: 23px;
+        }
+
+        .wechat-icon {
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
+        }
+
+        .wechat-icon img {
+            width: 72px;
+            height: 72px;
+        }
+
+        .follow-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .follow-title {
+            font-size: 30px;
+            font-weight: 500;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .follow-desc {
+            font-size: 24px;
+            line-height: 140%;
+            color: var(--color-lightgray);
+        }
+
+        .follow-btn {
+            width: 144px;
+            height: 60px;
+            border: 2px solid var(--color-auxiliary);
+            border-radius: 30px;
+            background: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--color-midgray);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        /* ========== 2.4 已购服务 ========== */
+        .purchased-section {
+            width: 750px;
+        }
+
+        .section-header {
+            height: 90px;
+            background: var(--color-white);
+            padding: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header-title {
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 28px;
+            color: var(--color-darkgray);
+        }
+
+        .purchased-item {
+            height: 87px;
+            background: var(--color-white);
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .purchased-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .purchased-name {
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .purchased-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .purchased-status {
+            font-size: 26px;
+            font-weight: 500;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .arrow-right {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow-right img {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ========== 2.5 你可能想了解 ========== */
+        .faq-section {
+            width: 750px;
+        }
+
+        .faq-header {
+            height: 90px;
+            background: var(--color-white);
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-title {
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .faq-more {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .faq-more-text {
+            font-size: 26px;
+            font-weight: 500;
+            line-height: 140%;
+            color: var(--color-darkgray);
+        }
+
+        .faq-divider {
+            width: 690px;
+            height: 0;
+            border-top: 1px solid var(--color-bg);
+            margin: 0 auto;
+        }
+
+        .faq-body {
+            background: var(--color-white);
+            padding: 24px 30px;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .faq-pill {
+            height: 60px;
+            background: var(--color-bg);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--color-midgray);
+            cursor: pointer;
+        }
+
+        /* ========== 2.6 广告图 ========== */
+        .ad-banner {
+            width: 750px;
+            height: 270px;
+        }
+
+        .ad-banner img {
+            width: 750px;
+            height: 270px;
+            object-fit: cover;
+        }
+
+        /* ========== 3. 底部栏 ========== */
+        .bottom-bar {
+            width: 750px;
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .bottom-bar-spacer {
+            width: 750px;
+            height: 228px;
+        }
+
+        .contact-row {
+            height: 90px;
+            background: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 24px 0 30px;
+        }
+
+        .pig-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .pig-icon img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .contact-text {
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 32px;
+            color: var(--color-darkgray);
+        }
+
+        .safe-area {
+            height: 64px;
+            background: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .home-indicator {
+            width: 268px;
+            height: 10px;
+            background: var(--color-darkgray);
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- 黄色背景层 -->
+        <div class="yellow-bg"></div>
+
+        <!-- ===== 1. 出票成功区 ===== -->
+        <div class="status-bar">
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN01deGvLF1vPATvevmnO_!!6000000006164-2-tps-1500-176.png" alt="iPhone status bar">
+        </div>
+
+        <div class="nav-bar">
+            <div class="back-btn"><img src="https://img.alicdn.com/imgextra/i3/O1CN01s3eQyy1ZB2il1sAXb_!!6000000003155-2-tps-96-96.png" alt="返回"></div>
+            <div class="more-btn"><img src="https://img.alicdn.com/imgextra/i2/O1CN017NNZ6C1FVqOTlDnIa_!!6000000000493-2-tps-96-96.png" alt="更多"></div>
+        </div>
+
+        <div class="success-section">
+            <div class="success-inner">
+                <div class="success-title">出票成功</div>
+                <div class="success-desc">该票为电子票，可直接凭购票证件进站乘车</div>
+            </div>
+        </div>
+
+        <!-- ===== 2. 内容区 ===== -->
+        <div class="content-area">
+
+            <!-- 白色背景容器：已出票卡片 + 快捷服务栏 -->
+            <div class="ticket-services-wrap">
+
+            <!-- 2.1 已出票卡片 -->
+            <div class="ticket-card">
+                <!-- 灰色头部 -->
+                <div class="ticket-header">
+                    <div class="header-left">
+                        <div class="check-row">
+                            <span class="check-label">检票口</span>
+                            <span class="check-value">二楼B6/B7</span>
+                        </div>
+                        <div class="check-tip">以上为预估信息，请在发车前关注变更情况</div>
+                    </div>
+                    <div class="header-right">正在候车</div>
+                </div>
+
+                <!-- 车票信息区 -->
+                <div class="ticket-info">
+                    <div class="ticket-no">取票号：E274972745</div>
+                    <div class="trip-section">
+                        <!-- 日期行 -->
+                        <div class="trip-date-row">
+                            <div class="trip-date">
+                                <span class="trip-date-num">08-08</span>
+                                <span class="trip-date-day">周五</span>
+                            </div>
+                            <div class="trip-date">
+                                <span class="trip-date-num">08-08</span>
+                                <span class="trip-date-day">周五</span>
+                            </div>
+                        </div>
+                        <!-- 行程 OD -->
+                        <div class="trip-od">
+                            <div class="station">
+                                <div class="station-time">18:00</div>
+                                <div class="station-name">杭州东</div>
+                            </div>
+                            <div class="trip-center">
+                                <div class="trip-duration">5时30分</div>
+                                <div class="trip-arrow-wrap">
+                                    <img class="trip-arrow-img" src="https://img.alicdn.com/imgextra/i2/O1CN01ncg4Hq1SAOqxZXacR_!!6000000002206-2-tps-490-19.png" alt="箭头">
+                                </div>
+                                <div class="trip-train">
+                                    <span class="trip-train-no">G1234</span>
+                                    <div class="trip-train-arrow"><img src="https://img.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="箭头"></div>
+                                </div>
+                            </div>
+                            <div class="station station-right">
+                                <div class="station-time">18:54</div>
+                                <div class="station-name">南京南</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 撕票分割线 -->
+                <div class="ticket-tear">
+                    <div class="tear-circle-left"></div>
+                    <div class="tear-dashed"></div>
+                    <div class="tear-circle-right"></div>
+                </div>
+
+                <!-- 乘客信息区 -->
+                <div class="ticket-passenger">
+                    <div class="passenger-row">
+                        <div class="passenger-info">
+                            <div class="passenger-name">李雷</div>
+                            <div class="passenger-id">身份证 3*********0</div>
+                        </div>
+                        <div class="seat-info">
+                            <div class="seat-top-row">
+                                <div class="window-tag">靠窗</div>
+                                <div class="seat-number">03车厢 07C号</div>
+                            </div>
+                            <div class="seat-class-price">二等座 ¥400</div>
+                        </div>
+                    </div>
+                    <!-- 操作按钮 -->
+                    <div class="action-row">
+                        <div class="action-btn action-btn-sm">改签</div>
+                        <div class="action-btn action-btn-sm">退票</div>
+                        <div class="action-btn action-btn-lg">
+                            <div class="qr-icon"><img src="https://img.alicdn.com/imgextra/i3/O1CN01KkZzHA1kttHFZrsLo_!!6000000004742-2-tps-52-52.png" alt="二维码"></div>
+                            乘车码
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.2 快捷服务栏 -->
+            <div class="quick-services">
+                <div class="service-item">
+                    <div class="service-icon"><img src="https://gw.alicdn.com/imgextra/i3/O1CN01oiZkpk1hFdcZI7VJA_!!6000000004248-2-tps-96-96.png" alt="车站大屏"></div>
+                    <div class="service-text">车站大屏</div>
+                </div>
+                <div class="service-divider"></div>
+                <div class="service-item">
+                    <div class="service-icon"><img src="https://img.alicdn.com/imgextra/i3/O1CN01knPx3w21Te35EeJ6V_!!6000000006986-2-tps-96-96.png" alt="儿童申报"></div>
+                    <div class="service-text">儿童申报</div>
+                </div>
+                <div class="service-divider"></div>
+                <div class="service-item">
+                    <div class="service-icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01ztvpjJ1KyJ5PXhl8S_!!6000000001232-2-tps-96-96.png" alt="退改说明"></div>
+                    <div class="service-text">退改说明</div>
+                </div>
+            </div>
+            </div><!-- /ticket-services-wrap -->
+
+            <!-- 2.3 关注公众号 -->
+            <div class="follow-card">
+                <div class="follow-left">
+                    <div class="wechat-icon"><img src="https://img.alicdn.com/imgextra/i2/O1CN01sCPRvz1xZovTSbQ9q_!!6000000006458-2-tps-144-144.png" alt="微信"></div>
+                    <div class="follow-text">
+                        <div class="follow-title">关注飞猪旅行公众号</div>
+                        <div class="follow-desc">第一时间接收出票、出行信息</div>
+                    </div>
+                </div>
+                <div class="follow-btn">去关注</div>
+            </div>
+
+            <!-- 2.4 已购服务 -->
+            <div class="purchased-section">
+                <div class="section-header">
+                    <div class="section-header-title">已购服务</div>
+                </div>
+                <div class="purchased-item">
+                    <div class="purchased-left">
+                        <span class="purchased-name">免登录12306</span>
+                        <span class="purchased-name">¥10x2份</span>
+                    </div>
+                    <div class="purchased-right">
+                        <span class="purchased-status">已使用</span>
+                        <div class="arrow-right"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01zhdQfl1pNtfVtACvY_!!6000000005349-2-tps-24-24.png" alt="箭头"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.5 你可能想了解 -->
+            <div class="faq-section">
+                <div class="faq-header">
+                    <div class="faq-title">你可能想了解</div>
+                    <div class="faq-more">
+                        <span class="faq-more-text">查看更多问题</span>
+                        <div class="arrow-right"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01zhdQfl1pNtfVtACvY_!!6000000005349-2-tps-24-24.png" alt="箭头"></div>
+                    </div>
+                </div>
+                <div class="faq-divider"></div>
+                <div class="faq-body">
+                    <div class="faq-grid">
+                        <div class="faq-pill">多长时间能出票</div>
+                        <div class="faq-pill">出票失败怎么办</div>
+                        <div class="faq-pill">出票中能修改信息吗</div>
+                        <div class="faq-pill">出票成功率准确吗</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.6 广告图 -->
+            <div class="ad-banner">
+                <img src="https://img.alicdn.com/imgextra/i3/O1CN01xO3WLp24zCBE97smR_!!6000000007461-2-tps-1500-540.png" alt="您是否会推荐亲朋好友来飞猪购买火车票？">
+            </div>
+        </div>
+
+        <div class="bottom-bar-spacer" aria-hidden="true"></div>
+
+        <!-- ===== 3. 底部栏 ===== -->
+        <div class="bottom-bar">
+            <div class="contact-row">
+                <div class="pig-icon"><img src="https://img.alicdn.com/imgextra/i4/O1CN01xqA2gL1e4EusUiJr8_!!6000000003817-2-tps-72-72.png" alt="飞猪"></div>
+                <div class="contact-text">联系飞猪</div>
+            </div>
+            <div class="safe-area">
+                <div class="home-indicator"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

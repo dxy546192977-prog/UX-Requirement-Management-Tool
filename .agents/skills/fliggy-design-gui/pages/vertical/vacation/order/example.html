@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=750, user-scalable=no">
+<title>度假订单详情 — 整页串联</title>
+<style>
+@font-face{font-family:'Fliggy Sans 102';src:url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');font-weight:500;font-display:swap;}
+:root{--color-darkgray:#0F131A;}
+body{margin:0;background:#F2F3F5;font-family:'PingFang SC','Alibaba Sans 102',sans-serif;padding-bottom:220px;}
+a,a:link,a:visited,a:hover,a:active{text-decoration:none !important;}
+.vac-shell{max-width:750px;margin:0 auto;position:relative;}
+/* fixed nav */
+.vac-nav{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:200;width:750px;max-width:100%;height:176px;background:rgba(255,255,255,0);transition:background .3s,box-shadow .3s;}
+.vac-nav::before{content:'';position:absolute;inset:0;background:#FFF;opacity:var(--nav-progress,0);pointer-events:none;transition:opacity .15s ease-out;}
+.vac-nav.is-scrolled{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.vac-nav .status-bar{position:absolute;top:0;left:0;right:0;height:88px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;color:#FFF;background:url('https://gw.alicdn.com/imgextra/i1/O1CN01GqKAdM1ndoDb2ZsHQ_!!6000000005113-2-tps-1500-162.png') center/cover no-repeat;transition:background .2s,color .2s;}
+.vac-nav .status-bar__time{font-size:28px;font-weight:700;}
+.vac-nav .status-bar__icons{display:flex;gap:10px;align-items:center;}
+.vac-nav .status-bar__icon{height:22px;fill:currentColor;}
+.vac-nav .nav-bar{position:absolute;bottom:0;left:0;right:0;height:88px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;color:#FFF;transition:color .2s;}
+.vac-nav .nav-bar__icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--color-darkgray);}
+.vac-nav .nav-bar__icon svg{width:48px;height:48px;fill:currentColor;}
+.vac-nav .nav-bar__title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:36px;font-weight:600;opacity:0;transition:opacity .3s,transform .3s;color:#0F131A;}
+.vac-nav.is-scrolled .status-bar{background:rgba(255,255,255,.92);color:#0F131A;}
+.vac-nav.is-scrolled .nav-bar{color:#0F131A;}
+.vac-nav.is-scrolled .nav-bar__title{opacity:1;transform:translate(-50%,calc(-50% - 24px));}
+/* yellow header */
+.order-result-header{box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:30px;width:100%;height:501px;background:#FFE033;}
+.main-content{display:flex;flex-direction:column;align-items:center;gap:36px;width:100%;}
+.content-wrapper{display:flex;flex-direction:column;align-items:center;gap:24px;width:702px;}
+.text-area{display:flex;flex-direction:column;align-items:flex-start;padding:0 12px;gap:12px;width:702px;box-sizing:border-box;}
+.status-title{font-weight:500;font-size:48px;line-height:140%;color:#0F131A;margin:0;}
+.guarantee-text{font-size:26px;line-height:140%;color:#0F131A;margin:0;}
+.highlight-time{color:#FF5533;}
+.button-group{display:flex;gap:18px;width:702px;height:72px;}
+.action-button{flex:1;display:flex;justify-content:center;align-items:center;height:72px;background:#FFFCEB;border-radius:100px;border:none;font-weight:500;font-size:30px;color:#0F131A;}
+.white-transition{width:100%;height:24px;background:#FFF;border-radius:24px 24px 0 0;}
+/* service */
+.service-wrapper{display:flex;flex-direction:column;padding:0 24px 24px;width:750px;max-width:100%;margin:0 auto;box-sizing:border-box;background:#FFF;}
+.guarantee__row{display:flex;align-items:center;width:100%;max-width:100%;margin:0 auto;}
+.guarantee__label{margin:0 -6px;z-index:1;flex-shrink:0;}
+.guarantee__label-inner{display:flex;align-items:center;justify-content:center;min-width:100px;height:36px;padding:0 10px;background:#FFE033;border-radius:5px;font-weight:600;font-size:22px;color:#0F131A;}
+.guarantee__text-bar{flex:1;display:flex;align-items:center;padding-left:12px;min-height:36px;background:linear-gradient(90deg,#FFF9D8 50%,rgba(255,249,216,.0001) 100%);border-radius:4px;}
+.guarantee__text{font-size:24px;color:#0F131A;white-space:nowrap;}
+/* basic */
+.card-wrapper{display:flex;flex-direction:column;padding:0 24px 24px;width:750px;max-width:100%;margin:0 auto;box-sizing:border-box;background:#FFF;}
+.product-card{width:100%;max-width:100%;margin:0 auto;background:#F7F8FA;border-radius:12px;padding:18px 24px 24px;box-sizing:border-box;}
+.itinerary{display:flex;flex-wrap:wrap;align-items:center;gap:12px;width:100%;color:#0F131A;}
+.itinerary__number{font-family:'Fliggy Sans 102',sans-serif;font-size:42px;font-weight:400;line-height:140%;}
+.itinerary__unit-month{font-size:26px;font-weight:500;line-height:56px;}
+.itinerary__unit-day{font-size:26px;font-weight:400;line-height:56px;}
+.itinerary__day,.itinerary__session{font-size:26px;font-weight:500;line-height:140%;}
+.itinerary__separator{width:12px;height:1px;background:#0F131A;}
+.itinerary__note{font-size:24px;color:#919499;}
+.title-section{display:flex;justify-content:space-between;align-items:center;padding-top:12px;gap:10px;width:100%;}
+.title-section__text{font-size:30px;font-weight:500;margin:0;color:#0F131A;}
+.title-section__quantity{color:#3865F6;margin-left:4px;}
+.info-list{display:flex;flex-direction:column;width:100%;}
+.bi-row{display:flex;align-items:flex-start;padding-top:12px;gap:18px;font-size:26px;line-height:140%;}
+.bi-row__label{flex-shrink:0;width:142px;color:#919499;}
+.bi-row__value{flex:1;color:#0F131A;}
+.card-link{display:flex;align-items:center;gap:4px;text-decoration:none;color:#0F131A;font-size:26px;font-weight:500;white-space:nowrap;}
+.card-link__icon{width:28px;height:28px;flex-shrink:0;}
+/* voucher */
+.ticket-voucher{display:flex;flex-direction:column;align-items:center;padding-bottom:24px;width:100%;background:#FFF;}
+.voucher-content{display:flex;flex-direction:column;gap:18px;width:702px;max-width:calc(100% - 48px);margin:0 auto;background:#F7F8FA;border-radius:12px;padding:18px 0;}
+.voucher-header{display:flex;flex-direction:column;gap:18px;padding:0 24px;width:100%;box-sizing:border-box;}
+.vq-row{display:flex;padding-top:12px;gap:18px;font-size:26px;line-height:140%;}
+.vq-row__label{width:142px;flex-shrink:0;color:#919499;}
+.vq-row__value{flex:1;color:#0F131A;}
+.vq-row__value--w{font-weight:500;color:#FF3333;}
+.voucher-qr{display:flex;flex-direction:column;align-items:center;gap:18px;padding:0 24px;width:100%;box-sizing:border-box;}
+.qr-img{width:280px;height:280px;border:1px solid #D2D4D9;border-radius:12px;object-fit:contain;}
+.qr-link{font-size:26px;color:#6666FF;text-decoration:none;}
+/* refund */
+.refund-sec{padding:24px 0 0;width:100%;background:#FFF;}
+.refund-h{display:flex;align-items:center;padding:0 24px 24px;}
+.refund-t{font-size:30px;font-weight:500;margin:0;color:#0F131A;}
+.refund-d{display:flex;align-items:center;padding:0 24px 18px;gap:30px;}
+.refund-lab{font-size:26px;color:#6666FF;}
+.refund-exp{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:26px;font-weight:500;color:#0F131A;}
+/* poi */
+.poi-sec{padding:24px 0 0;width:100%;background:#FFF;}
+.poi-h{display:flex;align-items:center;padding:0 24px 24px;gap:6px;}
+.poi-t{flex:1;font-size:30px;font-weight:500;margin:0;}
+.poi-d{padding:0 24px 18px;display:flex;flex-direction:column;gap:12px;}
+.poi-r1{display:flex;gap:18px;align-items:flex-start;}
+.poi-r1t{flex:1;font-size:26px;}
+.poi-ph{display:flex;align-items:center;gap:4px;font-size:26px;font-weight:500;color:#6666FF;}
+.poi-addr{font-size:26px;}
+/* order */
+.order-details{width:100%;background:#FFF;padding:0 24px 24px;box-sizing:border-box;}
+.store-info{display:flex;justify-content:space-between;align-items:center;padding:24px 0;gap:30px;}
+.store-info__left{display:flex;align-items:center;gap:12px;}
+.store-info__avatar{width:42px;height:42px;border-radius:6px;border:1px solid #D2D4D9;}
+.store-info__name{font-weight:500;font-size:30px;}
+.store-info__link{display:flex;align-items:center;gap:4px;font-size:26px;font-weight:500;}
+.product-item{display:flex;gap:18px;margin-bottom:16px;}
+.product-item__image{width:160px;height:160px;border-radius:12px;object-fit:cover;flex-shrink:0;}
+.product-item__details{flex:1;display:flex;flex-direction:column;gap:6px;}
+.product-item__row{display:flex;justify-content:space-between;gap:30px;}
+.product-item__name,.product-item__price{font-size:26px;}
+.product-item__spec,.product-item__quantity{font-size:24px;color:#919499;}
+.product-item__quantity{color:#0F131A;}
+.od-list{display:flex;flex-direction:column;}
+.od-item{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 0;gap:30px;}
+.od-item--c{align-items:center;}
+.od-lab{width:160px;flex-shrink:0;font-size:26px;color:#919499;}
+.od-val{flex:1;font-size:26px;word-break:break-all;}
+.od-price{display:flex;align-items:flex-end;gap:2px;color:#FF5533;flex:1;}
+.od-price .ci{font-size:24px;font-weight:500;}
+.od-price .ai{font-family:'Alibaba Sans 102',sans-serif;font-size:36px;font-weight:700;}
+.od-price .ad{font-family:'Alibaba Sans 102',sans-serif;font-size:24px;font-weight:700;}
+.od-act{display:flex;align-items:center;gap:4px;font-size:26px;font-weight:500;flex-shrink:0;}
+.od-act--b{color:#6666FF;}
+.od-div{height:1px;background:#F2F3F5;border:none;margin:0;}
+.od-toggle{display:flex;justify-content:center;align-items:center;gap:12px;padding-top:24px;font-size:26px;font-weight:500;}
+.od-toggle__arrow{display:inline-block;transform:scale(.7);transform-origin:left center;}
+/* travel */
+.tr-card{width:100%;background:#FFF;padding:24px 0 0;display:flex;flex-direction:column;align-items:center;}
+.tr-h{padding:0 24px 24px;width:100%;box-sizing:border-box;}
+.tr-ht{font-size:30px;font-weight:500;margin:0;}
+.tr-list{width:702px;max-width:100%;}
+.tr-row{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 0;gap:30px;font-size:26px;}
+.tr-lab{width:160px;flex-shrink:0;color:#919499;}
+.tr-val{flex:1;color:#0F131A;}
+/* upsell */
+.recommendations{width:100%;background:#FFF;padding-top:24px;}
+.recommendations__header{padding:0 24px 24px;}
+.recommendations__title{font-size:30px;font-weight:500;margin:0;}
+.recommendations__sc{overflow-x:auto;padding-bottom:24px;scrollbar-width:none;}
+.recommendations__sc::-webkit-scrollbar{display:none;}
+.recommendations__list{display:flex;gap:12px;padding:0 18px;margin:0;list-style:none;}
+.pcs{width:230px;flex-shrink:0;display:flex;flex-direction:column;}
+.pcs-img{position:relative;width:230px;height:230px;border-radius:6px;overflow:hidden;}
+.pcs-img img{width:100%;height:100%;object-fit:cover;}
+.pcs-badge{position:absolute;top:0;left:0;background:rgba(0,0,0,.7);color:#FFF;padding:6px;font-size:20px;border-radius:6px 0;}
+.pcs-info{padding-top:6px;}
+.pcs-name{font-size:28px;font-weight:500;margin:0;height:78px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:39px;}
+.pcs-tags{display:flex;gap:6px;padding-top:12px;}
+.pcs-tag{height:28px;padding:0 6px;border:1px solid rgba(102,102,255,.5);border-radius:4px;font-size:20px;color:#6666FF;display:flex;align-items:center;}
+.pcs-pr{display:flex;justify-content:space-between;align-items:flex-end;padding-top:12px;color:#FF5533;}
+.pcs-pr .pi{font-family:'Alibaba Sans 102',sans-serif;font-size:36px;font-weight:700;}
+.pcs-sc{font-size:20px;color:#919499;}
+/* bottom */
+.vac-bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:200;width:750px;max-width:100%;height:175px;background:#FFF;border-top:1px solid #F2F3F5;display:flex;justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom);}
+.vac-bottom a{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;}
+.vac-bottom .t1{font-size:28px;color:#0F131A;}
+.vac-bottom .t2{font-size:22px;color:#919499;}
+.vac-bottom .vd{height:65px;border-left:1px solid #F2F3F5;}
+.vac-bottom__icon{display:block;width:58px;height:auto;object-fit:contain;object-position:center;flex-shrink:0;}
+.vac-bottom__icon--small{width:46.4px;}
+.vac-sep{height:18px;width:100%;background:#F2F3F5;}
+</style>
+</head>
+<body>
+<div class="vac-shell">
+<header class="vac-nav" id="vacNav">
+<div class="status-bar"><div class="status-bar__icons">
+<svg class="status-bar__icon" viewBox="0 0 17 11"><path d="M0 10.6667H0.1V10.6667H0ZM3.4 10.6667V5.5H3.46667V10.6667H3.4Z" fill="currentColor"/></svg>
+</div></div>
+<nav class="nav-bar" aria-label="导航">
+<a href="#" class="nav-bar__icon" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z"/></svg></a>
+<h1 class="nav-bar__title">订单详情</h1>
+<a href="#" class="nav-bar__icon" aria-label="更多"><svg viewBox="0 0 24 24"><path d="M12 8C13.1 8 14 7.1 14 6S13.1 4 12 4 10 4.9 10 6 10.9 8 12 8Zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Z"/></svg></a>
+</nav>
+</header>
+
+<header class="order-result-header" aria-label="订单状态">
+<div class="main-content"><div class="content-wrapper">
+<div class="text-area"><h1 class="status-title">已出票</h1><p class="guarantee-text">请在当地时间 <span class="highlight-time">2025年08月06日23:56</span>后使用</p></div>
+<div class="button-group"><button type="button" class="action-button">申请退款</button><button type="button" class="action-button">发票/报销</button><button type="button" class="action-button">再次预订</button></div>
+</div></div>
+<div class="white-transition"></div>
+</header>
+
+<div class="service-wrapper"><div class="guarantee__row"><div class="guarantee__label"><span class="guarantee__label-inner">极速入园</span></div><div class="guarantee__text-bar"><span class="guarantee__text">10秒出票·出票即用·无需取票</span></div></div></div>
+
+<div class="card-wrapper"><div class="product-card">
+<div class="itinerary"><span class="itinerary__number">8</span><span class="itinerary__unit-month">月</span><span class="itinerary__number">7</span><span class="itinerary__unit-day">日</span><span class="itinerary__day">周六入园</span><span class="itinerary__number">19:00</span><span class="itinerary__separator"></span><span class="itinerary__number">23:59</span><span class="itinerary__session">场次</span></div>
+<div class="title-section"><h3 class="title-section__text">新加坡环球影城-1日门票<span class="title-section__quantity">×2张</span></h3><a href="#" class="card-link">须知<svg class="card-link__icon" viewBox="0 0 28 28" fill="none"><path d="M17.23 13.36l-5.17 5.38a1 1 0 01-1.41-1.42L14.29 14l-3.64-3.46a1 1 0 111.38-1.45l5.17 5.27z" fill="#0F131A"/></svg></a></div>
+<div class="info-list"><div class="bi-row"><span class="bi-row__label">入园区域</span><span class="bi-row__value">区域在这里</span></div><div class="bi-row"><span class="bi-row__label">门票套餐</span><span class="bi-row__value">快速通道</span></div></div>
+</div></div>
+
+<div class="ticket-voucher"><div class="voucher-content">
+<div class="voucher-header"><h3 style="margin:0;font-size:30px;font-weight:500;line-height:140%;color:#0F131A">凭证信息</h3>
+<div class="vq-row"><span class="vq-row__label">使用方式</span><span class="vq-row__value vq-row__value--w">凭身份证件直接使用</span></div>
+<div class="vq-row"><span class="vq-row__label">出行人</span><span class="vq-row__value">李雷 123456********7890</span></div></div>
+<div class="voucher-qr"><img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=vacation-order-demo" alt="二维码"><a href="#" class="qr-link">保存二维码</a></div>
+</div></div>
+
+<div class="vac-sep"></div>
+<section class="refund-sec"><header class="refund-h"><h3 class="refund-t">退款政策</h3></header><div class="refund-d"><span class="refund-lab">未办理全额退</span><a href="#" class="refund-exp">展开 <svg width="28" height="28" viewBox="0 0 28 28"><path d="M9.29 11.29a1 1 0 011.41 0L14 14.59l3.29-3.3a1 1 0 111.42 1.42l-4 4a1 1 0 01-1.42 0l-4-4a1 1 0 010-1.42z" fill="#0F131A"/></svg></a></div></section>
+
+<div class="vac-sep"></div>
+<section class="poi-sec"><header class="poi-h"><h3 class="poi-t">新加坡环球影城</h3><a href="#" class="card-link" style="width:80px">景点<svg class="card-link__icon" viewBox="0 0 28 28"><path d="M17.23 13.36l-5.17 5.38a1 1 0 01-1.41-1.42L14.29 14l-3.64-3.46a1 1 0 111.38-1.45z" fill="#0F131A"/></svg></a></header>
+<div class="poi-d"><div class="poi-r1"><span class="poi-r1t">04月01日-4月20日 全天：08:30-21:30</span><a href="tel:" class="poi-ph">电话</a></div><div class="poi-addr">浦东新区川沙镇黄赵路310号</div></div></section>
+
+<div class="vac-sep"></div>
+<section class="order-details" aria-label="订单信息">
+<div class="store-info"><div class="store-info__left"><img class="store-info__avatar" src="https://picsum.photos/id/64/42/42" alt=""><span class="store-info__name">新好游旅行旗舰店</span></div><a href="#" class="store-info__link">进店 ›</a></div>
+<div class="product-item"><img class="product-item__image" src="https://picsum.photos/id/1018/160/160" alt=""><div class="product-item__details"><div class="product-item__row"><span class="product-item__name">新加坡环球影城-1日门票</span><span class="product-item__price">¥230</span></div><div class="product-item__row"><span class="product-item__spec">快速通道</span><span class="product-item__quantity">×2</span></div></div></div>
+<div class="od-list"><div class="od-item od-item--c"><span class="od-lab">实付金额</span><div class="od-price"><span class="ci">¥</span><span class="ai">9296</span><span class="ad">.76</span></div><span class="od-act">明细 ›</span></div><hr class="od-div"><div class="od-item"><span class="od-lab">订单号</span><span class="od-val">358244354930874727738</span><span class="od-act od-act--b">复制</span></div></div>
+<div class="od-toggle">收起 <span class="od-toggle__arrow">▲</span></div>
+</section>
+
+<div class="vac-sep"></div>
+<div class="tr-card"><div class="tr-h"><h3 class="tr-ht">出行信息</h3></div><div class="tr-list">
+<div class="tr-row"><span class="tr-lab">出行人</span><span class="tr-val">韩梅梅</span><a href="#" class="card-link">查看 ›</a></div>
+<div class="tr-row"><span class="tr-lab">联系人</span><span class="tr-val">13832749988</span><a href="#" class="card-link">查看 ›</a></div>
+</div></div>
+
+<div class="vac-sep"></div>
+<section class="recommendations"><header class="recommendations__header"><h2 class="recommendations__title">园内好玩</h2></header><div class="recommendations__sc"><ul class="recommendations__list"><li>
+<article class="pcs"><a href="#"><div class="pcs-img"><img src="https://picsum.photos/id/103/230/230" alt=""><span class="pcs-badge">省心套餐</span></div><div class="pcs-info"><h3 class="pcs-name">新加坡环球影城联票</h3><div class="pcs-tags"><span class="pcs-tag">可订今日</span></div><div class="pcs-pr"><span>¥<span class="pi">296</span></span><span class="pcs-sc">已售300+</span></div></div></a></article>
+</li><li><article class="pcs"><a href="#"><div class="pcs-img"><img src="https://picsum.photos/id/237/230/230" alt=""><span class="pcs-badge">套餐</span></div><div class="pcs-info"><h3 class="pcs-name">园内餐饮券</h3><div class="pcs-pr"><span>¥<span class="pi">99</span></span><span class="pcs-sc">已售100+</span></div></div></a></article></li></ul></div></section>
+
+<nav class="vac-bottom" aria-label="联系">
+<a href="#"><img class="vac-bottom__icon vac-bottom__icon--small" src="https://gw.alicdn.com/imgextra/i1/O1CN01pXqeMG1r220p5RBLD_!!6000000005572-2-tps-64-56.png" alt="联系飞猪"><div><div class="t1">联系飞猪</div><div class="t2">24小时在线</div></div></a>
+<div class="vd"></div>
+<a href="#"><img class="vac-bottom__icon" src="https://gw.alicdn.com/imgextra/i3/O1CN0106zxTp20cyVBPJmAd_!!6000000006871-2-tps-88-80.png" alt="联系商家"><div><div class="t1">联系商家</div><div class="t2">09:00-23:00</div></div></a>
+</nav>
+</div>
+<script>
+(function(){var n=document.getElementById('vacNav');var TH=180;function s(){var y=window.scrollY||document.documentElement.scrollTop||0;var p=Math.min(Math.max(y/TH,0),1);n.style.setProperty('--nav-progress',String(p));n.classList.toggle('is-scrolled',y>120);}window.addEventListener('scroll',s,{passive:true});s();})();
+</script>
+</body>
+</html>

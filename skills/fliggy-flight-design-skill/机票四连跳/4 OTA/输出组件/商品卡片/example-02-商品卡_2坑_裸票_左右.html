@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>商品卡_2坑_裸票_左右</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f2f3f5;
+      color: #0e131b;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+    img { display: block; }
+    .card {
+      width: 714px;
+      margin: 0 auto;
+      border-radius: 12px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .body {
+      position: relative;
+      display: flex;
+      gap: 36px;
+      padding: 24px 24px 30px;
+    }
+    .buy {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 84px;
+      height: 84px;
+      border: 0;
+      border-radius: 12px;
+      background: #ff8400;
+      color: #ffffff;
+      font-size: 36px;
+      line-height: 36px;
+      font-weight: 500;
+    }
+    .price-col {
+      width: 204px;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .price-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      width: 204px;
+      height: 40px;
+    }
+    .price-main {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      width: 140px;
+      height: 45px;
+    }
+    .currency {
+      color: #ff4119;
+      font-size: 36px;
+      line-height: 31px;
+      font-weight: 700;
+      font-family: "Alibaba Sans 102", "Fliggy Sans 102", "PingFang SC", sans-serif;
+    }
+    .amount {
+      color: #ff4119;
+      font-size: 54px;
+      line-height: 45px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-family: "Alibaba Sans 102", "Fliggy Sans 102", "PingFang SC", sans-serif;
+    }
+    .strike {
+      width: 60px;
+      height: 20px;
+      font-size: 20px;
+      line-height: 20px;
+      font-weight: 400;
+      text-align: right;
+      text-decoration: line-through;
+      color: #91949a;
+      white-space: nowrap;
+    }
+    .price-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 6px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #ffe5df 0%, rgba(255, 229, 223, 0.0001) 100%);
+      color: #ff4119;
+      font-size: 22px;
+      line-height: 26px;
+      font-weight: 400;
+    }
+    .price-note img { width: 10px; height: 20px; }
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 96px;
+      font-size: 22px;
+      line-height: 31px;
+    }
+    .muted {
+      color: #90949a;
+      font-size: 22px;
+      line-height: 31px;
+    }
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #90949a;
+      font-size: 24px;
+      line-height: 24px;
+    }
+    .benefit img.badge { width: 24px; height: 24px; }
+    .benefit-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      flex: 1;
+    }
+    .benefit-copy img { width: 83px; height: 20px; flex: none; }
+    .benefit-copy span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .benefit img.arrow { width: 12px; height: 12px; }
+  </style>
+</head>
+<body>
+  <article class="card">
+    <div class="body">
+      <button class="buy" aria-label="预订">订</button>
+      <div class="price-col">
+        <div class="price-row">
+          <div class="price-main">
+            <span class="currency">¥</span>
+            <span class="amount">1045</span>
+          </div>
+          <div class="strike">¥1070</div>
+        </div>
+        <div class="price-note">
+          <span>至高减¥25</span>
+          <img src="https://gw.alicdn.com/imgextra/i4/O1CN01sYLDJz1HEYfwleQxX_!!6000000000726-2-tps-10-20.png" alt="">
+        </div>
+      </div>
+      <div class="info">
+        <div>托运行李共20公斤</div>
+        <div>退改¥41起</div>
+        <div>经济舱2.6折</div>
+        <div class="muted">赠飞猪立减券 ｜ 仅限在线支付购买</div>
+        <div class="benefit">
+          <img class="badge" src="https://gw.alicdn.com/imgextra/i4/O1CN01IINuL62A20gw5YBi0_!!6000000008144-2-tps-24-24.png" alt="礼">
+          <div class="benefit-copy">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01GPCFyc1pSw2oml6Ti_!!6000000005360-2-tps-83-20.png" alt="旅行套餐">
+            <span>赠送延误无忧旅行套餐</span>
+          </div>
+          <img class="arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN017pJeeo1OH27tRM2ci_!!6000000001679-2-tps-12-12.png" alt="">
+        </div>
+      </div>
+    </div>
+  </article>
+</body>
+</html>

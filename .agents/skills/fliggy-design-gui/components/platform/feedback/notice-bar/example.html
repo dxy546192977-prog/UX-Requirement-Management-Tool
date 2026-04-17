@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — 小黄条（Notice Bar）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --color-notice-tint: #fff6ee;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-notice-bar-demo-page {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.fdl-notice-bar-demo__heading {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-midgray);
+}
+
+.fdl-notice-bar-demo__block {
+  margin-bottom: 36px;
+}
+
+/* ========== fdl-notice-bar ========== */
+.fdl-notice-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
+  padding-left: 24px;
+  border-radius: var(--radius-m);
+  background: linear-gradient(90deg, var(--color-notice-tint) 0.25%, var(--color-white) 77.92%);
+  position: relative;
+}
+
+.fdl-notice-bar--static {
+  padding-right: 24px;
+}
+
+.fdl-notice-bar__main {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.fdl-notice-bar__brand {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 32px;
+  border-radius: var(--radius-s);
+  background: var(--color-brand-1);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-safeguard-5);
+}
+
+.fdl-notice-bar__title {
+  flex-shrink: 0;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--color-pay-1);
+  white-space: nowrap;
+}
+
+.fdl-notice-bar__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fdl-notice-bar__action {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 100%;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-darkgray);
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-notice-bar__action--dismiss {
+  color: var(--color-midgray);
+}
+
+.fdl-notice-bar__action::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -48px;
+  width: 48px;
+  height: 100%;
+  background: linear-gradient(270deg, var(--color-white) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.fdl-notice-bar__action svg {
+  position: relative;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+}
+
+.fdl-notice-bar__action:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: -2px;
+  z-index: 2;
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-notice-bar-demo-page">
+    <div class="fdl-notice-bar-demo__block">
+      <p class="fdl-notice-bar-demo__heading">带箭头</p>
+      <div class="fdl-notice-bar">
+        <div class="fdl-notice-bar__main">
+          <div class="fdl-notice-bar__brand" aria-hidden="true">会员</div>
+          <span class="fdl-notice-bar__title">会员福利</span>
+          <p class="fdl-notice-bar__text">您有一张专属优惠券待领取，点击查看详情。</p>
+        </div>
+        <a href="#" class="fdl-notice-bar__action" aria-label="查看详情">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              d="M9 18L15 12L9 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="fdl-notice-bar-demo__block">
+      <p class="fdl-notice-bar-demo__heading">带关闭</p>
+      <div class="fdl-notice-bar" id="fdl-notice-bar-dismiss-demo">
+        <div class="fdl-notice-bar__main">
+          <div class="fdl-notice-bar__brand" aria-hidden="true">提示</div>
+          <span class="fdl-notice-bar__title">温馨提示</span>
+          <p class="fdl-notice-bar__text">系统将于晚间 23:00–24:00 进行维护，部分功能可能受影响。</p>
+        </div>
+        <button type="button" class="fdl-notice-bar__action fdl-notice-bar__action--dismiss" aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="fdl-notice-bar-demo__block">
+      <p class="fdl-notice-bar-demo__heading">纯展示</p>
+      <div class="fdl-notice-bar fdl-notice-bar--static">
+        <div class="fdl-notice-bar__main">
+          <div class="fdl-notice-bar__brand" aria-hidden="true">活动</div>
+          <span class="fdl-notice-bar__title">限时活动</span>
+          <p class="fdl-notice-bar__text">全场商品 9 折优惠，仅限今日！</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var bar = document.getElementById("fdl-notice-bar-dismiss-demo");
+  if (!bar) return;
+  var btn = bar.querySelector(".fdl-notice-bar__action");
+  if (btn) {
+    btn.addEventListener("click", function () {
+      bar.style.display = "none";
+    });
+  }
+  document.querySelectorAll('.fdl-notice-bar__action[href="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+    });
+  });
+})();
+  </script>
+</body>
+</html>

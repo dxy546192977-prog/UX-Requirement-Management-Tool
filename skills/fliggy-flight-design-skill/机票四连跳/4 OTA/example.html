@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>fliggy-design-flight-ota-skill 整页示例</title>
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src:
+        local("Fliggy Sans 102"),
+        local("FliggySans102-Md"),
+        url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      --color-page-bg: #f2f3f5;
+      --color-surface: #ffffff;
+      --color-surface-soft: #f7f8fa;
+      --color-text-primary: #0e131b;
+      --color-text-secondary: #5b5f67;
+      --color-text-tertiary: #90949a;
+      --color-divider: #d2d4da;
+      --color-divider-soft: #e0e0e0;
+      --color-info: #009daa;
+      --color-price: #ff4119;
+      --color-warning: #ff0020;
+      --color-cta: #ff8400;
+      --color-title-underline: #ffdf00;
+      --color-tag-warm: #ffead6;
+      --color-tag-warm-text: #87533c;
+      --color-promo-warm-start: #ffe5df;
+      --color-promo-warm-end: rgba(255, 229, 223, 0.0001);
+      --color-upsell-start: #fff9f2;
+      --color-upsell-end: #fff1e6;
+      --color-info-pill-bg: rgba(0, 157, 170, 0.07);
+      --radius-shell: 24px;
+      --radius-card: 12px;
+      --radius-pill: 30px;
+      --radius-tag: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--color-page-bg);
+      color: var(--color-text-primary);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app-shell {
+      position: relative;
+      width: 750px;
+      height: 1624px;
+      margin: 0 auto;
+      background: var(--color-page-bg);
+      overflow: hidden;
+    }
+
+    .app-nav {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 176px;
+      background: var(--color-surface);
+      z-index: 10;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 88px;
+      padding: 0 28px 0 34px;
+      background: var(--color-surface);
+    }
+
+    .status-time {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .status-right {
+      width: 134px;
+      height: 24px;
+    }
+
+    .nav-bar {
+      position: relative;
+      height: 88px;
+      padding: 0 24px;
+      background: var(--color-surface);
+    }
+
+    .nav-back {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .nav-back img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .nav-title {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      width: 190px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translateX(-50%);
+    }
+
+    .nav-route {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 190px;
+      height: 48px;
+    }
+
+    .nav-city {
+      min-width: 68px;
+      font-size: 34px;
+      line-height: 48px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--color-text-primary);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .nav-route-icon {
+      width: 42px;
+      height: 42px;
+      flex: none;
+    }
+
+    .nav-actions {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      width: 168px;
+      height: 48px;
+    }
+
+    .nav-action {
+      width: 48px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--color-text-primary);
+    }
+
+    .nav-action img {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-action span {
+      margin-top: 2px;
+      font-size: 12px;
+      line-height: 17px;
+      font-weight: 400;
+      white-space: nowrap;
+      transform: scale(0.92);
+      transform-origin: center top;
+    }
+
+    .nav-action-more img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .nav-action-more span {
+      display: none;
+    }
+
+    .page-scroll {
+      position: absolute;
+      inset: 176px 0 0 0;
+      height: 1448px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      background: var(--color-page-bg);
+    }
+
+    .page-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .journey-module {
+      position: relative;
+      width: 750px;
+      padding: 24px 0 0;
+      background: linear-gradient(178.95deg, #ffffff 50%, #f2f3f5 99%);
+    }
+
+    .journey-pill {
+      position: absolute;
+      top: 16px;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 48px;
+      padding: 0 14px 0 12px;
+      border: 0;
+      border-radius: 30px 0 0 30px;
+      background: var(--color-info-pill-bg);
+      color: var(--color-text-secondary);
+      font-size: 22px;
+      line-height: 31px;
+    }
+
+    .journey-pill img:first-child {
+      width: 26px;
+      height: 26px;
+    }
+
+    .journey-pill img:last-child {
+      width: 12px;
+      height: 12px;
+    }
+
+    .journey-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 30px 30px;
+    }
+
+    .journey-summary {
+      padding-top: 0;
+      font-size: 18px;
+      line-height: 24px;
+      color: var(--color-text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    .journey-od {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 12px;
+      width: 458px;
+      height: 42px;
+      background: #ffffff;
+    }
+
+    .journey-time-group {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 6px;
+      width: 256px;
+      height: 42px;
+      flex: none;
+    }
+
+    .journey-time-start {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      width: 98px;
+      height: 42px;
+      flex: none;
+    }
+
+    .journey-time-end {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      width: 104px;
+      height: 42px;
+      flex: none;
+    }
+
+    .journey-time {
+      width: 100%;
+      height: 42px;
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-size: 42px;
+      line-height: 42px;
+      letter-spacing: -0.03em;
+    }
+
+    .journey-oneway-icon {
+      width: 42px;
+      height: 42px;
+      flex: none;
+    }
+
+    .journey-airport-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      width: 190px;
+      height: 42px;
+      flex: none;
+      align-self: stretch;
+    }
+
+    .journey-airport-route {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 2px;
+      width: 190px;
+      height: 42px;
+      flex: none;
+    }
+
+    .journey-airport-start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+      width: 73px;
+      line-height: 31px;
+      flex: none;
+    }
+
+    .journey-airport-end {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+      width: 105px;
+      height: 31px;
+      flex: none;
+    }
+
+    .journey-airport-copy {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 2px;
+      flex: none;
+    }
+
+    .journey-airport-copy span {
+      font-size: 22px;
+      line-height: 31px;
+      color: var(--color-text-primary);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .journey-airport-divider-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 10px;
+      width: 8px;
+      height: 31px;
+      flex: none;
+    }
+
+    .journey-airport-divider {
+      width: 8px;
+      border-top: 1.5px solid #000000;
+    }
+
+    .journey-service-tag {
+      width: 28px;
+      height: 28px;
+      flex: none;
+    }
+
+    .journey-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      min-height: 31px;
+      color: var(--color-text-tertiary);
+      font-size: 22px;
+      line-height: 31px;
+    }
+
+    .journey-meta .accent {
+      color: var(--color-info);
+    }
+
+    .journey-meta .flight-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .journey-meta .flight-chip img.logo {
+      width: 22px;
+      height: 22px;
+    }
+
+    .journey-meta img.separator {
+      width: 2px;
+      height: 20px;
+    }
+
+    .shutter {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      width: 750px;
+      height: 67px;
+      padding: 18px 24px 18px 30px;
+    }
+
+    .shutter-dashed {
+      position: absolute;
+      top: 1px;
+      left: 18px;
+      width: 714px;
+      border-top: 1px dashed var(--color-divider);
+      z-index: 2;
+    }
+
+    .shutter-main {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 6px;
+      width: 672px;
+      height: 31px;
+      flex: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .shutter-label {
+      width: 88px;
+      height: 31px;
+      flex: none;
+      font-size: 22px;
+      line-height: 31px;
+      font-weight: 600;
+      color: var(--color-info);
+      white-space: nowrap;
+    }
+
+    .shutter-rights {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      width: 578px;
+      height: 31px;
+      overflow: hidden;
+      flex: none;
+    }
+
+    .shutter-rights-track {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      width: 746px;
+      height: 31px;
+      flex: none;
+      color: var(--color-text-tertiary);
+      font-size: 22px;
+      line-height: 31px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .shutter-rights-track span {
+      flex: none;
+    }
+
+    .shutter-divider {
+      width: 1px;
+      height: 22px;
+      flex: none;
+    }
+
+    .shutter-mask {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 31px;
+      height: 30px;
+      background: linear-gradient(270deg, #f4f5f6 0%, rgba(244, 245, 246, 0.0001) 100%);
+    }
+
+    .shutter-arrow {
+      width: 12px;
+      height: 12px;
+      flex: none;
+      z-index: 1;
+    }
+
+    .promo-module {
+      padding: 6px 18px 18px;
+    }
+
+    .promo-card {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      width: 714px;
+      height: 72px;
+      padding: 0 18px;
+      background: var(--color-surface);
+      border-radius: var(--radius-card);
+    }
+
+    .promo-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      height: 60px;
+    }
+
+    .promo-image {
+      width: 65px;
+      height: 33px;
+      flex: none;
+    }
+
+    .promo-copy {
+      font-size: 24px;
+      line-height: 34px;
+      font-weight: 400;
+      color: var(--color-warning);
+      white-space: nowrap;
+    }
+
+    .promo-arrow {
+      width: 12px;
+      height: 12px;
+      flex: none;
+    }
+
+    .goods-shell {
+      background: linear-gradient(180deg, #ffffff 0%, #f2f3f5 9.08%);
+      border-radius: 24px 24px 0 0;
+      padding-top: 6px;
+    }
+
+    .ota-tabs {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 750px;
+      height: 106px;
+      padding: 0 24px;
+      background: transparent;
+    }
+
+    .ota-tab {
+      position: relative;
+      width: 180px;
+      height: 106px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--color-text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: none;
+    }
+
+    .ota-tab-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 180px;
+      height: 94px;
+      flex: none;
+    }
+
+    .ota-tab-bubble-row {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 180px;
+      height: 28px;
+      flex: none;
+    }
+
+    .ota-tab-bubble-placeholder {
+      width: 180px;
+      height: 28px;
+      flex: 1;
+    }
+
+    .ota-tab-title {
+      width: 180px;
+      height: 30px;
+      font-size: 30px;
+      line-height: 30px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .ota-tab.third .ota-tab-title {
+      width: 165px;
+    }
+
+    .ota-tab-sub {
+      width: 180px;
+      height: 28px;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 400;
+      text-align: center;
+      color: var(--color-text-secondary);
+    }
+
+    .ota-tab.active .ota-tab-sub {
+      color: var(--color-text-primary);
+    }
+
+    .ota-tab-underline {
+      width: 54px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--color-text-primary);
+      flex: none;
+    }
+
+    .ota-tab-seat {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 120px;
+      height: 32px;
+    }
+
+    .goods-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 0 18px 18px;
+    }
+
+    .goods-card {
+      width: 714px;
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+      overflow: hidden;
+    }
+
+    .goods-head {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      height: 66px;
+      padding: 20px 17px 12px;
+    }
+
+    .goods-head img.title-image {
+      width: 105px;
+      height: 34px;
+      flex: none;
+    }
+
+    .goods-head-copy {
+      padding-bottom: 2px;
+      font-size: 20px;
+      line-height: 28px;
+      color: var(--color-text-secondary);
+    }
+
+    .goods-card-body {
+      position: relative;
+      display: flex;
+      gap: 36px;
+      padding: 24px 24px 30px;
+    }
+
+    .goods-card.compact .goods-card-body {
+      padding-top: 24px;
+    }
+
+    .goods-card.multi-tabs .goods-card-body {
+      padding-top: 30px;
+    }
+
+    .goods-buy {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 84px;
+      height: 84px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--color-cta);
+      color: #ffffff;
+      font-size: 36px;
+      line-height: 36px;
+      font-weight: 500;
+    }
+
+    .goods-price-col {
+      width: 204px;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .goods-price-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      width: 204px;
+      height: 40px;
+    }
+
+    .goods-price-main {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      width: 140px;
+      height: 45px;
+    }
+
+    .goods-price-main .currency {
+      font-family: "Alibaba Sans 102", "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-size: 36px;
+      line-height: 31px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+
+    .goods-price-main .amount {
+      font-family: "Alibaba Sans 102", "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-size: 54px;
+      line-height: 45px;
+      font-weight: 700;
+      color: var(--color-price);
+      letter-spacing: -0.04em;
+    }
+
+    .goods-strike {
+      width: 60px;
+      height: 20px;
+      font-size: 20px;
+      line-height: 20px;
+      font-weight: 400;
+      text-align: right;
+      text-decoration: line-through;
+      color: #91949a;
+      white-space: nowrap;
+    }
+
+    .goods-price-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 6px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--color-promo-warm-start) 0%, var(--color-promo-warm-end) 100%);
+      font-size: 22px;
+      line-height: 26px;
+      font-weight: 400;
+      color: var(--color-price);
+      white-space: nowrap;
+    }
+
+    .goods-price-note img {
+      width: 10px;
+      height: 20px;
+    }
+
+    .cashback-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: 140.04px;
+      height: 28px;
+      padding: 0 6px;
+      border: 1px solid rgba(255, 65, 25, 0.5);
+      border-radius: 4px;
+      flex: none;
+    }
+
+    .cashback-logo {
+      width: 55.04px;
+      height: 19px;
+      flex: none;
+    }
+
+    .cashback-divider {
+      width: 1px;
+      height: 18px;
+      border-left: 1px dashed #ffae9f;
+      flex: none;
+    }
+
+    .cashback-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      width: 60px;
+      height: 22px;
+      flex: none;
+    }
+
+    .cashback-amount {
+      display: inline-block;
+      width: 49px;
+      height: 22px;
+      font-size: 22px;
+      line-height: 22px;
+      font-weight: 400;
+      color: var(--color-price);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .cashback-arrow {
+      position: relative;
+      width: 7px;
+      height: 12px;
+      flex: none;
+    }
+
+    .cashback-arrow::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      border-top: 2px solid #ff775d;
+      border-right: 2px solid #ff775d;
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
+
+    .goods-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 96px;
+      font-size: 22px;
+      line-height: 31px;
+      color: var(--color-text-primary);
+    }
+
+    .goods-info-muted {
+      font-size: 22px;
+      line-height: 31px;
+      color: var(--color-text-tertiary);
+    }
+
+    .limit-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      width: 426px;
+      height: 54px;
+      flex: none;
+    }
+
+    .limit-inline {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 6px;
+      width: 427px;
+      max-width: 666px;
+      height: 24px;
+      flex: none;
+    }
+
+    .limit-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(255, 65, 25, 0.5);
+      border-radius: 4px;
+      color: var(--color-price);
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 500;
+      flex: none;
+    }
+
+    .limit-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 396px;
+      height: 54px;
+      flex: none;
+    }
+
+    .limit-line {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 9px;
+      width: 396px;
+      height: 24px;
+      flex: none;
+    }
+
+    .limit-inline-copy {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 6px;
+      width: 397px;
+      height: 24px;
+      flex: none;
+    }
+
+    .limit-inline-line {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 9px;
+      width: 379px;
+      height: 24px;
+      flex: none;
+    }
+
+    .limit-text,
+    .limit-inline-text {
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 400;
+      color: var(--color-text-tertiary);
+      flex: none;
+    }
+
+    .limit-text-short {
+      width: 120px;
+    }
+
+    .limit-text-long {
+      width: 261px;
+    }
+
+    .limit-text-full {
+      width: 375px;
+    }
+
+    .limit-inline-text.short {
+      width: 144px;
+    }
+
+    .limit-inline-text.long {
+      width: 216px;
+    }
+
+    .limit-divider,
+    .limit-inline-divider {
+      width: 1px;
+      height: 19px;
+      background: #e0e0e0;
+      flex: none;
+    }
+
+    .goods-flight-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 31px;
+      color: var(--color-text-tertiary);
+      font-size: 22px;
+      line-height: 31px;
+      flex-wrap: wrap;
+    }
+
+    .goods-flight-row .flight-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .goods-flight-row .flight-chip img.logo {
+      width: 22px;
+      height: 22px;
+    }
+
+    .goods-flight-row img.separator {
+      width: 2px;
+      height: 20px;
+    }
+
+    .benefit-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      color: var(--color-text-tertiary);
+      font-size: 24px;
+      line-height: 24px;
+    }
+
+    .benefit-row img.badge {
+      width: 24px;
+      height: 24px;
+      flex: none;
+    }
+
+    .benefit-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .benefit-copy img.mark {
+      width: 83px;
+      height: 20px;
+      flex: none;
+    }
+
+    .benefit-copy span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .benefit-row img.arrow {
+      width: 12px;
+      height: 12px;
+      flex: none;
+    }
+
+    .goods-inline-alert {
+      padding: 18px 24px 0;
+      font-size: 20px;
+      line-height: 20px;
+      color: var(--color-price);
+    }
+
+    .inner-tabs {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 679px;
+      height: 72px;
+      margin: 0 18px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .inner-tab {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 226.33px;
+      height: 72px;
+      padding: 6px;
+      background: var(--color-page-bg);
+      flex: 1;
+    }
+
+    .inner-tab-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 214.33px;
+      height: 60px;
+      border-radius: 9px;
+    }
+
+    .inner-tab.active .inner-tab-panel {
+      background: var(--color-surface);
+    }
+
+    .inner-tab-title {
+      margin: -4px 0 0;
+      font-size: 22px;
+      line-height: 31px;
+      text-align: center;
+      color: var(--color-text-primary);
+      font-weight: 400;
+    }
+
+    .inner-tab.active .inner-tab-title {
+      font-weight: 500;
+    }
+
+    .inner-tab-sub {
+      font-size: 20px;
+      line-height: 28px;
+      text-align: center;
+      color: var(--color-text-primary);
+      font-weight: 400;
+    }
+
+    .inner-tab.active .inner-tab-sub {
+      font-weight: 500;
+    }
+
+    .rights-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 24px;
+      line-height: 24px;
+      color: var(--color-text-tertiary);
+    }
+
+    .rights-row img.badge {
+      width: 24px;
+      height: 24px;
+      flex: none;
+    }
+
+    .rights-row span {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .upsell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 20px 24px;
+      background: linear-gradient(180deg, var(--color-upsell-start) 26.61%, var(--color-upsell-end) 100%);
+      color: var(--color-tag-warm-text);
+    }
+
+    .upsell-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: none;
+    }
+
+    .upsell-left img {
+      width: 90px;
+      height: 24px;
+    }
+
+    .upsell-price {
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 500;
+      color: var(--color-price);
+    }
+
+    .upsell-copy {
+      flex: 1;
+      min-width: 0;
+      font-size: 22px;
+      line-height: 31px;
+      color: var(--color-tag-warm-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upsell-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--color-tag-warm-text);
+      font-size: 22px;
+      line-height: 22px;
+      flex: none;
+    }
+
+    .upsell-action img {
+      width: 12px;
+      height: 12px;
+      opacity: 0.7;
+    }
+
+    .more-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 714px;
+      height: 78px;
+      padding: 0 24px 0 29px;
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .more-copy {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      font-size: 26px;
+      line-height: 26px;
+      font-weight: 500;
+    }
+
+    .more-copy-text {
+      color: var(--color-text-primary);
+    }
+
+    .more-copy-price {
+      color: #ff1c00;
+    }
+
+    .more-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 24px;
+      line-height: 29px;
+      font-weight: 400;
+      color: var(--color-text-primary);
+    }
+
+    .more-action img {
+      width: 12px;
+      height: 12px;
+      transform: rotate(90deg);
+      transform-origin: center;
+    }
+
+    .mindset {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 750px;
+      padding: 36px 0 48px;
+    }
+
+    .mindset-brand {
+      width: 282px;
+      height: 41px;
+    }
+
+    .mindset-copy {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 24px;
+      line-height: 32px;
+      color: #212121;
+    }
+
+    .mindset-copy::before,
+    .mindset-copy::after {
+      content: "";
+      width: 64px;
+      height: 1px;
+      background: rgba(33, 33, 33, 0.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-nav">
+      <div class="status-bar">
+        <div class="status-time">9:41</div>
+        <img class="status-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01fDXHWq1je1wcx12ia_!!6000000004572-2-tps-134-24.png" alt="状态栏">
+      </div>
+      <div class="nav-bar">
+        <button class="nav-back" aria-label="返回">
+          <img src="https://gw.alicdn.com/imgextra/i1/O1CN01DTmWga1piVVizwK8x_!!6000000005394-2-tps-48-48.png" alt="">
+        </button>
+        <div class="nav-title">
+          <div class="nav-route" aria-label="杭州到北京">
+            <span class="nav-city">杭州</span>
+            <img class="nav-route-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN015RbuWn1af6KRGgKmO_!!6000000003356-2-tps-42-42.png" alt="">
+            <span class="nav-city">北京</span>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="nav-action" aria-label="低价提醒">
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN015uzCtj1heN0PLsbOK_!!6000000004302-2-tps-36-36.png" alt="">
+            <span>低价提醒</span>
+          </button>
+          <button class="nav-action" aria-label="我的收藏">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01x00HtJ1vG0YmOniAx_!!6000000006144-2-tps-36-36.png" alt="">
+            <span>我的收藏</span>
+          </button>
+          <button class="nav-action nav-action-more" aria-label="更多">
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN014bSFyZ1xCv7asQHR9_!!6000000006408-2-tps-48-48.png" alt="">
+            <span>更多</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-scroll">
+      <section class="journey-module">
+        <button class="journey-pill" aria-label="出行提醒">
+          <img src="https://gw.alicdn.com/imgextra/i1/O1CN01CCuCiC1SguyQWAkf3_!!6000000002277-2-tps-26-26.png" alt="">
+          <span>出行提醒</span>
+          <img src="https://gw.alicdn.com/imgextra/i3/O1CN01r65nUg1Eh0QgL9Edx_!!6000000000382-2-tps-12-12.png" alt="">
+        </button>
+        <div class="journey-card">
+          <div class="journey-summary">06-24 周二 · 直飞2h25m</div>
+          <div class="journey-od">
+            <div class="journey-time-group">
+              <div class="journey-time-start">
+                <div class="journey-time">07:10</div>
+              </div>
+              <img class="journey-oneway-icon" src="https://gw.alicdn.com/imgextra/i3/O1CN013xUKFA1fIGf6QEliq_!!6000000003983-2-tps-42-42.png" alt="单程">
+              <div class="journey-time-end">
+                <div class="journey-time">09:20</div>
+              </div>
+            </div>
+            <div class="journey-airport-group">
+              <div class="journey-airport-route">
+                <div class="journey-airport-start">
+                  <div class="journey-airport-copy">
+                    <span>萧山</span>
+                    <span>T3</span>
+                  </div>
+                </div>
+                <div class="journey-airport-divider-wrap">
+                  <div class="journey-airport-divider"></div>
+                </div>
+                <div class="journey-airport-end">
+                  <div class="journey-airport-copy">
+                    <span>首都</span>
+                    <span>T3</span>
+                  </div>
+                  <img class="journey-service-tag" src="https://gw.alicdn.com/imgextra/i3/O1CN01xS7HS4258M6FdMh3k_!!6000000007481-2-tps-28-28.png" alt="新">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="journey-meta">
+            <div class="flight-chip">
+              <img class="logo" src="https://gw.alicdn.com/imgextra/i1/O1CN019HfUvn1PTggSJApOx_!!6000000001842-2-tps-22-22.png" alt="国航">
+              <span>国航CA1742</span>
+            </div>
+            <img class="separator" src="https://gw.alicdn.com/imgextra/i4/O1CN01KYPosW1eXYGNaNvHV_!!6000000003881-2-tps-2-20.png" alt="">
+            <span>波音787(大)</span>
+            <img class="separator" src="https://gw.alicdn.com/imgextra/i4/O1CN01KYPosW1eXYGNaNvHV_!!6000000003881-2-tps-2-20.png" alt="">
+            <span class="accent">梦想宽体机</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="shutter">
+        <div class="shutter-main">
+          <div class="shutter-label">机场提示</div>
+          <div class="shutter-rights">
+            <div class="shutter-rights-track">
+              <span>国航快线</span>
+              <img class="shutter-divider" src="https://gw.alicdn.com/imgextra/i4/O1CN01ECpVp31Qe3GP2GbZ2_!!6000000002000-2-tps-1-22.png" alt="">
+              <span>赠¥10接送机券</span>
+              <img class="shutter-divider" src="https://gw.alicdn.com/imgextra/i4/O1CN01ECpVp31Qe3GP2GbZ2_!!6000000002000-2-tps-1-22.png" alt="">
+              <span>赠机场免费冰淇淋券包</span>
+            </div>
+            <div class="shutter-mask"></div>
+          </div>
+        </div>
+        <img class="shutter-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN017pJeeo1OH27tRM2ci_!!6000000001679-2-tps-12-12.png" alt="箭头">
+        <div class="shutter-dashed" aria-hidden="true"></div>
+      </section>
+
+      <section class="promo-module">
+        <div class="promo-card">
+          <div class="promo-content">
+            <img class="promo-image" src="https://gw.alicdn.com/imgextra/i3/O1CN0121KqdT1Hyog7f4ABg_!!6000000000827-2-tps-65-33.png" alt="享免单">
+            <div class="promo-copy">组队满10800个全额免单</div>
+          </div>
+          <img class="promo-arrow" src="https://gw.alicdn.com/imgextra/i3/O1CN01r65nUg1Eh0QgL9Edx_!!6000000000382-2-tps-12-12.png" alt="箭头">
+        </div>
+      </section>
+
+      <section class="goods-shell">
+        <div class="ota-tabs">
+          <button class="ota-tab active" aria-label="经济舱">
+            <div class="ota-tab-inner">
+              <div class="ota-tab-bubble-row">
+                <div class="ota-tab-bubble-placeholder"></div>
+              </div>
+              <div class="ota-tab-title">经济舱</div>
+              <div class="ota-tab-sub">¥550起</div>
+            </div>
+            <div class="ota-tab-underline"></div>
+          </button>
+          <button class="ota-tab" aria-label="超级经济舱">
+            <div class="ota-tab-inner">
+              <div class="ota-tab-bubble-row">
+                <div class="ota-tab-bubble-placeholder"></div>
+              </div>
+              <div class="ota-tab-title">超级经济舱</div>
+              <div class="ota-tab-sub">¥550起</div>
+            </div>
+          </button>
+          <button class="ota-tab third" aria-label="公务头等舱">
+            <div class="ota-tab-inner">
+              <div class="ota-tab-bubble-row">
+                <div class="ota-tab-bubble-placeholder"></div>
+                <img class="ota-tab-seat" src="https://gw.alicdn.com/imgextra/i3/O1CN01EQpKX51lf44Qu5vec_!!6000000004845-2-tps-120-32.png" alt="座椅可平躺">
+              </div>
+              <div class="ota-tab-title">公务/头等舱</div>
+              <div class="ota-tab-sub">¥1520起</div>
+            </div>
+          </button>
+        </div>
+
+        <div class="goods-list">
+          <article class="goods-card">
+            <div class="goods-head">
+              <img class="title-image" src="https://gw.alicdn.com/imgextra/i4/O1CN01prBGxg1bPMKbP0dVL_!!6000000003457-2-tps-105-34.png" alt="超值精选">
+              <div class="goods-head-copy">超值低价 出行无忧</div>
+            </div>
+            <div class="goods-card-body">
+              <button class="goods-buy" aria-label="预订">订</button>
+              <div class="goods-price-col">
+                <div class="goods-price-row">
+                  <div class="goods-price-main">
+                    <span class="currency">¥</span>
+                    <span class="amount">1045</span>
+                  </div>
+                  <div class="goods-strike">¥1094</div>
+                </div>
+                <div class="goods-price-note">
+                  <span>2项优惠减¥35</span>
+                  <img src="https://gw.alicdn.com/imgextra/i4/O1CN01sYLDJz1HEYfwleQxX_!!6000000000726-2-tps-10-20.png" alt="">
+                </div>
+              </div>
+              <div class="goods-info">
+                <div>托运行李共20公斤</div>
+                <div>退改¥41起</div>
+                <div>经济舱2.6折</div>
+                <div class="goods-info-muted">赠首单立减69元飞猪券</div>
+                <div class="benefit-row">
+                  <img class="badge" src="https://gw.alicdn.com/imgextra/i4/O1CN01IINuL62A20gw5YBi0_!!6000000008144-2-tps-24-24.png" alt="礼">
+                  <div class="benefit-copy">
+                    <img class="mark" src="https://gw.alicdn.com/imgextra/i2/O1CN01GPCFyc1pSw2oml6Ti_!!6000000005360-2-tps-83-20.png" alt="旅行套餐">
+                    <span>赠送旅行套餐权益</span>
+                  </div>
+                  <img class="arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN017pJeeo1OH27tRM2ci_!!6000000001679-2-tps-12-12.png" alt="">
+                </div>
+              </div>
+            </div>
+            <div class="upsell">
+              <div class="upsell-left">
+                <img src="https://gw.alicdn.com/imgextra/i1/O1CN01iPOAcf1wfUCumFpaH_!!6000000006335-2-tps-90-24.png" alt="延误无忧">
+                <span class="upsell-price">¥49</span>
+              </div>
+              <div class="upsell-copy">航班延误赔付400，赠快速理赔服务</div>
+              <div class="upsell-action">
+                <span>更换</span>
+                <img src="https://gw.alicdn.com/imgextra/i4/O1CN017pJeeo1OH27tRM2ci_!!6000000001679-2-tps-12-12.png" alt="">
+              </div>
+            </div>
+          </article>
+
+          <article class="goods-card compact">
+            <div class="goods-card-body">
+              <button class="goods-buy" aria-label="预订">订</button>
+              <div class="goods-price-col">
+                <div class="goods-price-row">
+                  <div class="goods-price-main">
+                    <span class="currency">¥</span>
+                    <span class="amount">1045</span>
+                  </div>
+                  <div class="goods-strike">¥1070</div>
+                </div>
+                <div class="goods-price-note">
+                  <span>至高减¥25</span>
+                  <img src="https://gw.alicdn.com/imgextra/i4/O1CN01sYLDJz1HEYfwleQxX_!!6000000000726-2-tps-10-20.png" alt="">
+                </div>
+              </div>
+              <div class="goods-info">
+                <div>托运行李共20公斤</div>
+                <div>退改¥41起</div>
+                <div>经济舱2.6折</div>
+                <div class="goods-info-muted">赠飞猪立减券 ｜ 仅限在线支付购买</div>
+                <div class="benefit-row">
+                  <img class="badge" src="https://gw.alicdn.com/imgextra/i4/O1CN01IINuL62A20gw5YBi0_!!6000000008144-2-tps-24-24.png" alt="礼">
+                  <div class="benefit-copy">
+                    <img class="mark" src="https://gw.alicdn.com/imgextra/i2/O1CN01GPCFyc1pSw2oml6Ti_!!6000000005360-2-tps-83-20.png" alt="旅行套餐">
+                    <span>赠送延误无忧旅行套餐</span>
+                  </div>
+                  <img class="arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN017pJeeo1OH27tRM2ci_!!6000000001679-2-tps-12-12.png" alt="">
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="goods-card multi-tabs">
+            <div class="goods-head">
+              <img class="title-image" src="https://gw.alicdn.com/imgextra/i4/O1CN016gr1GI24Uy2R1ZzrI_!!6000000007395-2-tps-105-34.png" alt="人群好价">
+              <div class="goods-head-copy">特定人群更优惠</div>
+            </div>
+            <div class="inner-tabs">
+              <div class="inner-tab active">
+                <div class="inner-tab-panel">
+                  <div class="inner-tab-title">家庭出行</div>
+                  <div class="inner-tab-sub">¥775</div>
+                </div>
+              </div>
+              <div class="inner-tab">
+                <div class="inner-tab-panel">
+                  <div class="inner-tab-title">16-28周岁</div>
+                  <div class="inner-tab-sub">¥780</div>
+                </div>
+              </div>
+              <div class="inner-tab">
+                <div class="inner-tab-panel">
+                  <div class="inner-tab-title">60周岁以上</div>
+                  <div class="inner-tab-sub">¥782</div>
+                </div>
+              </div>
+            </div>
+            <div class="goods-card-body">
+              <button class="goods-buy" aria-label="预订">订</button>
+              <div class="goods-price-col">
+                <div class="goods-price-row">
+                  <div class="goods-price-main">
+                    <span class="currency">¥</span>
+                    <span class="amount">1045</span>
+                  </div>
+                </div>
+                <div class="goods-price-note">
+                  <span>至高减¥25</span>
+                  <img src="https://gw.alicdn.com/imgextra/i4/O1CN01sYLDJz1HEYfwleQxX_!!6000000000726-2-tps-10-20.png" alt="">
+                </div>
+              </div>
+              <div class="goods-info">
+                <div>托运行李共20公斤</div>
+                <div>退改¥41起</div>
+                <div>经济舱2.6折</div>
+                <div class="limit-block">
+                  <div class="limit-badge">限</div>
+                  <div class="limit-stack">
+                    <div class="limit-line">
+                      <span class="limit-text limit-text-short">同周同航次</span>
+                      <span class="limit-divider" aria-hidden="true"></span>
+                      <span class="limit-text limit-text-long">同3人以上成团</span>
+                    </div>
+                    <div class="limit-line">
+                      <span class="limit-text limit-text-full">五重券叠加更省</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="goods-card multi-tabs">
+            <div class="goods-head">
+              <img class="title-image" src="https://gw.alicdn.com/imgextra/i4/O1CN016QHX501Kgu2CX3b2h_!!6000000001194-2-tps-105-34.png" alt="精选权益">
+              <div class="goods-head-copy">另赠超值权益</div>
+            </div>
+            <div class="inner-tabs">
+              <div class="inner-tab active">
+                <div class="inner-tab-panel">
+                  <div class="inner-tab-title">返100元现金</div>
+                  <div class="inner-tab-sub">¥940</div>
+                </div>
+              </div>
+              <div class="inner-tab">
+                <div class="inner-tab-panel">
+                  <div class="inner-tab-title">赠500里程</div>
+                  <div class="inner-tab-sub">¥1620</div>
+                </div>
+              </div>
+              <div class="inner-tab">
+                <div class="inner-tab-panel">
+                  <div class="inner-tab-title">赠600里程</div>
+                  <div class="inner-tab-sub">¥1690</div>
+                </div>
+              </div>
+            </div>
+            <div class="goods-card-body">
+              <button class="goods-buy" aria-label="预订">订</button>
+              <div class="goods-price-col">
+                <div class="goods-price-row">
+                  <div class="goods-price-main">
+                    <span class="currency">¥</span>
+                    <span class="amount">1045</span>
+                  </div>
+                </div>
+                <div class="cashback-tag">
+                  <img class="cashback-logo" src="https://gw.alicdn.com/imgextra/i3/O1CN017gisda1bnAvVisw4P_!!6000000003509-2-tps-56-19.png" alt="返现金">
+                  <span class="cashback-divider" aria-hidden="true"></span>
+                  <span class="cashback-action">
+                    <span class="cashback-amount">¥100</span>
+                    <span class="cashback-arrow" aria-hidden="true"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="goods-info">
+                <div>托运行李共20公斤</div>
+                <div>退改¥41起</div>
+                <div>经济舱2.6折</div>
+                <div class="limit-inline">
+                  <div class="limit-badge">限</div>
+                  <div class="limit-inline-copy">
+                    <div class="limit-inline-line">
+                      <span class="limit-inline-text short">赠机场咖啡</span>
+                      <span class="limit-inline-divider" aria-hidden="true"></span>
+                      <span class="limit-inline-text long">仅限信用卡支付购买</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="rights-row">
+                  <img class="badge" src="https://gw.alicdn.com/imgextra/i4/O1CN01IINuL62A20gw5YBi0_!!6000000008144-2-tps-24-24.png" alt="礼">
+                  <span>赠520安心礼包</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <section class="more-entry">
+            <div class="more-copy">
+              <span class="more-copy-text">更多报价</span>
+              <span class="more-copy-price">¥1043起</span>
+            </div>
+            <div class="more-action">
+              <span>展开</span>
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01r65nUg1Eh0QgL9Edx_!!6000000000382-2-tps-12-12.png" alt="展开">
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <footer class="mindset">
+        <img class="mindset-brand" src="https://gw.alicdn.com/imgextra/i2/O1CN01WkEORs1xqlZt4YvON_!!6000000006495-2-tps-282-41.png" alt="飞猪旅行·安心票">
+        <div class="mindset-copy">出票安心 · 出行安心 · 服务安心</div>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

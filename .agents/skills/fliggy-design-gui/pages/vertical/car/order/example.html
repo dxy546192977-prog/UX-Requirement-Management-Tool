@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, initial-scale=0.5">
+  <title>用车中</title>
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.2.27/fonts/FliggySans102-Md.ttf') format('truetype');
+    }
+    
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-auxiliary: #D2D4D9;
+      --color-bg: #F2F3F5;
+      --color-label: #F7F8FA;
+      --color-white: #FFFFFF;
+      --color-brand-1: #FFE033;
+      --color-brand-2: #FFFCEB;
+      --color-brand-4: #FFF7CC;
+      --color-indigo-1: #6666FF;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #FF3333;
+      --color-pay-1: #FF5533;
+      --color-pay-2: #FF8C1A;
+      --color-notice-tint: #FFF6EE;
+      --color-promo-1: #FF0036;
+      --color-promo-2: #9537FD;
+      --color-green-0: #149AA8;
+      --color-safeguard-4: #FEF5EC;
+      --color-safeguard-5: #5D3521;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+    
+      --color-local-1: #EBEDF0;
+      --color-local-2: #292C33;
+      --color-local-3: #FFE866;
+      --color-local-4: #805540;
+      --color-local-5: #FFFDF2;
+      --color-local-6: #FFF8CC;
+      --color-local-7: #B29A00;
+      --color-local-8: rgba(255, 232, 102, 0.0001);
+      --color-local-9: rgba(102, 102, 255, 0.02);
+      --color-local-10: rgba(102, 102, 255, 0.2);
+      --color-local-11: rgba(92, 95, 102, 0.5);
+    }
+
+        * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg);
+      width: 750px;
+      min-height: 3258px;
+      position: relative;
+    }
+    
+    /* 顶部黄色渐变背景 */
+    .header-bg {
+      position: absolute;
+      width: 750px;
+      height: 514px;
+      left: 0;
+      top: 0;
+      background: linear-gradient(180deg, var(--color-brand-1) 0%, transparent 100%);
+      z-index: 0;
+    }
+    
+    /* 状态栏 */
+    .status-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      z-index: 10;
+    }
+    
+    .status-time {
+      position: absolute;
+      left: 42px;
+      top: 24px;
+      width: 108px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .status-time span {
+      font-family: 'PingFang SC';
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--color-darkgray);
+    }
+    
+    .status-icons {
+      position: absolute;
+      right: 28px;
+      top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .signal-icon, .wifi-icon, .battery-icon {
+      display: flex;
+      align-items: center;
+    }
+    
+    .signal-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 28px;
+    }
+    
+    .signal-bar {
+      width: 6px;
+      background: var(--color-darkgray);
+      border-radius: 1px;
+    }
+    
+    .signal-bar:nth-child(1) { height: 9px; }
+    .signal-bar:nth-child(2) { height: 12px; }
+    .signal-bar:nth-child(3) { height: 16px; }
+    .signal-bar:nth-child(4) { height: 20px; }
+    
+    .wifi-icon svg {
+      width: 32px;
+      height: 28px;
+    }
+    
+    .battery-wrap {
+      display: flex;
+      align-items: center;
+    }
+    
+    .battery {
+      width: 46px;
+      height: 24px;
+      border: 2px solid var(--color-darkgray);
+      border-radius: 6px;
+      padding: 2px;
+      position: relative;
+    }
+    
+    .battery-level {
+      width: 100%;
+      height: 100%;
+      background: var(--color-darkgray);
+      border-radius: 2px;
+    }
+    
+    .battery-cap {
+      width: 2px;
+      height: 8px;
+      background: var(--color-darkgray);
+      border-radius: 0 2px 2px 0;
+      margin-left: 2px;
+    }
+    
+    /* 导航栏 */
+    .nav-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+    }
+    
+    .nav-back {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+    }
+    
+    .nav-more {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+    }
+    
+    /* 用车中头部 */
+    .driving-header {
+      position: relative;
+      padding: 18px 36px 0;
+      z-index: 10;
+    }
+    
+    .driving-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    
+    .driving-status h2 {
+      font-weight: 500;
+      font-size: 42px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .driving-tip {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+      margin-bottom: 24px;
+    }
+    
+    /* 按钮组 */
+    .action-buttons {
+      display: flex;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    
+    .action-btn {
+      width: 342px;
+      height: 74px;
+      background: var(--color-brand-2);
+      border-radius: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 30px;
+      color: var(--color-darkgray);
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* 主内容区域 */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 18px 0;
+      gap: 18px;
+      position: relative;
+      z-index: 10;
+    }
+    
+    /* 卡片通用样式 */
+    .card {
+      width: 714px;
+      background: var(--color-white);
+      border-radius: 12px;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      height: 80px;
+    }
+    
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .card-title h3 {
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+    
+    .card-title .help-icon {
+      width: 36px;
+      height: 36px;
+    }
+    
+    .card-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    
+    .card-link span {
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .card-link img {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* 租车小贴士卡片 */
+    .tips-card {
+      width: 720px;
+      padding-bottom: 24px;
+    }
+    
+    .tips-card .card-header {
+      width: 720px;
+    }
+    
+    .tips-title-img {
+      height: 32px;
+    }
+    
+    .tips-content {
+      padding: 0 27px;
+    }
+    
+    .tips-text {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+      margin-bottom: 12px;
+    }
+    
+    .tips-tags {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .tips-tag {
+      flex: 1;
+      height: 58px;
+      border: 1px solid var(--color-auxiliary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 18px;
+      cursor: pointer;
+    }
+    
+    .tips-tag span {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    .tips-tag img {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .limit-policy {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      border: 1px solid var(--color-auxiliary);
+      border-radius: 12px;
+      padding: 12px 18px;
+    }
+    
+    .limit-policy-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .limit-policy-left img {
+      height: 26px;
+    }
+    
+    .limit-policy-left span {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    .limit-policy img.arrow {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* 押金卡片 */
+    .deposit-card {
+      padding-bottom: 24px;
+    }
+    
+    .deposit-content {
+      width: 666px;
+      height: 106px;
+      background: var(--color-label);
+      border-radius: 12px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+    
+    .deposit-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .deposit-date {
+      height: 30px;
+      border: 1px solid var(--color-midgray);
+      border-radius: 191px;
+      padding: 1px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .deposit-date span {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    .deposit-amount {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .deposit-line {
+      position: absolute;
+      width: 139.5px;
+      height: 0;
+      border: 1px dashed var(--color-midgray);
+      top: 33px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    /* 合同卡片 */
+    .contract-card {
+      height: 80px;
+    }
+    
+    /* 预订信息卡片 */
+    .booking-card {
+      padding-bottom: 24px;
+    }
+    
+    .booking-content {
+      padding: 0 24px;
+    }
+    
+    .booking-price {
+      color: var(--color-pay-1) !important;
+    }
+    
+    .order-number {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    
+    .order-number span {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    .order-number img {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    
+    .divider {
+      width: 666px;
+      height: 1px;
+      background: var(--color-local-1);
+      margin-bottom: 18px;
+    }
+    
+    /* 车辆信息 */
+    .car-info {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      position: relative;
+    }
+    
+    .car-image {
+      width: 135px;
+      height: 90px;
+      object-fit: contain;
+    }
+    
+    .car-details {
+      margin-left: 24px;
+      flex: 1;
+    }
+    
+    .car-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    
+    .car-name {
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .car-plate {
+      position: relative;
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--color-local-2);
+    }
+    
+    .car-plate::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 62px;
+      height: 13px;
+      background: linear-gradient(90deg, var(--color-local-3) 0%, var(--color-local-8) 100%);
+      z-index: -1;
+    }
+    
+    .car-specs {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    
+    .car-spec {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-midgray);
+      padding: 0 12px;
+      border-right: 1px solid var(--color-auxiliary);
+    }
+    
+    .car-spec:first-child {
+      padding-left: 0;
+    }
+    
+    .car-spec:last-child {
+      border-right: none;
+    }
+    
+    .car-detail-link {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    
+    .car-detail-link span {
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    /* 时间信息 */
+    .time-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    
+    .time-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .time-date {
+      display: flex;
+      align-items: center;
+    }
+    
+    .time-date .num {
+      font-family: 'Fliggy Sans 102', sans-serif;
+      font-weight: 400;
+      font-size: 42px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .time-date .unit {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .time-weekday {
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .time-duration {
+      background: var(--color-bg);
+      border-radius: 15px;
+      padding: 2px 6px;
+    }
+    
+    .time-duration span {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    /* 地点信息 */
+    .location-info {
+      width: 666px;
+      height: 258px;
+      background: var(--color-label);
+      border-radius: 12px;
+      position: relative;
+      margin-bottom: 18px;
+    }
+    
+    .location-map-btn {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .location-map-icon {
+      width: 54px;
+      height: 54px;
+      background: linear-gradient(0deg, var(--color-local-9) 2.14%, var(--color-local-10) 97.86%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .location-map-icon svg {
+      width: 30px;
+      height: 30px;
+      fill: var(--color-indigo-1);
+    }
+    
+    .location-map-text {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 140%;
+      color: var(--color-indigo-1);
+      margin-top: 6px;
+    }
+    
+    .location-item {
+      padding: 18px;
+    }
+    
+    .location-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+    
+    .location-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-top: 13px;
+      margin-right: 18px;
+    }
+    
+    .location-dot.pickup {
+      background: var(--color-indigo-1);
+    }
+    
+    .location-dot.return {
+      background: var(--color-pay-2);
+    }
+    
+    .location-content {
+      flex: 1;
+    }
+    
+    .location-type-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    
+    .location-type {
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .location-store {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .location-store img {
+      width: 30px;
+      height: 30px;
+    }
+    
+    .location-store span {
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 32px;
+      color: var(--color-local-4);
+    }
+    
+    .location-address {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-midgray);
+      margin-bottom: 6px;
+    }
+    
+    .location-hours {
+      display: flex;
+      align-items: center;
+    }
+    
+    .location-hours span {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    .location-phone {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 12px;
+      cursor: pointer;
+    }
+    
+    .location-phone span {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-indigo-1);
+    }
+    
+    .location-phone img {
+      width: 30px;
+      height: 30px;
+    }
+    
+    /* 商家信息 */
+    .merchant-info {
+      margin-bottom: 0;
+    }
+    
+    .merchant-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .merchant-name {
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    .merchant-tags {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .merchant-tag {
+      height: 28px;
+      border: 1px solid var(--color-local-11);
+      border-radius: 4px;
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .merchant-tag span {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    /* 出行/订单信息卡片 */
+    .info-card {
+      padding-bottom: 24px;
+    }
+    
+    .info-row {
+      display: flex;
+      padding: 0 24px;
+      margin-bottom: 12px;
+    }
+    
+    .info-label {
+      width: 170px;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-lightgray);
+    }
+    
+    .info-value {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    /* 单行卡片 */
+    .single-row-card {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+    }
+    
+    .single-row-card .label {
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 32px;
+      color: var(--color-darkgray);
+      width: 200px;
+    }
+    
+    .single-row-card .value {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+    
+    /* NPS评分卡片 */
+    .nps-card {
+      height: 229px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .nps-header-bg {
+      position: absolute;
+      width: 714px;
+      height: 80px;
+      left: 0;
+      top: 0;
+      background: linear-gradient(180deg, var(--color-local-5) 0%, var(--color-white) 100%);
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .nps-card .card-header {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .nps-content {
+      padding: 0 24px;
+    }
+    
+    .nps-faces {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    
+    .nps-face-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .nps-face-item img {
+      width: 30px;
+      height: 30px;
+    }
+    
+    .nps-face-item span {
+      font-weight: 400;
+      font-size: 28px;
+      line-height: 140%;
+      color: var(--color-lightgray);
+    }
+    
+    .nps-scale {
+      width: 666px;
+      height: 68px;
+      background: var(--color-local-6);
+      border-radius: 34px 2px 34px 34px;
+      padding: 9px 18px;
+    }
+    
+    .nps-circles {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .nps-circle {
+      width: 50px;
+      height: 50px;
+      background: var(--color-white);
+      border: 1px solid var(--color-brand-1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DIN Alternate', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--color-local-7);
+      cursor: pointer;
+    }
+    
+    /* 问题卡片 */
+    .faq-card {
+      padding-bottom: 24px;
+    }
+    
+    .faq-content {
+      padding: 0 24px;
+    }
+    
+    .faq-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .faq-btn {
+      width: 214px;
+      height: 48px;
+      background: var(--color-label);
+      border-radius: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .faq-btn span {
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-midgray);
+    }
+    
+    /* 底部栏 */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 750px;
+      height: 178.92px;
+      background: var(--color-white);
+      z-index: 100;
+    }
+    
+    .bottom-bar-content {
+      height: 114.51px;
+      border-top: 1px solid var(--color-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+    
+    .bottom-action {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      height: 100%;
+      position: relative;
+    }
+    
+    .bottom-action::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 66px;
+      background: var(--color-bg);
+    }
+    
+    .bottom-action:last-child::after {
+      display: none;
+    }
+    
+    .bottom-action img {
+      width: 40px;
+      height: 39px;
+    }
+    
+    .bottom-action span {
+      font-weight: 400;
+      font-size: 28px;
+      line-height: 28px;
+      color: var(--color-darkgray);
+    }
+    
+    .bottom-home-indicator {
+      height: 65.43px;
+      background: var(--color-white);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 18px;
+    }
+    
+    .home-indicator-bar {
+      width: 268px;
+      height: 10px;
+      background: var(--color-darkgray);
+      border-radius: 5px;
+    }
+    
+    /* 页面底部占位 */
+    .page-bottom-space {
+      height: 200px;
+    }
+    
+    /* Help icon */
+    .help-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--color-lightgray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--color-lightgray);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部黄色渐变背景 -->
+  <div class="header-bg"></div>
+  
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <div class="status-time">
+      <span>9:41</span>
+    </div>
+    <div class="status-icons">
+      <div class="signal-icon">
+        <div class="signal-bars">
+          <div class="signal-bar"></div>
+          <div class="signal-bar"></div>
+          <div class="signal-bar"></div>
+          <div class="signal-bar"></div>
+        </div>
+      </div>
+      <div class="wifi-icon">
+        <svg viewBox="0 0 32 28" fill="none">
+          <path d="M16 22C17.5 22 18.7 23.2 18.7 24.7C18.7 26.2 17.5 27.4 16 27.4C14.5 27.4 13.3 26.2 13.3 24.7C13.3 23.2 14.5 22 16 22Z" fill="var(--color-darkgray)"/>
+          <path d="M10.5 17.5C12 16 13.9 15.2 16 15.2C18.1 15.2 20 16 21.5 17.5" stroke="var(--color-darkgray)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M5.5 12.5C8.3 9.7 12 8 16 8C20 8 23.7 9.7 26.5 12.5" stroke="var(--color-darkgray)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="battery-wrap">
+        <div class="battery">
+          <div class="battery-level"></div>
+        </div>
+        <div class="battery-cap"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 导航栏 -->
+  <div class="nav-bar">
+    <img class="nav-back" src="https://img.alicdn.com/imgextra/i2/O1CN013Z2ANB1Qcg4nKik2f_!!6000000001997-55-tps-48-48.svg" alt="返回">
+    <img class="nav-more" src="https://img.alicdn.com/imgextra/i3/O1CN01J6xuRu1LC2y3tW58X_!!6000000001262-55-tps-48-48.svg" alt="更多">
+  </div>
+  
+  <!-- 用车中头部 -->
+  <div class="driving-header">
+    <div class="driving-status">
+      <h2>用车中</h2>
+    </div>
+    <p class="driving-tip">请注意行车安全，如有问题请及时联系商家</p>
+    <div class="action-buttons">
+      <button class="action-btn">我要退款</button>
+      <button class="action-btn">续租</button>
+    </div>
+  </div>
+  
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <!-- 租车小贴士卡片 -->
+    <div class="card tips-card">
+      <div class="card-header">
+        <div class="card-title">
+          <img class="tips-title-img" src="https://img.alicdn.com/imgextra/i4/O1CN013WmHAN1D4FIOQvBOF_!!6000000000162-55-tps-137-32.svg" alt="租车小贴士">
+        </div>
+        <div class="card-link">
+          <span>更多</span>
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+        </div>
+      </div>
+      <div class="tips-content">
+        <p class="tips-text">• 还车时油量/电量需与取车时一致</p>
+        <div class="tips-tags">
+          <div class="tips-tag">
+            <span>提前/延迟还车</span>
+            <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+          </div>
+          <div class="tips-tag">
+            <span>事故如何处理</span>
+            <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+          </div>
+          <div class="tips-tag">
+            <span>了解还车流程</span>
+            <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+          </div>
+        </div>
+        <div class="limit-policy">
+          <div class="limit-policy-left">
+            <img src="https://img.alicdn.com/imgextra/i2/O1CN01riZ0ZK1DbgD0tUZkG_!!6000000000235-55-tps-92-28.svg" alt="限行政策">
+            <span>杭州工作日部分道路限行规则</span>
+          </div>
+          <img class="arrow" src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+        </div>
+      </div>
+    </div>
+    
+    <!-- 押金卡片 -->
+    <div class="card deposit-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3>押金·已信用免押</h3>
+          <div class="help-icon">?</div>
+        </div>
+        <div class="card-link">
+          <span>解押进度</span>
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+        </div>
+      </div>
+      <div class="deposit-content">
+        <div class="deposit-item">
+          <div class="deposit-date">
+            <span>预计2024年10月20日</span>
+          </div>
+          <span class="deposit-amount">无车损解押¥1000</span>
+        </div>
+        <div class="deposit-line"></div>
+        <div class="deposit-item">
+          <div class="deposit-date">
+            <span>预计2024年11月5日</span>
+          </div>
+          <span class="deposit-amount">无违章解押¥2000</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 合同卡片 -->
+    <div class="card contract-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3>合同·签署成功</h3>
+        </div>
+        <div class="card-link">
+          <span>查看合同</span>
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+        </div>
+      </div>
+    </div>
+    
+    <!-- 预订信息卡片 -->
+    <div class="card booking-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3>总额</h3>
+          <span class="booking-price" style="font-weight: 500; font-size: 32px; color: var(--color-pay-1);">¥600</span>
+        </div>
+        <div class="card-link">
+          <span>明细</span>
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+        </div>
+      </div>
+      <div class="booking-content">
+        <div class="order-number">
+          <span>订单号：3977773654578945634</span>
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01BCHlnK1xdU5utHy8I_!!6000000006466-55-tps-30-30.svg" alt="复制">
+        </div>
+        <div class="divider"></div>
+        
+        <!-- 车辆信息 -->
+        <div class="car-info">
+          <img class="car-image" src="https://img.alicdn.com/imgextra/i4/O1CN01Zm7f801UyRMKO9f5L_!!6000000002586-55-tps-135-90.svg" alt="车辆图片">
+          <div class="car-details">
+            <div class="car-name-row">
+              <span class="car-name">丰田凯美瑞</span>
+              <span class="car-plate">浙A</span>
+            </div>
+            <div class="car-specs">
+              <span class="car-spec">经济型</span>
+              <span class="car-spec">5座</span>
+              <span class="car-spec">自动档</span>
+              <span class="car-spec">1.6L</span>
+            </div>
+          </div>
+          <div class="car-detail-link">
+            <span>详情</span>
+            <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+          </div>
+        </div>
+        
+        <!-- 时间信息 -->
+        <div class="time-info">
+          <div class="time-item">
+            <div class="time-date">
+              <span class="num">7</span>
+              <span class="unit">月</span>
+              <span class="num">17</span>
+              <span class="unit">日</span>
+            </div>
+            <span class="time-weekday">周四 10:00</span>
+          </div>
+          <div class="time-duration">
+            <span>1天2小时</span>
+          </div>
+          <div class="time-item">
+            <div class="time-date">
+              <span class="num">7</span>
+              <span class="unit">月</span>
+              <span class="num">18</span>
+              <span class="unit">日</span>
+            </div>
+            <span class="time-weekday">周五 12:00</span>
+          </div>
+        </div>
+        
+        <!-- 地点信息 -->
+        <div class="location-info">
+          <div class="location-map-btn">
+            <div class="location-map-icon">
+              <svg viewBox="0 0 30 30" fill="none">
+                <path d="M15 3C10.03 3 6 7.03 6 12C6 18.75 15 27 15 27C15 27 24 18.75 24 12C24 7.03 19.97 3 15 3ZM15 15.5C13.07 15.5 11.5 13.93 11.5 12C11.5 10.07 13.07 8.5 15 8.5C16.93 8.5 18.5 10.07 18.5 12C18.5 13.93 16.93 15.5 15 15.5Z" fill="var(--color-indigo-1)"/>
+              </svg>
+            </div>
+            <span class="location-map-text">地图指引</span>
+          </div>
+          
+          <div class="location-item">
+            <div class="location-row">
+              <div class="location-dot pickup"></div>
+              <div class="location-content">
+                <div class="location-type-row">
+                  <span class="location-type">取</span>
+                  <span class="location-type">自行前往门店</span>
+                  <div class="location-store">
+                    <img src="https://img.alicdn.com/imgextra/i1/O1CN01PgcVpL1oGjsoQopbQ_!!6000000005198-55-tps-30-30.svg" alt="店铺">
+                    <span>飞猪租车中心</span>
+                  </div>
+                </div>
+                <p class="location-address">成都双流机场T2航站楼L2层</p>
+                <div class="location-hours">
+                  <span>营业时间 09:00 - 20:00</span>
+                  <div class="location-phone">
+                    <span>门店电话</span>
+                    <img src="https://img.alicdn.com/imgextra/i3/O1CN01kNKFGO1oQob2rcD8Z_!!6000000005220-55-tps-30-30.svg" alt="电话">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="location-item" style="padding-top: 0;">
+            <div class="location-row">
+              <div class="location-dot return"></div>
+              <div class="location-content">
+                <div class="location-type-row">
+                  <span class="location-type">还</span>
+                  <span class="location-type">店员免费上门</span>
+                </div>
+                <p class="location-address">成都万豪酒店</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 商家信息 -->
+        <div class="merchant-info">
+          <div class="merchant-header">
+            <span class="merchant-name">车速递租车</span>
+            <div class="card-link">
+              <span>门店详情</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="箭头">
+            </div>
+          </div>
+          <div class="merchant-tags">
+            <div class="merchant-tag">
+              <span>免费上门取送车</span>
+            </div>
+            <div class="merchant-tag">
+              <span>免加油服务费</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 出行信息卡片 -->
+    <div class="card info-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3>出行信息</h3>
+        </div>
+      </div>
+      <div class="divider" style="margin: 0 24px 12px;"></div>
+      <div class="info-row">
+        <span class="info-label">驾驶人</span>
+        <span class="info-value">李雷</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">证件号</span>
+        <span class="info-value">4****************3</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">手机号</span>
+        <span class="info-value">130****0009</span>
+      </div>
+    </div>
+    
+    <!-- 订单信息卡片 -->
+    <div class="card info-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3>订单信息</h3>
+        </div>
+      </div>
+      <div class="divider" style="margin: 0 24px 12px;"></div>
+      <div class="info-row">
+        <span class="info-label">卖家名称</span>
+        <span class="info-value">成都空港租车专营店</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">支付宝交易号</span>
+        <span class="info-value">b_7644465908789</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">创建时间</span>
+        <span class="info-value">2024-07-22 12:12:12</span>
+      </div>
+    </div>
+    
+    <!-- 发票 -->
+    <div class="card single-row-card">
+      <span class="label">发票</span>
+      <span class="value">如需发票，请联系门店索取</span>
+    </div>
+    
+    <!-- 里程 -->
+    <div class="card single-row-card">
+      <span class="label">里程</span>
+      <span class="value">本单预计可获得10飞猪里程</span>
+    </div>
+    
+    <!-- NPS评分卡片 -->
+    <div class="card nps-card">
+      <div class="nps-header-bg"></div>
+      <div class="card-header">
+        <div class="card-title">
+          <h3>您是否会推荐亲朋好友来飞猪租车？</h3>
+        </div>
+      </div>
+      <div class="nps-content">
+        <div class="nps-faces">
+          <div class="nps-face-item">
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01thQqn61kOkLQMKvlF_!!6000000004674-55-tps-30-30.svg" alt="不推荐">
+            <span>肯定不推荐</span>
+          </div>
+          <div class="nps-face-item">
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN013VzBVn1eOOLKzWvpK_!!6000000003861-55-tps-30-30.svg" alt="推荐">
+            <span>肯定会推荐</span>
+          </div>
+        </div>
+        <div class="nps-scale">
+          <div class="nps-circles">
+            <div class="nps-circle">0</div>
+            <div class="nps-circle">1</div>
+            <div class="nps-circle">2</div>
+            <div class="nps-circle">3</div>
+            <div class="nps-circle">4</div>
+            <div class="nps-circle">5</div>
+            <div class="nps-circle">6</div>
+            <div class="nps-circle">7</div>
+            <div class="nps-circle">8</div>
+            <div class="nps-circle">9</div>
+            <div class="nps-circle">10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 常见问题卡片 -->
+    <div class="card faq-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3>您可能遇到的问题</h3>
+        </div>
+      </div>
+      <div class="divider" style="margin: 0 24px 18px;"></div>
+      <div class="faq-content">
+        <div class="faq-buttons">
+          <div class="faq-btn"><span>退款到账路径</span></div>
+          <div class="faq-btn"><span>信用免押失败</span></div>
+          <div class="faq-btn"><span>联系租车卖家</span></div>
+          <div class="faq-btn"><span>押金何时退还</span></div>
+          <div class="faq-btn"><span>还车问题合集</span></div>
+          <div class="faq-btn"><span>保险保障范围</span></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-bottom-space"></div>
+  </div>
+  
+  <!-- 底部栏 -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-content">
+      <div class="bottom-action">
+        <img src="https://img.alicdn.com/imgextra/i2/O1CN01vKIvl01koqv7J9UvH_!!6000000004731-55-tps-44-39.svg" alt="联系飞猪">
+        <span>联系飞猪</span>
+      </div>
+      <div class="bottom-action">
+        <img src="https://img.alicdn.com/imgextra/i4/O1CN01YXqhfj1d8zPLrYnhE_!!6000000003692-55-tps-41-39.svg" alt="联系商家">
+        <span>联系商家</span>
+      </div>
+    </div>
+    <div class="bottom-home-indicator">
+      <div class="home-indicator-bar"></div>
+    </div>
+  </div>
+</body>
+</html>

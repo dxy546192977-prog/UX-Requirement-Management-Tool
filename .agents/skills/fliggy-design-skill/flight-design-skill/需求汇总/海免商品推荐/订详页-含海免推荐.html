@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>订单详情 example</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-page-bg: #F2F3F5;
+      --color-white: #FFFFFF;
+      --color-brand: #6666FF;
+      --color-brand-soft: #F5F5FF;
+      --color-emphasis: #FFE033;
+      --color-emphasis-soft: #FFFCEB;
+      --color-divider: #D2D4D9;
+      --color-shadow-line: rgba(151, 151, 151, 0.14);
+    }
+
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #dfe3e8;
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      color: var(--color-darkgray);
+    }
+    .page {
+      width: 750px;
+      margin: 0 auto;
+      background: var(--color-page-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-image,
+    .trip-image,
+    .research-image,
+    .faq-image,
+    .customer-image {
+      display: block;
+      width: 750px;
+      object-fit: cover;
+      flex: 0 0 auto;
+    }
+    .nav-image {
+      height: 176px;
+      position: relative;
+      z-index: 1;
+    }
+    .trip-image { height: 616px; }
+    .research-image { height: 256px; }
+    .faq-image { height: 246px; }
+    .customer-image { height: 154px; }
+
+    .fulfillment {
+      position: relative;
+      width: 750px;
+      min-height: 755px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      background: var(--color-page-bg);
+      isolation: isolate;
+    }
+    .fulfillment::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      width: 750px;
+      height: 774px;
+      background: linear-gradient(180deg, #FFE036 0%, rgba(255,255,255,0.0001) 81.77%);
+      z-index: 0;
+    }
+
+    .status-wrap {
+      position: relative;
+      z-index: 1;
+      width: 750px;
+      padding: 0 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 59px;
+    }
+    .status-title {
+      font-size: 42px;
+      font-weight: 500;
+      line-height: 140%;
+    }
+    .status-arrow {
+      width: 12px;
+      height: 20.57px;
+      object-fit: contain;
+      display: block;
+    }
+    .status-desc {
+      margin: 0;
+      width: 678px;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-darkgray);
+    }
+
+    .quick-strip {
+      position: relative;
+      z-index: 1;
+      width: 750px;
+      padding: 0 24px;
+      display: flex;
+      gap: 12px;
+      overflow: hidden;
+    }
+    .quick-pill {
+      width: 166px;
+      height: 72px;
+      background: var(--color-emphasis-soft);
+      border-radius: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      flex: 0 0 auto;
+    }
+
+    .service-stack {
+      position: relative;
+      z-index: 1;
+      width: 714px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .service-card {
+      background: var(--color-white);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .service-head {
+      height: 84px;
+      padding: 18px 24px;
+      background: var(--color-brand-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+    .service-head-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .service-status-icon,
+    .mustread-icon,
+    .copy-icon-20,
+    .copy-icon-24,
+    .airline-icon,
+    .rich-arrow-icon,
+    .transfer-icon,
+    .action-icon,
+    .send-icon,
+    .arrow-7 {
+      display: block;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+    .service-status-icon {
+      width: 32px;
+      height: 32px;
+    }
+    .service-title {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 32px;
+      color: var(--color-darkgray);
+    }
+    .yellow-btn,
+    .ghost-btn,
+    .claim-btn {
+      border: 0;
+      border-radius: 42px;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 34px;
+      color: var(--color-darkgray);
+      flex: 0 0 auto;
+    }
+    .yellow-btn {
+      width: 140px;
+      height: 48px;
+      background: var(--color-emphasis);
+    }
+    .ghost-btn {
+      width: 140px;
+      height: 48px;
+      border: 2px solid var(--color-divider);
+      background: transparent;
+      color: var(--color-midgray);
+    }
+    .service-body {
+      padding: 18px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      color: var(--color-midgray);
+      font-size: 24px;
+      line-height: 28px;
+    }
+    .copy-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .copy-group,
+    .price-link,
+    .warning-tag,
+    .expand-link,
+    .action-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .copy-group,
+    .action-inline {
+      color: var(--color-brand);
+      font-weight: 500;
+    }
+    .copy-group {
+      font-size: 20px;
+      line-height: 24px;
+    }
+    .copy-icon-20 {
+      width: 20px;
+      height: 20px;
+    }
+    .copy-icon-24,
+    .airline-icon,
+    .rich-arrow-icon,
+    .action-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .transfer-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .mustread-card {
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mustread-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+    .mustread-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .mustread-icon {
+      width: 36px;
+      height: 36px;
+    }
+    .mustread-text {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 32px;
+    }
+    .tag-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--color-midgray);
+      font-size: 24px;
+      line-height: 28px;
+    }
+    .tag-divider {
+      width: 20px;
+      height: 0;
+      border-top: 2px solid var(--color-divider);
+      transform: rotate(90deg);
+    }
+
+    /* ===== 海免商品推荐模块 ===== */
+    .duty-free-recommend {
+      width: 750px;
+      padding: 0 18px;
+    }
+    .duty-free-card {
+      width: 714px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--color-white);
+      position: relative;
+    }
+    /* 顶部渐变头 — 飞猪品牌紫 */
+    .duty-free-header {
+      height: 88px;
+      background: linear-gradient(135deg, var(--color-brand) 0%, #8585FF 60%, #A5A5FF 100%);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .duty-free-header::before {
+      content: '';
+      position: absolute;
+      right: 60px;
+      top: -20px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .duty-free-header::after {
+      content: '';
+      position: absolute;
+      right: -10px;
+      bottom: -30px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .duty-free-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1;
+    }
+    .duty-free-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--color-emphasis);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+    .duty-free-header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .duty-free-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-white);
+      letter-spacing: 0.5px;
+    }
+    .duty-free-subtitle {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .duty-free-more {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-emphasis);
+      border-radius: 30px;
+      padding: 8px 20px;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      z-index: 1;
+    }
+    .duty-free-more::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid var(--color-darkgray);
+      border-right: 2px solid var(--color-darkgray);
+      transform: rotate(45deg);
+      margin-left: 2px;
+    }
+    /* 商品横滑区 */
+    .duty-free-products {
+      padding: 20px 0 16px 24px;
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .duty-free-products::-webkit-scrollbar { display: none; }
+    .duty-free-product {
+      flex: 0 0 auto;
+      width: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .duty-free-product-img {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      background: var(--color-surface-muted, #F7F8FA);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      gap: 8px;
+    }
+    .duty-free-product-img img {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+    }
+    .duty-free-product-tag {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--color-brand);
+      color: var(--color-white);
+      font-size: 18px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 12px 0 8px 0;
+      line-height: 1.3;
+    }
+    .duty-free-product-tag--hot {
+      background: var(--color-emphasis);
+      color: var(--color-darkgray);
+    }
+    .duty-free-product-name {
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--color-darkgray);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-weight: 400;
+    }
+    .duty-free-product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .duty-free-product-price-now {
+      font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--color-brand);
+      line-height: 1;
+    }
+    .duty-free-product-price-now .yen {
+      font-size: 20px;
+    }
+    .duty-free-product-price-origin {
+      font-size: 20px;
+      color: var(--color-lightgray);
+      text-decoration: line-through;
+    }
+    .duty-free-product-save {
+      font-size: 18px;
+      color: var(--color-brand);
+      font-weight: 500;
+      margin-top: -4px;
+    }
+    /* 底部提示条 */
+    .duty-free-footer {
+      height: 60px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      font-size: 22px;
+      color: var(--color-midgray);
+    }
+    .duty-free-footer-icon {
+      font-size: 20px;
+    }
+    .duty-free-footer-highlight {
+      color: var(--color-brand);
+      font-weight: 500;
+    }
+    /* 关闭按钮 */
+    .duty-free-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .duty-free-close::before,
+    .duty-free-close::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 2px;
+      background: var(--color-white);
+      border-radius: 1px;
+    }
+    .duty-free-close::before { transform: rotate(45deg); }
+    .duty-free-close::after { transform: rotate(-45deg); }
+    .duty-free-close:active {
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(0.9);
+    }
+    .travel-zone,
+    .order-zone {
+      width: 750px;
+      background: var(--color-white);
+    }
+    .section-head,
+    .simple-head {
+      padding: 24px;
+      font-size: 28px;
+      line-height: 32px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+    .expand-link {
+      color: var(--color-darkgray);
+      font-size: 24px;
+      line-height: 34px;
+      font-weight: 500;
+    }
+    .arrow-7 {
+      width: 7px;
+      height: 12px;
+    }
+    .expand-arrow {
+      transform: rotate(90deg);
+    }
+    .info-row,
+    .order-line,
+    .send-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 24px;
+      background: var(--color-white);
+    }
+    .send-row {
+      align-items: center;
+    }
+    .label {
+      flex: 0 0 auto;
+      font-size: 24px;
+      line-height: 28px;
+      color: var(--color-midgray);
+    }
+    .w72 { width: 72px; }
+    .w96 { width: 96px; }
+    .w120 { width: 120px; }
+    .w144 { width: 144px; }
+    .info-content {
+      width: 525px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      font-size: 24px;
+      line-height: 28px;
+      color: var(--color-darkgray);
+    }
+    .row-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .muted {
+      color: var(--color-lightgray);
+    }
+    .shadow-line {
+      width: 666px;
+      margin: 0 auto;
+      border-top: 1px solid var(--color-shadow-line);
+    }
+    .send-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 24px;
+      line-height: 30px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .send-icon {
+      width: 38px;
+      height: 38px;
+    }
+    .claim-btn {
+      width: 108px;
+      height: 48px;
+      background: var(--color-emphasis);
+    }
+    .mileage-wrap {
+      width: 526px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      font-size: 24px;
+      line-height: 28px;
+      color: var(--color-darkgray);
+    }
+    .mileage-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .plus-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #333;
+      position: relative;
+      flex: 0 0 auto;
+    }
+    .plus-icon::before,
+    .plus-icon::after {
+      content: "";
+      position: absolute;
+      background: #333;
+    }
+    .plus-icon::before {
+      width: 10px;
+      height: 2px;
+      left: 5px;
+      top: 10px;
+    }
+    .plus-icon::after {
+      width: 2px;
+      height: 10px;
+      left: 10px;
+      top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="fulfillment">
+      <img class="nav-image" src="https://gw.alicdn.com/imgextra/i3/O1CN01mchUok26QVPh4mAIw_!!6000000007656-2-tps-1500-352.png" alt="导航栏">
+
+      <section class="status-wrap">
+        <div class="status-row">
+          <span class="status-title">出票成功</span>
+          <img class="status-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01oHJ2D029WrlEV5Vat_!!6000000008076-2-tps-24-42.png" alt="箭头">
+        </div>
+        <p class="status-desc">请至少提前3小时到达机场，以免误机</p>
+      </section>
+
+      <div class="quick-strip">
+        <div class="quick-pill">我要退票</div>
+        <div class="quick-pill">我要改签</div>
+        <div class="quick-pill">发票报销</div>
+        <div class="quick-pill">在线选座</div>
+      </div>
+
+      <div class="service-stack">
+        <section class="service-card">
+          <div class="service-head">
+            <div class="service-head-main">
+              <img class="service-status-icon" src="https://gw.alicdn.com/imgextra/i3/O1CN019weas01b7xHaY3agN_!!6000000003419-2-tps-64-64.png" alt="状态">
+              <div class="service-title">预计 8月18日15:30 选座截止</div>
+            </div>
+            <button class="yellow-btn">去选座</button>
+          </div>
+          <div class="service-body">
+            <div class="copy-line">
+              <span>航司预订编码: NHDKJ660</span>
+              <span class="copy-group"><img class="copy-icon-20" src="https://gw.alicdn.com/imgextra/i4/O1CN019KRIpB1aYEOCj1xZD_!!6000000003341-2-tps-40-40.png" alt="复制"><span>复制</span></span>
+            </div>
+            <div>通过航司预订编码前往官网选座/加购行李</div>
+          </div>
+        </section>
+
+        <section class="mustread-card">
+          <div class="mustread-head">
+            <div class="mustread-title">
+              <img class="mustread-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01ukoyEq1WjRcizhQaK_!!6000000002824-2-tps-72-72.png" alt="出行前必读">
+              <div class="mustread-text">
+                <span>出行前必读</span>
+                <span style="color: var(--color-brand);">3条</span>
+              </div>
+            </div>
+            <button class="ghost-btn">详情</button>
+          </div>
+          <div class="tag-row">
+            <span>防诈骗提醒</span>
+            <span class="tag-divider"></span>
+            <span>出入境提醒</span>
+            <span class="tag-divider"></span>
+            <span>其他提醒</span>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <img class="trip-image" src="https://gw.alicdn.com/imgextra/i3/O1CN01ZrcPyN1c3fBeefMz5_!!6000000003545-2-tps-1500-1232.png" alt="行程区">
+
+    <!-- 海免商品推荐模块 -->
+    <section class="duty-free-recommend"
+             data-spm="Product recommendation"
+             data-exposure="181.7437879.Product recommendation"
+             data-condition-cities="三亚,海口"
+             data-condition-status="paid"
+             data-condition-refund="none">
+      <div class="duty-free-card"
+           data-jump-fliggy="https://pages.tmall.com/wow/a/act/21266/hainan-duty-free?from=fliggy"
+           data-jump-alipay="https://pages.tmall.com/wow/a/act/21266/hainan-duty-free?from=alipay"
+           data-jump-taobao="https://pages.tmall.com/wow/a/act/21266/hainan-duty-free?from=taobao">
+        <button class="duty-free-close" aria-label="关闭推荐"></button>
+
+        <!-- 顶部标题栏 -->
+        <div class="duty-free-header">
+          <div class="duty-free-header-left">
+            <div class="duty-free-icon">🛍</div>
+            <div class="duty-free-header-titles">
+              <span class="duty-free-title">海南离岛免税</span>
+              <span class="duty-free-subtitle">离岛前30天可下单 · 机场提货</span>
+            </div>
+          </div>
+          <div class="duty-free-more">去逛逛</div>
+        </div>
+
+        <!-- 商品横滑区 -->
+        <div class="duty-free-products">
+          <div class="duty-free-product">
+            <div class="duty-free-product-img">
+              <span class="duty-free-product-tag">爆款</span>
+              <img src="images/skii.png" alt="SK-II 神仙水">
+            </div>
+            <div class="duty-free-product-name">SK-II 护肤精华露 神仙水 230ml</div>
+            <div class="duty-free-product-price">
+              <span class="duty-free-product-price-now"><span class="yen">¥</span>890</span>
+              <span class="duty-free-product-price-origin">¥1590</span>
+            </div>
+            <div class="duty-free-product-save">省¥700</div>
+          </div>
+
+          <div class="duty-free-product">
+            <div class="duty-free-product-img">
+              <span class="duty-free-product-tag duty-free-product-tag--hot">热销</span>
+              <img src="images/lancome.png" alt="兰蔻小黑瓶">
+            </div>
+            <div class="duty-free-product-name">兰蔻 小黑瓶精华肌底液 100ml</div>
+            <div class="duty-free-product-price">
+              <span class="duty-free-product-price-now"><span class="yen">¥</span>760</span>
+              <span class="duty-free-product-price-origin">¥1280</span>
+            </div>
+            <div class="duty-free-product-save">省¥520</div>
+          </div>
+
+          <div class="duty-free-product">
+            <div class="duty-free-product-img">
+              <img src="images/esteelauder.png" alt="雅诗兰黛小棕瓶">
+            </div>
+            <div class="duty-free-product-name">雅诗兰黛 小棕瓶精华 50ml</div>
+            <div class="duty-free-product-price">
+              <span class="duty-free-product-price-now"><span class="yen">¥</span>520</span>
+              <span class="duty-free-product-price-origin">¥950</span>
+            </div>
+            <div class="duty-free-product-save">省¥430</div>
+          </div>
+
+          <div class="duty-free-product">
+            <div class="duty-free-product-img">
+              <span class="duty-free-product-tag">新品</span>
+              <img src="images/dior.png" alt="Dior 口红 999">
+            </div>
+            <div class="duty-free-product-name">Dior 烈艳蓝金唇膏 999#</div>
+            <div class="duty-free-product-price">
+              <span class="duty-free-product-price-now"><span class="yen">¥</span>230</span>
+              <span class="duty-free-product-price-origin">¥395</span>
+            </div>
+            <div class="duty-free-product-save">省¥165</div>
+          </div>
+
+          <div class="duty-free-product" style="padding-right: 24px;">
+            <div class="duty-free-product-img">
+              <span class="duty-free-product-tag duty-free-product-tag--hot">必买</span>
+              <img src="images/maotai.png" alt="茅台飞天 53度">
+            </div>
+            <div class="duty-free-product-name">贵州茅台 飞天 53度 500ml</div>
+            <div class="duty-free-product-price">
+              <span class="duty-free-product-price-now"><span class="yen">¥</span>1299</span>
+              <span class="duty-free-product-price-origin">¥1499</span>
+            </div>
+            <div class="duty-free-product-save">省¥200</div>
+          </div>
+        </div>
+
+        <!-- 底部提示 -->
+        <div class="duty-free-footer">
+          <span class="duty-free-footer-icon">✈️</span>
+          <span>到达海南后 <span class="duty-free-footer-highlight">机场提货</span> · 离岛免税最高省 <span class="duty-free-footer-highlight">50%</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="travel-zone">
+      <div class="section-head">
+        <span>出行信息</span>
+        <div class="expand-link">
+          <span>收起</span>
+          <img class="arrow-7 expand-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01NJJxka1RkkfvCKoPd_!!6000000002150-2-tps-14-24.png" alt="展开">
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="label w72">乘机人</div>
+        <div class="info-content">
+          <div class="row-between">
+            <span>HAN/MEIMEI 成人 女</span>
+            <span class="action-inline"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN013XVzRW1kaedurIc1p_!!6000000004700-2-tps-48-48.png" alt="修改"><span>修改姓名/证件</span></span>
+          </div>
+          <div>护照：E12****78</div>
+          <div class="row-between">
+            <span>票号：00391873987298</span>
+            <span class="action-inline"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01Zz2Bgr1rI3sHW9j14_!!6000000005607-2-tps-48-48.png" alt="复制"><span>复制</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="shadow-line"></div>
+
+      <div class="info-row">
+        <div class="label w144">航司预订编码</div>
+        <div class="info-content">
+          <div class="row-between">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <span>WANERD</span>
+              <span class="action-inline"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01Zz2Bgr1rI3sHW9j14_!!6000000005607-2-tps-48-48.png" alt="复制"><span>复制</span></span>
+              <span class="muted">(上海-中国香港)</span>
+            </div>
+          </div>
+          <div class="muted">可用于在线选座、加购行李等事宜</div>
+        </div>
+      </div>
+      <div class="shadow-line"></div>
+
+      <div class="info-row" style="padding-bottom:0;">
+        <div class="label w96">联系手机</div>
+        <div class="info-content" style="gap:0;">
+          <div class="row-between">
+            <span>134****3454</span>
+            <span class="action-inline"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN013XVzRW1kaedurIc1p_!!6000000004700-2-tps-48-48.png" alt="修改"><span>修改</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="label w96">联系邮箱</div>
+        <div class="info-content">
+          <div class="row-between">
+            <span>72*******@qq.com</span>
+            <span class="action-inline"><img class="action-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN013XVzRW1kaedurIc1p_!!6000000004700-2-tps-48-48.png" alt="修改"><span>修改</span></span>
+          </div>
+          <div class="muted">请确保手机畅通，并随时关注邮件通知，以便卖家在航班变动时通知到您。</div>
+        </div>
+      </div>
+      <div class="shadow-line"></div>
+
+      <div class="send-row">
+        <div class="send-left">
+          <img class="send-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01OpI8691yK4vfxZKnP_!!6000000006559-2-tps-76-76.png" alt="发送行程确认单">
+          <span>发送行程确认单</span>
+        </div>
+        <span class="action-inline"><span>去发送</span><img class="arrow-7" src="https://gw.alicdn.com/imgextra/i1/O1CN01NJJxka1RkkfvCKoPd_!!6000000002150-2-tps-14-24.png" alt="箭头"></span>
+      </div>
+    </section>
+
+    <section class="order-zone">
+      <div class="simple-head">订单信息</div>
+      <div class="order-line">
+        <div class="label w96">创建时间</div>
+        <div style="width:525px; font-size:24px; line-height:28px;">2024-03-26 20:16:20</div>
+      </div>
+
+      <div class="order-line">
+        <div class="label w96">飞猪里程</div>
+        <div class="mileage-wrap">
+          <div class="mileage-main">
+            <span>订单完成，可领取300飞猪里程</span>
+            <span class="plus-icon"></span>
+          </div>
+          <button class="claim-btn">领里程</button>
+        </div>
+      </div>
+
+      <div class="order-line">
+        <div class="label w72">服务商</div>
+        <div style="width:525px; font-size:24px; line-height:28px;">阿斯兰航空服务(上海)有限公司</div>
+      </div>
+
+      <div class="order-line" style="padding-bottom:30px;">
+        <div class="label w120">交易流水号</div>
+        <div style="width:525px; font-size:24px; line-height:28px;">202406272220011915814200007630</div>
+      </div>
+    </section>
+
+    <img class="research-image" src="https://gw.alicdn.com/imgextra/i3/O1CN01UJQQOy1y1l5QxDgAf_!!6000000006519-2-tps-1500-512.png" alt="用研">
+    <img class="faq-image" src="https://gw.alicdn.com/imgextra/i1/O1CN01uvLCet1ueuTrDJwII_!!6000000006063-2-tps-1500-492.png" alt="常见问题">
+    <img class="customer-image" src="https://gw.alicdn.com/imgextra/i4/O1CN01PuWqKF1XOCsCtMBkB_!!6000000002913-2-tps-1500-308.png" alt="客服联系入口">
+  </div>
+</body>
+</html>

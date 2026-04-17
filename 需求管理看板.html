@@ -831,7 +831,9 @@
     .ai-badge-queued   { background: rgba(245,158,11,0.15);  color: var(--accent-orange); }
     .ai-badge-processing { background: rgba(34,211,238,0.15); color: var(--accent-cyan); animation: ai-pulse 1.4s ease-in-out infinite; }
     .ai-badge-confirm  { background: rgba(167,139,250,0.18); color: var(--accent-purple); }
+    .ai-badge-generating { background: rgba(79,140,255,0.16); color: var(--accent-blue); animation: ai-pulse 1.4s ease-in-out infinite; }
     .ai-badge-done     { background: rgba(52,211,153,0.15);  color: var(--accent-green); }
+    .ai-badge-brief-ready { background: rgba(52,211,153,0.15); color: var(--accent-green); }
     .ai-badge-failed   { background: rgba(239,68,68,0.12);   color: var(--accent-red); }
     @keyframes ai-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
@@ -877,7 +879,9 @@
     .ai-status-bar.queued     { background: rgba(245,158,11,0.08);  color: var(--accent-orange);  border: 1px solid rgba(245,158,11,0.2); }
     .ai-status-bar.processing { background: rgba(34,211,238,0.08);  color: var(--accent-cyan);    border: 1px solid rgba(34,211,238,0.2); }
     .ai-status-bar.needs_confirmation { background: rgba(167,139,250,0.08); color: var(--accent-purple); border: 1px solid rgba(167,139,250,0.2); }
+    .ai-status-bar.generating { background: rgba(79,140,255,0.08); color: var(--accent-blue); border: 1px solid rgba(79,140,255,0.2); }
     .ai-status-bar.completed  { background: rgba(52,211,153,0.08);  color: var(--accent-green);   border: 1px solid rgba(52,211,153,0.2); }
+    .ai-status-bar.brief_ready { background: rgba(52,211,153,0.08); color: var(--accent-green); border: 1px solid rgba(52,211,153,0.2); }
     .ai-status-bar.failed     { background: rgba(239,68,68,0.08);   color: var(--accent-red);     border: 1px solid rgba(239,68,68,0.2); }
     .ai-spinner {
       width: 14px; height: 14px; border: 2px solid currentColor;
@@ -922,6 +926,14 @@
     .ai-change-reuse   { background: rgba(52,211,153,0.12);  color: var(--accent-green); }
     .ai-module-intent  { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
     .ai-module-notes   { font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .ai-module-html-brief { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.06); }
+    .ai-html-brief-label { font-size: 10px; font-weight: 600; color: var(--accent-blue); letter-spacing: 0.03em; margin-bottom: 6px; }
+    .ai-html-brief-pre {
+      font-size: 11px; line-height: 1.45; white-space: pre-wrap; word-break: break-word;
+      margin: 0; padding: 10px 12px; background: rgba(79,140,255,0.06); border-radius: var(--radius-sm);
+      border: 1px solid rgba(79,140,255,0.12); color: var(--text-primary); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .ai-btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .ai-module-status-confirmed { border-color: rgba(52,211,153,0.3); }
     .ai-module-confirmed-tag {
       display: inline-flex; align-items: center; gap: 4px;
@@ -931,6 +943,8 @@
       text-align: center; padding: 24px; color: var(--text-muted);
       font-size: 13px; border: 1px dashed var(--border);
       border-radius: var(--radius-sm);
+      width: 100%;
+      box-sizing: border-box;
     }
     .ai-pages-row {
       display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
@@ -940,8 +954,67 @@
       background: rgba(79,140,255,0.1); color: var(--accent-blue);
       border: 1px solid rgba(79,140,255,0.2);
     }
-    .ai-trigger-wrap { display: flex; align-items: center; gap: 10px; }
+    .ai-trigger-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      width: 100%;
+    }
     .ai-trigger-hint { font-size: 12px; color: var(--text-muted); }
+    .ai-brief-section {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-column);
+      overflow: hidden;
+    }
+    .ai-brief-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ai-brief-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .ai-brief-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .ai-brief-preview {
+      margin: 0;
+      padding: 14px;
+      max-height: 280px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: rgba(79,140,255,0.04);
+    }
+    .ai-brief-placeholder {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .ai-brief-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,0.01);
+    }
     /* 进度阶段标 */
     .ai-stage-label {
       font-size: 11px; opacity: 0.75; margin-left: 4px;
@@ -1670,8 +1743,8 @@ function openModal(reqId) {
       ? '<a href="' + req.prd_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
       : '<button class="modal-link-add-prd" onclick="event.preventDefault();promptPrdUrl(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ 添加 PRD</button>')
     + (req.design_url
-      ? '<a href="' + req.design_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Design</a>'
-      : '<button class="modal-link-add-design" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>+ Add Design</button>')
+      ? '<a href="' + req.design_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>设计稿</a>'
+      : '<button class="modal-link-add-design" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>+ 添加设计稿</button>')
     + '</div>'
     + (req.notes ? '<div class="modal-notes">' + req.notes + '</div>' : '')
     + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Owner: ' + req.owner + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
@@ -2401,17 +2474,21 @@ function renderAiBadge(req) {
   if (!ai || !ai.status || ai.status === 'idle') return '';
 
   var labelMap = {
-    queued:               '⏳ AI 排队中',
-    processing:           '⚡ AI 分析中',
-    needs_confirmation:   '👁 待确认',
-    completed:            '✓ AI 已完成',
-    failed:               '✗ AI 失败'
+    queued:               'AI 排队中',
+    processing:           'AI 分析中',
+    needs_confirmation:   '待确认',
+    generating:           '文档生成中',
+    completed:            'AI 已完成',
+    brief_ready:          '文档已就绪',
+    failed:               'AI 失败'
   };
   var classMap = {
     queued:             'ai-badge-queued',
     processing:         'ai-badge-processing',
     needs_confirmation: 'ai-badge-confirm',
+    generating:         'ai-badge-generating',
     completed:          'ai-badge-done',
+    brief_ready:        'ai-badge-brief-ready',
     failed:             'ai-badge-failed'
   };
   var label = labelMap[ai.status] || ai.status;
@@ -2452,13 +2529,16 @@ function renderAiDesignSection(req) {
     }
     return '<div class="ai-section">'
       + header
-      + '<div class="ai-section-actions">'
-      + '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
+      + '<div class="ai-section-actions ai-btn-row">'
+      + '<button type="button" class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\', \'prd_html_decompose\')"'
+      + ' title="拆解 PRD，完成后自动下载 Markdown 文档">'
       + '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
       + '<g id="ai-spark-edit"><path fill="currentColor" d="M22.9141 7.5 8.41406 22H4v-4.4141L18.5 3.08594zM6 18.4141V20h1.58594l9.70706 -9.707 -1.586 -1.58597zM7 1.5c0.00002 1.93297 1.56703 3.49998 3.5 3.5v2l-0.1748 0.00391c-1.79222 0.08816 -3.22971 1.52481 -3.32032 3.31639L7 10.5H5c0 -1.87274 -1.47081 -3.4016 -3.32031 -3.49512L1.5 7V5l0.17969 -0.00488C3.52916 4.90158 4.99998 3.37271 5 1.5z"/></g></svg>'
-      + 'AI帮你做</button>'
+      + '拆解 PRD</button>'
+      + '<button type="button" class="ai-btn ai-btn-secondary" onclick="triggerAiDesign(\'' + req.id + '\', \'default\')">'
+      + '设计拆解</button>'
       + '</div></div>'
-      + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案'
+      + '<div class="ai-trigger-hint">拆解完成后自动生成并下载 Markdown 文档；云端模式读取语雀 PRD 正文精确拆解，本地 Mock 基于需求标题推断'
       + '<span style="margin-left:8px;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600;'
       + 'background:rgba(245,158,11,0.12);color:var(--accent-orange);border:1px solid rgba(245,158,11,0.25)">'
       + (API_BASE ? 'Mock 模式' : '本地 Mock') + '</span>'
@@ -2472,11 +2552,13 @@ function renderAiDesignSection(req) {
     queued:             '排队等待中…',
     processing:         _stageLabel(ai.stage),
     needs_confirmation: '分析完成，请确认',
+    generating:         _stageLabel(ai.stage),
     completed:          '已确认',
+    brief_ready:        'AI 执行文档已生成',
     failed:             '执行失败'
   };
   var statusLabel = statusLabelMap[ai.status] || ai.status;
-  var isRunning = ai.status === 'queued' || ai.status === 'processing';
+  var isRunning = ai.status === 'queued' || ai.status === 'processing' || ai.status === 'generating';
 
   var retryBtn  = isAiDesignTriggerAllowed(req)
     ? '<button class="ai-btn ai-btn-secondary" onclick="retryAiDesign(\'' + req.id + '\', \'' + (ai.job_id || '') + '\')">'
@@ -2551,12 +2633,19 @@ function renderAiDesignSection(req) {
       if (mod.notes) {
         html += '<div class="ai-module-notes">备注：' + escapeHtml(mod.notes) + '</div>';
       }
+      if (mod.html_brief) {
+        html += '<div class="ai-module-html-brief">'
+          + '<div class="ai-html-brief-label">HTML 生成要点（分条信息）</div>'
+          + '<pre class="ai-html-brief-pre">' + escapeHtml(mod.html_brief) + '</pre>'
+          + '</div>';
+      }
       html += '</div>';
     });
   } else if (!isRunning && ai.status !== 'failed') {
     html += '<div class="ai-empty-hint">暂无模块数据</div>';
   }
 
+  html += _renderAiBriefSection(req, ai);
   html += '</div>';
   return html;
 }
@@ -2565,7 +2654,8 @@ function _stageLabel(stage) {
   var map = {
     fetching_prd: '正在拉取 PRD 正文…',
     decomposing:  '正在拆解需求…',
-    planning:     '正在生成设计方案…'
+    planning:     '正在生成设计方案…',
+    generating_brief: '正在整理 AI 执行文档…'
   };
   return map[stage] || 'AI 处理中…';
 }
@@ -2573,7 +2663,8 @@ function _stageLabel(stage) {
 /**
  * 触发 AI 帮你做任务
  */
-async function triggerAiDesign(reqId) {
+async function triggerAiDesign(reqId, skillKey) {
+  skillKey = skillKey || 'default';
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req) return;
 
@@ -2589,7 +2680,7 @@ async function triggerAiDesign(reqId) {
 
   // 没有代理服务 → 走纯前端 Mock 流水线（完整 UI 体验，无需后端）
   if (!API_BASE) {
-    runAiDesignMockLocal(req);
+    runAiDesignMockLocal(req, skillKey);
     return;
   }
 
@@ -2597,7 +2688,7 @@ async function triggerAiDesign(reqId) {
     var res = await fetch(API_BASE + '/api/ai-design/jobs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reqId: req.id, prdUrl: req.prd_url })
+      body: JSON.stringify({ reqId: req.id, prdUrl: req.prd_url, skillKey: skillKey })
     });
 
     if (!res.ok) {
@@ -2612,15 +2703,19 @@ async function triggerAiDesign(reqId) {
       status:     job.status,
       stage:      job.stage,
       job_id:     job.id,
+      skill_key:  job.skill_key || skillKey,
       summary:    null,
       pages:      [],
       modules:    [],
+      brief_md:   null,
+      brief_filename: null,
+      brief_generated_at: null,
       last_error: null,
       updated_at: job.updated_at
     };
     saveData();
     openModal(reqId);
-    showToast('AI帮你做已启动，正在分析 PRD…', 'success');
+    showToast((skillKey === 'prd_html_decompose' ? 'PRD 拆解已启动' : '设计拆解已启动') + '，正在分析 PRD…', 'success');
 
     startAiPolling(reqId, job.id);
   } catch (err) {
@@ -2635,19 +2730,21 @@ async function triggerAiDesign(reqId) {
  * Phase 1 → Phase 2 → Phase 3 各有延迟，模拟真实异步节奏
  * 结果基于 PRD 标题 + FDG 页面/模块知识库规则推断
  */
-async function runAiDesignMockLocal(req) {
+async function runAiDesignMockLocal(req, skillKey) {
+  skillKey = skillKey || 'default';
   var _sleep = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
 
   // 初始化状态
   req.ai_design = {
     status: 'processing', stage: 'fetching_prd',
     job_id: 'local-' + Date.now(),
-    summary: null, pages: [], modules: [], last_error: null,
+    skill_key: skillKey,
+    summary: null, pages: [], modules: [], brief_md: null, brief_filename: null, brief_generated_at: null, last_error: null,
     updated_at: new Date().toISOString()
   };
   saveData();
   openModal(req.id);
-  showToast('AI帮你做已启动（本地 Mock 模式）', 'success');
+  showToast((skillKey === 'prd_html_decompose' ? 'PRD 拆解' : '设计拆解') + '已启动（本地 Mock 模式）', 'success');
 
   function _tick(patch) {
     Object.assign(req.ai_design, patch, { updated_at: new Date().toISOString() });
@@ -2667,17 +2764,22 @@ async function runAiDesignMockLocal(req) {
 
   // Phase 3: 设计方案生成
   await _sleep(1200);
-  var modules = _fdgBuildModules(pages, titleRaw, req);
+  var modules = _fdgBuildModules(pages, titleRaw, req, skillKey);
 
-  _tick({
-    status: 'needs_confirmation',
-    stage:  null,
-    modules: modules
-  });
-
-  saveData();
-  renderKanban();
-  showToast('AI 拆解完成，请在需求详情中确认方案', 'success');
+  if (skillKey === 'prd_html_decompose') {
+    // 自动确认并生成文档，无需人工点击确认
+    modules.forEach(function(m) { m.status = 'confirmed'; });
+    _tick({ status: 'generating', stage: 'generating_brief', modules: modules });
+    saveData();
+    await runAiGenerateBrief(req);
+    downloadAiBrief(req.id);
+    showToast('PRD 拆解完成，Markdown 已自动下载', 'success');
+  } else {
+    _tick({ status: 'needs_confirmation', stage: null, modules: modules });
+    saveData();
+    renderKanban();
+    showToast('设计拆解完成，请在需求详情中确认方案', 'success');
+  }
 }
 
 // ---------- FDG 知识库规则（对齐 fliggy-design-gui 页面/模块体系）----------
@@ -2751,25 +2853,224 @@ var _FDG_MODULE_TEMPLATES = {
   ],
 };
 
-function _fdgBuildModules(pages, title, req) {
+function _fdgBuildModules(pages, title, req, skillKey) {
+  skillKey = skillKey || 'default';
+  var htmlSkill = skillKey === 'prd_html_decompose';
   var modules = [];
   pages.forEach(function(page) {
     var templates = _FDG_MODULE_TEMPLATES[page];
     if (!templates) {
-      modules.push({
+      var row = {
         name: page + ' — 主体模块', page: page,
         intent: '承载本次 PRD 核心改动，具体模块需进一步与产品确认',
         change_type: 'modify',
         notes: '接入 AI Key 后将基于 PRD 正文精确拆解模块清单',
         status: 'pending'
-      });
+      };
+      if (htmlSkill) {
+        row.html_brief = '1. 页面根布局与标题\n2. 与「' + page + '」相关的主内容区块\n3. 主操作与次要链接占位\n4. 加载与空状态说明占位';
+      }
+      modules.push(row);
       return;
     }
     templates.forEach(function(t) {
-      modules.push(Object.assign({}, t, { page: page, status: 'pending' }));
+      var m = Object.assign({}, t, { page: page, status: 'pending' });
+      if (htmlSkill) {
+        m.html_brief = [
+          '1. 区块标题与说明文案占位',
+          '2. 主内容：' + (t.name || '模块') + ' 的结构（列表/卡片/表单择一）',
+          '3. 交互控件与禁用态说明',
+          '4. 与 PRD「' + (title || '') + '」相关的提示或合规文案占位'
+        ].join('\n');
+      }
+      modules.push(m);
     });
   });
   return modules;
+}
+
+function _renderAiBriefSection(req, ai) {
+  if (!ai || (!ai.brief_md && ai.status !== 'generating' && ai.status !== 'brief_ready')) {
+    return '';
+  }
+
+  var html = '<div class="ai-brief-section">'
+    + '<div class="ai-brief-header">'
+    + '<div class="ai-brief-title">AI 执行文档</div>'
+    + '<div class="ai-brief-meta">' + escapeHtml(ai.brief_filename || _fdgBuildBriefFileName(req)) + '</div>'
+    + '</div>';
+
+  if (ai.status === 'generating' && !ai.brief_md) {
+    html += '<div class="ai-brief-placeholder">'
+      + '<div class="ai-spinner"></div>'
+      + '<span>正在基于当前 skill 拆解结果整理 Markdown 文档…</span>'
+      + '</div>';
+  }
+
+  if (ai.brief_md) {
+    html += '<pre class="ai-brief-preview">' + escapeHtml(ai.brief_md) + '</pre>'
+      + '<div class="ai-brief-actions">'
+      + '<button class="ai-btn ai-btn-primary" onclick="downloadAiBrief(\'' + req.id + '\')">下载 .md</button>'
+      + '<button class="ai-btn ai-btn-secondary" onclick="copyAiBrief(\'' + req.id + '\')">复制全文</button>'
+      + '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function _fdgBuildBriefFileName(req) {
+  var safeId = (req.id || 'requirement').replace(/[^a-zA-Z0-9_-]+/g, '-');
+  var ai = req.ai_design || {};
+  var suffix = (ai.skill_key === 'prd_html_decompose') ? 'prd-decompose' : 'ai-design-brief';
+  return safeId + '-' + suffix + '.md';
+}
+
+function _fdgSkillName(skillKey) {
+  return skillKey === 'prd_html_decompose' ? 'PRD 拆解' : '设计拆解';
+}
+
+function _fdgChangeLabel(changeType) {
+  return { create: '新建', modify: '改现有', reuse: '直接复用' }[changeType] || (changeType || '待确认');
+}
+
+function _fdgExecutionType(changeType) {
+  if (changeType === 'create') return 'Type A（在现有页面上增加模块）';
+  if (changeType === 'modify') return 'Type B（在现有页面上修改模块）';
+  return 'Direct Reuse（直接复用，无需单独出稿）';
+}
+
+function _fdgPageReference(page) {
+  var map = {
+    '首页 (tabs.home)': '基线页面：tabs.home',
+    '列表页 (flight.list)': '基线页面：flight.list',
+    '下单页 (flight.booking)': '基线页面：flight.booking',
+    '订单详情页 (flight.order-detail)': '基线页面：flight.order-detail',
+    '个人中心 (tabs.mine)': '基线页面：tabs.mine',
+    '支付页': '基线页面：支付页',
+    '低价地图/日历': '基线页面：低价地图/日历',
+    '弹窗/浮层组件': '基线页面：弹窗/浮层组件'
+  };
+  return map[page] || ('基线页面：' + page);
+}
+
+function _fdgBuildExecutionPrompt(mod, skillKey) {
+  var lines = [];
+  var briefLines = [];
+  if (mod.html_brief) {
+    briefLines = mod.html_brief.split('\n').map(function(line) {
+      return line.replace(/^\s*\d+\.\s*/, '').trim();
+    }).filter(Boolean);
+  }
+
+  if (mod.change_type === 'reuse') {
+    lines.push('该模块当前判断为直接复用，不需要单独设计新稿。');
+    lines.push('请在整页方案中保留该模块，并确认其与本次需求的上下文衔接即可。');
+  } else {
+    lines.push('请使用 `fliggy-design-gui` 能力处理该模块。');
+    lines.push('按 `' + _fdgExecutionType(mod.change_type) + '` 的方式执行。');
+    lines.push('优先沿用现有页面骨架，不要脱离当前页面的信息架构重做。');
+  }
+
+  if (mod.intent) {
+    lines.push('本模块核心目标：' + mod.intent);
+  }
+  if (mod.notes) {
+    lines.push('额外约束：' + mod.notes);
+  }
+  if (briefLines.length) {
+    lines.push('生成时至少覆盖以下结构化要点：');
+    briefLines.forEach(function(line) {
+      lines.push('- ' + line);
+    });
+  }
+  if (skillKey === 'prd_html_decompose') {
+    lines.push('本次识别来源于“帮我将上传的prd文档拆解成能够生成html的分条信息”这一 skill 语义。');
+  }
+
+  return lines.join('\n');
+}
+
+function _buildDesignBriefMd(req) {
+  var ai = req.ai_design || {};
+  var pages = ai.pages || [];
+  var modules = ai.modules || [];
+  var grouped = {};
+
+  modules.forEach(function(mod) {
+    var page = mod.page || '未归类页面';
+    if (!grouped[page]) grouped[page] = [];
+    grouped[page].push(mod);
+  });
+
+  var pageList = pages.slice();
+  Object.keys(grouped).forEach(function(page) {
+    if (pageList.indexOf(page) === -1) pageList.push(page);
+  });
+
+  var lines = [];
+  lines.push('# AI 设计执行文档：' + (req.name || '未命名需求'));
+  lines.push('');
+  lines.push('> 需求 ID：' + (req.id || '未知'));
+  lines.push('> 生成时间：' + new Date().toLocaleString('zh-CN', { hour12: false }));
+  lines.push('> PRD 链接：' + (req.prd_url || '未提供'));
+  lines.push('> 识别 Skill：' + _fdgSkillName(ai.skill_key || 'default'));
+  lines.push('> 下游设计 Skill：fliggy-design-gui');
+  lines.push('');
+  lines.push('## 使用方式');
+  lines.push('将下方任一页面或模块片段直接发给 AI，要求其基于 `fliggy-design-gui` 输出设计稿方案。');
+  lines.push('如果只想先做部分页面，可以按页面维度分开发送。');
+  lines.push('');
+  lines.push('## 需求摘要');
+  lines.push(ai.summary || '暂无摘要');
+  lines.push('');
+  lines.push('## 涉及页面');
+  if (pageList.length) {
+    pageList.forEach(function(page) {
+      lines.push('- ' + page);
+    });
+  } else {
+    lines.push('- 暂无页面信息');
+  }
+
+  pageList.forEach(function(page, pageIndex) {
+    var pageModules = grouped[page] || [];
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+    lines.push('## 页面 ' + (pageIndex + 1) + '：' + page);
+    lines.push('');
+    lines.push('> ' + _fdgPageReference(page));
+    lines.push('');
+    if (!pageModules.length) {
+      lines.push('暂无模块拆解，请结合 PRD 原文进一步补充。');
+      return;
+    }
+
+    pageModules.forEach(function(mod, modIndex) {
+      lines.push('### 模块 ' + (modIndex + 1) + '：' + (mod.name || '未命名模块'));
+      lines.push('- 变更类型：' + _fdgChangeLabel(mod.change_type));
+      lines.push('- 执行类型：' + _fdgExecutionType(mod.change_type));
+      lines.push('- 设计意图：' + (mod.intent || '待补充'));
+      lines.push('- 备注：' + (mod.notes || '无'));
+      lines.push('');
+      lines.push('#### 可直接发给 AI 的执行指令');
+      lines.push(_fdgBuildExecutionPrompt(mod, ai.skill_key || 'default'));
+      lines.push('');
+    });
+  });
+
+  lines.push('---');
+  lines.push('');
+  lines.push('## 给 AI 的统一要求');
+  lines.push('- 使用 `fliggy-design-gui` 进行页面或模块设计。');
+  lines.push('- 优先复用现有页面骨架，不要脱离当前信息架构从零发散。');
+  lines.push('- 对于 `modify` 类型模块，按改现有模块的方式产出。');
+  lines.push('- 对于 `create` 类型模块，按在现有页面插入新模块的方式产出。');
+  lines.push('- 对于 `reuse` 类型模块，只需在整体方案中保留并说明原因。');
+  lines.push('- 如果信息不足，请先列出假设，再继续产出设计稿。');
+
+  return lines.join('\n');
 }
 
 /**
@@ -2809,9 +3110,13 @@ function startAiPolling(reqId, jobId) {
         status:     job.status,
         stage:      job.stage,
         job_id:     job.id,
+        skill_key:  job.skill_key || (req.ai_design && req.ai_design.skill_key) || 'default',
         summary:    job.summary,
         pages:      job.pages || [],
         modules:    job.modules || [],
+        brief_md:   null,
+        brief_filename: null,
+        brief_generated_at: null,
         last_error: job.last_error,
         updated_at: job.updated_at
       };
@@ -2827,9 +3132,27 @@ function startAiPolling(reqId, jobId) {
         delete _aiPollTimers[reqId];
 
         if (job.status === 'needs_confirmation') {
-          showToast('AI帮你做已完成，请在需求详情中确认方案', 'success');
+          var skDone = job.skill_key || (req.ai_design && req.ai_design.skill_key) || 'default';
+          if (skDone === 'prd_html_decompose') {
+            // 自动确认并生成文档下载
+            if (req.ai_design.modules) {
+              req.ai_design.modules.forEach(function(m) { m.status = 'confirmed'; });
+            }
+            req.ai_design.status = 'generating';
+            req.ai_design.stage  = 'generating_brief';
+            saveData();
+            _refreshAiSectionIfOpen(req);
+            runAiGenerateBrief(req).then(function() {
+              downloadAiBrief(req.id);
+              showToast('PRD 拆解完成，Markdown 已自动下载', 'success');
+            }).catch(function(err) {
+              showToast('文档生成失败：' + err.message, 'error');
+            });
+          } else {
+            showToast('设计拆解已完成，请在需求详情中确认方案', 'success');
+          }
         } else if (job.status === 'failed') {
-          showToast('AI帮你做失败：' + (job.last_error || '未知错误'), 'error');
+          showToast((job.skill_key === 'prd_html_decompose' ? 'PRD 拆解失败：' : '设计拆解失败：') + (job.last_error || '未知错误'), 'error');
         }
       }
     } catch (err) {
@@ -2864,21 +3187,98 @@ function _refreshAiSectionIfOpen(req) {
 }
 
 /**
- * 确认 AI 设计方案（把 needs_confirmation -> completed，所有模块标为 confirmed）
+ * 确认 AI 设计方案，并生成可下载的 AI 执行 Markdown 文档
  */
-function confirmAiDesign(reqId) {
+async function confirmAiDesign(reqId) {
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req || !req.ai_design) return;
 
-  req.ai_design.status = 'completed';
+  if (!req.ai_design.modules || !req.ai_design.modules.length) {
+    showToast('当前没有可确认的模块方案', 'error');
+    return;
+  }
+
   if (req.ai_design.modules) {
     req.ai_design.modules.forEach(function(m) { m.status = 'confirmed'; });
   }
+  req.ai_design.status = 'generating';
+  req.ai_design.stage = 'generating_brief';
+  req.ai_design.brief_md = null;
+  req.ai_design.brief_filename = null;
+  req.ai_design.brief_generated_at = null;
   req.updated_at = todayStr();
   saveData();
   renderKanban();
   openModal(reqId);
-  showToast('AI 设计方案已确认', 'success');
+  showToast('方案已确认，正在生成 AI 执行文档…', 'success');
+
+  try {
+    await runAiGenerateBrief(req);
+  } catch (err) {
+    req.ai_design.status = 'failed';
+    req.ai_design.stage = null;
+    req.ai_design.last_error = err.message;
+    req.updated_at = todayStr();
+    saveData();
+    renderKanban();
+    openModal(reqId);
+    showToast('AI 执行文档生成失败：' + err.message, 'error');
+  }
+}
+
+async function runAiGenerateBrief(req) {
+  var _sleep = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
+  if (!req || !req.ai_design) return;
+
+  _refreshAiSectionIfOpen(req);
+  await _sleep(600);
+
+  var briefMd = _buildDesignBriefMd(req);
+  req.ai_design.status = 'brief_ready';
+  req.ai_design.stage = null;
+  req.ai_design.brief_md = briefMd;
+  req.ai_design.brief_filename = _fdgBuildBriefFileName(req);
+  req.ai_design.brief_generated_at = new Date().toISOString();
+  req.ai_design.last_error = null;
+  req.updated_at = todayStr();
+
+  saveData();
+  renderKanban();
+  openModal(req.id);
+  showToast('AI 执行文档已生成，可直接下载后发给 AI', 'success');
+}
+
+function downloadAiBrief(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !req.ai_design || !req.ai_design.brief_md) {
+    showToast('当前没有可下载的 AI 执行文档', 'error');
+    return;
+  }
+
+  var blob = new Blob([req.ai_design.brief_md], { type: 'text/markdown;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = req.ai_design.brief_filename || _fdgBuildBriefFileName(req);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 0);
+}
+
+async function copyAiBrief(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !req.ai_design || !req.ai_design.brief_md) {
+    showToast('当前没有可复制的 AI 执行文档', 'error');
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(req.ai_design.brief_md);
+    showToast('AI 执行文档已复制', 'success');
+  } catch (err) {
+    showToast('复制失败：' + err.message, 'error');
+  }
 }
 
 /**
@@ -2894,8 +3294,7 @@ async function retryAiDesign(reqId, jobId) {
   }
 
   if (!API_BASE) {
-    showToast('需要启动代理服务才能重跑任务', 'error');
-    return;
+    return triggerAiDesign(reqId, req.ai_design && req.ai_design.skill_key);
   }
 
   var url = jobId
@@ -2904,7 +3303,7 @@ async function retryAiDesign(reqId, jobId) {
 
   // 如果没有 jobId，则重新创建任务
   if (!url) {
-    return triggerAiDesign(reqId);
+    return triggerAiDesign(reqId, req.ai_design && req.ai_design.skill_key);
   }
 
   try {

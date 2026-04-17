@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — button（常用按钮）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-button-demo__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px 16px;
+  align-items: center;
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--color-auxiliary);
+}
+
+.fdl-button-demo__grid:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.fdl-button-demo__title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-button-demo__sizes {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: -8px;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-lightgray);
+}
+
+.fdl-button-demo__grid .fdl-button {
+  justify-self: center;
+  width: 100%;
+  max-width: 200px;
+}
+
+/* ========== fdl-button ========== */
+.fdl-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 9999px;
+  font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+  font-weight: 500;
+  line-height: 1.4;
+  border: 2px solid transparent;
+  padding: 0 30px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    filter 0.2s ease-in-out,
+    background-color 0.2s ease-in-out,
+    opacity 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-button:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.fdl-button--large { height: 84px; font-size: 30px; }
+.fdl-button--medium { height: 72px; font-size: 30px; }
+.fdl-button--small { height: 60px; font-size: 28px; }
+.fdl-button--extra-small { height: 48px; font-size: 24px; }
+
+.fdl-button--primary {
+  background-color: var(--color-brand-1);
+  color: var(--color-darkgray);
+}
+
+.fdl-button--secondary {
+  background-color: var(--color-indigo-1);
+  color: var(--color-white);
+}
+
+.fdl-button--danger {
+  background-color: var(--color-pay-1);
+  color: var(--color-white);
+}
+
+.fdl-button--light {
+  background-color: var(--color-label);
+  color: var(--color-midgray);
+}
+
+.fdl-button--white {
+  background-color: var(--color-white);
+  color: var(--color-midgray);
+}
+
+.fdl-button--outline {
+  background-color: transparent;
+  color: var(--color-midgray);
+  border-color: var(--color-auxiliary);
+}
+
+.fdl-button:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.fdl-button--outline:hover:not(:disabled) {
+  background-color: var(--color-label);
+  filter: none;
+}
+
+.fdl-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">Primary（主要 · 黄）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--primary">按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--primary">按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--primary">按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--primary">按钮</button>
+  </div>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">Secondary（次要 · 蓝）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--secondary">按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--secondary">按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--secondary">按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--secondary">按钮</button>
+  </div>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">Danger（危险 / 强调 · 橙红）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--danger">按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--danger">按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--danger">按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--danger">按钮</button>
+  </div>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">Light（浅灰底）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--light">按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--light">按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--light">按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--light">按钮</button>
+  </div>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">White（白底）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--white">按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--white">按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--white">按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--white">按钮</button>
+  </div>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">Outline（描边）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--outline">按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--outline">按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--outline">按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--outline">按钮</button>
+  </div>
+
+  <div class="fdl-button-demo__grid">
+    <h2 class="fdl-button-demo__title">Disabled（禁用）</h2>
+    <div class="fdl-button-demo__sizes"><span>Large</span><span>Medium</span><span>Small</span><span>Extra Small</span></div>
+    <button type="button" class="fdl-button fdl-button--large fdl-button--primary" disabled>按钮</button>
+    <button type="button" class="fdl-button fdl-button--medium fdl-button--secondary" disabled>按钮</button>
+    <button type="button" class="fdl-button fdl-button--small fdl-button--light" disabled>按钮</button>
+    <button type="button" class="fdl-button fdl-button--extra-small fdl-button--outline" disabled>按钮</button>
+  </div>
+
+</body>
+</html>

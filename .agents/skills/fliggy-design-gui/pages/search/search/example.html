@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>搜索页</title>
+  <style>
+    :root {
+      --bg-page: #ffffff;
+      --bg-section: #f2f3f5;
+      --bg-chip: #f7f8fa;
+      --primary: #6666ff;
+      --text: #0f131a;
+      --text-weak: #919499;
+      --color-black: #000000;
+      --shadow-weak: rgba(15, 19, 26, 0.04);
+      --voice-gradient-start: #6f6dff;
+      --voice-gradient-end: #6666ff;
+      --voice-shadow: rgba(102, 102, 255, 0.25);
+      --radius-l: 24px;
+      --radius-m: 18px;
+      --radius-s: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 750px;
+      margin: 0 auto;
+      background: var(--bg-page);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+    }
+    .page {
+      width: 750px;
+      background: var(--bg-section);
+      padding: 8px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .status-bar {
+      width: 750px;
+      height: 88px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-size: 30px;
+      line-height: 42px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-right svg {
+      color: var(--text);
+    }
+    .status-battery {
+      width: 48px;
+      height: 24px;
+      border: 2px solid var(--text);
+      border-radius: 5px;
+      position: relative;
+      padding: 2px;
+    }
+    .status-battery::after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 8px;
+      background: var(--text);
+      border-radius: 0 2px 2px 0;
+    }
+    .status-battery-inner {
+      width: 70%;
+      height: 100%;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    .search-box-wrap {
+      width: 750px;
+      padding: 0 18px;
+    }
+    .search-box {
+      width: 714px;
+      height: 180px;
+      padding: 12px 12px 12px 6px;
+      display: flex;
+      align-items: stretch;
+      background: var(--bg-page);
+      border: 3px solid var(--primary);
+      border-radius: 18px;
+    }
+    .search-box__inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .back {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .back img { width: 48px; height: 48px; display: block; }
+    .content {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+    .input-row {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      margin-top: 6px;
+    }
+    .cursor-bar {
+      width: 3px;
+      height: 32px;
+      background: var(--text);
+      border-radius: 2px;
+      flex: 0 0 auto;
+    }
+    .placeholder {
+      font-size: 28px;
+      line-height: 1.4;
+      color: var(--text-weak);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: 12px;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding-right: 6px;
+      padding-bottom: 6px;
+    }
+    .btn-primary {
+      width: 120px;
+      height: 60px;
+      border: 0;
+      border-radius: 42px;
+      background: var(--primary);
+      color: var(--bg-page);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      line-height: 1.4;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .skill {
+      width: 750px;
+      margin: 0;
+      padding: 0;
+    }
+    .skill__scroller {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 18px;
+      scrollbar-width: none;
+    }
+    .skill__scroller::-webkit-scrollbar { display: none; }
+    .skill__content {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+      padding-bottom: 6px;
+    }
+    .skill__row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      height: 60px;
+    }
+    .opt {
+      height: 60px;
+      background: var(--bg-page);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 18px;
+      flex: none;
+      white-space: nowrap;
+      box-shadow: 0 1px 0 var(--shadow-weak);
+    }
+    .opt--w130 { width: 130px; }
+    .opt--w156 { width: 156px; }
+    .opt--w166 { width: 166px; padding: 18px; gap: 0; }
+    .opt--w300 { width: 300px; padding: 18px; gap: 6px; }
+    .opt__icon {
+      width: 36px;
+      height: 36px;
+      flex: none;
+      display: inline-block;
+    }
+    .opt__icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+    .opt__text {
+      font-size: 26px;
+      line-height: 1.4;
+      font-weight: 400;
+      text-align: center;
+      color: var(--text);
+    }
+    .opt__text--w52 { width: 52px; }
+    .opt__text--w78 { width: 78px; }
+    .opt__text--w130 { width: 130px; }
+    .opt__text--w234 { width: 234px; }
+
+    .history-wrap {
+      width: 750px;
+      background: var(--bg-page);
+      border-radius: 24px 24px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 30px 18px 24px;
+      gap: 30px;
+    }
+    .history-header {
+      width: 714px;
+      height: 39px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .history-title {
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 39px;
+      color: var(--color-black);
+    }
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-btn img { width: 32px; height: 32px; display: block; }
+    .chips {
+      width: 714px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      align-content: flex-start;
+      gap: 12px;
+    }
+    .chip {
+      height: 60px;
+      background: var(--bg-chip);
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 18px;
+      color: var(--text);
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 36px;
+      text-align: center;
+      border: 0;
+      white-space: nowrap;
+    }
+    .chip--star { width: 300px; justify-content: flex-start; }
+    .chip__icon { width: 24px; height: 24px; display: block; flex: 0 0 24px; }
+    .w-172 { width: 172px; padding: 18px 24px 18px 18px; }
+    .w-192 { width: 192px; }
+    .w-140 { width: 140px; }
+    .w-166 { width: 166px; }
+    .w-88 { width: 88px; }
+    .chip--more {
+      width: 72px;
+      padding: 0 12px;
+      justify-content: center;
+      background: var(--bg-chip);
+      cursor: pointer;
+    }
+    .chip--more img {
+      width: 48px;
+      height: 48px;
+      display: block;
+    }
+
+    .voice-wrap {
+      width: 750px;
+      padding: 0 18px;
+    }
+    .voice-btn {
+      width: 714px;
+      height: 96px;
+      border-radius: 48px;
+      border: 0;
+      background: linear-gradient(90deg, var(--voice-gradient-start) 0%, var(--voice-gradient-end) 100%);
+      color: var(--bg-page);
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px var(--voice-shadow);
+    }
+    .voice-btn img {
+      width: 42px;
+      height: 42px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-label="搜索入口页">
+    <div class="status-bar" aria-label="状态栏">
+      <span class="status-time">9:41</span>
+      <div class="status-right" aria-hidden="true">
+        <svg width="34" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="8" width="6" height="16" rx="2" fill="currentColor"/>
+          <rect x="9" y="5" width="6" height="19" rx="2" fill="currentColor"/>
+          <rect x="18" y="2" width="6" height="22" rx="2" fill="currentColor"/>
+          <rect x="27" y="0" width="6" height="24" rx="2" fill="currentColor"/>
+        </svg>
+        <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 4C18.4 4 22.2 5.8 24.9 8.8L27.4 6.2C24.1 2.4 19.4 0 14 0C8.6 0 3.9 2.4 0.6 6.2L3.1 8.8C5.8 5.8 9.6 4 14 4Z" fill="currentColor"/>
+          <path d="M14 11C16.6 11 18.9 12 20.6 13.9L23.1 11.3C20.8 8.8 17.6 7.2 14 7.2C10.4 7.2 7.2 8.8 4.9 11.3L7.4 13.9C9.1 12 11.4 11 14 11Z" fill="currentColor"/>
+          <circle cx="14" cy="19" r="3" fill="currentColor"/>
+        </svg>
+        <div class="status-battery"><div class="status-battery-inner"></div></div>
+      </div>
+    </div>
+
+    <section class="search-box-wrap">
+      <div class="search-box" role="group" aria-label="搜索框">
+        <div class="search-box__inner">
+          <button class="back" aria-label="返回">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01pFcfnw1NI7Rx247sH_!!6000000001546-2-tps-96-96.png" alt="返回" />
+          </button>
+          <div class="content">
+            <div class="input-row">
+              <span class="cursor-bar" aria-hidden="true"></span>
+              <span class="placeholder">试试搜：能看到巴黎埃菲尔铁塔的酒店</span>
+            </div>
+            <div class="actions">
+              <button class="btn-primary">搜索</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="skill" aria-label="发现与推荐">
+      <div class="skill__scroller">
+        <div class="skill__content">
+          <div class="skill__row">
+            <div class="opt opt--w130"><span class="opt__icon"><img src="https://gw.alicdn.com/imgextra/i3/O1CN013OyYdQ1PjiVLb1V4N_!!6000000001877-2-tps-96-96.png" alt="" /></span><span class="opt__text opt__text--w52">机票</span></div>
+            <div class="opt opt--w156"><span class="opt__icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01174MVM1GYQC9vwAlb_!!6000000000634-2-tps-96-96.png" alt="" /></span><span class="opt__text opt__text--w78">火车票</span></div>
+            <div class="opt opt--w130"><span class="opt__icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01CV2URM20sXvKfTLkJ_!!6000000006905-2-tps-96-96.png" alt="" /></span><span class="opt__text opt__text--w52">酒店</span></div>
+            <div class="opt opt--w166"><span class="opt__text opt__text--w130">东南亚邮轮</span></div>
+            <div class="opt opt--w166"><span class="opt__text opt__text--w130">更多业务</span></div>
+          </div>
+          <div class="skill__row">
+            <div class="opt opt--w300"><span class="opt__icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01c1Ri681aIevDRxOyq_!!6000000003307-2-tps-72-72.png" alt="" /></span><span class="opt__text opt__text--w234">巴黎埃菲尔铁塔攻略</span></div>
+            <div class="opt opt--w166"><span class="opt__text opt__text--w130">热门推荐</span></div>
+            <div class="opt opt--w166"><span class="opt__text opt__text--w130">周边玩法</span></div>
+            <div class="opt opt--w166"><span class="opt__text opt__text--w130">亲子出行</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="history-wrap" aria-label="搜索历史组件">
+      <header class="history-header">
+        <h2 class="history-title">搜索历史</h2>
+        <button class="icon-btn" aria-label="删除搜索历史">
+          <img src="https://gw.alicdn.com/imgextra/i4/O1CN01kFhrZD1PPZ7YaZOd2_!!6000000001833-2-tps-64-64.png" alt="" />
+        </button>
+      </header>
+
+      <div class="chips" role="list" aria-label="历史搜索词">
+        <div class="chip chip--star" role="listitem"><img class="chip__icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01c1Ri681aIevDRxOyq_!!6000000003307-2-tps-72-72.png" alt="" aria-hidden="true" /><span>巴黎埃菲尔铁塔攻略</span></div>
+        <div class="chip w-172" role="listitem">东南亚邮轮</div>
+        <div class="chip w-192" role="listitem">杭州周边两日游</div>
+        <div class="chip w-140" role="listitem">亲子酒店</div>
+        <div class="chip w-140" role="listitem">环球影城</div>
+        <div class="chip w-166" role="listitem">日本签证</div>
+        <div class="chip w-140" role="listitem">上海迪士尼</div>
+        <div class="chip w-88" role="listitem">选项</div>
+        <div class="chip w-140" role="listitem">三亚机票</div>
+        <button class="chip chip--more" type="button" aria-label="更多"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01HjhmtW1eps6Z4CQRh_!!6000000003921-2-tps-48-48.png" alt="" /></button>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

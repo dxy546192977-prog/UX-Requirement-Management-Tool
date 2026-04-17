@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>FAQ 模块预览</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-page-bg: #F2F3F5;
+      --color-white: #FFFFFF;
+      --color-surface-muted: #F7F8FA;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--color-page-bg);
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .module {
+      width: 750px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .faq-digits-section,
+    .common-faq-section {
+      background: var(--color-white);
+    }
+    .faq-gradient-head {
+      padding: 36px 24px 24px;
+      background: linear-gradient(180deg, #FFFDF2 0%, #FFFFFF 108.15%);
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .faq-intros {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 24px 24px;
+      color: var(--color-lightgray);
+      font-size: 26px;
+    }
+    .digit-strip {
+      margin: 0 24px 24px;
+      padding: 10px 20px;
+      display: flex;
+      gap: 9px;
+      background: #FFF8CC;
+      border-radius: 36px 2px 36px 36px;
+    }
+    .digit-bubble {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid #FFE033;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B29A00;
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .common-faq-title {
+      padding: 24px;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .faq-chip-grid {
+      padding: 0 24px 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 20px;
+    }
+    .faq-chip {
+      min-height: 62px;
+      border-radius: 30px;
+      background: var(--color-surface-muted);
+      padding: 16px 42px;
+      display: flex;
+      align-items: center;
+      font-size: 26px;
+      color: var(--color-midgray);
+    }
+  </style>
+</head>
+<body>
+  <div class="module">
+    <section class="faq-digits-section">
+      <div class="faq-gradient-head">FAQ</div>
+      <div class="faq-intros">
+        <span>选择问题类型</span>
+        <span>按数字快速查看</span>
+      </div>
+      <div class="digit-strip">
+        <div class="digit-bubble">0</div>
+        <div class="digit-bubble">1</div>
+        <div class="digit-bubble">2</div>
+        <div class="digit-bubble">3</div>
+        <div class="digit-bubble">4</div>
+        <div class="digit-bubble">5</div>
+        <div class="digit-bubble">6</div>
+        <div class="digit-bubble">7</div>
+        <div class="digit-bubble">8</div>
+        <div class="digit-bubble">9</div>
+        <div class="digit-bubble">10</div>
+      </div>
+    </section>
+
+    <section class="common-faq-section">
+      <div class="common-faq-title">常见问题</div>
+      <div class="faq-chip-grid">
+        <div class="faq-chip">如何值机和选座</div>
+        <div class="faq-chip">航变后如何处理</div>
+        <div class="faq-chip">如何申请退票</div>
+        <div class="faq-chip">能否补开发票</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

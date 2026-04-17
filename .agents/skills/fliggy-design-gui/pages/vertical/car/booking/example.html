@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>填写订单</title>
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.2.27/fonts/FliggySans102-Md.ttf') format('truetype');
+    }
+    :root {
+      --color-darkgray: #0F131A;
+      --color-midgray: #5C5F66;
+      --color-lightgray: #919499;
+      --color-auxiliary: #D2D4D9;
+      --color-bg: #F2F3F5;
+      --color-label: #F7F8FA;
+      --color-white: #FFFFFF;
+      --color-brand-1: #FFE033;
+      --color-brand-2: #FFFCEB;
+      --color-brand-4: #FFF7CC;
+      --color-indigo-1: #6666FF;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #FF3333;
+      --color-pay-1: #FF5533;
+      --color-pay-2: #FF8C1A;
+      --color-notice-tint: #FFF6EE;
+      --color-promo-1: #FF0036;
+      --color-promo-2: #9537FD;
+      --color-green-0: #149AA8;
+      --color-safeguard-4: #FEF5EC;
+      --color-safeguard-5: #5D3521;
+      --radius-l: 48px;
+      --radius-m: 24px;
+      --radius-s: 12px;
+    
+      --color-local-1: #FFE866;
+      --color-local-2: #F2FEFF;
+      --color-local-3: #EBEDF0;
+      --color-local-4: #FFD3DA;
+      --color-local-5: rgba(0, 0, 0, 0.6);
+      --color-local-6: rgba(255, 232, 102, 0.0001);
+      --color-local-7: rgba(20, 154, 168, 0.5);
+      --color-local-8: rgba(92, 95, 102, 0.5);
+      --color-local-9: rgba(255, 255, 255, 0.06);
+    }
+
+        * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg);
+      position: relative;
+    }
+    .page-container {
+      position: relative;
+      width: 750px;
+      min-height: 3000px;
+      margin: 0 auto;
+      background: var(--color-bg);
+      overflow-x: hidden;
+      padding-bottom: 196px;
+    }
+    /* 顶部渐变背景 */
+    .header-bg {
+      position: absolute;
+      width: 750px;
+      height: 520px;
+      left: 0;
+      top: 0;
+      background: linear-gradient(180deg, var(--color-brand-1) 0.84%, transparent 100%);
+      z-index: 0;
+    }
+    /* 状态栏 */
+    .status-bar {
+      width: 750px;
+      height: 88px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 28px;
+      position: relative;
+      z-index: 10;
+    }
+    .status-time {
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--color-darkgray);
+    }
+    .status-icons {
+      width: 134px;
+      height: 24px;
+    }
+    /* 导航栏 */
+    .nav-bar {
+      width: 750px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+    }
+    .nav-back {
+      position: absolute;
+      left: 24px;
+      width: 48px;
+      height: 48px;
+    }
+    .nav-title {
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      text-align: center;
+    }
+    /* 内容区域 */
+    .content {
+      padding: 0 18px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    /* 车辆信息卡片 */
+    .car-card {
+      width: 714px;
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .car-info {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .car-image {
+      width: 186px;
+      height: 124px;
+      position: relative;
+    }
+    .car-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .car-album-tag {
+      position: absolute;
+      left: 120px;
+      top: 100px;
+      background: var(--color-local-5);
+      border-radius: 36px;
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .car-album-tag span {
+      font-size: 18px;
+      color: var(--color-white);
+    }
+    .car-album-tag img {
+      width: 12px;
+      height: 12px;
+      filter: brightness(0) invert(1);
+    }
+    .car-details {
+      flex: 1;
+    }
+    .car-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .car-name {
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .car-plate {
+      position: relative;
+    }
+    .car-plate-bg {
+      position: absolute;
+      width: 37px;
+      height: 12px;
+      left: 0;
+      bottom: 4px;
+      background: linear-gradient(90deg, var(--color-local-1) 0%, var(--color-local-6) 100%);
+    }
+    .car-plate-text {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-darkgray);
+      position: relative;
+    }
+    .car-shop-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .car-shop {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .car-shop-arrow {
+      width: 12px;
+      height: 12px;
+    }
+    .car-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .car-tag {
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-size: 20px;
+    }
+    .car-tag-primary {
+      border: 1px solid var(--color-local-7);
+      color: var(--color-green-0);
+    }
+    .car-tag-secondary {
+      border: 1px solid var(--color-local-8);
+      color: var(--color-midgray);
+    }
+    .car-detail-btn {
+      position: absolute;
+      right: 24px;
+      top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .car-detail-btn span {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .car-detail-btn img {
+      width: 12px;
+      height: 12px;
+    }
+    /* 取还车方式选择 */
+    .pickup-method {
+      width: 714px;
+      position: relative;
+    }
+    .pickup-tabs {
+      display: flex;
+      width: 714px;
+      height: 70px;
+    }
+    .pickup-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--color-darkgray);
+      background: linear-gradient(180deg, var(--color-local-9) 0%, var(--color-white) 100%);
+      border-radius: 12px 12px 0 0;
+    }
+    .pickup-tab.active {
+      font-weight: 500;
+      background: url('https://img.alicdn.com/imgextra/i2/O1CN01efPaWE22oXjjJZCT2_!!6000000007167-2-tps-391-70.png') no-repeat center;
+      background-size: cover;
+    }
+    /* 取还车详情 */
+    .pickup-detail {
+      background: var(--color-white);
+      border-radius: 0 0 12px 12px;
+      padding: 24px;
+    }
+    .date-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+    }
+    .date-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .date-num {
+      font-family: 'Fliggy Sans 102', sans-serif;
+      font-size: 42px;
+      color: var(--color-darkgray);
+    }
+    .date-unit {
+      font-size: 26px;
+      color: var(--color-darkgray);
+    }
+    .date-time {
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .duration-tag {
+      background: var(--color-bg);
+      border-radius: 16px;
+      padding: 2px 6px;
+      font-size: 20px;
+      color: var(--color-darkgray);
+    }
+    /* 取还车地点 */
+    .location-box {
+      background: var(--color-label);
+      border-radius: 0 12px 12px 12px;
+      padding: 18px 24px;
+      margin-top: 18px;
+      position: relative;
+    }
+    .map-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 158px;
+      height: 64px;
+      background: url('https://img.alicdn.com/imgextra/i3/O1CN01UQf2Qq1pOM5Lspgle_!!6000000005350-2-tps-158-64.png') no-repeat center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .map-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .map-btn span {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-indigo-1);
+    }
+    .location-info {
+      padding-top: 28px;
+    }
+    .location-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .location-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--color-indigo-1);
+      border-radius: 50%;
+    }
+    .location-label {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .location-value {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .location-address {
+      font-size: 24px;
+      color: var(--color-midgray);
+      margin-left: 24px;
+      margin-top: 8px;
+    }
+    .location-distance {
+      font-size: 24px;
+      color: var(--color-midgray);
+      margin-left: 24px;
+      margin-top: 8px;
+    }
+    /* 禁行政策 */
+    .policy-bar {
+      background: var(--color-label);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 18px;
+    }
+    .policy-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .policy-icon {
+      width: 92px;
+      height: 26px;
+    }
+    .policy-text {
+      font-size: 26px;
+      color: var(--color-darkgray);
+    }
+    .policy-arrow {
+      width: 12px;
+      height: 12px;
+    }
+    /* 取消政策 */
+    .cancel-bar {
+      background: var(--color-local-2);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 18px;
+    }
+    .cancel-text {
+      font-size: 26px;
+      color: var(--color-green-0);
+    }
+    .cancel-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cancel-btn span {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-midgray);
+    }
+    .cancel-btn img {
+      width: 12px;
+      height: 12px;
+    }
+    /* 选择驾驶人卡片 */
+    .driver-card {
+      width: 714px;
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 0 24px 24px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+    }
+    .card-title {
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .card-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-action span {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .card-action img {
+      width: 12px;
+      height: 12px;
+    }
+    /* 快筛栏 */
+    .filter-row {
+      display: flex;
+      gap: 12px;
+      position: relative;
+    }
+    .filter-item {
+      padding: 10px 18px;
+      background: var(--color-label);
+      border-radius: 6px;
+      font-size: 24px;
+      color: var(--color-darkgray);
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+    }
+    .filter-item.active {
+      background: var(--color-brand-2);
+      border: 1px solid var(--color-brand-1);
+      font-weight: 500;
+    }
+    .filter-check {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 24px;
+      height: 21px;
+    }
+    .filter-add {
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: var(--color-brand-4);
+      border-radius: 6px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-add img {
+      width: 30px;
+      height: 30px;
+    }
+    .filter-add span {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    /* 表单 */
+    .form-item {
+      display: flex;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--color-bg);
+    }
+    .form-item:last-child {
+      border-bottom: none;
+    }
+    .form-label {
+      width: 140px;
+      font-size: 28px;
+      color: var(--color-lightgray);
+    }
+    .form-value {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .form-text {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .form-tag {
+      background: var(--color-brand-4);
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 20px;
+      color: var(--color-darkgray);
+    }
+    .form-sub {
+      font-size: 24px;
+      color: var(--color-lightgray);
+      margin-left: 140px;
+      margin-top: -16px;
+      padding-bottom: 24px;
+    }
+    .form-clear {
+      width: 32px;
+      height: 32px;
+    }
+    /* 升级商家保障 */
+    .service-card {
+      width: 714px;
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 0 24px 24px;
+    }
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .service-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .service-section-title {
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .service-section-tag {
+      font-size: 26px;
+      color: var(--color-lightgray);
+    }
+    .service-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .service-icon {
+      width: 30px;
+      height: 26px;
+      margin-top: 4px;
+    }
+    .service-icon-x {
+      width: 28px;
+      height: 28px;
+      margin-top: 4px;
+    }
+    .service-text {
+      font-size: 26px;
+      color: var(--color-darkgray);
+      flex: 1;
+    }
+    .service-help {
+      width: 30px;
+      height: 30px;
+    }
+    .service-divider {
+      height: 1px;
+      background: var(--color-local-3);
+    }
+    .service-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .service-price-title {
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .service-price {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .service-price span {
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .service-toggle {
+      width: 36px;
+      height: 36px;
+    }
+    /* 新客专享 */
+    .promo-card {
+      width: 714px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .promo-header {
+      background: linear-gradient(180deg, var(--color-local-4) 1.35%, var(--color-white) 98.21%);
+      padding: 22px 24px 34px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .promo-icon {
+      width: 36px;
+      height: 36px;
+    }
+    .promo-title {
+      width: 120px;
+      height: 34px;
+    }
+    .promo-subtitle {
+      font-size: 26px;
+      color: var(--color-warning-1);
+    }
+    .promo-content {
+      background: var(--color-white);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .promo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .promo-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .promo-label span {
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+    .promo-label img {
+      width: 30px;
+      height: 30px;
+    }
+    .promo-value {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .promo-value span {
+      font-size: 26px;
+    }
+    .promo-value .highlight {
+      color: var(--color-pay-1);
+      font-weight: 500;
+    }
+    .promo-value img {
+      width: 12px;
+      height: 12px;
+      transform: rotate(90deg);
+    }
+    .promo-divider {
+      height: 1px;
+      background: var(--color-bg);
+    }
+    /* 底部价格栏 */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      background: var(--color-white);
+      padding: 24px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 -1px 0 var(--color-local-3);
+      z-index: 100;
+    }
+    .price-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .price-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .price-original {
+      font-size: 24px;
+      color: var(--color-lightgray);
+      text-decoration: line-through;
+    }
+    .price-current {
+      display: flex;
+      align-items: flex-end;
+    }
+    .price-symbol {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-pay-1);
+    }
+    .price-num {
+      font-family: 'Fliggy Sans 102', sans-serif;
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--color-pay-1);
+      line-height: 0.65;
+    }
+    .price-saved {
+      font-size: 24px;
+      color: var(--color-lightgray);
+    }
+    .detail-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .detail-btn span {
+      font-size: 24px;
+      color: var(--color-lightgray);
+    }
+    .detail-btn img {
+      width: 12px;
+      height: 12px;
+      transform: rotate(-90deg);
+    }
+    .pay-btn {
+      width: 270px;
+      height: 84px;
+      background: var(--color-pay-1);
+      border-radius: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+    }
+    .pay-btn-text {
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--color-white);
+    }
+    .pay-btn-sub {
+      font-size: 24px;
+      color: var(--color-white);
+    }
+    .bottom-safe {
+      height: 64px;
+      background: var(--color-white);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <!-- 顶部渐变背景 -->
+    <div class="header-bg"></div>
+    
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <img class="status-icons" src="https://img.alicdn.com/imgextra/i3/O1CN01b5Xdn31zpVj4XOs5B_!!6000000006763-55-tps-134-24.svg" alt="status">
+    </div>
+    
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <img class="nav-back" src="https://img.alicdn.com/imgextra/i2/O1CN013Z2ANB1Qcg4nKik2f_!!6000000001997-55-tps-48-48.svg" alt="back">
+      <span class="nav-title">填写订单</span>
+    </div>
+    
+    <!-- 内容区域 -->
+    <div class="content">
+      <!-- 车辆信息卡片 -->
+      <div class="car-card" style="position: relative;">
+        <div class="car-info">
+          <div class="car-image">
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN019xrSM91sILjsCCh6K_!!6000000005743-55-tps-186-124.svg" alt="坦克300">
+            <div class="car-album-tag">
+              <span>相册</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+            </div>
+          </div>
+          <div class="car-details">
+            <div class="car-name-row">
+              <span class="car-name">坦克300</span>
+              <span class="car-plate">
+                <span class="car-plate-bg"></span>
+                <span class="car-plate-text">新A</span>
+              </span>
+            </div>
+            <div class="car-shop-row">
+              <span class="car-shop">飞猪租车官方旗舰店</span>
+              <img class="car-shop-arrow" src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+            </div>
+            <div class="car-tags">
+              <span class="car-tag car-tag-primary">小伤免赔</span>
+              <span class="car-tag car-tag-secondary">免费取消</span>
+              <span class="car-tag car-tag-secondary">免押金</span>
+            </div>
+          </div>
+        </div>
+        <div class="car-detail-btn">
+          <span>详情</span>
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+        </div>
+      </div>
+      
+      <!-- 取还车方式选择 -->
+      <div class="pickup-method">
+        <div class="pickup-tabs">
+          <div class="pickup-tab">送车上门 ¥400</div>
+          <div class="pickup-tab active">自行到店 ¥364</div>
+        </div>
+        <div class="pickup-detail">
+          <!-- 日期选择 -->
+          <div class="date-row">
+            <div class="date-item">
+              <span class="date-num">7</span>
+              <span class="date-unit">月</span>
+              <span class="date-num">17</span>
+              <span class="date-unit">日</span>
+              <span class="date-time">周四 10:00</span>
+            </div>
+            <span class="duration-tag">1天2小时</span>
+            <div class="date-item">
+              <span class="date-num">7</span>
+              <span class="date-unit">月</span>
+              <span class="date-num">18</span>
+              <span class="date-unit">日</span>
+              <span class="date-time">周五 12:00</span>
+            </div>
+          </div>
+          
+          <!-- 取还车地点 -->
+          <div class="location-box">
+            <div class="map-btn">
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01S6cojD1DvpdSFv1Ju_!!6000000000279-55-tps-24-24.svg" alt="location">
+              <span>地图指引</span>
+            </div>
+            <div class="location-info">
+              <div class="location-title">
+                <span class="location-dot"></span>
+                <span class="location-label">取/还</span>
+                <span class="location-value">自行前往门店取还车</span>
+              </div>
+              <div class="location-address">世茂工三百货B2麻豆智行门店</div>
+              <div class="location-distance">距门店直线20公里，打车预计20分钟，约28元</div>
+            </div>
+          </div>
+          
+          <!-- 禁行政策 -->
+          <div class="policy-bar">
+            <div class="policy-content">
+              <img class="policy-icon" src="https://img.alicdn.com/imgextra/i3/O1CN01Mhd67W1TxEhav2FbG_!!6000000002448-55-tps-93-26.svg" alt="禁行政策">
+              <span class="policy-text">乌鲁木齐工作日部分道路限行规则</span>
+            </div>
+            <img class="policy-arrow" src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+          </div>
+          
+          <!-- 取消政策 -->
+          <div class="cancel-bar">
+            <span class="cancel-text">取车时间前可免费取消</span>
+            <div class="cancel-btn">
+              <span>取消政策</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 选择驾驶人 -->
+      <div class="driver-card">
+        <div class="card-header">
+          <span class="card-title">选择驾驶人</span>
+          <div class="card-action">
+            <span>取车证件要求</span>
+            <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+          </div>
+        </div>
+        
+        <!-- 快筛栏 -->
+        <div class="filter-row">
+          <div class="filter-item active">
+            飞猪
+            <img class="filter-check" src="https://img.alicdn.com/imgextra/i1/O1CN01CKuWKk1qGrDVaWfiF_!!6000000005469-55-tps-24-21.svg" alt="check">
+          </div>
+          <div class="filter-item">飞猪猪</div>
+          <div class="filter-item">飞小猪</div>
+          <div class="filter-item">飞大猪</div>
+          <div class="filter-add">
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01JT3o9f1gXfb9Dx0Za_!!6000000004152-55-tps-30-30.svg" alt="add">
+            <span>更多/新增</span>
+          </div>
+        </div>
+        
+        <!-- 表单 -->
+        <div class="form-item" style="margin-top: 12px;">
+          <span class="form-label">驾驶人</span>
+          <div class="form-value">
+            <span class="form-text">飞猪</span>
+            <span class="form-tag">本人</span>
+          </div>
+        </div>
+        <div class="form-sub">身份证 123456789009876543</div>
+        
+        <div class="form-item">
+          <span class="form-label">联系电话</span>
+          <div class="form-value">
+            <span class="form-text">13000000000</span>
+          </div>
+          <img class="form-clear" src="https://img.alicdn.com/imgextra/i1/O1CN01273ha51jfrWtsaTSe_!!6000000004576-55-tps-32-32.svg" alt="clear">
+        </div>
+      </div>
+      
+      <!-- 升级商家保障 -->
+      <div class="service-card">
+        <div class="card-header">
+          <span class="card-title">升级商家保障，租车达人必备</span>
+        </div>
+        
+        <div class="service-list">
+          <!-- 基础服务 -->
+          <div class="service-section">
+            <span class="service-section-title">基础服务</span>
+            <span class="service-section-tag">已含</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">单个剐蹭小伤免赔（300元以内）</span>
+            <img class="service-help" src="https://img.alicdn.com/imgextra/i4/O1CN01pPto3u1dqV26H4LdI_!!6000000003787-55-tps-30-30.svg" alt="info">
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">您需承担轮胎（含轮毂）破损的维修费及车辆维修费用中小于或等于1500元的部</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">您无需承担理赔范围内行车致使第三方人身或财产损失20万以内的部分</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon-x" src="https://img.alicdn.com/imgextra/i2/O1CN01TkflY021mQHrlZl77_!!6000000007027-55-tps-24-31.svg" alt="x">
+            <span class="service-text">您需要承担因车损导致的停运损失</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon-x" src="https://img.alicdn.com/imgextra/i2/O1CN01TkflY021mQHrlZl77_!!6000000007027-55-tps-24-31.svg" alt="x">
+            <span class="service-text">您需要承担因车损导致的损失费</span>
+          </div>
+          
+          <div class="service-divider"></div>
+          
+          <!-- 尊享保障 -->
+          <div class="service-price-row">
+            <span class="service-price-title">尊享保障</span>
+            <div class="service-price">
+              <span>¥120</span>
+              <img class="service-toggle" src="https://img.alicdn.com/imgextra/i2/O1CN01iEWlnH1w8Vh0mWbUV_!!6000000006263-55-tps-48-48.svg" alt="toggle">
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">无需承担第三者损失200万以内损失</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">责任限额为500万，超出部分由责任方承担</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">在合同解除后，未付款项需在30天内结清</span>
+          </div>
+          
+          <div class="service-item">
+            <img class="service-icon" src="https://img.alicdn.com/imgextra/i4/O1CN01ESBkp328h70Nqa8dd_!!6000000007963-55-tps-24-28.svg" alt="check">
+            <span class="service-text">所有索赔需在事故发生后60天内提出</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 新客专享 -->
+      <div class="promo-card">
+        <div class="promo-header">
+          <img class="promo-icon" src="https://img.alicdn.com/imgextra/i4/O1CN018Wsz3O1DRbUkdBCUo_!!6000000000213-55-tps-36-36.svg" alt="gift">
+          <img class="promo-title" src="https://img.alicdn.com/imgextra/i2/O1CN01Tt9qgp1hDLdfkMnE5_!!6000000004243-55-tps-120-34.svg" alt="新客专享">
+          <span class="promo-subtitle">本单可享新客优惠</span>
+        </div>
+        <div class="promo-content">
+          <div class="promo-row">
+            <div class="promo-label">
+              <span>优惠</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01pPto3u1dqV26H4LdI_!!6000000003787-55-tps-30-30.svg" alt="info">
+            </div>
+            <div class="promo-value">
+              <span class="highlight">共减¥100，已享最大优惠</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+            </div>
+          </div>
+          
+          <div class="promo-divider"></div>
+          
+          <div class="promo-row">
+            <div class="promo-label">
+              <span>飞猪里程</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01pPto3u1dqV26H4LdI_!!6000000003787-55-tps-30-30.svg" alt="info">
+            </div>
+            <div class="promo-value">
+              <span style="color: var(--color-darkgray);">里程<span style="color: var(--color-green-0); font-weight: 500;">可抵¥10</span>，还可得300里程</span>
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部价格栏 -->
+    <div class="bottom-bar">
+      <div class="price-info">
+        <div class="price-row">
+          <span class="price-original">¥424</span>
+          <div class="price-current">
+            <span class="price-symbol">¥</span>
+            <span class="price-num">364</span>
+          </div>
+        </div>
+        <span class="price-saved">已优惠¥70</span>
+      </div>
+      <div class="detail-btn">
+        <span>明细</span>
+        <img src="https://img.alicdn.com/imgextra/i4/O1CN01MFx34Y1nGuPiDhrJP_!!6000000005063-55-tps-18-18.svg" alt="arrow">
+      </div>
+      <div class="pay-btn">
+        <span class="pay-btn-text">立即支付</span>
+        <span class="pay-btn-sub">享信用免押</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

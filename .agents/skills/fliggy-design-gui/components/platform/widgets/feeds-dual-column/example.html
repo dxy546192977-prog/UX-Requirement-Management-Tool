@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — feeds-dual-column（双排推荐 Feeds）示例</title>
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-weight: 500;
+      font-display: swap;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 0 48px;
+    }
+    .fdl-feeds-dual-demo__title {
+      width: 690px;
+      margin: 0 0 16px;
+      font-size: 28px;
+      font-weight: 600;
+      color: #0f131a;
+    }
+    .fdl-feeds-dual-demo__note {
+      width: 690px;
+      margin: 0 0 24px;
+      font-size: 22px;
+      line-height: 1.5;
+      color: #5c5f66;
+    }
+
+    /* ========== fdl-feeds-dual（组件本体；首页等接入页请复制本段并与此文件同步）========== */
+    .fdl-feeds-dual-wrap {
+      margin-top: 24px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 48px;
+    }
+    
+    .fdl-feeds-dual {
+      width: 690px;
+      display: flex;
+      flex-direction: row;
+      gap: 18px;
+      position: relative;
+    }
+    
+    .fdl-feeds-dual__bg {
+      position: absolute;
+      width: 750px;
+      left: calc(50% - 750px / 2);
+      top: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    .fdl-feeds-dual__bg-top {
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(180deg, #ffffff 0%, #f2f3f5 100%);
+    }
+    
+    .fdl-feeds-dual__bg-solid {
+      width: 100%;
+      height: 1595px;
+      background: #f2f3f5;
+    }
+    
+    .fdl-feeds-dual__col {
+      width: 336px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .fdl-feeds-dual__col--right {
+      z-index: 2;
+    }
+    
+    .fdl-feeds-dual__banner {
+      width: 336px;
+      height: 440px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      background-color: #f2f3f5;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .fdl-feeds-dual__banner--demo {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01dfOivO1ceIs1i3c5W_!!6000000003625-2-tps-336-440.png");
+    }
+    
+    .fdl-feeds-dual__dots {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      align-items: center;
+    }
+    
+    .fdl-feeds-dual__dot {
+      width: 24px;
+      height: 6px;
+      border-radius: 3px 0;
+    }
+    
+    .fdl-feeds-dual__dot--on {
+      background: #ffe033;
+    }
+    
+    .fdl-feeds-dual__dot--off {
+      background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .fdl-feeds-dual__card {
+      width: 336px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    
+    .fdl-feeds-dual__card--tall {
+      height: 538px;
+    }
+    
+    .fdl-feeds-dual__card--mid {
+      height: 492px;
+    }
+    
+    .fdl-feeds-dual__card--xl {
+      height: 565px;
+    }
+    
+    .fdl-feeds-dual__media {
+      width: 336px;
+      height: 336px;
+      border-radius: 12px 12px 0 0;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      background-color: #f2f3f5;
+    }
+    
+    .fdl-feeds-dual__media--ex1 {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01DC0HgW1imu07p3GFZ_!!6000000004456-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__media--ex2 {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN012YdNJr1Js44Ocuc3U_!!6000000001083-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__media--ex3 {
+      background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN017qEK5e1mn8fW7C09n_!!6000000004998-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__media--ex4 {
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01CNtjGZ22Qj8kG2p5m_!!6000000007115-2-tps-336-336.png");
+    }
+    
+    .fdl-feeds-dual__tag {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 4px 12px;
+      gap: 6px;
+      background: #feebd8;
+      border-radius: 12px 0;
+    }
+    
+    .fdl-feeds-dual__tag--dark {
+      background: rgba(15, 19, 26, 0.7);
+    }
+    
+    .fdl-feeds-dual__tag-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .fdl-feeds-dual__tag-label {
+      font-size: 20px;
+      line-height: 140%;
+      color: #805540;
+    }
+    
+    .fdl-feeds-dual__tag--dark .fdl-feeds-dual__tag-label {
+      color: #ffffff;
+    }
+    
+    .fdl-feeds-dual__loc {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: auto;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 6px 12px;
+      gap: 6px;
+      background: rgba(15, 19, 26, 0.7);
+      border-radius: 48px;
+      margin: 12px;
+      max-width: calc(100% - 24px);
+      box-sizing: border-box;
+    }
+    
+    .fdl-feeds-dual__loc-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .fdl-feeds-dual__loc-text {
+      font-size: 20px;
+      line-height: 140%;
+      color: #ffffff;
+      text-align: left;
+      flex: 0 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .fdl-feeds-dual__play {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .fdl-feeds-dual__play-icon {
+      width: 0;
+      height: 0;
+      border-left: 10px solid #ffffff;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      margin-left: 2px;
+    }
+    
+    .fdl-feeds-dual__body {
+      width: 336px;
+      padding: 12px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #ffffff;
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .fdl-feeds-dual__titles {
+      width: 312px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .fdl-feeds-dual__title-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+    
+    .fdl-feeds-dual__title-main {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 140%;
+      color: #0f131a;
+      flex: 1;
+    }
+    
+    .fdl-feeds-dual__title-sub {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 140%;
+      color: #0f131a;
+    }
+    
+    .fdl-feeds-dual__pill {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 6px;
+      background: #f2f3f5;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    
+    .fdl-feeds-dual__pill-text {
+      font-size: 20px;
+      color: #5c5f66;
+    }
+    
+    .fdl-feeds-dual__desc {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 312px;
+    }
+    
+    .fdl-feeds-dual__rating {
+      font-size: 24px;
+      font-weight: 500;
+      color: #6666ff;
+    }
+    
+    .fdl-feeds-dual__desc-long {
+      font-size: 24px;
+      color: #5c5f66;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .fdl-feeds-dual__price-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 312px;
+    }
+    
+    .fdl-feeds-dual__price-group {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    
+    .fdl-feeds-dual__price-sym {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #ff5533;
+    }
+    
+    .fdl-feeds-dual__price-num {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-size: 42px;
+      font-weight: 600;
+      color: #ff5533;
+      line-height: 27px;
+    }
+    
+    .fdl-feeds-dual__price-unit {
+      font-family: "PingFang SC", sans-serif;
+      font-size: 20px;
+      color: #ff5533;
+    }
+    
+    .fdl-feeds-dual__sales {
+      font-size: 20px;
+      color: #5c5f66;
+    }
+    
+    .fdl-feeds-dual__split {
+      width: 312px;
+      height: 0;
+      border: 1px solid #f2f3f5;
+    }
+    
+    .fdl-feeds-dual__review {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 6px;
+      gap: 6px;
+      background: #fef5ec;
+      border-radius: 4px;
+      width: 255px;
+    }
+    
+    .fdl-feeds-dual__review-text {
+      font-size: 24px;
+      color: #805540;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="fdl-feeds-dual-demo__title">双排推荐 Feeds（fdl-feeds-dual）</h1>
+  <p class="fdl-feeds-dual-demo__note">
+    750 通栏页请将 <code>.fdl-feeds-dual__bg</code> 置于页面中线；组件样式在本页 <code>&lt;style&gt;</code>；规范见 <a href="spec.md">spec.md</a>。首页请复制同段 <code>fdl-feeds-dual</code> CSS 并与本文件保持同步。
+  </p>
+
+  <div class="fdl-feeds-dual-wrap">
+    <div class="fdl-feeds-dual">
+      <div class="fdl-feeds-dual__bg" aria-hidden="true">
+        <div class="fdl-feeds-dual__bg-top"></div>
+        <div class="fdl-feeds-dual__bg-solid"></div>
+      </div>
+      <div class="fdl-feeds-dual__col fdl-feeds-dual__col--left">
+        <div class="fdl-feeds-dual__banner fdl-feeds-dual__banner--demo">
+          <div class="fdl-feeds-dual__dots">
+            <div class="fdl-feeds-dual__dot fdl-feeds-dual__dot--on"></div>
+            <div class="fdl-feeds-dual__dot fdl-feeds-dual__dot--off"></div>
+            <div class="fdl-feeds-dual__dot fdl-feeds-dual__dot--off"></div>
+          </div>
+        </div>
+        <div class="fdl-feeds-dual__card fdl-feeds-dual__card--tall">
+          <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex1">
+            <div class="fdl-feeds-dual__tag">
+              <svg class="fdl-feeds-dual__tag-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4" y="4" width="16" height="16" rx="2" fill="#FF8C1A"/>
+                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="fdl-feeds-dual__tag-label">无需换票</span>
+            </div>
+            <div class="fdl-feeds-dual__loc">
+              <svg class="fdl-feeds-dual__loc-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+              </svg>
+              <span class="fdl-feeds-dual__loc-text">近湖州市中心...</span>
+            </div>
+          </div>
+          <div class="fdl-feeds-dual__body">
+            <div class="fdl-feeds-dual__titles">
+              <div class="fdl-feeds-dual__title-row">
+                <span class="fdl-feeds-dual__title-main">西湖游船体验</span>
+                <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+              </div>
+              <div class="fdl-feeds-dual__title-row"><span class="fdl-feeds-dual__title-sub">含三潭印月门票</span></div>
+            </div>
+            <div class="fdl-feeds-dual__desc"><span class="fdl-feeds-dual__rating">评分 4.9</span></div>
+            <div class="fdl-feeds-dual__price-row">
+              <div class="fdl-feeds-dual__price-group">
+                <span class="fdl-feeds-dual__price-sym">¥</span>
+                <span class="fdl-feeds-dual__price-num">694</span>
+                <span class="fdl-feeds-dual__price-unit">起</span>
+              </div>
+              <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+            </div>
+          </div>
+        </div>
+        <div class="fdl-feeds-dual__card fdl-feeds-dual__card--tall">
+          <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex3">
+            <div class="fdl-feeds-dual__tag">
+              <svg class="fdl-feeds-dual__tag-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4" y="4" width="16" height="16" rx="2" fill="#FF8C1A"/>
+                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="fdl-feeds-dual__tag-label">无需换票</span>
+            </div>
+            <div class="fdl-feeds-dual__loc">
+              <svg class="fdl-feeds-dual__loc-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+              </svg>
+              <span class="fdl-feeds-dual__loc-text">近湖州市中心...</span>
+            </div>
+            <div class="fdl-feeds-dual__play"><div class="fdl-feeds-dual__play-icon"></div></div>
+          </div>
+          <div class="fdl-feeds-dual__body">
+            <div class="fdl-feeds-dual__titles">
+              <div class="fdl-feeds-dual__title-row">
+                <span class="fdl-feeds-dual__title-main">莫干山民宿体验</span>
+                <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+              </div>
+              <div class="fdl-feeds-dual__title-row"><span class="fdl-feeds-dual__title-sub">竹林深处的静谧</span></div>
+            </div>
+            <div class="fdl-feeds-dual__desc"><span class="fdl-feeds-dual__rating">评分 4.8</span></div>
+            <div class="fdl-feeds-dual__price-row">
+              <div class="fdl-feeds-dual__price-group">
+                <span class="fdl-feeds-dual__price-sym">¥</span>
+                <span class="fdl-feeds-dual__price-num">694</span>
+                <span class="fdl-feeds-dual__price-unit">起</span>
+              </div>
+              <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+            </div>
+            <div class="fdl-feeds-dual__split"></div>
+            <div class="fdl-feeds-dual__review"><span class="fdl-feeds-dual__review-text">无需换票</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fdl-feeds-dual__col fdl-feeds-dual__col--right">
+        <div class="fdl-feeds-dual__card fdl-feeds-dual__card--mid">
+          <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex2">
+            <div class="fdl-feeds-dual__tag fdl-feeds-dual__tag--dark"><span class="fdl-feeds-dual__tag-label">景点</span></div>
+          </div>
+          <div class="fdl-feeds-dual__body">
+            <div class="fdl-feeds-dual__titles">
+              <div class="fdl-feeds-dual__title-row">
+                <span class="fdl-feeds-dual__title-main">灵隐寺祈福之旅</span>
+                <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+              </div>
+              <div class="fdl-feeds-dual__title-row"><span class="fdl-feeds-dual__title-sub">千年古刹寻禅意</span></div>
+            </div>
+            <div class="fdl-feeds-dual__price-row">
+              <div class="fdl-feeds-dual__price-group">
+                <span class="fdl-feeds-dual__price-sym">¥</span>
+                <span class="fdl-feeds-dual__price-num">694</span>
+                <span class="fdl-feeds-dual__price-unit">起</span>
+              </div>
+              <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+            </div>
+          </div>
+        </div>
+        <div class="fdl-feeds-dual__card fdl-feeds-dual__card--xl">
+          <div class="fdl-feeds-dual__media fdl-feeds-dual__media--ex4">
+            <div class="fdl-feeds-dual__tag fdl-feeds-dual__tag--dark"><span class="fdl-feeds-dual__tag-label">景点</span></div>
+            <div class="fdl-feeds-dual__loc">
+              <svg class="fdl-feeds-dual__loc-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+              </svg>
+              <span class="fdl-feeds-dual__loc-text">近湖州市中心...</span>
+            </div>
+            <div class="fdl-feeds-dual__play"><div class="fdl-feeds-dual__play-icon"></div></div>
+          </div>
+          <div class="fdl-feeds-dual__body">
+            <div class="fdl-feeds-dual__titles">
+              <div class="fdl-feeds-dual__title-row">
+                <span class="fdl-feeds-dual__title-main">千岛湖环湖骑行</span>
+                <div class="fdl-feeds-dual__pill"><span class="fdl-feeds-dual__pill-text">无需换票</span></div>
+              </div>
+            </div>
+            <div class="fdl-feeds-dual__desc">
+              <span class="fdl-feeds-dual__desc-long">湖光山色尽收眼底，沿途打卡网红景点</span>
+            </div>
+            <div class="fdl-feeds-dual__price-row">
+              <div class="fdl-feeds-dual__price-group">
+                <span class="fdl-feeds-dual__price-sym">¥</span>
+                <span class="fdl-feeds-dual__price-num">694</span>
+                <span class="fdl-feeds-dual__price-unit">起</span>
+              </div>
+              <span class="fdl-feeds-dual__sales">月销 23 笔</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

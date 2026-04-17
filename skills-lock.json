@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "fliggy-design-gui": {
+      "source": "tibers.hxf/FliggyDesignGUISkill",
+      "sourceType": "internal",
+      "computedHash": "efc3b8ee2a93bf9d20118170922168cc1e96d81ea3744161ad41173e08618e80",
+      "commitHash": "fb6f3c15e7abbbe0308a034ea0613b22c9a5f04d",
+      "skillPath": ""
+    },
+    "fliggy-design-skill": {
+      "source": "tibers.hxf/designskill",
+      "sourceType": "internal",
+      "computedHash": "5b2c0f55d3d253d32c2b28a92af88f7132bf8a1113de5ab32bff314200741f02",
+      "skillPath": "Fliggy Design Skill"
+    },
+    "yuque-doc-fetch": {
+      "source": "trip/mtop-devtools",
+      "sourceType": "internal",
+      "computedHash": "56eaf537873c00ef8cea88a75d6dbea63fb45b22f04691fe1a2f375b7bde068a",
+      "commitHash": "1279d17a962b82c4aa8a15c262886bc1d88f5703",
+      "skillPath": "packages/skills/yuque-doc-fetch"
+    }
+  }
+}

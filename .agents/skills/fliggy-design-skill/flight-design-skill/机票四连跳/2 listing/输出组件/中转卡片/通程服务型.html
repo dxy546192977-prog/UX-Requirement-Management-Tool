@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>通程服务型</title>
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+    :root {
+      --color-primary: #0E131B;
+      --color-secondary: #90949A;
+      --color-price: #FF4119;
+      --color-accent: #009DAA;
+      --color-white: #FFFFFF;
+      --color-bg: #F2F3F5;
+      --color-border: #E6E7EB;
+      --color-divider: #E0E0E0;
+      --color-discount-bg-start: rgba(255, 229, 223, 0.0001);
+      --color-discount-bg-end: #FFE5DF;
+      --color-chip-border: rgba(144, 148, 154, 0.5);
+      --radius-m: 6px;
+      --radius-s: 4px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'PingFang SC', 'SimHei', sans-serif; background: var(--color-bg); }
+    img { display: block; }
+    .transfer-card { width: 750px; height: 212px; padding: 42px 30px 24px; display: flex; justify-content: space-between; align-items: flex-start; background: var(--color-white); border-bottom: 1px solid var(--color-bg); }
+    .transfer-card__info { width: 430px; display: flex; flex-direction: column; gap: 18px; }
+    .transfer-card__route { width: 430px; height: 68px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .transfer-card__time-group { display: flex; flex-direction: column; gap: 14px; width: 103px; }
+    .transfer-card__time-group--arrival { align-items: flex-end; width: 104px; }
+    .transfer-card__time { font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif; font-size: 42px; line-height: 26px; font-weight: 700; color: var(--color-primary); }
+    .transfer-card__airport { font-size: 22px; line-height: 22px; color: var(--color-primary); }
+    .transfer-card__middle { position: relative; width: 136px; height: 68px; }
+    .transfer-card__middle-line { position: absolute; left: 50%; top: 0; width: 124px; height: 68px; transform: translateX(-50%); background: url('https://gw.alicdn.com/imgextra/i4/O1CN01Zz6fJr1hyypVXg88S_!!6000000004347-2-tps-124-68.png') center / 124px 68px no-repeat; opacity: 0.8; }
+    .transfer-card__middle-content { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; width: max-content; gap: 6px; }
+    .transfer-card__stop-chip { height: 32px; padding: 6px 8px; border: 2px solid var(--color-border); border-radius: var(--radius-m); background: var(--color-white); display: inline-flex; justify-content: center; align-items: center; font-size: 20px; line-height: 20px; color: var(--color-primary); white-space: nowrap; }
+    .transfer-card__stop-text { font-size: 20px; line-height: 20px; color: var(--color-primary); white-space: nowrap; }
+    .transfer-card__meta { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .transfer-card__meta-group { display: inline-flex; align-items: center; gap: 6px; }
+    .transfer-card__icon { width: 20px; height: 20px; flex: none; }
+    .transfer-card__meta-text { font-size: 20px; line-height: 20px; color: var(--color-secondary); }
+    .transfer-card__meta-text--seat { color: var(--color-accent); }
+    .transfer-card__divider { width: 1px; height: 20px; background: var(--color-divider); }
+    .transfer-card__seat-arrow { width: 12px; height: 7px; }
+    .transfer-card__service-row { display: flex; align-items: center; gap: 6px; min-height: 28px; white-space: nowrap; }
+    .transfer-card__service-chip { height: 28px; padding: 0 6px; border: 1px solid var(--color-chip-border); border-radius: var(--radius-s); display: inline-flex; align-items: center; gap: 6px; background: var(--color-white); font-size: 20px; line-height: 28px; color: var(--color-secondary); }
+    .transfer-card__service-chip-group { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .transfer-card__tail-arrow { width: 12px; height: 7px; }
+    .transfer-card__price { min-width: 150px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+    .transfer-card__price-row { display: flex; align-items: flex-end; gap: 4px; min-height: 32px; }
+    .transfer-card__original-price { font-size: 20px; line-height: 20px; color: var(--color-secondary); text-decoration: line-through; }
+    .transfer-card__price-group { display: inline-flex; align-items: flex-end; gap: 2px; }
+    .transfer-card__price-symbol { font-family: 'Alibaba Sans 102', 'PingFang SC', sans-serif; font-size: 24px; line-height: 22px; font-weight: 700; color: var(--color-price); }
+    .transfer-card__price-number { font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif; font-size: 42px; line-height: 26px; font-weight: 700; color: var(--color-price); }
+    .transfer-card__discount { display: inline-flex; align-items: center; justify-content: flex-end; min-height: 28px; padding: 0 6px; border-radius: var(--radius-s); background: linear-gradient(90deg, var(--color-discount-bg-start) 42.38%, var(--color-discount-bg-end) 100%); font-size: 20px; line-height: 28px; color: var(--color-price); white-space: nowrap; }
+    .transfer-card__cabin { font-size: 22px; line-height: 22px; color: var(--color-secondary); }
+  </style>
+</head>
+<body>
+  <div class="transfer-card">
+    <div class="transfer-card__info">
+      <div class="transfer-card__route">
+        <div class="transfer-card__time-group">
+          <div class="transfer-card__time">13:35</div>
+          <div class="transfer-card__airport">萧山T4</div>
+        </div>
+        <div class="transfer-card__middle">
+          <div class="transfer-card__middle-line"></div>
+          <div class="transfer-card__middle-content">
+            <div class="transfer-card__stop-chip">重庆通程</div>
+            <div class="transfer-card__stop-text">停22h45m</div>
+          </div>
+        </div>
+        <div class="transfer-card__time-group transfer-card__time-group--arrival">
+          <div class="transfer-card__time">17:15</div>
+          <div class="transfer-card__airport">首都T3</div>
+        </div>
+      </div>
+      <div class="transfer-card__meta">
+        <span class="transfer-card__meta-group">
+          <img class="transfer-card__icon" src="../../../list切图/山航logo.png" alt="山航">
+          <span class="transfer-card__meta-text">山航</span>
+        </span>
+        <span class="transfer-card__divider"></span>
+        <span class="transfer-card__meta-group">
+          <img class="transfer-card__icon" src="../../../list切图/山航logo.png" alt="山航">
+          <span class="transfer-card__meta-text">山航</span>
+        </span>
+        <span class="transfer-card__divider"></span>
+        <span class="transfer-card__meta-text">总7h32m</span>
+        <span class="transfer-card__divider"></span>
+        <span class="transfer-card__meta-group">
+          <span class="transfer-card__meta-text transfer-card__meta-text--seat">可平躺</span>
+          <img class="transfer-card__seat-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01XtHUaA1GvmR9qkuqh_!!6000000000685-2-tps-12-7.png" alt="">
+        </span>
+      </div>
+      <div class="transfer-card__service-row">
+        <span class="transfer-card__service-chip">
+          <img class="transfer-card__icon" src="../../../list切图/权益标小icon_中转logo.png" alt="">
+          <span>通程服务</span>
+        </span>
+        <span class="transfer-card__service-chip-group">
+          <span class="transfer-card__service-chip">
+            <img class="transfer-card__icon" src="../../../list切图/权益标小icon.png" alt="">
+            <span>凯悦80元优惠券包</span>
+          </span>
+          <img class="transfer-card__tail-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01XtHUaA1GvmR9qkuqh_!!6000000000685-2-tps-12-7.png" alt="">
+        </span>
+      </div>
+    </div>
+    <div class="transfer-card__price">
+      <div class="transfer-card__price-row">
+        <span class="transfer-card__original-price">¥467</span>
+        <span class="transfer-card__price-group">
+          <span class="transfer-card__price-symbol">¥</span>
+          <span class="transfer-card__price-number">550</span>
+        </span>
+      </div>
+      <div class="transfer-card__discount">2项已优惠¥70›</div>
+      <div class="transfer-card__cabin">经济舱3.3折</div>
+    </div>
+  </div>
+</body>
+</html>

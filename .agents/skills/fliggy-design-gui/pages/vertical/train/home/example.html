@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>火车票首页 — 顶部氛围</title>
+  <style>
+    :root {
+      --color-white: #ffffff;
+      --color-bg: #f2f3f5;
+      --color-overlay-btn: rgba(0, 0, 0, 0.2);
+      --color-white-40: rgba(255, 255, 255, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 750px;
+      margin: 0 auto;
+      background: var(--color-bg);
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      overflow-x: hidden;
+    }
+
+    .fdl-train-home-atmosphere {
+      position: relative;
+      width: 750px;
+      height: 310px;
+    }
+
+    .fdl-train-home-atmosphere__canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: url("https://gw.alicdn.com/imgextra/i2/O1CN01WZ8eNv1wPuk5smgbE_!!6000000006301-2-tps-1500-620.png")
+        center top / cover no-repeat;
+    }
+
+    .top-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 750px;
+      height: 310px;
+      z-index: 10;
+    }
+
+    .status-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+    }
+
+    .nav-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .nav-bar__back,
+    .nav-bar__action-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--color-overlay-btn);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-bar__back-icon,
+    .nav-bar__action-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-bar__actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .top-bar__slider {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      right: 57px;
+      top: 210px;
+      z-index: 10;
+    }
+
+    .top-bar__dot {
+      width: 12px;
+      height: 6px;
+      border-radius: 6px;
+      background: var(--color-white-40);
+    }
+
+    .top-bar__dot--active {
+      width: 18px;
+      background: var(--color-white);
+    }
+
+    .top-bar__gradient {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 85px;
+      background: linear-gradient(
+        180deg,
+        rgba(242, 243, 245, 0) 0%,
+        rgba(242, 243, 245, 0.8) 70%,
+        #f2f3f5 100%
+      );
+      z-index: 2;
+    }
+
+    .train-mini-search-wrap {
+      position: relative;
+      width: 750px;
+      margin-top: -80px;
+      z-index: 20;
+    }
+
+    .search-module {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      position: relative;
+      width: 750px;
+      height: 702px;
+    }
+
+    .tab-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 24px;
+      width: 750px;
+      height: 260px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .tab-section-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      width: 702px;
+      height: 260px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .primary-tab-area {
+      width: 750px;
+      height: 84px;
+      position: relative;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .primary-tab-gradient {
+      position: absolute;
+      width: 750px;
+      height: 84px;
+      right: 0;
+      top: 0;
+      background: linear-gradient(180deg, rgba(242, 243, 245, 0) 0%, #F2F3F5 100%);
+    }
+
+    .primary-tab-glass {
+      box-sizing: border-box;
+      position: absolute;
+      left: 3.2%;
+      right: 3.2%;
+      top: 9.52%;
+      bottom: 0%;
+      background: linear-gradient(180deg, rgba(242, 243, 245, 0.6) -48.68%, #F2F3F5 62.83%);
+      border-width: 2px 2px 0 2px;
+      border-style: solid;
+      border-color: #FFFFFF;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .primary-tab-indicator {
+      position: absolute;
+      width: 124px;
+      height: 24px;
+      left: 288px;
+      top: 48px;
+      background: linear-gradient(90deg, #FFE033 4.35%, rgba(255, 224, 51, 0) 97.28%);
+      border-radius: 24px;
+    }
+
+    .primary-tab-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      position: absolute;
+      width: 190px;
+      height: 27px;
+      left: 48px;
+      top: 33px;
+    }
+
+    .primary-tab-left .tab-divider {
+      width: 2px;
+      height: 22px;
+      background: #D2D4D9;
+      flex: none;
+    }
+
+    .primary-tab-right {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0;
+      gap: 32px;
+      position: absolute;
+      width: 240px;
+      height: 27px;
+      right: 48px;
+      top: 32px;
+    }
+
+    .primary-tab-left img,
+    .primary-tab-right img {
+      display: block;
+      height: 27px;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .primary-tab-selected-icon {
+      position: absolute;
+      width: 100px;
+      height: 34px;
+      left: 300px;
+      top: 26px;
+    }
+
+    .primary-tab-selected-icon img {
+      width: 100px;
+      height: 34px;
+      display: block;
+    }
+
+    .primary-tab-selected-bg-img {
+      position: absolute;
+      left: 31.73%;
+      right: 38.4%;
+      top: 0%;
+      bottom: 0%;
+    }
+
+    .primary-tab-selected-bg-img img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .promo-bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 6px 24px 0;
+      gap: 10px;
+      width: 702px;
+      height: 78px;
+      background: #FFFFFF;
+      flex: none;
+      order: 2;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .promo-bar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 19px 18px;
+      gap: 129px;
+      isolation: isolate;
+      width: 654px;
+      height: 72px;
+      background: #FFF0F0;
+      border-radius: 12px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      position: relative;
+    }
+
+    .promo-bar-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      width: 471px;
+      height: 34px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      z-index: 0;
+    }
+
+    .promo-bar-left .promo-icon {
+      width: 199px;
+      height: 30px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .promo-bar-left .promo-icon img {
+      width: 199px;
+      height: 30px;
+      display: block;
+    }
+
+    .promo-bar-left .promo-text {
+      height: 34px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: #0F131A;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      white-space: nowrap;
+    }
+
+    .promo-text-highlight {
+      color: #FF5533;
+      font-family: "PingFang SC";
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 140%;
+    }
+
+    .promo-bar-arrow {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      left: 606px;
+      top: 30px;
+      z-index: 1;
+    }
+
+    .promo-bar-arrow img {
+      width: 12px;
+      height: 12px;
+      display: block;
+    }
+
+    .secondary-tab {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0 18px;
+      width: 702px;
+      height: 98px;
+      background: #FFFFFF;
+      border-radius: 0px 26px 0px 0px;
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .secondary-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      width: 351px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+
+    .secondary-tab-item.hidden-tab {
+      display: none;
+    }
+
+    .tab-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      gap: 4px;
+      width: 60px;
+      height: 62px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .tab-bubble-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 0;
+      width: 60px;
+      height: 28px;
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .tab-bubble-placeholder {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 6px;
+      gap: 10px;
+      width: 60px;
+      height: 28px;
+      flex: none;
+      order: 0;
+      flex-grow: 1;
+    }
+
+    .tab-bubble-tag {
+      display: none;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 6px;
+      gap: 10px;
+      position: absolute;
+      width: 92px;
+      height: 28px;
+      left: 0;
+      top: 0;
+      background: #FF5533;
+      border-radius: 14px 14px 14px 2px;
+    }
+
+    .tab-bubble-tag.visible {
+      display: flex;
+    }
+
+    .tab-bubble-tag-text {
+      width: 80px;
+      height: 20px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 100%;
+      text-align: center;
+      color: #FFFFFF;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .secondary-tab-item .tab-label {
+      font-family: "PingFang SC";
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 100%;
+      text-align: justify;
+      width: 60px;
+      height: 30px;
+      flex: none;
+      order: 1;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .secondary-tab-item .tab-label.active {
+      color: #0F131A;
+    }
+
+    .secondary-tab-item .tab-label.inactive {
+      color: #919499;
+    }
+
+    .secondary-tab-item .tab-underline {
+      width: 46px;
+      height: 6px;
+      background: #0F131A;
+      border-radius: 3px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .secondary-tab-item .tab-underline.hidden {
+      display: none;
+    }
+
+    .search-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      width: 750px;
+      height: 442px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .od-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 24px;
+      width: 750px;
+      height: 258px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .od-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 20px 30px;
+      gap: 10px;
+      isolation: isolate;
+      width: 702px;
+      height: 100px;
+      background: #FFFFFF;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      position: relative;
+    }
+
+    .od-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      flex: 1 0 0;
+      min-height: 1px;
+      min-width: 1px;
+      height: 60px;
+      z-index: 0;
+    }
+
+    .departure-city-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      width: 280px;
+      flex-shrink: 0;
+    }
+
+    .arrival-city-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0;
+      width: 280px;
+      flex-shrink: 0;
+    }
+
+    .city-name {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 42px;
+      line-height: 100%;
+      color: #0F131A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+    }
+
+    .city-name.departure { text-align: justify; }
+    .city-name.arrival { text-align: right; }
+
+    .od-switch {
+      width: 68px;
+      height: 68px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .od-switch img {
+      width: 68px;
+      height: 68px;
+      display: block;
+    }
+
+    .od-divider {
+      position: absolute;
+      width: 642px;
+      height: 0;
+      left: 30px;
+      bottom: 0;
+      border: 1px solid #F2F3F5;
+      z-index: 1;
+    }
+
+    .date-row {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 30px;
+      gap: 10px;
+      isolation: isolate;
+      width: 702px;
+      height: 100px;
+      background: #FFFFFF;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      position: relative;
+    }
+
+    .date-content {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 0;
+      gap: 12px;
+      width: 642px;
+      height: 38px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .date-group {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 0;
+      gap: 2px;
+      height: 38px;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .date-number {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 48px;
+      line-height: 90%;
+      text-align: center;
+      color: #0F131A;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .date-unit,
+    .date-weekday {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 100%;
+      text-align: center;
+      color: #0F131A;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .date-divider {
+      position: absolute;
+      width: 642px;
+      height: 0;
+      left: 30px;
+      bottom: 0;
+      border: 1px solid #F2F3F5;
+      z-index: 1;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 30px 30px 0;
+      gap: 10px;
+      width: 702px;
+      height: 58px;
+      background: #FFFFFF;
+      flex: none;
+      order: 2;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .filter-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      width: 642px;
+      height: 28px;
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 8px;
+      height: 28px;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .filter-checkbox {
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      border: 2px solid #D2D4D9;
+      border-radius: 50%;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .filter-text {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 100%;
+      color: #5C5F66;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 24px;
+      gap: 10px;
+      isolation: isolate;
+      width: 750px;
+      height: 184px;
+      flex: none;
+      order: 1;
+      align-self: stretch;
+      flex-grow: 0;
+      position: relative;
+    }
+
+    .search-button-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 30px 24px;
+      gap: 24px;
+      width: 702px;
+      height: 184px;
+      background: #FFFFFF;
+      border-radius: 0 0 26px 26px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      z-index: 1;
+    }
+
+    .search-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 90px;
+      gap: 10px;
+      isolation: isolate;
+      width: 642px;
+      height: 84px;
+      background: #FFE033;
+      border-radius: 42px;
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+      position: relative;
+    }
+
+    .search-button-text {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 140%;
+      text-align: center;
+      color: #0F131A;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      z-index: 0;
+      margin: auto;
+    }
+
+    .promo-tag {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      padding: 2px 12px;
+      gap: 10px;
+      position: absolute;
+      width: 180px;
+      height: 36px;
+      right: 0;
+      top: -10px;
+      background: linear-gradient(91.13deg, #FF4B6C -3.42%, #FF1835 74.28%, #FF4A6C 100.65%);
+      border-radius: 16px 19px 19px 2px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      z-index: 1;
+    }
+
+    .promo-tag-text {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 140%;
+      text-align: center;
+      color: #FFFFFF;
+      white-space: nowrap;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .search-history {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      width: 642px;
+      height: 22px;
+      flex: none;
+      order: 1;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .history-items {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 36px;
+      height: 22px;
+      flex: none;
+      order: 0;
+      flex-grow: 1;
+    }
+
+    .history-text,
+    .history-clear {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 100%;
+      color: #919499;
+      white-space: nowrap;
+    }
+
+    .history-clear {
+      text-align: right;
+      width: 44px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .diamond-wrap {
+      width: 750px;
+      padding: 0 24px;
+    }
+
+    .diamond-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      isolation: isolate;
+      position: relative;
+      width: 702px;
+      height: 163px;
+      background: #FFFFFF;
+      border-radius: 18px;
+    }
+
+    .diamond-top {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      width: 702px;
+      height: 96px;
+      background: #FFFFFF;
+      border-radius: 18px;
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+      z-index: 0;
+    }
+
+    .feature-entry {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 18px 30px 18px 24px;
+      gap: 6px;
+      height: 96px;
+      border-radius: 6px;
+      flex: none;
+      flex-grow: 0;
+      box-sizing: border-box;
+    }
+
+    .feature-entry:nth-child(1) { width: 240px; order: 0; }
+    .feature-entry:nth-child(2) { width: 220px; order: 1; }
+    .feature-entry:nth-child(3) { width: 242px; order: 2; }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .feature-icon img {
+      width: 60px;
+      height: 60px;
+      display: block;
+    }
+
+    .feature-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .feature-title {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 140%;
+      color: #0F131A;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .feature-subtitle {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 140%;
+      color: #919499;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .diamond-divider {
+      width: 702px;
+      height: 0;
+      border: 1px solid #F2F3F5;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      z-index: 1;
+    }
+
+    .diamond-bottom {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 18px 24px;
+      gap: 36px;
+      width: 702px;
+      height: 67px;
+      flex: none;
+      order: 2;
+      align-self: stretch;
+      flex-grow: 0;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+
+    .shortcut-entry {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 6px;
+      height: 31px;
+      border-radius: 6px;
+      flex: none;
+      flex-grow: 0;
+    }
+
+    .shortcut-icon {
+      width: 30px;
+      height: 30px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .shortcut-icon img {
+      width: 30px;
+      height: 30px;
+      display: block;
+    }
+
+    .shortcut-text {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 140%;
+      text-align: center;
+      color: #0F131A;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .expand-group {
+      position: absolute;
+      width: 105.5px;
+      height: 36px;
+      left: 573px;
+      top: 111px;
+      z-index: 3;
+    }
+
+    .expand-blur {
+      position: absolute;
+      width: 13px;
+      height: 25px;
+      left: 0;
+      top: 4px;
+      background: #F2F3F5;
+      filter: blur(3px);
+    }
+
+    .expand-btn {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 24px;
+      position: absolute;
+      width: 100px;
+      height: 36px;
+      left: 5.5px;
+      top: 0;
+      background: #FFFFFF;
+    }
+
+    .expand-line {
+      width: 0;
+      height: 36px;
+      border: 1px solid #F2F3F5;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .expand-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      width: 76px;
+      height: 34px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+
+    .expand-text {
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      text-align: center;
+      color: #919499;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
+    .expand-arrow {
+      width: 28px;
+      height: 28px;
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .promotion-wrap,
+    .route-expert-wrap,
+    .wechat-assistant-wrap,
+    .watermark-wrap {
+      width: 750px;
+      padding: 0 24px;
+      margin-top: 18px;
+    }
+
+    .promotion-container {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px 24px 24px;
+      gap: 10px;
+      isolation: isolate;
+      position: relative;
+      width: 702px;
+      height: 267px;
+      background: #FFFFFF;
+      border: 2px solid #FFFFFF;
+      border-radius: 18px;
+    }
+
+    .promotion-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 18px;
+      width: 654px;
+      height: 225px;
+    }
+
+    .promotion-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      width: 654px;
+      height: 45px;
+    }
+
+    .promotion-title-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      width: 235px;
+      height: 45px;
+    }
+
+    .promotion-title {
+      width: 235px;
+      height: 45px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 140%;
+      color: #0F131A;
+    }
+
+    .promotion-more {
+      display: none;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 6px;
+      width: 109px;
+      height: 24px;
+    }
+
+    .promotion-more-text {
+      width: 96px;
+      height: 24px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 100%;
+      color: #5C5F66;
+    }
+
+    .promotion-more-arrow {
+      width: 7px;
+      height: 12px;
+    }
+
+    .promotion-more-arrow svg {
+      display: block;
+      width: 7px;
+      height: 12px;
+    }
+
+    .promotion-cards {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      width: 654px;
+      height: 162px;
+    }
+
+    .promotion-card-large {
+      width: 270px;
+      height: 162px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .promotion-card-large img {
+      width: 270px;
+      height: 162px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .promotion-card-small {
+      width: 180px;
+      height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .promotion-card-small img {
+      width: 180px;
+      height: 160px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .route-expert {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 24px;
+      position: relative;
+      width: 702px;
+      background: linear-gradient(180deg, #FFF5EB 0%, #FFFAF6 100%);
+      border: 2px solid #FFFFFF;
+      border-radius: 18px;
+    }
+
+    .route-expert .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      width: 100%;
+      height: 81px;
+    }
+
+    .route-expert .header-title {
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 140%;
+      color: #0F131A;
+    }
+
+    .route-expert .tab-section {
+      position: relative;
+      width: 654px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+
+    .route-expert .tab-bg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 6px;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, #FFFFFF 100%);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .route-expert .tab-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 654px;
+      height: 80px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .route-expert .tab-img img {
+      height: 100%;
+      object-fit: cover;
+      object-position: left center;
+    }
+
+    .route-expert .tab-item {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 2px;
+      height: 32px;
+      top: 27px;
+      z-index: 2;
+    }
+
+    .route-expert .tab-item-left { left: 0; width: 345px; }
+    .route-expert .tab-item-right { left: 345px; width: 309px; }
+
+    .route-expert .tab-text {
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 32px;
+      text-align: center;
+      color: #000000;
+    }
+
+    .route-expert .content-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0 24px;
+      width: 654px;
+      background: #FFFFFF;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .route-expert .filter-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      gap: 12px;
+      width: 654px;
+      height: 60px;
+      flex-shrink: 0;
+      order: 0;
+    }
+
+    .route-expert .filter-btn {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 18px;
+      gap: 6px;
+      width: 194px;
+      height: 60px;
+      background: #F7F8FA;
+      border-radius: 6px;
+    }
+
+    .route-expert .filter-btn-text {
+      max-width: 192px;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      text-align: center;
+      color: #0F131A;
+    }
+
+    .route-expert .filter-btn-arrow {
+      width: 20px;
+      height: 20px;
+    }
+
+    .route-expert .filter-btn.active {
+      background: #FFF2F0;
+    }
+
+    .route-expert .filter-btn.active .filter-btn-text {
+      font-weight: 500;
+      color: #FF5533;
+    }
+
+    .route-expert .card-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 654px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      order: 1;
+    }
+
+    .route-expert .route-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px;
+      width: 654px;
+      border-radius: 12px;
+    }
+
+    .route-expert .route-card-inner {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 12px;
+      width: 606px;
+    }
+
+    .route-expert .city-image {
+      width: 100px;
+      height: 120px;
+      background: #F0F0F0;
+      border-radius: 12px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .route-expert .city-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .route-expert .route-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 494px;
+    }
+
+    .route-expert .od-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 18px;
+      height: 34px;
+      width: fit-content;
+      max-width: 100%;
+      align-self: flex-start;
+    }
+
+    .route-expert .od-city {
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 34px;
+      color: #0F131A;
+    }
+
+    .route-expert .od-dash {
+      width: 24px;
+      height: 4px;
+    }
+
+    .route-expert .tag-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+    }
+
+    .route-expert .tag-badge {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 28px;
+      height: 28px;
+      background: #FFF2F0;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .route-expert .tag-badge-text {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 140%;
+      color: #FF5533;
+    }
+
+    .route-expert .tag-desc {
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 22px;
+      color: #5C5F66;
+    }
+
+    .route-expert .price-bar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 18px;
+      margin-top: 18px;
+      width: 494px;
+      height: 78px;
+      background: linear-gradient(90deg, #F7F8FA 0%, #FFEEEB 100%);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .route-expert .train-info {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .route-expert .train-number,
+    .route-expert .train-time {
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 24px;
+      color: #0F131A;
+    }
+
+    .route-expert .train-number {
+      font-weight: 500;
+    }
+
+    .route-expert .price-expression {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      height: 78px;
+    }
+
+    .route-expert .price-value-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      padding: 5px 2px 7px 0;
+      width: 118px;
+      height: 76px;
+      background: linear-gradient(270deg, #FDF2EE 0%, rgba(253, 242, 238, 0) 100%);
+    }
+
+    .route-expert .price-value {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .route-expert .price-yen {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 13px;
+      text-align: right;
+      color: #FF5533;
+    }
+
+    .route-expert .price-num {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 36px;
+      line-height: 23px;
+      display: flex;
+      align-items: flex-end;
+      text-align: right;
+      color: #FF5533;
+    }
+
+    .route-expert .lightning-icon {
+      width: 36px;
+      height: 76px;
+      flex-shrink: 0;
+    }
+
+    .route-expert .lightning-icon img {
+      width: 36px;
+      height: 76px;
+      object-fit: cover;
+    }
+
+    .route-expert .save-tag {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 8px 0 0;
+      gap: 6px;
+      width: 110px;
+      height: 78px;
+      background: linear-gradient(238.24deg, #FF7138 30.12%, #FF445C 76.72%);
+      border-radius: 0 12px 12px 0;
+      flex-shrink: 0;
+    }
+
+    .route-expert .save-tag-label {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 20px;
+      color: #FFFFFF;
+    }
+
+    .route-expert .save-tag-amount {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .route-expert .save-tag-text {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 24px;
+      color: #FFFFFF;
+    }
+
+    .route-expert .save-tag-num {
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 24px;
+      color: #FFFFFF;
+    }
+
+    .route-expert .expand-btn {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 48px;
+      gap: 12px;
+      width: 276px;
+      height: 60px;
+      background: #F7F8FA;
+      border-radius: 30px;
+      margin-top: 24px;
+      order: 2;
+      align-self: center;
+      position: static;
+      left: auto;
+      top: auto;
+    }
+
+    .route-expert .expand-btn-text {
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 140%;
+      text-align: center;
+      color: #6666FF;
+    }
+
+    .route-expert .expand-btn-arrow {
+      width: 12px;
+      height: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .route-expert .expand-btn-arrow svg {
+      transform: rotate(90deg);
+    }
+
+    .wechat-assistant-card {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      gap: 23px;
+      position: relative;
+      width: 702px;
+      height: 130px;
+      background: #FFFFFF;
+      border-radius: 18px;
+    }
+
+    .wechat-assistant-card .left-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 23px;
+      width: 455px;
+      height: 82px;
+    }
+
+    .wechat-assistant-card .icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    .wechat-assistant-card .icon img {
+      width: 60px;
+      height: 60px;
+      display: block;
+    }
+
+    .wechat-assistant-card .text-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 6px;
+      width: 372px;
+      height: 82px;
+    }
+
+    .wechat-assistant-card .title {
+      width: 372px;
+      height: 42px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 140%;
+      color: #0F131A;
+    }
+
+    .wechat-assistant-card .subtitle {
+      width: 372px;
+      height: 34px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: #8C8C8C;
+    }
+
+    .wechat-assistant-card .button {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      gap: 10px;
+      width: 144px;
+      height: 60px;
+      background: #FFE033;
+      border-radius: 42px;
+    }
+
+    .wechat-assistant-card .button-text {
+      width: 84px;
+      height: 39px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 140%;
+      color: #0F131A;
+      text-align: center;
+    }
+
+    .watermark {
+      position: relative;
+      width: 702px;
+      height: 116px;
+      background: #FFFFFF;
+    }
+
+    .watermark img {
+      position: absolute;
+      width: 750px;
+      height: 116px;
+      left: calc(50% - 750px/2);
+      top: 0;
+      display: block;
+    }
+
+    .train-bottom-tab-spacer {
+      width: 750px;
+      height: 150px;
+    }
+
+    .train-bottom-tab {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      width: 750px;
+      height: 150px;
+      background: #FFFFFF;
+    }
+
+    .train-bottom-tab .tab-bar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 750px;
+      height: 86px;
+    }
+
+    .train-bottom-tab .tab-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 0 0;
+      gap: 6px;
+      width: 150px;
+      max-width: 150px;
+      height: 86px;
+      box-sizing: border-box;
+    }
+
+    .train-bottom-tab .tab-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+    }
+
+    .train-bottom-tab .tab-icon img {
+      width: 48px;
+      height: 48px;
+      display: block;
+    }
+
+    .train-bottom-tab .tab-text {
+      width: 150px;
+      height: 20px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 100%;
+      text-align: center;
+      color: #0F131A;
+    }
+
+    .train-bottom-tab .safe-area {
+      width: 750px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .train-bottom-tab .home-indicator {
+      width: 268px;
+      height: 10px;
+      background: #000000;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <section class="fdl-train-home-atmosphere" aria-label="火车票首页顶部氛围">
+    <div class="fdl-train-home-atmosphere__canvas" aria-hidden="true"></div>
+
+    <div class="top-bar">
+      <div class="status-bar"></div>
+
+      <nav class="nav-bar">
+        <div class="nav-bar__back" role="button" tabindex="0" aria-label="返回">
+          <svg class="nav-bar__back-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.5 5.5L11 18L22.5 30.5" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="nav-bar__actions">
+          <div class="nav-bar__action-btn" role="button" tabindex="0" aria-label="相机">
+            <svg class="nav-bar__action-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="9" width="27" height="22" rx="3" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+              <circle cx="18.5" cy="19.5" r="5.5" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+              <path d="M13 9L15 5H22L24 9" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="nav-bar__action-btn" role="button" tabindex="0" aria-label="更多">
+            <svg class="nav-bar__action-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="18" r="2.5" fill="#FFFFFF"/>
+              <circle cx="18" cy="18" r="2.5" fill="#FFFFFF"/>
+              <circle cx="27" cy="18" r="2.5" fill="#FFFFFF"/>
+            </svg>
+          </div>
+        </div>
+      </nav>
+
+      <div class="top-bar__slider" aria-hidden="true">
+        <div class="top-bar__dot top-bar__dot--active"></div>
+        <div class="top-bar__dot"></div>
+        <div class="top-bar__dot"></div>
+        <div class="top-bar__dot"></div>
+      </div>
+
+      <div class="top-bar__gradient" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div class="train-mini-search-wrap" aria-label="火车票小搜模块">
+    <div class="search-module">
+      <div class="tab-section">
+        <div class="tab-section-inner">
+          <div class="primary-tab-area">
+            <div class="primary-tab-gradient"></div>
+            <div class="primary-tab-glass"></div>
+            <div class="primary-tab-selected-bg-img">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01s25gxe1C6FPTnb1cT_!!6000000000031-2-tps-448-168.png" alt="选中背景">
+            </div>
+            <div class="primary-tab-indicator"></div>
+
+            <div class="primary-tab-left">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01fNSknD21Te30C56PG_!!6000000006986-2-tps-112-54.png" alt="机票" style="width: 56px;">
+              <span class="tab-divider"></span>
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01Vxt6qK1OiyHoeN1mP_!!6000000001740-2-tps-216-54.png" alt="特价机票" style="width: 108px;">
+            </div>
+
+            <div class="primary-tab-selected-icon">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01JMvbNA1lfWSznIYj4_!!6000000004846-2-tps-200-68.png" alt="火车票">
+            </div>
+
+            <div class="primary-tab-right">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01dhh6HC1zO1xdIhwth_!!6000000006703-2-tps-164-54.png" alt="汽车票" style="width: 82px;">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01tTLJeS1zEs2VzScFr_!!6000000006683-2-tps-252-54.png" alt="租车" style="width: 126px;">
+            </div>
+          </div>
+
+          <div class="secondary-tab-wrapper">
+            <div class="secondary-tab">
+              <div class="secondary-tab-item">
+                <div class="tab-inner">
+                  <div class="tab-bubble-row">
+                    <div class="tab-bubble-placeholder"></div>
+                  </div>
+                  <span class="tab-label active">单程</span>
+                </div>
+                <div class="tab-underline"></div>
+              </div>
+              <div class="secondary-tab-item">
+                <div class="tab-inner">
+                  <div class="tab-bubble-row">
+                    <div class="tab-bubble-placeholder"></div>
+                  </div>
+                  <span class="tab-label inactive">往返</span>
+                </div>
+                <div class="tab-underline hidden"></div>
+              </div>
+              <div class="secondary-tab-item hidden-tab">
+                <div class="tab-inner">
+                  <div class="tab-bubble-row">
+                    <div class="tab-bubble-placeholder"></div>
+                  </div>
+                  <span class="tab-label inactive">国内</span>
+                </div>
+                <div class="tab-underline hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="promo-bar-wrapper">
+            <div class="promo-bar">
+              <div class="promo-bar-left">
+                <div class="promo-icon">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN01mNC3ib1YqtICgVRG9_!!6000000003111-2-tps-398-60.png" alt="88VIP">
+                </div>
+                <span class="promo-text">火车票券最高膨胀<span class="promo-text-highlight">至¥68</span></span>
+              </div>
+              <div class="promo-bar-arrow">
+                <img src="https://gw.alicdn.com/imgextra/i2/O1CN01zhdQfl1pNtfVtACvY_!!6000000005349-2-tps-24-24.png" alt="箭头">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-card">
+        <div class="od-section">
+          <div class="od-row">
+            <div class="od-content">
+              <div class="departure-city-container">
+                <span class="city-name departure">杭州</span>
+              </div>
+              <div class="od-switch">
+                <img src="https://gw.alicdn.com/imgextra/i1/O1CN01PgqhIz1lJXSIXB8HP_!!6000000004798-2-tps-136-136.png" alt="切换OD">
+              </div>
+              <div class="arrival-city-container">
+                <span class="city-name arrival">北京</span>
+              </div>
+            </div>
+            <div class="od-divider"></div>
+          </div>
+
+          <div class="date-row">
+            <div class="date-content">
+              <div class="date-group">
+                <span class="date-number" style="width: 27px;">9</span>
+                <span class="date-unit">月</span>
+                <span class="date-number" style="width: 45px;">12</span>
+                <span class="date-unit">日</span>
+              </div>
+              <span class="date-weekday">周一</span>
+            </div>
+            <div class="date-divider"></div>
+          </div>
+
+          <div class="filter-row">
+            <div class="filter-content">
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span class="filter-text">学生票</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span class="filter-text">高铁动车</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-container">
+          <div class="search-button-area">
+            <div class="search-button">
+              <span class="search-button-text">搜索火车票</span>
+              <div class="promo-tag">
+                <span class="promo-tag-text">今日购票立减¥30</span>
+              </div>
+            </div>
+
+            <div class="search-history">
+              <div class="history-items">
+                <span class="history-text">杭州-北京 07-01</span>
+                <span class="history-text">杭州-北京 07-02</span>
+              </div>
+              <span class="history-clear">清除</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diamond-wrap" style="margin-top: 18px;" aria-label="火车票金刚区模块">
+      <div class="diamond-section">
+        <div class="diamond-top">
+          <div class="feature-entry">
+            <div class="feature-icon">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01CJl5Wz1pppqe4yLp4_!!6000000005410-2-tps-120-120.png" alt="有票神器">
+            </div>
+            <div class="feature-text">
+              <span class="feature-title">有票神器</span>
+              <span class="feature-subtitle">解决无票难题</span>
+            </div>
+          </div>
+          <div class="feature-entry">
+            <div class="feature-icon">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01lbeoZ91r7z9wE2B5l_!!6000000005585-2-tps-120-120.png" alt="在线换座">
+            </div>
+            <div class="feature-text">
+              <span class="feature-title">在线换座</span>
+              <span class="feature-subtitle">座位在一起</span>
+            </div>
+          </div>
+          <div class="feature-entry">
+            <div class="feature-icon">
+              <img src="https://gw.alicdn.com/imgextra/i4/O1CN01iVlr551pppqcTJn9i_!!6000000005410-2-tps-120-120.png" alt="火车超能力">
+            </div>
+            <div class="feature-text">
+              <span class="feature-title">火车超能力</span>
+              <span class="feature-subtitle">60种抢票方案</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="diamond-divider"></div>
+
+        <div class="diamond-bottom">
+          <div class="shortcut-entry">
+            <div class="shortcut-icon">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01AfdCvW1ehcycW9Gpw_!!6000000003903-2-tps-60-60.png" alt="学生核验">
+            </div>
+            <span class="shortcut-text">学生核验</span>
+          </div>
+          <div class="shortcut-entry">
+            <div class="shortcut-icon">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01dXkOTr1YOUjih9Efz_!!6000000003049-2-tps-60-60.png" alt="企业认证">
+            </div>
+            <span class="shortcut-text">企业认证</span>
+          </div>
+          <div class="shortcut-entry">
+            <div class="shortcut-icon">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01cYWfWf1mNwswMtAuv_!!6000000004943-2-tps-60-60.png" alt="抢票攻略">
+            </div>
+            <span class="shortcut-text">抢票攻略</span>
+          </div>
+          <div class="shortcut-entry">
+            <div class="shortcut-icon">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01768sWQ1jOusCVXsHQ_!!6000000004539-2-tps-60-60.png" alt="正晚点查询">
+            </div>
+            <span class="shortcut-text">正晚点查询</span>
+          </div>
+        </div>
+
+        <div class="expand-group">
+          <div class="expand-blur"></div>
+          <div class="expand-btn">
+            <div class="expand-line"></div>
+            <div class="expand-content">
+              <span class="expand-text">展开</span>
+              <div class="expand-arrow">
+                <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L7 7L13 1" stroke="#919499" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="promotion-wrap" aria-label="优惠专区模块">
+      <div class="promotion-container">
+        <div class="promotion-inner">
+          <div class="promotion-header">
+            <div class="promotion-title-wrapper">
+              <span class="promotion-title">找优惠 帮你省钱</span>
+            </div>
+            <div class="promotion-more">
+              <span class="promotion-more-text">更多优惠</span>
+              <div class="promotion-more-arrow">
+                <svg viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L6 6L1 11" stroke="#D2D4D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="promotion-cards">
+            <div class="promotion-card-large">
+              <img src="https://gw.alicdn.com/imgextra/i2/O1CN01sdQ5U11m5Ae9pmXAn_!!6000000004902-2-tps-540-324.png" alt="优惠模块1">
+            </div>
+            <div class="promotion-card-small">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN012srpN71CDZkOjrXaX_!!6000000000047-2-tps-360-320.png" alt="优惠模块2">
+            </div>
+            <div class="promotion-card-small">
+              <img src="https://gw.alicdn.com/imgextra/i3/O1CN01GP0Zbr29nM19L2qHL_!!6000000008112-2-tps-360-320.png" alt="优惠模块3">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="route-expert-wrap" aria-label="火车路线专家模块">
+      <div class="route-expert">
+        <div class="header">
+          <span class="header-title">火车路线专家</span>
+        </div>
+
+        <div class="tab-section">
+          <div class="tab-bg"></div>
+          <div class="tab-img">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01mwnZt81ipByuP9a9M_!!6000000004461-2-tps-371-80.png" alt="tab-bg">
+          </div>
+          <div class="tab-item tab-item-left">
+            <span class="tab-text">特价火车票</span>
+          </div>
+          <div class="tab-item tab-item-right">
+            <span class="tab-text">火车小时达</span>
+          </div>
+        </div>
+
+        <div class="content-area">
+          <div class="filter-row">
+            <div class="filter-btn">
+              <span class="filter-btn-text">杭州出发</span>
+              <img class="filter-btn-arrow" src="https://gw.alicdn.com/imgextra/i2/O1CN01vwRHRn25S38AMka2k_!!6000000007524-2-tps-40-40.png" alt="arrow">
+            </div>
+            <div class="filter-btn">
+              <span class="filter-btn-text">6月16日</span>
+              <img class="filter-btn-arrow" src="https://gw.alicdn.com/imgextra/i2/O1CN01vwRHRn25S38AMka2k_!!6000000007524-2-tps-40-40.png" alt="arrow">
+            </div>
+            <div class="filter-btn active">
+              <span class="filter-btn-text">6折起</span>
+              <img class="filter-btn-arrow" src="https://gw.alicdn.com/imgextra/i2/O1CN01vwRHRn25S38AMka2k_!!6000000007524-2-tps-40-40.png" alt="arrow">
+            </div>
+          </div>
+
+          <div class="card-list">
+            <div class="route-card">
+              <div class="route-card-inner">
+                <div class="city-image">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                </div>
+                <div class="route-info">
+                  <div class="od-row">
+                    <span class="od-city">杭州东</span>
+                    <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                    <span class="od-city">绍兴北</span>
+                  </div>
+                  <div class="tag-row">
+                    <div class="tag-badge"><span class="tag-badge-text">玩</span></div>
+                    <span class="tag-desc">盐官观潮景区-博物馆-志摩故里</span>
+                  </div>
+                  <div class="tag-row">
+                    <div class="tag-badge"><span class="tag-badge-text">吃</span></div>
+                    <span class="tag-desc">美食名称 美食名称 美食名称</span>
+                  </div>
+                  <div class="price-bar">
+                    <div class="train-info">
+                      <span class="train-number">高铁</span>
+                      <span class="train-time">18分</span>
+                    </div>
+                    <div class="price-expression">
+                      <div class="price-value-area">
+                        <div class="price-value">
+                          <span class="price-yen">&yen;</span>
+                          <span class="price-num">240</span>
+                        </div>
+                      </div>
+                      <div class="lightning-icon">
+                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                      </div>
+                      <div class="save-tag">
+                        <span class="save-tag-label">5.5折</span>
+                        <div class="save-tag-amount">
+                          <span class="save-tag-text">立省</span>
+                          <span class="save-tag-num">&yen;100</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="route-card">
+              <div class="route-card-inner">
+                <div class="city-image">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                </div>
+                <div class="route-info">
+                  <div class="od-row">
+                    <span class="od-city">杭州杭...</span>
+                    <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                    <span class="od-city">绍兴绍兴</span>
+                  </div>
+                  <div class="tag-row">
+                    <div class="tag-badge"><span class="tag-badge-text">玩</span></div>
+                    <span class="tag-desc">盐官观潮景区-博物馆-志摩故里</span>
+                  </div>
+                  <div class="tag-row">
+                    <div class="tag-badge"><span class="tag-badge-text">吃</span></div>
+                    <span class="tag-desc">美食名称 美食名称 美食名称</span>
+                  </div>
+                  <div class="price-bar">
+                    <div class="train-info">
+                      <span class="train-number">高铁</span>
+                      <span class="train-time">18分</span>
+                    </div>
+                    <div class="price-expression">
+                      <div class="price-value-area">
+                        <div class="price-value">
+                          <span class="price-yen">&yen;</span>
+                          <span class="price-num">240</span>
+                        </div>
+                      </div>
+                      <div class="lightning-icon">
+                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                      </div>
+                      <div class="save-tag">
+                        <span class="save-tag-label">5.5折</span>
+                        <div class="save-tag-amount">
+                          <span class="save-tag-text">立省</span>
+                          <span class="save-tag-num">&yen;100</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="route-card">
+              <div class="route-card-inner">
+                <div class="city-image">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                </div>
+                <div class="route-info">
+                  <div class="od-row">
+                    <span class="od-city">杭州杭...</span>
+                    <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                    <span class="od-city">绍兴绍兴</span>
+                  </div>
+                  <div class="tag-row">
+                    <div class="tag-badge"><span class="tag-badge-text">玩</span></div>
+                    <span class="tag-desc">盐官观潮景区-博物馆-志摩故里</span>
+                  </div>
+                  <div class="tag-row">
+                    <div class="tag-badge"><span class="tag-badge-text">吃</span></div>
+                    <span class="tag-desc">美食名称 美食名称 美食名称</span>
+                  </div>
+                  <div class="price-bar">
+                    <div class="train-info">
+                      <span class="train-number">高铁</span>
+                      <span class="train-time">18分</span>
+                    </div>
+                    <div class="price-expression">
+                      <div class="price-value-area">
+                        <div class="price-value">
+                          <span class="price-yen">&yen;</span>
+                          <span class="price-num">240</span>
+                        </div>
+                      </div>
+                      <div class="lightning-icon">
+                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                      </div>
+                      <div class="save-tag">
+                        <span class="save-tag-label">5.5折</span>
+                        <div class="save-tag-amount">
+                          <span class="save-tag-text">立省</span>
+                          <span class="save-tag-num">&yen;100</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="route-card">
+              <div class="route-card-inner">
+                <div class="city-image">
+                  <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                </div>
+                <div class="route-info">
+                  <div class="od-row">
+                    <span class="od-city">杭州杭...</span>
+                    <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                    <span class="od-city">绍兴绍兴</span>
+                  </div>
+                  <div class="price-bar">
+                    <div class="train-info">
+                      <span class="train-number">高铁</span>
+                      <span class="train-time">18分</span>
+                    </div>
+                    <div class="price-expression">
+                      <div class="price-value-area">
+                        <div class="price-value">
+                          <span class="price-yen">&yen;</span>
+                          <span class="price-num">240</span>
+                        </div>
+                      </div>
+                      <div class="lightning-icon">
+                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                      </div>
+                      <div class="save-tag">
+                        <span class="save-tag-label">5.5折</span>
+                        <div class="save-tag-amount">
+                          <span class="save-tag-text">立省</span>
+                          <span class="save-tag-num">&yen;100</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="expand-btn">
+            <span class="expand-btn-text">查看更多内容</span>
+            <div class="expand-btn-arrow">
+              <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L6 6L1 11" stroke="#6666FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wechat-assistant-wrap" aria-label="添加微信助手模块">
+      <div class="wechat-assistant-card">
+        <div class="left-content">
+          <div class="icon">
+            <img src="https://gw.alicdn.com/imgextra/i3/O1CN01mupPFw1Z4AmK87UIA_!!6000000003140-2-tps-120-120.png" alt="微信助手图标">
+          </div>
+          <div class="text-content">
+            <p class="title">添加飞猪旅行助手</p>
+            <p class="subtitle">第一时间接收出票、出行信息</p>
+          </div>
+        </div>
+        <div class="button">
+          <span class="button-text">去添加</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="watermark-wrap" aria-label="火车票水印模块">
+      <div class="watermark">
+        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01dA4l2P1wMFWuJLxsf_!!6000000006293-2-tps-1500-232.png" alt="火车票水印">
+      </div>
+    </div>
+
+    <div class="train-bottom-tab-spacer" aria-hidden="true"></div>
+
+    <div class="train-bottom-tab" aria-label="火车票底部固定导航">
+      <div class="tab-bar">
+        <div class="tab-item">
+          <div class="tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01mO0AJo1t9w4sfDWcV_!!6000000005860-2-tps-96-96.png" alt="12306账号">
+          </div>
+          <span class="tab-text">12306账号</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01YDeizb1THYevF9IiT_!!6000000002357-2-tps-96-96.png" alt="抢票">
+          </div>
+          <span class="tab-text">抢票</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01einTYH1NodZPwopCl_!!6000000001617-2-tps-96-96.png" alt="电子发票">
+          </div>
+          <span class="tab-text">电子发票</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01RXL9Ci1ZqGMhyFeNw_!!6000000003245-2-tps-96-96.png" alt="车站大屏">
+          </div>
+          <span class="tab-text">车站大屏</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01BtI3AB1VCddVJuuCU_!!6000000002617-2-tps-96-96.png" alt="我的订单">
+          </div>
+          <span class="tab-text">我的订单</span>
+        </div>
+      </div>
+
+      <div class="safe-area">
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

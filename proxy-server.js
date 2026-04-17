@@ -282,12 +282,15 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const { reqId, prdUrl } = body;
+    const { reqId, prdUrl, skillKey } = body;
     if (!reqId || !prdUrl) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'reqId and prdUrl are required' }));
       return;
     }
+
+    const allowedSkills = new Set(['default', 'prd_html_decompose']);
+    const skill = allowedSkills.has(skillKey) ? skillKey : 'default';
 
     const config = loadConfig();
     if (!config) {
@@ -301,7 +304,7 @@ const server = http.createServer(async (req, res) => {
       console.log('[AiDesign] No ai_api_key — running in MOCK mode');
     }
 
-    const job = aiDesignSvc.createJob(reqId, prdUrl, config, yuqueSvc);
+    const job = aiDesignSvc.createJob(reqId, prdUrl, config, yuqueSvc, { skillKey: skill });
     console.log(`[AiDesign] Created job ${job.id} for req ${reqId}${isMock ? ' (mock)' : ''}`);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });

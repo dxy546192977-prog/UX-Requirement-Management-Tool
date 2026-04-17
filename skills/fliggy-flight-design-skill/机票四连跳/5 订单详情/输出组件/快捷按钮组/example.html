@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>快捷按钮组预览</title>
+  <style>
+    :root {
+      --color-darkgray: #0F131A;
+      --color-page-bg: #F2F3F5;
+      --color-emphasis-soft: #FFFCEB;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--color-page-bg);
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .quick-action-strip {
+      width: 750px;
+      display: flex;
+      gap: 12px;
+      padding: 0 24px;
+      overflow-x: auto;
+    }
+    .quick-action-pill {
+      flex: 0 0 auto;
+      width: 166px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-emphasis-soft);
+      border-radius: 42px;
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+    }
+  </style>
+</head>
+<body>
+  <div class="quick-action-strip">
+    <div class="quick-action-pill">退改签</div>
+    <div class="quick-action-pill">选座</div>
+    <div class="quick-action-pill">行李额</div>
+    <div class="quick-action-pill">产品说明</div>
+  </div>
+</body>
+</html>

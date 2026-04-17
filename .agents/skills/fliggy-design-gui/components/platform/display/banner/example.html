@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — 营销横幅（Banner）示例</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Fonts";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.31/fonts/FliggyFonts-MediumItalicVer0711.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-notice-tint: #fff6ee;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+  /* Banner 蒙版：全局尚无旅行蓝 token，组件级注册（见 spec） */
+  --fdl-banner-mask-1: #19aafd;
+  --fdl-banner-mask-2: #009ce7;
+  --fdl-banner-mask-transparent: rgba(1, 157, 232, 0);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-banner-demo-page {
+  display: flex;
+  justify-content: center;
+}
+
+/* ========== fdl-banner ========== */
+.fdl-banner {
+  position: relative;
+  width: 702px;
+  height: 148px;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  background-color: #d9d9d9;
+  background-image: url("https://fli.alicdn.com/upload/creative-platform/8nzmEcX0yD4bd1d0434df0165a.png?x-oss-process=image/format,webp");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.fdl-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    var(--fdl-banner-mask-1) 0%,
+    var(--fdl-banner-mask-2) 48%,
+    var(--fdl-banner-mask-transparent) 71%,
+    var(--fdl-banner-mask-transparent) 100%
+  );
+}
+
+.fdl-banner__link {
+  position: relative;
+  z-index: 2;
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-banner__link:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-banner__content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  padding: 22px 30px;
+}
+
+.fdl-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fdl-banner__title {
+  margin: 0;
+  font-family: "Fliggy Fonts", "PingFang SC", "SimHei", sans-serif;
+  font-size: 60px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-white);
+}
+
+.fdl-banner__subtitle {
+  display: flex;
+  align-items: center;
+  margin: 4px 0 0;
+  gap: 8px;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-brand-1);
+}
+
+.fdl-banner__arrow {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--color-darkgray);
+  background-color: var(--color-brand-1);
+}
+
+.fdl-banner__arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.fdl-banner__pagination {
+  position: absolute;
+  bottom: 10px;
+  left: 30px;
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+}
+
+.fdl-banner__dot {
+  width: 24px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-white) 80%, transparent);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-banner__dot:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-banner__dot--active {
+  background: var(--color-brand-1);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-banner-demo-page">
+    <article class="fdl-banner">
+      <a class="fdl-banner__link" href="#" aria-label="旅行好货榜单，查看详情">
+        <div class="fdl-banner__content">
+          <div class="fdl-banner__text">
+            <h2 class="fdl-banner__title">旅行好货榜单</h2>
+            <p class="fdl-banner__subtitle">
+              <span>100+ 专业评审甄选好货</span>
+              <span class="fdl-banner__arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path
+                    d="M9 18L15 12L9 6"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </p>
+          </div>
+        </div>
+      </a>
+      <nav class="fdl-banner__pagination" aria-label="轮播图页码" id="fdl-banner-pagination-demo">
+        <button
+          type="button"
+          class="fdl-banner__dot fdl-banner__dot--active"
+          aria-label="第 1 页"
+          aria-current="true"
+        ></button>
+        <button type="button" class="fdl-banner__dot" aria-label="第 2 页"></button>
+        <button type="button" class="fdl-banner__dot" aria-label="第 3 页"></button>
+      </nav>
+    </article>
+  </div>
+
+  <script>
+(function () {
+  var link = document.querySelector(".fdl-banner__link");
+  if (link && link.getAttribute("href") === "#") {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+    });
+  }
+
+  var nav = document.getElementById("fdl-banner-pagination-demo");
+  if (!nav) return;
+
+  var dots = nav.querySelectorAll(".fdl-banner__dot");
+  dots.forEach(function (dot) {
+    dot.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dots.forEach(function (d) {
+        d.classList.remove("fdl-banner__dot--active");
+        d.removeAttribute("aria-current");
+      });
+      dot.classList.add("fdl-banner__dot--active");
+      dot.setAttribute("aria-current", "true");
+    });
+  });
+})();
+  </script>
+</body>
+</html>

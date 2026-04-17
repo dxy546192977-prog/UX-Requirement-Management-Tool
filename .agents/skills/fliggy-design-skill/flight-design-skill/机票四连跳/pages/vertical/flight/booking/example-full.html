@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=750, user-scalable=no">
+<title>机票下单 — vertical.flight.booking</title>
+<style>
+/* ===== @font-face ===== */
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+/* ===== Design Tokens ===== */
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-notice-tint: #fff6ee;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+/* ===== Reset ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 750px;
+  max-width: 750px;
+  margin: 0 auto;
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-darkgray);
+  padding-bottom: 160px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 顶部渐变背景 ===== */
+.top-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 750px;
+  height: 514px;
+  background: linear-gradient(180deg, var(--color-brand-1) 0%, var(--color-brand-4) 40%, var(--color-bg) 100%);
+  z-index: -1;
+}
+
+/* ===== 导航栏 ===== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  background: transparent;
+}
+.navbar-back {
+  position: absolute;
+  left: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar-back::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border-left: 3px solid var(--color-darkgray);
+  border-bottom: 3px solid var(--color-darkgray);
+  transform: rotate(45deg);
+  margin-left: 4px;
+}
+.navbar-title {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+
+/* ===== 内容区 ===== */
+.content {
+  padding: 112px 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+}
+
+/* ===== 通用卡片 ===== */
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-l);
+  padding: 24px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.card-title {
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.card-optional {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.card-action {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-indigo-1);
+}
+.divider {
+  height: 1px;
+  background: var(--color-bg);
+  margin: 18px 0;
+}
+.divider-indent {
+  height: 1px;
+  background: var(--color-bg);
+  margin: 0 0 0 160px;
+}
+
+/* ===== 航班信息卡 ===== */
+.airline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.airline-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-s);
+  background: linear-gradient(135deg, #e6f0ff, #cce0ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.airline-name {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.flight-number {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-midgray);
+}
+.aircraft-type {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+  margin-left: auto;
+}
+
+/* 航程时间轴 */
+.timeline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+.timeline-point {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 200px;
+}
+.timeline-point.arrive {
+  text-align: right;
+  align-items: flex-end;
+}
+.timeline-time {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--color-darkgray);
+  line-height: 1;
+}
+.timeline-city {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.timeline-airport {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.timeline-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 12px;
+}
+.timeline-duration {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.timeline-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+.timeline-dash {
+  flex: 1;
+  height: 1px;
+  border-top: 2px dashed var(--color-auxiliary);
+}
+.timeline-plane {
+  font-size: 20px;
+  color: var(--color-midgray);
+  transform: rotate(0deg);
+}
+.timeline-type {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-green-0);
+}
+
+/* 舱等行李退改 */
+.cabin-baggage-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.service-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--radius-s);
+  font-size: 22px;
+  font-weight: 400;
+}
+.service-tag.cabin {
+  background: var(--color-indigo-4);
+  color: var(--color-indigo-1);
+}
+.service-tag.baggage {
+  background: var(--color-label);
+  color: var(--color-midgray);
+}
+.refund-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.refund-text {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.refund-link {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-indigo-1);
+}
+
+/* ===== 表单行 ===== */
+.form-row {
+  display: flex;
+  align-items: center;
+  height: 88px;
+}
+.form-label {
+  width: 160px;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-midgray);
+  flex-shrink: 0;
+}
+.form-value {
+  flex: 1;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-darkgray);
+}
+.form-placeholder {
+  color: var(--color-auxiliary);
+}
+.form-arrow {
+  width: 24px;
+  height: 24px;
+  border-right: 2px solid var(--color-lightgray);
+  border-bottom: 2px solid var(--color-lightgray);
+  transform: rotate(-45deg);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* 乘客标签 */
+.pax-label {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+  padding: 12px 0 0;
+}
+.add-pax-btn {
+  height: 88px;
+  border: 2px dashed var(--color-indigo-4);
+  border-radius: var(--radius-m);
+  background: var(--color-label);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-indigo-1);
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+/* ===== 联系人提示 ===== */
+.contact-hint {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+  margin-top: 8px;
+}
+
+/* ===== 保险项 ===== */
+.insurance-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 0;
+  gap: 12px;
+}
+.checkbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-auxiliary);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkbox.checked {
+  background: var(--color-brand-1);
+  border-color: var(--color-brand-1);
+}
+.checkbox.checked::after {
+  content: '✓';
+  font-size: 16px;
+  color: var(--color-darkgray);
+  font-weight: bold;
+}
+.insurance-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.insurance-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.insurance-name-text {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.recommend-tag {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-pay-1);
+  background: rgba(255,85,51,0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-s);
+}
+.insurance-desc {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.insurance-price {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+  flex-shrink: 0;
+}
+.no-insurance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-midgray);
+}
+.radio {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-auxiliary);
+  flex-shrink: 0;
+}
+.insurance-detail-link {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-indigo-1);
+  text-align: right;
+  padding-top: 8px;
+}
+
+/* ===== 附加服务 ===== */
+.addon-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 0;
+  gap: 12px;
+}
+.addon-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.addon-icon.seat { background: linear-gradient(135deg, #e6f0ff, #cce0ff); }
+.addon-icon.meal { background: linear-gradient(135deg, #fff0e6, #ffe6cc); }
+.addon-icon.luggage { background: linear-gradient(135deg, #f0e6ff, #e0ccff); }
+.addon-icon.lounge { background: linear-gradient(135deg, var(--color-safeguard-4), #fde8d5); }
+.addon-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.addon-name {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.addon-desc {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.addon-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.addon-price {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+}
+.addon-add-btn {
+  padding: 8px 18px;
+  background: var(--color-indigo-4);
+  color: var(--color-indigo-1);
+  border-radius: var(--radius-s);
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ===== 优惠券 ===== */
+.coupon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88px;
+}
+.coupon-label {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.coupon-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.coupon-count {
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-pay-1);
+}
+.coupon-code-link {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-indigo-1);
+  padding-top: 4px;
+}
+
+/* ===== 价格明细 ===== */
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.price-item-name {
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--color-midgray);
+}
+.price-item-value {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--color-darkgray);
+}
+.price-item-value.discount {
+  color: var(--color-pay-1);
+}
+.total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+}
+.total-label {
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.total-value {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 42px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+  line-height: 1;
+}
+.total-symbol {
+  font-size: 26px;
+}
+
+/* ===== 协议 ===== */
+.agreement-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 6px;
+}
+.agreement-text {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+  line-height: 1.6;
+}
+.agreement-link {
+  color: var(--color-indigo-1);
+  text-decoration: none;
+}
+
+/* ===== 底部支付栏 ===== */
+.pay-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  height: 140px;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 100;
+}
+.pay-bar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pay-label {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-midgray);
+}
+.pay-total {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.pay-total-symbol {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+}
+.pay-total-value {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 42px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+  line-height: 1;
+}
+.pay-detail-toggle {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-indigo-1);
+  cursor: pointer;
+}
+.pay-btn {
+  width: 240px;
+  height: 84px;
+  background: var(--color-pay-1);
+  border-radius: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-white);
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部渐变背景 -->
+<div class="top-gradient"></div>
+
+<!-- 导航栏 -->
+<div class="navbar">
+  <div class="navbar-back"></div>
+  <span class="navbar-title">填写订单</span>
+</div>
+
+<!-- 内容区 -->
+<div class="content">
+
+  <!-- ===== 1. 航班信息卡 ===== -->
+  <div class="card">
+    <div class="airline-row">
+      <div class="airline-logo">✈</div>
+      <span class="airline-name">南方航空</span>
+      <span class="flight-number">CZ3101</span>
+      <span class="aircraft-type">空客A320</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-point">
+        <span class="timeline-time">07:30</span>
+        <span class="timeline-city">杭州</span>
+        <span class="timeline-airport">萧山T4</span>
+      </div>
+      <div class="timeline-center">
+        <span class="timeline-duration">2h30m</span>
+        <div class="timeline-line">
+          <span class="timeline-dash"></span>
+          <span class="timeline-plane">✈</span>
+          <span class="timeline-dash"></span>
+        </div>
+        <span class="timeline-type">直飞</span>
+      </div>
+      <div class="timeline-point arrive">
+        <span class="timeline-time">10:00</span>
+        <span class="timeline-city">北京</span>
+        <span class="timeline-airport">首都T2</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cabin-baggage-row">
+      <span class="service-tag cabin">经济舱 Y</span>
+      <span class="service-tag baggage">托运 20kg</span>
+      <span class="service-tag baggage">手提 7kg</span>
+    </div>
+
+    <div class="refund-summary">
+      <span class="refund-text">退票手续费¥50起 · 改签免费</span>
+      <span class="refund-link">详情 ></span>
+    </div>
+  </div>
+
+  <!-- ===== 2. 乘机人信息 ===== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">乘机人信息</span>
+      <span class="card-action">+ 添加乘客</span>
+    </div>
+
+    <span class="pax-label">成人 1</span>
+    <div class="form-row">
+      <span class="form-label">姓名</span>
+      <span class="form-value form-placeholder">请输入乘机人姓名</span>
+    </div>
+    <div class="divider-indent"></div>
+    <div class="form-row">
+      <span class="form-label">证件类型</span>
+      <span class="form-value">身份证</span>
+      <span class="form-arrow"></span>
+    </div>
+    <div class="divider-indent"></div>
+    <div class="form-row">
+      <span class="form-label">证件号码</span>
+      <span class="form-value form-placeholder">请输入证件号码</span>
+    </div>
+    <div class="divider-indent"></div>
+    <div class="form-row">
+      <span class="form-label">出生日期</span>
+      <span class="form-value form-placeholder">请选择出生日期</span>
+      <span class="form-arrow"></span>
+    </div>
+
+    <div class="add-pax-btn">+ 添加乘客</div>
+  </div>
+
+  <!-- ===== 3. 联系人信息 ===== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">联系人</span>
+    </div>
+    <div class="form-row">
+      <span class="form-label">手机号</span>
+      <span class="form-value form-placeholder">请输入手机号码</span>
+    </div>
+    <div class="divider-indent"></div>
+    <div class="form-row">
+      <span class="form-label">邮箱</span>
+      <span class="form-value form-placeholder">用于接收行程单（选填）</span>
+    </div>
+    <span class="contact-hint">航班变动将通过短信和邮件通知</span>
+  </div>
+
+  <!-- ===== 4. 航空保险 ===== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">航空保险</span>
+      <span class="card-optional">可选</span>
+    </div>
+
+    <div class="insurance-item">
+      <div class="checkbox checked"></div>
+      <div class="insurance-info">
+        <div class="insurance-name">
+          <span class="insurance-name-text">航班延误险</span>
+          <span class="recommend-tag">推荐</span>
+        </div>
+        <span class="insurance-desc">延误2小时赔付¥200，最高¥600</span>
+      </div>
+      <span class="insurance-price">¥25</span>
+    </div>
+    <div class="divider"></div>
+
+    <div class="insurance-item">
+      <div class="checkbox"></div>
+      <div class="insurance-info">
+        <div class="insurance-name">
+          <span class="insurance-name-text">航班取消险</span>
+        </div>
+        <span class="insurance-desc">航班取消赔付¥300</span>
+      </div>
+      <span class="insurance-price">¥20</span>
+    </div>
+    <div class="divider"></div>
+
+    <div class="insurance-item">
+      <div class="checkbox"></div>
+      <div class="insurance-info">
+        <div class="insurance-name">
+          <span class="insurance-name-text">航空意外险</span>
+          <span class="recommend-tag">热销</span>
+        </div>
+        <span class="insurance-desc">最高赔付¥500万</span>
+      </div>
+      <span class="insurance-price">¥30</span>
+    </div>
+    <div class="divider"></div>
+
+    <div class="no-insurance">
+      <div class="radio"></div>
+      <span>不购买保险</span>
+    </div>
+
+    <div class="insurance-detail-link">查看保障详情 ></div>
+  </div>
+
+  <!-- ===== 5. 附加服务 ===== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">附加服务</span>
+      <span class="card-optional">可选</span>
+    </div>
+
+    <div class="addon-item">
+      <div class="addon-icon seat">💺</div>
+      <div class="addon-info">
+        <span class="addon-name">选座服务</span>
+        <span class="addon-desc">提前选择心仪座位</span>
+      </div>
+      <div class="addon-action">
+        <span class="addon-price">¥30/人</span>
+        <span class="addon-add-btn">添加</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="addon-item">
+      <div class="addon-icon meal">🍽</div>
+      <div class="addon-info">
+        <span class="addon-name">机上餐食</span>
+        <span class="addon-desc">精选中西式餐食</span>
+      </div>
+      <div class="addon-action">
+        <span class="addon-price">¥45/份</span>
+        <span class="addon-add-btn">添加</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="addon-item">
+      <div class="addon-icon luggage">🧳</div>
+      <div class="addon-info">
+        <span class="addon-name">额外行李</span>
+        <span class="addon-desc">加购10kg/20kg/30kg</span>
+      </div>
+      <div class="addon-action">
+        <span class="addon-price">¥120起</span>
+        <span class="addon-add-btn">添加</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="addon-item">
+      <div class="addon-icon lounge">🛋</div>
+      <div class="addon-info">
+        <span class="addon-name">贵宾休息室</span>
+        <span class="addon-desc">萧山机场T4贵宾厅</span>
+      </div>
+      <div class="addon-action">
+        <span class="addon-price">¥99/人</span>
+        <span class="addon-add-btn">添加</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6. 优惠券 ===== -->
+  <div class="card">
+    <div class="coupon-row">
+      <span class="coupon-label">优惠券</span>
+      <div class="coupon-right">
+        <span class="coupon-count">3张可用</span>
+        <span class="form-arrow"></span>
+      </div>
+    </div>
+    <span class="coupon-code-link">输入兑换码</span>
+  </div>
+
+  <!-- ===== 7. 价格明细 ===== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">价格明细</span>
+    </div>
+
+    <div class="price-row">
+      <span class="price-item-name">机票票价（成人×1）</span>
+      <span class="price-item-value">¥580</span>
+    </div>
+    <div class="price-row">
+      <span class="price-item-name">机建燃油</span>
+      <span class="price-item-value">¥120</span>
+    </div>
+    <div class="price-row">
+      <span class="price-item-name">航班延误险</span>
+      <span class="price-item-value">¥25</span>
+    </div>
+    <div class="price-row">
+      <span class="price-item-name">优惠券</span>
+      <span class="price-item-value discount">-¥50</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="total-row">
+      <span class="total-label">合计</span>
+      <div>
+        <span class="total-value"><span class="total-symbol">¥</span>675</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 8. 协议信息 ===== -->
+  <div class="agreement-section">
+    <div class="checkbox checked" style="margin-top: 2px;"></div>
+    <span class="agreement-text">
+      我已阅读并同意
+      <a class="agreement-link" href="#">《购票须知》</a>
+      <a class="agreement-link" href="#">《退改签规则》</a>
+      <a class="agreement-link" href="#">《隐私政策》</a>
+    </span>
+  </div>
+
+</div>
+
+<!-- ===== 底部支付栏 ===== -->
+<div class="pay-bar">
+  <div class="pay-bar-left">
+    <span class="pay-label">合计</span>
+    <div class="pay-total">
+      <span class="pay-total-symbol">¥</span>
+      <span class="pay-total-value">675</span>
+    </div>
+    <span class="pay-detail-toggle">明细 ∧</span>
+  </div>
+  <div class="pay-btn">去支付</div>
+</div>
+
+</body>
+</html>

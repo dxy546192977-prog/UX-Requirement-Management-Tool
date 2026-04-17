@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>otatab 示例</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #ffffff 0%, #f2f3f5 9.08%);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: #0e131b;
+    }
+
+    img {
+      display: block;
+    }
+
+    .stage {
+      width: 750px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #ffffff 0%, #f2f3f5 9.08%);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .ota-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+      width: 750px;
+      height: 106px;
+    }
+
+    .tab-style {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 116px;
+      width: 750px;
+      height: 106px;
+      padding: 0 24px;
+    }
+
+    .tab-item {
+      width: 180px;
+      height: 106px;
+      margin: 0 auto;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: #0e131b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: none;
+      position: relative;
+    }
+
+    .tab-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 180px;
+      height: 94px;
+      flex: none;
+    }
+
+    .tab-bubble-row {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 180px;
+      height: 28px;
+      flex: none;
+    }
+
+    .tab-bubble-placeholder {
+      width: 180px;
+      height: 28px;
+      flex: 1;
+    }
+
+    .tab-title {
+      width: 180px;
+      height: 30px;
+      font-size: 30px;
+      line-height: 30px;
+      font-weight: 500;
+      text-align: center;
+      color: #0e131b;
+    }
+
+    .tab-item.third .tab-title {
+      width: 165px;
+    }
+
+    .tab-sub {
+      width: 180px;
+      height: 28px;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 400;
+      text-align: center;
+      color: #5b5f67;
+    }
+
+    .tab-item.active .tab-sub {
+      color: #0e131b;
+    }
+
+    .tab-underline {
+      width: 54px;
+      height: 6px;
+      border-radius: 3px;
+      background: #0e131b;
+      flex: none;
+    }
+
+    .seat-tag {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 120px;
+      height: 32px;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <section class="ota-tab">
+      <div class="tab-style">
+        <button class="tab-item active" aria-label="经济舱">
+          <div class="tab-inner">
+            <div class="tab-bubble-row">
+              <div class="tab-bubble-placeholder"></div>
+            </div>
+            <div class="tab-title">经济舱</div>
+            <div class="tab-sub">¥550起</div>
+          </div>
+          <div class="tab-underline"></div>
+        </button>
+
+        <button class="tab-item" aria-label="超级经济舱">
+          <div class="tab-inner">
+            <div class="tab-bubble-row">
+              <div class="tab-bubble-placeholder"></div>
+            </div>
+            <div class="tab-title">超级经济舱</div>
+            <div class="tab-sub">¥550起</div>
+          </div>
+        </button>
+
+        <button class="tab-item third" aria-label="公务头等舱">
+          <div class="tab-inner">
+            <div class="tab-bubble-row">
+              <div class="tab-bubble-placeholder"></div>
+              <img class="seat-tag" src="https://gw.alicdn.com/imgextra/i3/O1CN01EQpKX51lf44Qu5vec_!!6000000004845-2-tps-120-32.png" alt="座椅可平躺">
+            </div>
+            <div class="tab-title">公务/头等舱</div>
+            <div class="tab-sub">¥1520起</div>
+          </div>
+        </button>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=750, user-scalable=no">
+<title>机票首页 — vertical.flight.home</title>
+<style>
+/* ===== @font-face ===== */
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fliggy Fonts';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.31/fonts/FliggyFonts-MediumItalicVer0711.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ===== Design Tokens ===== */
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-notice-tint: #fff6ee;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+
+  /* 页面局部 token */
+  --flight-home-content-offset-bottom: 145px;
+}
+
+/* ===== Reset ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 750px;
+  max-width: 750px;
+  margin: 0 auto;
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-darkgray);
+  padding-bottom: var(--flight-home-content-offset-bottom);
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+
+/* ===== 顶部氛围区 ===== */
+.atmosphere {
+  position: relative;
+  width: 750px;
+  height: 360px;
+  background: linear-gradient(180deg, var(--color-brand-1) 0%, var(--color-brand-4) 70%, var(--color-bg) 100%);
+}
+.status-bar {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.status-bar-time {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--color-darkgray);
+}
+.status-bar-icons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.status-bar-icons span {
+  width: 32px;
+  height: 32px;
+  background: var(--color-darkgray);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+.navbar {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.navbar-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.navbar-location::before {
+  content: '';
+  width: 28px;
+  height: 28px;
+  background: var(--color-darkgray);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+.navbar-actions {
+  display: flex;
+  gap: 18px;
+}
+.navbar-actions span {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar-actions span::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: var(--color-darkgray);
+  border-radius: var(--radius-s);
+  opacity: 0.5;
+}
+
+/* ===== 搜索模块 ===== */
+.flight-search-module {
+  position: relative;
+  margin: -120px 24px 0;
+  background: var(--color-white);
+  border-radius: var(--radius-l);
+  padding: 0 0 24px;
+  z-index: 10;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+/* 一级品类 Tab */
+.category-tabs {
+  display: flex;
+  height: 80px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-bg);
+  padding: 0 18px;
+  gap: 0;
+}
+.category-tabs .tab-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+  position: relative;
+  line-height: 80px;
+  cursor: pointer;
+}
+.category-tabs .tab-item.active {
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.category-tabs .tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 6px;
+  background: var(--color-brand-1);
+  border-radius: 3px;
+}
+
+/* 二级行程类型 Tab */
+.trip-type-tabs {
+  display: flex;
+  height: 72px;
+  align-items: center;
+  padding: 0 18px;
+  gap: 0;
+}
+.trip-type-tabs .tab-item {
+  flex: 1;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--color-midgray);
+  position: relative;
+  line-height: 72px;
+  cursor: pointer;
+}
+.trip-type-tabs .tab-item.active {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.trip-type-tabs .tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: var(--color-brand-1);
+  border-radius: 2px;
+}
+
+/* OD 行 */
+.od-row {
+  display: flex;
+  align-items: center;
+  height: 120px;
+  padding: 0 24px;
+  position: relative;
+}
+.city-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.city-block.arrival {
+  text-align: right;
+}
+.city-name {
+  font-size: 42px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+  line-height: 1.2;
+}
+.city-code {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.swap-btn {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--color-label);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0 18px;
+  cursor: pointer;
+  position: relative;
+}
+.swap-btn::before,
+.swap-btn::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 3px;
+  background: var(--color-midgray);
+  border-radius: 2px;
+}
+.swap-btn::before { top: 24px; transform: rotate(45deg); }
+.swap-btn::after { bottom: 24px; transform: rotate(-45deg); }
+
+/* 分割线 */
+.search-divider {
+  height: 1px;
+  background: var(--color-bg);
+  margin: 0 24px;
+}
+
+/* 日期行 */
+.date-row {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  padding: 0 24px;
+  gap: 24px;
+}
+.date-block {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.date-number {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--color-darkgray);
+  line-height: 1;
+}
+.date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.date-md {
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--color-darkgray);
+}
+.date-week {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+
+/* 乘客舱等行 */
+.pax-cabin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 24px;
+}
+.pax-cabin-label {
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-midgray);
+}
+.pax-cabin-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--color-darkgray);
+}
+.pax-cabin-arrow {
+  width: 24px;
+  height: 24px;
+  border-right: 3px solid var(--color-lightgray);
+  border-bottom: 3px solid var(--color-lightgray);
+  transform: rotate(-45deg);
+  flex-shrink: 0;
+}
+
+/* 搜索按钮 */
+.search-btn {
+  margin: 18px 24px 0;
+  height: 84px;
+  background: var(--color-brand-1);
+  border-radius: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+  cursor: pointer;
+}
+
+/* 历史搜索 */
+.search-history {
+  padding: 16px 24px 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.history-item {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+  background: var(--color-label);
+  padding: 8px 16px;
+  border-radius: var(--radius-s);
+}
+
+/* ===== 主内容区 ===== */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 24px 0;
+}
+
+/* ===== 金刚区 ===== */
+.flight-kingkong {
+  background: var(--color-white);
+  border-radius: var(--radius-l);
+  padding: 24px 18px;
+}
+.kingkong-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px 0;
+}
+.kingkong-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.kingkong-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+.kingkong-icon.special { background: linear-gradient(135deg, #fff0e6, #ffe6cc); }
+.kingkong-icon.intl { background: linear-gradient(135deg, #e6f0ff, #cce0ff); }
+.kingkong-icon.status { background: linear-gradient(135deg, #e6ffe6, #ccf5cc); }
+.kingkong-icon.refund { background: linear-gradient(135deg, #f0e6ff, #e0ccff); }
+.kingkong-icon.seat { background: linear-gradient(135deg, #fff6e6, #ffeccc); }
+.kingkong-icon.transfer { background: linear-gradient(135deg, #e6f5ff, #ccebff); }
+.kingkong-icon.insurance { background: linear-gradient(135deg, #e6fff0, #ccf5e0); }
+.kingkong-icon.more { background: var(--color-label); }
+.kingkong-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+  text-align: center;
+}
+.kingkong-subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-pay-1);
+  text-align: center;
+  margin-top: -4px;
+}
+
+/* ===== 公告条 ===== */
+.flight-notice {
+  display: flex;
+  align-items: center;
+  height: 72px;
+  padding: 0 18px;
+  background: linear-gradient(90deg, var(--color-notice-tint), var(--color-white));
+  border-radius: var(--radius-m);
+  gap: 12px;
+}
+.notice-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-pay-2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notice-icon::after {
+  content: '!';
+  color: var(--color-white);
+  font-size: 18px;
+  font-weight: bold;
+}
+.notice-text {
+  flex: 1;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-darkgray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notice-arrow {
+  width: 24px;
+  height: 24px;
+  border-right: 2px solid var(--color-lightgray);
+  border-bottom: 2px solid var(--color-lightgray);
+  transform: rotate(-45deg);
+  flex-shrink: 0;
+}
+
+/* ===== 营销横滑 ===== */
+.flight-promo {
+  margin: 0 -24px;
+  padding: 0 24px;
+}
+.promo-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.promo-scroll::-webkit-scrollbar { display: none; }
+.promo-card {
+  flex-shrink: 0;
+  width: 702px;
+  height: 148px;
+  border-radius: var(--radius-l);
+  position: relative;
+  overflow: hidden;
+  scroll-snap-align: start;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  background-size: cover;
+  background-position: center;
+}
+.promo-card:nth-child(1) {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/NOirpu7G6y4bd1d0434df0165a.jpeg?x-oss-process=image/format,webp');
+}
+.promo-card:nth-child(2) {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/J-1XYahvVf4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.promo-card:nth-child(3) {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/EVa73BYCr14bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.promo-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, transparent 70%);
+}
+.promo-content {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+}
+.promo-title {
+  font-family: 'Fliggy Fonts', 'PingFang SC', sans-serif;
+  font-size: 36px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-white);
+  line-height: 1.2;
+}
+.promo-subtitle {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-brand-1);
+  margin-top: 4px;
+}
+.promo-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.promo-dot {
+  width: 12px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-auxiliary);
+}
+.promo-dot.active {
+  width: 24px;
+  background: var(--color-darkgray);
+}
+
+/* ===== 推荐航线 ===== */
+.flight-recommend {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.section-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.section-subtitle {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+
+/* 低价日历 */
+.price-calendar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.price-calendar::-webkit-scrollbar { display: none; }
+.calendar-item {
+  flex-shrink: 0;
+  width: 120px;
+  height: 96px;
+  border-radius: var(--radius-m);
+  background: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.calendar-item.active {
+  background: var(--color-brand-4);
+}
+.calendar-date {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.calendar-week {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.calendar-price {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+}
+
+/* 航线卡片双列 */
+.route-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.route-card {
+  background: var(--color-white);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  cursor: pointer;
+}
+.route-card-image {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e0e0e0;
+  position: relative;
+}
+.route-card:nth-child(1) .route-card-image {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/oTWDa-CETO4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.route-card:nth-child(2) .route-card-image {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/NnbUPSHqjj4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.route-card:nth-child(3) .route-card-image {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/6f7mb5vjCF4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.route-card:nth-child(4) .route-card-image {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/wiwNXxSy3x4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.route-card:nth-child(5) .route-card-image {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/9RsmaEzGFl4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.route-card:nth-child(6) .route-card-image {
+  background-image: url('https://fli.alicdn.com/upload/creative-platform/8e0spBDoif4bd1d0434df0165a.png?x-oss-process=image/format,webp');
+}
+.route-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0,0,0,0.5);
+  color: var(--color-white);
+  font-size: 20px;
+  font-weight: 400;
+  padding: 4px 12px;
+  border-radius: var(--radius-s);
+}
+.route-card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.route-card-route {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+.route-card-airline {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.route-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 6px;
+}
+.route-card-price .price-symbol {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+}
+.route-card-price .price-value {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--color-pay-1);
+  line-height: 1;
+}
+.route-card-price .price-suffix {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+
+/* ===== 底部悬浮栏 ===== */
+.flight-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  height: 145px;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-bg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding-top: 12px;
+  z-index: 100;
+}
+.bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  width: 120px;
+}
+.bar-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bar-icon::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: var(--color-lightgray);
+  border-radius: var(--radius-s);
+}
+.bar-item.active .bar-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--color-brand-1);
+}
+.bar-item.active .bar-icon::after {
+  width: 28px;
+  height: 28px;
+  background: var(--color-darkgray);
+}
+.bar-label {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-lightgray);
+}
+.bar-item.active .bar-label {
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部氛围区 ===== -->
+<div class="atmosphere">
+  <div class="status-bar">
+    <span class="status-bar-time">9:41</span>
+    <div class="status-bar-icons">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="navbar">
+    <div class="navbar-location">杭州</div>
+    <div class="navbar-actions">
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 搜索模块 ===== -->
+<div class="flight-search-module">
+  <div class="category-tabs">
+    <div class="tab-item active">机票</div>
+    <div class="tab-item">火车票</div>
+    <div class="tab-item">汽车票</div>
+    <div class="tab-item">租车</div>
+  </div>
+  <div class="trip-type-tabs">
+    <div class="tab-item active">单程</div>
+    <div class="tab-item">往返</div>
+    <div class="tab-item">多程</div>
+  </div>
+  <div class="od-row">
+    <div class="city-block departure">
+      <span class="city-name">杭州</span>
+      <span class="city-code">HGH 萧山国际机场</span>
+    </div>
+    <div class="swap-btn"></div>
+    <div class="city-block arrival">
+      <span class="city-name">北京</span>
+      <span class="city-code">PEK 首都国际机场</span>
+    </div>
+  </div>
+  <div class="search-divider"></div>
+  <div class="date-row">
+    <div class="date-block">
+      <span class="date-number">15</span>
+      <div class="date-info">
+        <span class="date-md">4月</span>
+        <span class="date-week">周二</span>
+      </div>
+    </div>
+  </div>
+  <div class="search-divider"></div>
+  <div class="pax-cabin-row">
+    <span class="pax-cabin-label">乘客与舱等</span>
+    <div class="pax-cabin-value">
+      1成人 · 经济舱
+      <span class="pax-cabin-arrow"></span>
+    </div>
+  </div>
+  <div class="search-btn">搜索机票</div>
+  <div class="search-history">
+    <span class="history-item">杭州→北京 04-10</span>
+    <span class="history-item">上海→三亚 04-08</span>
+    <span class="history-item">杭州→成都 04-05</span>
+  </div>
+</div>
+
+<!-- ===== 主内容区 ===== -->
+<div class="main-content">
+
+  <!-- 金刚区 -->
+  <div class="flight-kingkong">
+    <div class="kingkong-grid">
+      <div class="kingkong-item">
+        <div class="kingkong-icon special">✈</div>
+        <span class="kingkong-title">特价机票</span>
+        <span class="kingkong-subtitle">低至¥99</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon intl">🌍</div>
+        <span class="kingkong-title">国际机票</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon status">⏱</div>
+        <span class="kingkong-title">航班动态</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon refund">📋</div>
+        <span class="kingkong-title">退改签</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon seat">💺</div>
+        <span class="kingkong-title">值机选座</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon transfer">🚗</div>
+        <span class="kingkong-title">接送机</span>
+        <span class="kingkong-subtitle">新人立减</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon insurance">🛡</div>
+        <span class="kingkong-title">延误险</span>
+      </div>
+      <div class="kingkong-item">
+        <div class="kingkong-icon more">⋯</div>
+        <span class="kingkong-title">更多</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 公告条 -->
+  <div class="flight-notice">
+    <div class="notice-icon"></div>
+    <span class="notice-text">杭州萧山机场T4航站楼4月15日起启用，请注意航站楼变更</span>
+    <span class="notice-arrow"></span>
+  </div>
+
+  <!-- 营销横滑 -->
+  <div class="flight-promo">
+    <div class="promo-scroll">
+      <div class="promo-card">
+        <div class="promo-mask"></div>
+        <div class="promo-content">
+          <div class="promo-title">会员日特惠</div>
+          <div class="promo-subtitle">国内机票低至1折起</div>
+        </div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-mask"></div>
+        <div class="promo-content">
+          <div class="promo-title">东南亚直飞</div>
+          <div class="promo-subtitle">往返含税¥999起</div>
+        </div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-mask"></div>
+        <div class="promo-content">
+          <div class="promo-title">里程兑机票</div>
+          <div class="promo-subtitle">积分当钱花 最高抵50%</div>
+        </div>
+      </div>
+    </div>
+    <div class="promo-indicator">
+      <span class="promo-dot active"></span>
+      <span class="promo-dot"></span>
+      <span class="promo-dot"></span>
+    </div>
+  </div>
+
+  <!-- 推荐航线 -->
+  <div class="flight-recommend">
+    <div class="section-header">
+      <span class="section-title">低价航线推荐</span>
+      <span class="section-subtitle">为你精选特惠航线</span>
+    </div>
+
+    <!-- 低价日历 -->
+    <div class="price-calendar">
+      <div class="calendar-item active">
+        <span class="calendar-date">4月15日</span>
+        <span class="calendar-week">周二</span>
+        <span class="calendar-price">¥320</span>
+      </div>
+      <div class="calendar-item">
+        <span class="calendar-date">4月16日</span>
+        <span class="calendar-week">周三</span>
+        <span class="calendar-price">¥450</span>
+      </div>
+      <div class="calendar-item">
+        <span class="calendar-date">4月17日</span>
+        <span class="calendar-week">周四</span>
+        <span class="calendar-price">¥380</span>
+      </div>
+      <div class="calendar-item">
+        <span class="calendar-date">4月18日</span>
+        <span class="calendar-week">周五</span>
+        <span class="calendar-price">¥520</span>
+      </div>
+      <div class="calendar-item">
+        <span class="calendar-date">4月19日</span>
+        <span class="calendar-week">周六</span>
+        <span class="calendar-price">¥680</span>
+      </div>
+      <div class="calendar-item">
+        <span class="calendar-date">4月20日</span>
+        <span class="calendar-week">周日</span>
+        <span class="calendar-price">¥590</span>
+      </div>
+    </div>
+
+    <!-- 航线卡片 -->
+    <div class="route-cards">
+      <div class="route-card">
+        <div class="route-card-image">
+          <span class="route-tag">直飞</span>
+        </div>
+        <div class="route-card-body">
+          <span class="route-card-route">杭州 → 三亚</span>
+          <span class="route-card-airline">南方航空 · 3h10m</span>
+          <div class="route-card-price">
+            <span class="price-symbol">¥</span>
+            <span class="price-value">320</span>
+            <span class="price-suffix">起</span>
+          </div>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-image">
+          <span class="route-tag">直飞</span>
+        </div>
+        <div class="route-card-body">
+          <span class="route-card-route">杭州 → 成都</span>
+          <span class="route-card-airline">四川航空 · 2h50m</span>
+          <div class="route-card-price">
+            <span class="price-symbol">¥</span>
+            <span class="price-value">380</span>
+            <span class="price-suffix">起</span>
+          </div>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-image">
+          <span class="route-tag">经停</span>
+        </div>
+        <div class="route-card-body">
+          <span class="route-card-route">杭州 → 昆明</span>
+          <span class="route-card-airline">东方航空 · 4h20m</span>
+          <div class="route-card-price">
+            <span class="price-symbol">¥</span>
+            <span class="price-value">450</span>
+            <span class="price-suffix">起</span>
+          </div>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-image">
+          <span class="route-tag">直飞</span>
+        </div>
+        <div class="route-card-body">
+          <span class="route-card-route">杭州 → 重庆</span>
+          <span class="route-card-airline">春秋航空 · 2h40m</span>
+          <div class="route-card-price">
+            <span class="price-symbol">¥</span>
+            <span class="price-value">299</span>
+            <span class="price-suffix">起</span>
+          </div>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-image">
+          <span class="route-tag">直飞</span>
+        </div>
+        <div class="route-card-body">
+          <span class="route-card-route">杭州 → 大理</span>
+          <span class="route-card-airline">祥鹏航空 · 3h30m</span>
+          <div class="route-card-price">
+            <span class="price-symbol">¥</span>
+            <span class="price-value">520</span>
+            <span class="price-suffix">起</span>
+          </div>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-image">
+          <span class="route-tag">直飞</span>
+        </div>
+        <div class="route-card-body">
+          <span class="route-card-route">杭州 → 西安</span>
+          <span class="route-card-airline">海南航空 · 2h30m</span>
+          <div class="route-card-price">
+            <span class="price-symbol">¥</span>
+            <span class="price-value">410</span>
+            <span class="price-suffix">起</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 底部悬浮栏 ===== -->
+<div class="flight-bottom-bar">
+  <div class="bar-item active">
+    <div class="bar-icon"></div>
+    <span class="bar-label">推荐</span>
+  </div>
+  <div class="bar-item">
+    <div class="bar-icon"></div>
+    <span class="bar-label">我的行程</span>
+  </div>
+  <div class="bar-item">
+    <div class="bar-icon"></div>
+    <span class="bar-label">航班动态</span>
+  </div>
+  <div class="bar-item">
+    <div class="bar-icon"></div>
+    <span class="bar-label">客服</span>
+  </div>
+  <div class="bar-item">
+    <div class="bar-icon"></div>
+    <span class="bar-label">更多</span>
+  </div>
+</div>
+
+</body>
+</html>

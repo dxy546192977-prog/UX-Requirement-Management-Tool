@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>机票首页 — 整页</title>
+  <style>
+
+    body.fdg-stitch-page { margin: 0; padding: 0; max-width: 750px; margin-left: auto; margin-right: auto; }
+    .fdg-module-stitch { display: block; }
+    .fdg-module-stitch:not([data-module="flight-home-atmosphere"]):not([data-module="flight-home-industry-tabbar"]) {
+      position: relative;
+      top: -80px;
+    }
+    .fdg-module-stitch[data-module="flight-home-mini-search"] {
+      z-index: 20;
+    }
+    .fdg-module-stitch[data-module="flight-home-kingkong"],
+    .fdg-module-stitch[data-module="flight-home-savings"],
+    .fdg-module-stitch[data-module="flight-home-special-fares"],
+    .fdg-module-stitch[data-module="flight-home-activity-strip"] {
+      margin-top: 18px;
+    }
+    
+:root {
+      --color-white: #ffffff;
+      --color-bg: #f2f3f5;
+      --color-darkgray: #0f131a;
+      --color-white-40: rgba(255, 255, 255, 0.4);
+      --color-overlay-btn: rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-darkgray);
+      width: 750px;
+      margin: 0 auto;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 模块根：750×310，背景 + 顶栏叠层 */
+    .fdl-flight-home-atmosphere {
+      position: relative;
+      width: 750px;
+      height: 310px;
+    }
+
+    .fdl-flight-home-atmosphere__canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: url("https://gw.alicdn.com/imgextra/i2/O1CN01WZ8eNv1wPuk5smgbE_!!6000000006301-2-tps-1500-620.png")
+        center top / cover no-repeat;
+    }
+
+    .top-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 750px;
+      height: 310px;
+      z-index: 10;
+    }
+
+    .status-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      z-index: 10;
+    }
+
+    .nav-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+    }
+
+    .nav-bar__back {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--color-overlay-btn);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-bar__back-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-bar__actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-bar__action-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--color-overlay-btn);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-bar__action-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .top-bar__slider {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      right: 57px;
+      top: 210px;
+      z-index: 10;
+    }
+
+    .top-bar__dot {
+      height: 6px;
+      border-radius: 6px;
+      width: 12px;
+      background: var(--color-white-40);
+    }
+
+    .top-bar__dot--active {
+      width: 18px;
+      background: var(--color-white);
+    }
+
+    .top-bar__gradient {
+      position: absolute;
+      height: 85px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(242, 243, 245, 0) 0%,
+        rgba(242, 243, 245, 0.8) 70%,
+        #f2f3f5 100%
+      );
+      z-index: 2;
+    }
+
+@font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-indigo-1: #6666ff;
+      --color-indigo-4: #ebebff;
+      --color-warning-1: #ff3333;
+      --color-pay-1: #ff5533;
+      --color-white: #ffffff;
+      --color-label: #f7f8fa;
+      --color-bg: #f2f3f5;
+      --radius-xl: 36px;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+      --radius-none: 0;
+      --color-search-yellow: #ffe033;
+      --color-promo-red-a: #ff4b6c;
+      --color-promo-red-b: #ff1835;
+      --color-promo-red-c: #ff4a6c;
+      --color-separator: #d2d4d9;
+      --color-aux-text: #575757;
+      --color-tip-green: #149aa8;
+      --color-overlay-dark: rgba(0, 0, 0, 0.5);
+      --color-shadow-card: rgba(0, 0, 0, 0.03);
+      --color-shadow-pill: rgba(0, 0, 0, 0.06);
+      --color-white-25: rgba(255, 255, 255, 0.25);
+      --color-search-gradient-start: rgba(242, 243, 245, 0.6);
+      --color-search-yellow-clear: rgba(255, 224, 51, 0);
+      --radius-search-top: 26px;
+      --radius-search-pill: 42px;
+      --radius-indicator: 3px;
+      --radius-promo-tail: 2px;
+      --radius-round: 999px;
+      --radius-promo-top: 19px;
+      --radius-promo-left: 16px;
+      --shadow-card: 0 6px 20px var(--color-shadow-card);
+      --shadow-pill: 0 6px 12px var(--color-shadow-pill);
+      --color-border-tab: rgba(255, 255, 255, 0.6);
+      --gradient-search-surface: linear-gradient(180deg, var(--color-search-gradient-start) 0%, var(--color-bg) 70%);
+      --gradient-tab-bg: linear-gradient(180deg, var(--color-search-gradient-start) -48.68%, var(--color-bg) 62.83%);
+      --gradient-primary-bar: linear-gradient(90deg, var(--color-search-yellow) 4.76%, var(--color-search-yellow-clear) 106.55%);
+      --gradient-promo: linear-gradient(91.13deg, var(--color-promo-red-a) -3.42%, var(--color-promo-red-b) 74.28%, var(--color-promo-red-c) 100.65%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-label);
+      color: var(--color-darkgray);
+      width: 750px;
+      margin: 0 auto;
+      padding: 24px 0 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .fdl-flight-home-mini-search.skill-search {
+      width: 750px;
+      margin: 0 auto;
+      background: var(--gradient-search-surface);
+      border-radius: var(--radius-search-top);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .skill-search__top { padding: 0 24px; background: transparent; }
+
+    .skill-search__primary {
+      position: relative;
+      width: 702px;
+      height: 84px;
+      border-radius: var(--radius-search-top) var(--radius-search-top) 0 0;
+      overflow: hidden;
+      flex: none;
+    }
+
+    .skill-search__primary-bg {
+      position: absolute;
+      left: 0; right: 0; top: 9.52%; bottom: 0;
+      background: var(--gradient-tab-bg);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-search-top) var(--radius-search-top) 0 0;
+      border: 2px solid var(--color-border-tab);
+      border-bottom: none;
+    }
+
+    .skill-search__primary-selected {
+      position: absolute;
+      left: 0; top: 0;
+      width: 328px;
+      height: 84px;
+    }
+
+    .skill-search__primary-bar {
+      position: absolute;
+      left: 30px;
+      top: 48px;
+      width: 84px;
+      height: 24px;
+      border-radius: var(--radius-l);
+      background: var(--gradient-primary-bar);
+    }
+
+    .skill-search__primary-row { position: absolute; z-index: 1; inset: 0; }
+
+    .skill-search__brand {
+      position: absolute;
+      left: 36px;
+      top: 26px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 242px;
+      height: 34px;
+    }
+
+    .skill-search__brand-sep {
+      width: 2px;
+      height: 26px;
+      background: var(--color-separator);
+    }
+
+    .skill-search__tab-icon { display: block; flex-shrink: 0; }
+
+    .skill-search__nav-item { position: absolute; top: 32px; display: block; }
+    .skill-search__nav-item--train { left: 328px; width: 78px; height: 27px; }
+    .skill-search__nav-item--bus { left: 438px; width: 80px; height: 27px; }
+    .skill-search__nav-item--transfer { left: 550px; width: 122px; height: 27px; }
+
+    .skill-search__subtabs {
+      background: var(--color-white);
+      border-radius: var(--radius-none) var(--radius-search-top) var(--radius-none) var(--radius-none);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 18px 18px;
+      min-height: 98px;
+      align-items: flex-end;
+    }
+
+    .skill-search__subtab { flex: 1; display: flex; justify-content: center; }
+
+    .skill-search__subtab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 120px;
+      padding-top: 18px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .skill-search__subtab-label {
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--color-lightgray);
+    }
+
+    .skill-search__subtab-indicator {
+      width: 54px;
+      height: 6px;
+      border-radius: var(--radius-indicator);
+      background: transparent;
+    }
+
+    .skill-search__subtab--active .skill-search__subtab-label { color: var(--color-darkgray); }
+    .skill-search__subtab--active .skill-search__subtab-indicator {
+      width: 46px;
+      background: var(--color-darkgray);
+    }
+
+    .skill-search__body { padding: 0 24px; background: transparent; }
+
+    .skill-search__card {
+      background: var(--color-white);
+      border-radius: var(--radius-none) var(--radius-none) var(--radius-search-top) var(--radius-search-top);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .skill-search__row { padding: 24px 30px; border-bottom: 1px solid var(--color-bg); }
+
+    .skill-search__row--od {
+      position: relative;
+      padding: 20px 30px;
+      border-bottom: none;
+      isolation: isolate;
+    }
+
+    .skill-search__row--date {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 30px;
+      gap: 10px;
+      position: relative;
+      border-bottom: none;
+      width: 702px;
+      height: 100px;
+      background: var(--color-white);
+    }
+
+    .skill-search__row--pax {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 22px 30px;
+      gap: 10px;
+      position: relative;
+      border-bottom: none;
+      width: 702px;
+      height: 107px;
+      background: var(--color-white);
+    }
+
+    .skill-search__row--cabin { padding: 24px 30px 0; border-bottom: 0; }
+
+    .skill-search__od {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 18px;
+      height: 60px;
+    }
+
+    .skill-search__city {
+      flex: 1;
+      font-size: 42px;
+      font-weight: 500;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+
+    .skill-search__city--right { text-align: right; }
+
+    .skill-search__flight-icon { width: 68px; height: 68px; flex-shrink: 0; }
+
+    .skill-search__od-divider {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 0 30px;
+      z-index: 1;
+    }
+
+    .skill-search__od-divider::after {
+      content: "";
+      display: block;
+      border-top: 1px solid var(--color-bg);
+    }
+
+    .skill-search__date {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 40px;
+      width: 194px;
+      height: 38px;
+    }
+
+    .skill-search__date-nums {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 2px;
+      width: 102px;
+      height: 38px;
+    }
+
+    .skill-search__date-num {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      width: 27px;
+      height: 38px;
+    }
+
+    .skill-search__date-num-text {
+      width: 27px;
+      height: 37px;
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 90%;
+      text-align: justify;
+      color: var(--color-darkgray);
+      align-self: stretch;
+    }
+
+    .skill-search__date-unit {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      width: 26px;
+      height: 38px;
+    }
+
+    .skill-search__date-unit-text {
+      width: 26px;
+      height: 26px;
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 100%;
+      text-align: justify;
+      color: var(--color-darkgray);
+    }
+
+    .skill-search__date-day {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-end;
+      width: 45px;
+      height: 38px;
+    }
+
+    .skill-search__date-day-text {
+      width: 45px;
+      height: 37px;
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 90%;
+      text-align: justify;
+      color: var(--color-darkgray);
+    }
+
+    .skill-search__date-weekday {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      width: 52px;
+      height: 38px;
+    }
+
+    .skill-search__weekday {
+      width: 52px;
+      height: 26px;
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+
+    .skill-search__date-divider {
+      position: absolute;
+      width: 702px;
+      height: 1px;
+      left: 0;
+      bottom: 0;
+      background: var(--color-white);
+      display: flex;
+      align-items: flex-start;
+      padding: 0 30px;
+      z-index: 1;
+    }
+
+    .skill-search__date-divider::after {
+      content: "";
+      display: block;
+      flex: none;
+      width: 642px;
+      height: 1px;
+      background: var(--color-bg);
+    }
+
+    .skill-search__pax-line {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 642px;
+      height: 62px;
+    }
+
+    .skill-search__pax-inner {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 18px;
+      flex: 1;
+      height: 62px;
+    }
+
+    .skill-search__pax-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 7px;
+    }
+
+    .skill-search__pax-title {
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+
+    .skill-search__pax-tip {
+      font-size: 25px;
+      font-weight: 400;
+      line-height: 100%;
+      color: var(--color-tip-green);
+    }
+
+    .skill-search__bubble { display: flex; flex-direction: row; align-items: center; }
+
+    .skill-search__bubble-arrow {
+      width: 8px;
+      height: 18px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .skill-search__bubble-arrow::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 8px solid var(--color-overlay-dark);
+    }
+
+    .skill-search__bubble-body {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 12px;
+      gap: 12px;
+      height: 62px;
+      background: var(--color-overlay-dark);
+      border-radius: var(--radius-m);
+    }
+
+    .skill-search__bubble-text {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 100%;
+      white-space: nowrap;
+      color: var(--color-white);
+    }
+
+    .skill-search__bubble-close {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      border: 0;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .skill-search__pax-arrow { width: 14px; height: 32px; flex-shrink: 0; }
+
+    .skill-search__pax-divider {
+      position: absolute;
+      width: 702px;
+      height: 1px;
+      left: 0;
+      bottom: 0;
+      background: var(--color-white);
+      display: flex;
+      padding: 0 30px;
+      z-index: 1;
+    }
+
+    .skill-search__pax-divider::after {
+      content: "";
+      display: block;
+      width: 642px;
+      height: 1px;
+      background: var(--color-bg);
+    }
+
+    .skill-search__cabin-wrap { display: flex; align-items: center; min-height: 64px; }
+
+    .skill-search__cabin {
+      width: 323px;
+      background: var(--color-bg);
+      border-radius: var(--radius-m);
+      padding: 6px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .skill-search__cabin-item {
+      border: 0;
+      border-radius: var(--radius-m);
+      padding: 13px 14px;
+      font-size: 26px;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      color: var(--color-darkgray);
+      background: transparent;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .skill-search__cabin-item--active {
+      background: var(--color-white);
+      box-shadow: var(--shadow-pill);
+      font-weight: 500;
+    }
+
+    .skill-search__cabin-item--normal { font-weight: 400; }
+
+    .skill-search__footer {
+      position: relative;
+      padding: 24px;
+      background: var(--color-white);
+      border-top: 1px solid var(--color-bg);
+    }
+
+    .skill-search__search-btn {
+      position: relative;
+      border: 0;
+      width: 100%;
+      min-height: 84px;
+      border-radius: var(--radius-search-pill);
+      background: var(--color-search-yellow);
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--color-darkgray);
+      cursor: pointer;
+      margin-top: 24px;
+      font-family: inherit;
+    }
+
+    .skill-search__promo-btn {
+      position: absolute;
+      right: 0;
+      top: -12px;
+      height: 36px;
+      padding: 2px 12px;
+      border-radius: var(--radius-promo-left) var(--radius-promo-top) var(--radius-promo-top) var(--radius-promo-tail);
+      display: flex;
+      align-items: center;
+      background: var(--gradient-promo);
+      color: var(--color-white);
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .skill-search__history {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--color-midgray);
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .skill-search__history-left { display: flex; gap: 36px; }
+
+    .skill-search__clear {
+      background: none;
+      border: 0;
+      color: var(--color-midgray);
+      font-size: 22px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .icon-close__stroke { stroke: var(--color-white); }
+
+:root {
+      --color-darkgray: #0f131a;
+      --color-white: #ffffff;
+      --color-bg-page: #f2f3f5;
+      --radius-kong: 18px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg-page);
+      width: 750px;
+      margin: 0 auto;
+      padding: 24px 0;
+    }
+    .fdl-flight-home-kingkong.kong {
+      width: 702px;
+      margin: 0 auto;
+      padding: 18px 24px 22px;
+      background: var(--color-white);
+      border-radius: var(--radius-kong);
+    }
+    .kong__row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 654px;
+      height: 88px;
+    }
+    .kong__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 102px;
+      height: 88px;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+    }
+    .kong__icon {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    .kong__label {
+      width: 96px;
+      height: 24px;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 100%;
+      color: var(--color-darkgray);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+:root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-white: #ffffff;
+      --color-bg-page: #f2f3f5;
+      --color-separator: #d2d4d9;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg-page);
+      color: var(--color-darkgray);
+      width: 750px;
+      margin: 0 auto;
+      padding: 24px 0;
+    }
+    .fdl-flight-home-savings.save-money {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px 24px 24px;
+      gap: 10px;
+      width: 702px;
+      margin: 0 auto;
+      min-height: 256px;
+      background: var(--color-white);
+      border-radius: 18px;
+    }
+    .save-money__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 20px;
+      width: 654px;
+    }
+    .save-money__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      width: 654px;
+      min-height: 32px;
+    }
+    .save-money__title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+    .save-money__more {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      cursor: pointer;
+    }
+    .save-money__more-text {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 100%;
+      color: var(--color-midgray);
+    }
+    .save-money__more-icon svg {
+      display: block;
+      width: 8.47px;
+      height: 14.52px;
+    }
+    .save-money__cards {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      width: 654px;
+      height: 160px;
+    }
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 18px 16px;
+      height: 160px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .card__info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .card__title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card__title {
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 100%;
+      color: var(--color-darkgray);
+    }
+    .card__subtitle {
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 100%;
+      color: var(--color-midgray);
+    }
+    .card--discount {
+      width: 256px;
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01awtbsf1MntJE7vx8U_!!6000000001480-2-tps-512-320.png");
+    }
+    .card__btn--red {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 14px;
+      width: 108px;
+      height: 42px;
+      background: #ff6666;
+      border-radius: 24px;
+      border: none;
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 100%;
+      color: var(--color-white);
+      cursor: pointer;
+    }
+    .card--promo-mid {
+      width: 242px;
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01ucCwHq1oxn6zs4Wuh_!!6000000005292-2-tps-484-320.png");
+    }
+    .card--promo-sm {
+      width: 156px;
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01YVP5mc1I4lpLCFKL2_!!6000000000840-2-tps-312-320.png");
+    }
+    .card__tag {
+      display: block;
+      width: 34px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .card__tag img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .card__btn--gold {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 14px;
+      width: 108px;
+      height: 42px;
+      border: 1px solid rgba(178, 95, 36, 0.32);
+      border-radius: 22px;
+      background: transparent;
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 28px;
+      color: #b25f24;
+      cursor: pointer;
+    }
+
+@font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: #f2f3f5;
+      color: #0f131a;
+      width: 750px;
+      margin: 0 auto;
+      padding: 24px 0 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .fdl-flight-home-special-fares.deal-flights {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 24px;
+      gap: 10px;
+      width: 702px;
+      margin: 0 auto;
+      background: linear-gradient(167.59deg, #f5f5ff 3.58%, #f8f8ff 70.17%);
+      backdrop-filter: blur(4px);
+      border-radius: 18px;
+    }
+    .deal-flights__inner { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; width: 654px; }
+    .deal-flights__header {
+      display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+      width: 654px; min-height: 32px;
+    }
+    .deal-flights__header-info { display: flex; align-items: center; gap: 18px; }
+    .deal-flights__title { font-weight: 500; font-size: 32px; line-height: 100%; color: #0f131a; }
+    .deal-flights__dropdown { display: flex; align-items: center; gap: 7px; height: 26px; cursor: pointer; }
+    .deal-flights__dropdown-text { font-weight: 400; font-size: 26px; color: #0f131a; }
+    .deal-flights__dropdown-arrow img { width: 13px; height: 10px; display: block; }
+    .deal-flights__more { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .deal-flights__more-text { font-size: 24px; color: #5c5f66; }
+    .deal-flights__more-icon svg { display: block; width: 7px; height: 12px; }
+    .deal-flights__main { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; width: 654px; }
+    .deal-flights__tabs {
+      display: flex; flex-direction: row; align-items: flex-start; gap: 12px;
+      width: 654px; height: 85.5px; overflow-x: auto; scrollbar-width: none;
+    }
+    .deal-flights__tabs::-webkit-scrollbar { display: none; }
+    .deal-flights__tab {
+      display: flex; flex-direction: row; align-items: center; padding: 12px; gap: 6px; height: 60px;
+      background: rgba(255,255,255,0.7); border-radius: 12px; flex: none; cursor: pointer;
+    }
+    .deal-flights__tab.deal-flights__tab--active {
+      flex-direction: column; justify-content: flex-end; align-items: center; padding: 0; height: 85.5px;
+      background: none; border-radius: 0;
+    }
+    .deal-flights__tab--active .deal-flights__tab-inner {
+      display: flex; flex-direction: row; align-items: center; padding: 18px 15px; gap: 6px; height: 72px;
+      background: #fff; border-radius: 12px; margin-bottom: -9px;
+    }
+    .deal-flights__tab--active .deal-flights__tab-indicator {
+      width: 45.25px; height: 22.5px; background: #fff; flex-shrink: 0;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+    .deal-flights__tab-icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .deal-flights__tab-icon img { width: 36px; height: 36px; object-fit: contain; }
+    .deal-flights__tab-label {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      font-weight: 500; font-size: 30px; line-height: 30px; letter-spacing: -1px; color: #0f131a;
+      white-space: nowrap; transform: skewX(-8deg);
+    }
+    .deal-flights__content { display: flex; flex-direction: column; width: 654px; }
+    .deal-flights__region-tabs { position: relative; width: 100%; height: 80px; border-radius: 24px 24px 0 0; overflow: hidden; }
+    .deal-flights__region-bg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 74px; object-fit: fill; z-index: 1; }
+    .deal-flights__region-active-bg {
+      position: absolute; top: 0; left: 0; width: 370.5px; height: 80px;
+      filter: drop-shadow(5px 2px 6px rgba(15,19,26,0.05)); z-index: 2;
+    }
+    .deal-flights__region-option {
+      position: absolute; top: 27px; width: 345px; display: flex; align-items: flex-end; justify-content: center; gap: 2px; z-index: 3;
+    }
+    .deal-flights__region-option--domestic { left: 0; }
+    .deal-flights__region-option--international { left: 345px; }
+    .deal-flights__region-label { font-weight: 500; font-size: 28px; line-height: 32px; color: #0f131a; }
+    .deal-flights__region-price { font-weight: 500; font-size: 20px; line-height: 24px; color: #ff5533; }
+    .deal-flights__list-wrap {
+      display: flex; flex-direction: column; gap: 6px; width: 654px; background: #fff; border-radius: 0 0 24px 24px; z-index: 2; position: relative;
+    }
+    .deal-flights__filter-row {
+      display: flex; justify-content: space-between; align-items: center; padding: 0 13px; width: 654px; height: 60px; background: #fff;
+    }
+    .deal-flights__trip-toggle { position: relative; width: 168px; height: 60px; }
+    .deal-flights__trip-toggle-bg { position: absolute; inset: 0; background: #f2f3f5; border-radius: 6px; }
+    .deal-flights__trip-btn {
+      position: absolute; display: flex; align-items: center; justify-content: center; width: 86px; height: 32px;
+      font-size: 24px; line-height: 32px; color: #0f131a; cursor: pointer; top: 50%; transform: translateY(-50%);
+    }
+    .deal-flights__trip-btn--left { left: -1px; }
+    .deal-flights__trip-btn--right { right: -1px; }
+    .deal-flights__trip-btn--active { font-weight: 500; }
+    .deal-flights__trip-btn--active::before {
+      content: ""; position: absolute; width: 72px; height: 48px; background: #fff; border-radius: 4px; z-index: -1;
+    }
+    .deal-flights__trip-btn--left.deal-flights__trip-btn--active::before { left: 6px; bottom: -8px; }
+    .deal-flights__date-dropdown { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .deal-flights__date-text { font-size: 26px; line-height: 42px; color: #0f131a; }
+    .deal-flights__date-arrow img { width: 13px; height: 10px; display: block; }
+    .deal-flights__flight-list { display: flex; flex-direction: column; width: 654px; }
+    .deal-flights__flight-item {
+      position: relative; display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+      padding: 17px 24px; width: 654px; min-height: 114px; background: #fff;
+    }
+    .deal-flights__flight-left { display: flex; align-items: center; gap: 24px; }
+    .deal-flights__flight-img { width: 108px; height: 80px; border-radius: 12px; overflow: hidden; flex-shrink: 0; background: #e8e8e8; }
+    .deal-flights__flight-img img { width: 108px; height: 80px; object-fit: cover; display: block; }
+    .deal-flights__flight-info { display: flex; flex-direction: column; gap: 8px; }
+    .deal-flights__flight-od { display: flex; align-items: center; gap: 3px; }
+    .deal-flights__flight-city { font-weight: 500; font-size: 30px; line-height: 36px; color: #0f131a; }
+    .deal-flights__flight-arrow-icon img { width: 24px; height: 24px; display: block; }
+    .deal-flights__flight-date { font-size: 24px; line-height: 28px; color: #919499; }
+    .deal-flights__flight-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .deal-flights__flight-price-row { display: flex; align-items: center; justify-content: flex-end; gap: 1px; }
+    .deal-flights__price-icon img { width: 36px; height: 36px; object-fit: contain; display: block; }
+    .deal-flights__flight-amount {
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif; font-weight: 700; font-size: 42px; line-height: 36px; color: #ff5533;
+    }
+    .deal-flights__flight-tag {
+      display: flex; align-items: center; padding: 4px 6px;
+      background: linear-gradient(90deg, rgba(255,230,224,0) 0%, #ffe6e0 100%); border-radius: 4px;
+    }
+    .deal-flights__flight-tag-text { font-size: 20px; line-height: 20px; color: #ff5533; }
+    .deal-flights__rank-badge { position: absolute; width: 37.12px; height: 42px; left: 14px; top: 17px; z-index: 3; }
+    .deal-flights__rank-badge-img { display: block; width: 37.12px; height: 42px; object-fit: contain; }
+    .deal-flights__footer { display: flex; flex-direction: column; align-items: center; padding: 6px 0 24px; width: 654px; background: #fff; border-radius: 0 0 24px 24px; }
+    .deal-flights__more-btn {
+      display: flex; justify-content: center; align-items: center; padding: 12px 30px; gap: 6px; height: 52px;
+      background: #f5f5ff; border-radius: 117px; cursor: pointer;
+    }
+    .deal-flights__more-btn-text { font-size: 24px; line-height: 28px; color: #6666ff; }
+    .deal-flights__more-btn-icon {
+      width: 20px; height: 20px; border-radius: 50%; background: #6666ff;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+:root {
+      --color-bg: #f2f3f5;
+      --radius-card: 18px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg);
+      width: 750px;
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+    .fdl-flight-home-activity-strip {
+      width: 702px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+    .fdl-flight-home-activity-strip__img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-card);
+    }
+
+:root {
+      --color-darkgray: #0f131a;
+      --color-white: #ffffff;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: #f2f3f5;
+      min-height: 120vh;
+      width: 750px;
+      margin: 0 auto;
+      padding-bottom: 180px;
+    }
+    .fdl-flight-home-industry-tabbar {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 750px;
+      background: var(--color-white);
+      z-index: 1000;
+    }
+    .industry-tabbar__tabs {
+      display: flex;
+      width: 750px;
+      height: 86px;
+      align-items: center;
+    }
+    .industry-tabbar__item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 0;
+      padding: 0 4px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--color-darkgray);
+    }
+    .industry-tabbar__icon {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      display: block;
+    }
+    .industry-tabbar__label {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--color-darkgray);
+      white-space: nowrap;
+    }
+    .industry-tabbar__safe {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .industry-tabbar__home-indicator {
+      width: 268px;
+      height: 10px;
+      border-radius: 20px;
+      background: #000000;
+    }
+  </style>
+</head>
+<body class="fdg-stitch-page">
+  <section class="fdg-module-stitch" data-module="flight-home-atmosphere">
+<section class="fdl-flight-home-atmosphere" aria-label="首屏氛围">
+  <div class="fdl-flight-home-atmosphere__canvas" aria-hidden="true"></div>
+
+  <div class="top-bar">
+    <div class="status-bar"></div>
+
+    <nav class="nav-bar">
+      <div class="nav-bar__back" role="button" tabindex="0" aria-label="返回">
+        <svg class="nav-bar__back-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.5 5.5L11 18L22.5 30.5" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="nav-bar__actions">
+        <div class="nav-bar__action-btn" role="button" tabindex="0" aria-label="相机">
+          <svg class="nav-bar__action-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="9" width="27" height="22" rx="3" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+            <circle cx="18.5" cy="19.5" r="5.5" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+            <path d="M13 9L15 5H22L24 9" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="nav-bar__action-btn" role="button" tabindex="0" aria-label="更多">
+          <svg class="nav-bar__action-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="9" cy="18" r="2.5" fill="#FFFFFF"/>
+            <circle cx="18" cy="18" r="2.5" fill="#FFFFFF"/>
+            <circle cx="27" cy="18" r="2.5" fill="#FFFFFF"/>
+          </svg>
+        </div>
+      </div>
+    </nav>
+
+    <div class="top-bar__slider" aria-hidden="true">
+      <div class="top-bar__dot top-bar__dot--active"></div>
+      <div class="top-bar__dot"></div>
+      <div class="top-bar__dot"></div>
+      <div class="top-bar__dot"></div>
+    </div>
+
+    <div class="top-bar__gradient" aria-hidden="true"></div>
+  </div>
+</section>
+  </section>
+
+  <section class="fdg-module-stitch" data-module="flight-home-mini-search">
+<section class="fdl-flight-home-mini-search skill-search" aria-label="航班搜索模块">
+    <div class="skill-search__top">
+      <div class="skill-search__primary">
+        <div class="skill-search__primary-bg" aria-hidden="true"></div>
+        <img class="skill-search__primary-selected" src="https://gw.alicdn.com/imgextra/i2/O1CN01fSg8571ID0xMS3Bje_!!6000000000858-55-tps-328-84.svg" width="328" height="84" alt="" aria-hidden="true" />
+        <span class="skill-search__primary-bar" aria-hidden="true"></span>
+        <div class="skill-search__primary-row">
+          <div class="skill-search__brand">
+            <img class="skill-search__tab-icon" src="https://img.alicdn.com/imgextra/i2/O1CN01GeN3Vc1Nu8K5ath9N_!!6000000001629-55-tps-72-34.svg" width="72" height="34" alt="机票" />
+            <span class="skill-search__brand-sep" aria-hidden="true"></span>
+            <img class="skill-search__tab-icon" src="https://img.alicdn.com/imgextra/i1/O1CN01IYNQyo1RJGuReBFiw_!!6000000002090-55-tps-136-34.svg" width="136" height="34" alt="特价机票" />
+          </div>
+          <img class="skill-search__nav-item skill-search__nav-item--train" src="https://img.alicdn.com/imgextra/i3/O1CN01KqaSW81eN19atGDKH_!!6000000003858-55-tps-78-27.svg" width="78" height="27" alt="火车票" />
+          <img class="skill-search__nav-item skill-search__nav-item--bus" src="https://img.alicdn.com/imgextra/i1/O1CN01Q8YMLW279qccxvRHV_!!6000000007755-55-tps-80-27.svg" width="80" height="27" alt="汽车票" />
+          <img class="skill-search__nav-item skill-search__nav-item--transfer" src="https://img.alicdn.com/imgextra/i4/O1CN01edEghQ1kEfd7FeMlV_!!6000000004652-55-tps-122-27.svg" width="122" height="27" alt="接送机" />
+        </div>
+      </div>
+
+      <nav class="skill-search__subtabs" aria-label="二级行程类型（实现稿：国内/国际/港澳台；框架文案另见 spec）">
+        <div class="skill-search__subtab skill-search__subtab--active">
+          <button class="skill-search__subtab-btn" type="button" aria-current="page">
+            <span class="skill-search__subtab-label">国内</span>
+            <span class="skill-search__subtab-indicator" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="skill-search__subtab">
+          <button class="skill-search__subtab-btn" type="button">
+            <span class="skill-search__subtab-label">国际</span>
+            <span class="skill-search__subtab-indicator" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="skill-search__subtab">
+          <button class="skill-search__subtab-btn" type="button">
+            <span class="skill-search__subtab-label">港澳台</span>
+            <span class="skill-search__subtab-indicator" aria-hidden="true"></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <div class="skill-search__body">
+      <div class="skill-search__card">
+        <div class="skill-search__row skill-search__row--od">
+          <div class="skill-search__od">
+            <p class="skill-search__city">杭州</p>
+            <img class="skill-search__flight-icon" src="https://img.alicdn.com/imgextra/i3/O1CN01ZAzJFP1Ylqw56Qd9O_!!6000000003100-55-tps-68-68.svg" width="68" height="68" alt="" aria-hidden="true" />
+            <p class="skill-search__city skill-search__city--right">北京</p>
+          </div>
+          <div class="skill-search__od-divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="skill-search__row skill-search__row--date">
+          <div class="skill-search__date">
+            <div class="skill-search__date-nums">
+              <span class="skill-search__date-num"><span class="skill-search__date-num-text">9</span></span>
+              <span class="skill-search__date-unit"><span class="skill-search__date-unit-text">月</span></span>
+              <span class="skill-search__date-day"><span class="skill-search__date-day-text">12</span></span>
+            </div>
+            <span class="skill-search__date-weekday"><span class="skill-search__weekday">周一</span></span>
+          </div>
+          <div class="skill-search__date-divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="skill-search__row skill-search__row--pax">
+          <div class="skill-search__pax-line">
+            <div class="skill-search__pax-inner">
+              <div class="skill-search__pax-left">
+                <p class="skill-search__pax-title">选择乘机人</p>
+                <p class="skill-search__pax-tip">快速找到低价票</p>
+              </div>
+              <div class="skill-search__bubble">
+                <span class="skill-search__bubble-arrow" aria-hidden="true"></span>
+                <div class="skill-search__bubble-body">
+                  <p class="skill-search__bubble-text">近期选过：韩梅梅、李...</p>
+                  <button class="skill-search__bubble-close" type="button" aria-label="关闭提示">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path class="icon-close__stroke" d="M6 6L18 18M18 6L6 18" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <img class="skill-search__pax-arrow" src="https://img.alicdn.com/imgextra/i2/O1CN01ztu72m20YOXVuZeiw_!!6000000006861-55-tps-14-32.svg" width="14" height="32" alt="" aria-hidden="true" />
+          </div>
+          <div class="skill-search__pax-divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="skill-search__row skill-search__row--cabin">
+          <div class="skill-search__cabin-wrap">
+            <div class="skill-search__cabin" role="tablist" aria-label="舱位筛选">
+              <button class="skill-search__cabin-item skill-search__cabin-item--active" type="button" role="tab" aria-selected="true">全部舱位</button>
+              <button class="skill-search__cabin-item skill-search__cabin-item--normal" type="button" role="tab" aria-selected="false">公务/头等舱</button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="skill-search__footer">
+          <button class="skill-search__search-btn" type="button">
+            搜索机票
+            <span class="skill-search__promo-btn">今日购票立减¥30</span>
+          </button>
+
+          <div class="skill-search__history">
+            <div class="skill-search__history-left">
+              <span>杭州-北京 07-01</span>
+              <span>杭州-北京 07-02</span>
+            </div>
+            <button class="skill-search__clear" type="button">清除</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </section>
+  </section>
+
+  <section class="fdg-module-stitch" data-module="flight-home-kingkong">
+<section class="fdl-flight-home-kingkong kong" aria-label="快捷功能入口">
+    <div class="kong__row">
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01vh7Hby1VxoQlO5u75_!!6000000002720-2-tps-120-120.png" alt="特价机票" />
+        <span class="kong__label">特价机票</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i3/O1CN01yerynW1DJolEEPzyh_!!6000000000196-2-tps-120-120.png" alt="机票次卡" />
+        <span class="kong__label">机票次卡</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01y6eVFh20qiNjzhGRO_!!6000000006901-2-tps-120-120.png" alt="低价提醒" />
+        <span class="kong__label">低价提醒</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i3/O1CN013nZIJx1lJzqrMZzK3_!!6000000004799-2-tps-120-120.png" alt="企业认证" />
+        <span class="kong__label">企业认证</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01FBYXyV1xn6PWHZ79C_!!6000000006487-2-tps-120-120.png" alt="展开全部" />
+        <span class="kong__label">全部</span>
+      </button>
+    </div>
+  </section>
+  </section>
+
+  <section class="fdg-module-stitch" data-module="flight-home-savings">
+<section class="fdl-flight-home-savings save-money" aria-label="出行省钱">
+  <div class="save-money__inner">
+    <div class="save-money__header">
+      <span class="save-money__title">出行省钱</span>
+      <div class="save-money__more" role="button" tabindex="0">
+        <span class="save-money__more-text">更多优惠</span>
+        <span class="save-money__more-icon">
+          <svg viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L7.5 7.5L1 14" stroke="#D2D4D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="save-money__cards">
+      <div class="card card--discount">
+        <div class="card__info">
+          <div class="card__title-row">
+            <span class="card__title">机票优惠券</span>
+          </div>
+          <span class="card__subtitle">领券立减出行省</span>
+        </div>
+        <button class="card__btn--red" type="button">立即领取</button>
+      </div>
+
+      <div class="card card--promo-mid">
+        <div class="card__info">
+          <div class="card__title-row">
+            <span class="card__tag">
+              <img src="https://gw.alicdn.com/imgextra/i1/O1CN01ckRuPS233eo0NPAco_!!6000000007200-2-tps-68-48.png" alt="F1" />
+            </span>
+            <span class="card__title">低价机票日历</span>
+          </div>
+          <span class="card__subtitle">看看哪天飞最便宜</span>
+        </div>
+        <button class="card__btn--gold" type="button">去看看</button>
+      </div>
+
+      <div class="card card--promo-sm">
+        <div class="card__info">
+          <div class="card__title-row">
+            <span class="card__title">特价机票</span>
+          </div>
+          <span class="card__subtitle">低至1折起</span>
+        </div>
+        <button class="card__btn--gold" type="button">去看看</button>
+      </div>
+    </div>
+  </div>
+</section>
+  </section>
+
+  <section class="fdg-module-stitch" data-module="flight-home-special-fares">
+<section class="fdl-flight-home-special-fares deal-flights" aria-label="特价机票">
+  <div class="deal-flights__inner">
+    <div class="deal-flights__header">
+      <div class="deal-flights__header-info">
+        <span class="deal-flights__title">特价机票</span>
+        <div class="deal-flights__dropdown">
+          <span class="deal-flights__dropdown-text">杭州出发</span>
+          <span class="deal-flights__dropdown-arrow">
+            <img src="https://gw.alicdn.com/imgextra/i4/O1CN01jeJOe426pEnbctYCa_!!6000000007710-55-tps-13-10.svg" alt="" />
+          </span>
+        </div>
+      </div>
+      <div class="deal-flights__more">
+        <span class="deal-flights__more-text">查看更多</span>
+        <span class="deal-flights__more-icon">
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1L6 6L1 11" stroke="#D2D4D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+    <div class="deal-flights__main">
+      <div class="deal-flights__tabs">
+        <div class="deal-flights__tab deal-flights__tab--active">
+          <div class="deal-flights__tab-inner">
+            <span class="deal-flights__tab-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="" /></span>
+            <span class="deal-flights__tab-label">低价任意飞</span>
+          </div>
+          <div class="deal-flights__tab-indicator"></div>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon"><img src="https://gw.alicdn.com/imgextra/i3/O1CN01SKbxyI1JemaM1GxcJ_!!6000000001054-2-tps-72-72.png" alt="" /></span>
+          <span class="deal-flights__tab-label">猜你喜欢</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01Z2Iifj1T9lvTFIajl_!!6000000002340-2-tps-72-72.png" alt="" /></span>
+          <span class="deal-flights__tab-label">航司特价</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01ANuOcQ1kEfd7Q65rG_!!6000000004652-2-tps-72-72.png" alt="" /></span>
+          <span class="deal-flights__tab-label">免签落地签</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01Z2Iifj1T9lvTFIajl_!!6000000002340-2-tps-72-72.png" alt="" /></span>
+          <span class="deal-flights__tab-label">头等/商务舱特惠</span>
+        </div>
+        <div class="deal-flights__tab">
+          <span class="deal-flights__tab-icon"><img src="https://gw.alicdn.com/imgextra/i3/O1CN01SKbxyI1JemaM1GxcJ_!!6000000001054-2-tps-72-72.png" alt="" /></span>
+          <span class="deal-flights__tab-label">畅游全球</span>
+        </div>
+      </div>
+      <div class="deal-flights__content">
+        <div class="deal-flights__region-tabs">
+          <img class="deal-flights__region-bg" src="https://gw.alicdn.com/imgextra/i3/O1CN01UxwTjF1NtDWyfmHKH_!!6000000001627-2-tps-1308-148.png" alt="" />
+          <img class="deal-flights__region-active-bg" src="https://gw.alicdn.com/imgextra/i2/O1CN01tQGYHL20A7Y1lpIph_!!6000000006808-55-tps-371-80.svg" alt="" />
+          <div class="deal-flights__region-option deal-flights__region-option--domestic">
+            <span class="deal-flights__region-label">国内最低</span><span class="deal-flights__region-price">¥99起</span>
+          </div>
+          <div class="deal-flights__region-option deal-flights__region-option--international">
+            <span class="deal-flights__region-label">国际最低</span><span class="deal-flights__region-price">¥499起</span>
+          </div>
+        </div>
+        <div class="deal-flights__list-wrap">
+          <div class="deal-flights__filter-row">
+            <div class="deal-flights__trip-toggle">
+              <div class="deal-flights__trip-toggle-bg"></div>
+              <span class="deal-flights__trip-btn deal-flights__trip-btn--left deal-flights__trip-btn--active">单程</span>
+              <span class="deal-flights__trip-btn deal-flights__trip-btn--right">往返</span>
+            </div>
+            <div class="deal-flights__date-dropdown">
+              <span class="deal-flights__date-text">近一周出发</span>
+              <span class="deal-flights__date-arrow"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01jeJOe426pEnbctYCa_!!6000000007710-55-tps-13-10.svg" alt="" /></span>
+            </div>
+          </div>
+          <div class="deal-flights__flight-list">
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__rank-badge"><img class="deal-flights__rank-badge-img" src="https://gw.alicdn.com/imgextra/i2/O1CN01An6DfI23pHzqHG8GI_!!6000000007304-2-tps-75-84.png" alt="" width="37" height="42" /></div>
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01RXfFLT277YdqRmW8n_!!6000000007750-2-tps-216-160.png" alt="青岛" /></div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="" /></span>
+                    <span class="deal-flights__flight-city">青岛</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.02 周三</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="" /></span>
+                  <span class="deal-flights__flight-amount">109</span>
+                </div>
+                <div class="deal-flights__flight-tag"><span class="deal-flights__flight-tag-text">30天低价</span></div>
+              </div>
+            </div>
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__rank-badge"><img class="deal-flights__rank-badge-img" src="https://gw.alicdn.com/imgextra/i3/O1CN01bS4lCX1jHaXOFzryd_!!6000000004523-2-tps-75-84.png" alt="" width="37" height="42" /></div>
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01i0pq1g1hyWQxZfqJL_!!6000000004346-2-tps-216-160.png" alt="成都" /></div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="" /></span>
+                    <span class="deal-flights__flight-city">成都</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.03 周四</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="" /></span>
+                  <span class="deal-flights__flight-amount">199</span>
+                </div>
+                <div class="deal-flights__flight-tag"><span class="deal-flights__flight-tag-text">30天低价</span></div>
+              </div>
+            </div>
+            <div class="deal-flights__flight-item">
+              <div class="deal-flights__rank-badge"><img class="deal-flights__rank-badge-img" src="https://gw.alicdn.com/imgextra/i2/O1CN01N9u3L41kfgzvJVm0u_!!6000000004711-2-tps-75-84.png" alt="" width="37" height="42" /></div>
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img"><img src="https://gw.alicdn.com/imgextra/i4/O1CN019NKgfB1gdALfmDujP_!!6000000004164-2-tps-216-160.png" alt="北京" /></div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="" /></span>
+                    <span class="deal-flights__flight-city">北京</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.04 周五</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="" /></span>
+                  <span class="deal-flights__flight-amount">259</span>
+                </div>
+                <div class="deal-flights__flight-tag"><span class="deal-flights__flight-tag-text">30天低价</span></div>
+              </div>
+            </div>
+            <div class="deal-flights__flight-item">
+              
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img"><img src="https://gw.alicdn.com/imgextra/i3/O1CN01DlrqRE1qaYFLZxgQv_!!6000000005512-2-tps-216-160.png" alt="上海" /></div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="" /></span>
+                    <span class="deal-flights__flight-city">上海</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.05 周六</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="" /></span>
+                  <span class="deal-flights__flight-amount">99</span>
+                </div>
+                <div class="deal-flights__flight-tag"><span class="deal-flights__flight-tag-text">30天低价</span></div>
+              </div>
+            </div>
+            <div class="deal-flights__flight-item">
+              
+              <div class="deal-flights__flight-left">
+                <div class="deal-flights__flight-img"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01SwfHNc1Werf31EAPA_!!6000000002814-2-tps-216-160.png" alt="广州" /></div>
+                <div class="deal-flights__flight-info">
+                  <div class="deal-flights__flight-od">
+                    <span class="deal-flights__flight-city">杭州</span>
+                    <span class="deal-flights__flight-arrow-icon"><img src="https://gw.alicdn.com/imgextra/i1/O1CN016dWVXr25ZNT4wCSgT_!!6000000007540-55-tps-24-24.svg" alt="" /></span>
+                    <span class="deal-flights__flight-city">广州</span>
+                  </div>
+                  <span class="deal-flights__flight-date">08.06 周日</span>
+                </div>
+              </div>
+              <div class="deal-flights__flight-right">
+                <div class="deal-flights__flight-price-row">
+                  <span class="deal-flights__price-icon"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01UCcXiX1d32G3WOIke_!!6000000003679-2-tps-72-72.png" alt="" /></span>
+                  <span class="deal-flights__flight-amount">329</span>
+                </div>
+                <div class="deal-flights__flight-tag"><span class="deal-flights__flight-tag-text">30天低价</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="deal-flights__footer">
+            <div class="deal-flights__more-btn">
+              <span class="deal-flights__more-btn-text">更多低价方案</span>
+              <span class="deal-flights__more-btn-icon">
+                <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1L5 5L1 9" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  </section>
+
+  <section class="fdg-module-stitch" data-module="flight-home-activity-strip">
+<section class="fdl-flight-home-activity-strip" aria-label="活动长图">
+    <img
+      class="fdl-flight-home-activity-strip__img"
+      src="https://gw.alicdn.com/imgextra/i2/O1CN01EiEEPH1WJL2pZ72RH_!!6000000002767-2-tps-1404-8804.png"
+      alt="特价机票活动"
+    />
+    <img
+      class="fdl-flight-home-activity-strip__img"
+      src="https://gw.alicdn.com/imgextra/i4/O1CN01MJHsqJ27fRwzg28G7_!!6000000007824-2-tps-1500-320.png"
+      alt="安心租"
+    />
+  </section>
+  </section>
+
+  <section class="fdg-module-stitch" data-module="flight-home-industry-tabbar">
+<p style="padding:24px;font-size:26px;color:#5c5f66;">向下滚动可见底栏固定在视口底部（示例页留白）。</p>
+
+  <nav class="fdl-flight-home-industry-tabbar industry-tabbar" aria-label="机票快捷入口">
+    <div class="industry-tabbar__tabs">
+      <button class="industry-tabbar__item" type="button">
+        <img class="industry-tabbar__icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01ix7Jl11pvKbIZMwKv_!!6000000005422-2-tps-96-96.png" alt="" />
+        <span class="industry-tabbar__label">值机选座</span>
+      </button>
+      <button class="industry-tabbar__item" type="button">
+        <img class="industry-tabbar__icon" src="https://gw.alicdn.com/imgextra/i3/O1CN01oLZyyI1peNwjCQ3TR_!!6000000005385-2-tps-96-96.png" alt="" />
+        <span class="industry-tabbar__label">我的收藏</span>
+      </button>
+      <button class="industry-tabbar__item" type="button">
+        <img class="industry-tabbar__icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01AHJrWd1vfCLN81V3n_!!6000000006199-2-tps-96-96.png" alt="" />
+        <span class="industry-tabbar__label">发票报销</span>
+      </button>
+      <button class="industry-tabbar__item" type="button">
+        <img class="industry-tabbar__icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01ddy2N51UAyaCmJWTd_!!6000000002478-2-tps-96-96.png" alt="" />
+        <span class="industry-tabbar__label">航班动态</span>
+      </button>
+      <button class="industry-tabbar__item" type="button">
+        <img class="industry-tabbar__icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01f5AF411vUCq1gfv7q_!!6000000006175-2-tps-96-96.png" alt="" />
+        <span class="industry-tabbar__label">我的订单</span>
+      </button>
+    </div>
+    <div class="industry-tabbar__safe" aria-hidden="true">
+      <div class="industry-tabbar__home-indicator"></div>
+    </div>
+  </nav>
+  </section>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>省钱推荐组件</title>
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Alibaba Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-display: swap;
+    }
+
+    :root {
+      --color-primary: #0E131B;
+      --color-secondary: #90949A;
+      --color-price: #FF4119;
+      --color-accent: #009DAA;
+      --color-white: #FFFFFF;
+      --color-bg: #F2F3F5;
+      --color-bg-card: #FAFAFA;
+      --color-divider: #D2D4DA;
+      --radius-l: 12px;
+      --radius-s: 4px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      background-color: #F7F8FA;
+    }
+
+    /* 省钱推荐整体容器 */
+    .money-saving {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 0;
+      gap: 12px;
+      width: 750px;
+      height: 102px;
+      background: var(--color-white);
+    }
+
+    /* 左侧标题区 */
+    .saving-title {
+      width: 42px;
+      height: 102px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .saving-title-mask {
+      position: absolute;
+      width: 42px;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(89.72deg, #E6F7F7 0.2%, rgba(230, 247, 247, 0.26) 99.71%);
+    }
+
+    .saving-title-text {
+      position: absolute;
+      width: 18px;
+      height: 88px;
+      left: 9px;
+      top: calc(50% - 88px/2);
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 22px;
+      color: var(--color-accent);
+      writing-mode: vertical-rl;
+    }
+
+    /* 卡片滚动区 */
+    .saving-cards {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 12px;
+      height: 102px;
+      overflow-x: auto;
+    }
+
+    /* 不同日期推荐卡片 (246px) */
+    .saving-card-date {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 24px 18px;
+      gap: 8px;
+      width: 246px;
+      height: 102px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-l);
+      flex-shrink: 0;
+    }
+
+    /* 不同城市推荐卡片 (250px) */
+    .saving-card-city {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 24px 18px;
+      gap: 8px;
+      width: 250px;
+      height: 102px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-l);
+      flex-shrink: 0;
+    }
+
+    /* 日期卡片标题行 */
+    .card-header-date {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 0;
+      height: 34px;
+    }
+
+    /* 城市卡片标题行 */
+    .card-header-city {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      gap: 3px;
+      height: 34px;
+    }
+
+    /* 日期数字 (如 04/05) */
+    .date-number {
+      height: 34px;
+      font-family: 'Alibaba Sans 102', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 100%;
+      display: flex;
+      align-items: center;
+      color: var(--color-primary);
+    }
+
+    /* 周几 (如 周六) */
+    .date-weekday {
+      height: 34px;
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-primary);
+    }
+
+    /* 城市名 */
+    .city-text {
+      height: 34px;
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-primary);
+    }
+
+    /* 航线箭头icon */
+    .route-arrow-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .route-arrow-icon svg {
+      width: 25.25px;
+      height: 5.45px;
+    }
+
+    /* 价格行 */
+    .card-price-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 0;
+      gap: 6px;
+      height: 30px;
+      align-self: stretch;
+    }
+
+    .price-group {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 0;
+      gap: 3px;
+      height: 30px;
+    }
+
+    .price-inner {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 0;
+      height: 24px;
+    }
+
+    /* 价格符号 ¥ */
+    .price-symbol {
+      width: 14px;
+      height: 24px;
+      font-family: 'Alibaba Sans 102', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 24px;
+      color: var(--color-price);
+    }
+
+    /* 价格数字 */
+    .price-number {
+      height: 23px;
+      font-family: 'Fliggy Sans 102', sans-serif;
+      font-weight: 400;
+      font-size: 32px;
+      line-height: 23px;
+      color: var(--color-price);
+    }
+
+    /* 起字 */
+    .price-suffix {
+      width: 20px;
+      height: 24px;
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 24px;
+      color: var(--color-price);
+    }
+
+    /* 优惠标签 */
+    .discount-tag {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 3px 6px;
+      gap: 6px;
+      height: 24px;
+      border: 1px solid rgba(255, 65, 25, 0.5);
+      border-radius: var(--radius-s);
+    }
+
+    .discount-tag-text {
+      height: 18px;
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 18px;
+      color: var(--color-price);
+    }
+  </style>
+</head>
+<body>
+  <div class="money-saving">
+    <div class="saving-title">
+      <div class="saving-title-mask"></div>
+      <span class="saving-title-text">省钱推荐</span>
+    </div>
+    <div class="saving-cards">
+      <!-- 不同日期推荐卡片 (246px) -->
+      <div class="saving-card-date">
+        <div class="card-header-date">
+          <span class="date-number">04/05</span>
+          <span class="date-weekday">周六</span>
+        </div>
+        <div class="card-price-row">
+          <div class="price-group">
+            <div class="price-inner">
+              <span class="price-symbol">¥</span>
+              <span class="price-number">694</span>
+            </div>
+            <span class="price-suffix">起</span>
+          </div>
+          <div class="discount-tag">
+            <span class="discount-tag-text">无需换票</span>
+          </div>
+        </div>
+      </div>
+      <!-- 不同城市推荐卡片 (250px) -->
+      <div class="saving-card-city">
+        <div class="card-header-city">
+          <span class="city-text">天津</span>
+          <div class="route-arrow-icon">
+            <svg viewBox="0 0 26 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 3H24M24 3L21 0.5M24 3L21 5.5" stroke="#D2D4DA" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <span class="city-text">法兰克福</span>
+        </div>
+        <div class="card-price-row">
+          <div class="price-group">
+            <div class="price-inner">
+              <span class="price-symbol">¥</span>
+              <span class="price-number">694</span>
+            </div>
+            <span class="price-suffix">起</span>
+          </div>
+          <div class="discount-tag">
+            <span class="discount-tag-text">无需换票</span>
+          </div>
+        </div>
+      </div>
+      <!-- 不同日期推荐卡片 (246px) -->
+      <div class="saving-card-date">
+        <div class="card-header-date">
+          <span class="date-number">04/17</span>
+          <span class="date-weekday">周日</span>
+        </div>
+        <div class="card-price-row">
+          <div class="price-group">
+            <div class="price-inner">
+              <span class="price-symbol">¥</span>
+              <span class="price-number">398</span>
+            </div>
+            <span class="price-suffix">起</span>
+          </div>
+          <div class="discount-tag">
+            <span class="discount-tag-text">无需换票</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

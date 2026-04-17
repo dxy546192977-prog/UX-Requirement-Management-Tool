@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — tabbar 预订（预订操作栏）示例</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-booking-bar-demo-page {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.fdl-booking-bar-demo__heading {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-booking-bar-demo__heading:not(:first-child) {
+  margin-top: 48px;
+}
+
+.fdl-booking-bar-demo__card {
+  margin-bottom: 24px;
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-darkgray) 8%, transparent);
+}
+
+.fdl-booking-bar-demo__card-title {
+  margin: 0;
+  padding: 12px 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-midgray);
+  background: var(--color-label);
+  border-bottom: 1px solid var(--color-auxiliary);
+}
+
+/* ========== fdl-booking-bar ========== */
+.fdl-booking-bar {
+  position: relative;
+  width: 100%;
+  background: var(--color-white);
+}
+
+.fdl-booking-bar__strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  box-shadow: 0 -1px 0 var(--color-bg);
+}
+
+.fdl-booking-bar__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.fdl-booking-bar__price {
+  display: flex;
+  align-items: flex-end;
+  line-height: 1;
+  color: var(--color-pay-1);
+}
+
+.fdl-booking-bar__currency {
+  margin-right: 2px;
+  font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.fdl-booking-bar__value {
+  font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+}
+
+.fdl-booking-bar__details {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-lightgray);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-booking-bar__details:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+.fdl-booking-bar__details-icon {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.fdl-booking-bar__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.fdl-booking-bar__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84px;
+  padding: 0 30px;
+  border: none;
+  color: var(--color-white);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.fdl-booking-bar__btn:hover {
+  filter: brightness(1.03);
+}
+
+.fdl-booking-bar__btn:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-booking-bar__btn:active {
+  opacity: 0.92;
+}
+
+.fdl-booking-bar__btn--primary {
+  background-color: var(--color-pay-1);
+}
+
+.fdl-booking-bar__btn--secondary {
+  background-color: var(--color-pay-2);
+}
+
+.fdl-booking-bar__btn--capsule {
+  border-radius: 9999px;
+}
+
+.fdl-booking-bar__btn--left-cap {
+  border-radius: 9999px 0 0 9999px;
+}
+
+.fdl-booking-bar__btn--right-cap {
+  border-radius: 0 9999px 9999px 0;
+}
+
+.fdl-booking-bar__btn--stack {
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 30px;
+}
+
+.fdl-booking-bar__btn-main {
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.fdl-booking-bar__btn-sub {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.fdl-booking-bar__btn--wide {
+  min-width: 270px;
+}
+
+.fdl-booking-bar__btn--mid {
+  min-width: 200px;
+}
+
+.fdl-booking-bar__safe-area {
+  min-height: 64px;
+  width: 100%;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--color-white);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-booking-bar-demo-page">
+    <h1 class="fdl-booking-bar-demo__heading">预订操作栏（fdl-booking-bar）</h1>
+
+    <div class="fdl-booking-bar-demo__card">
+      <p class="fdl-booking-bar-demo__card-title">单按钮 + 明细</p>
+      <div class="fdl-booking-bar">
+        <div class="fdl-booking-bar__strip">
+          <div class="fdl-booking-bar__info">
+            <div class="fdl-booking-bar__price">
+              <span class="fdl-booking-bar__currency">¥</span>
+              <span class="fdl-booking-bar__value">694</span>
+            </div>
+            <a href="#" class="fdl-booking-bar__details">
+              <span>明细</span>
+              <svg class="fdl-booking-bar__details-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="transform: rotate(-90deg)">
+                <path d="M10 4L6 8L2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+          <div class="fdl-booking-bar__actions">
+            <button type="button" class="fdl-booking-bar__btn fdl-booking-bar__btn--primary fdl-booking-bar__btn--capsule fdl-booking-bar__btn--wide">
+              立即预订
+            </button>
+          </div>
+        </div>
+        <div class="fdl-booking-bar__safe-area" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="fdl-booking-bar-demo__card">
+      <p class="fdl-booking-bar-demo__card-title">双按钮</p>
+      <div class="fdl-booking-bar">
+        <div class="fdl-booking-bar__strip">
+          <div class="fdl-booking-bar__info">
+            <div class="fdl-booking-bar__price">
+              <span class="fdl-booking-bar__currency">¥</span>
+              <span class="fdl-booking-bar__value">888</span>
+            </div>
+          </div>
+          <div class="fdl-booking-bar__actions">
+            <button type="button" class="fdl-booking-bar__btn fdl-booking-bar__btn--secondary fdl-booking-bar__btn--left-cap fdl-booking-bar__btn--mid">
+              加入购物车
+            </button>
+            <button type="button" class="fdl-booking-bar__btn fdl-booking-bar__btn--primary fdl-booking-bar__btn--right-cap fdl-booking-bar__btn--mid">
+              立即购买
+            </button>
+          </div>
+        </div>
+        <div class="fdl-booking-bar__safe-area" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="fdl-booking-bar-demo__card">
+      <p class="fdl-booking-bar-demo__card-title">带副标题的双按钮</p>
+      <div class="fdl-booking-bar">
+        <div class="fdl-booking-bar__strip">
+          <div class="fdl-booking-bar__info">
+            <div class="fdl-booking-bar__price">
+              <span class="fdl-booking-bar__currency">¥</span>
+              <span class="fdl-booking-bar__value">1280</span>
+            </div>
+          </div>
+          <div class="fdl-booking-bar__actions">
+            <button type="button" class="fdl-booking-bar__btn fdl-booking-bar__btn--secondary fdl-booking-bar__btn--left-cap fdl-booking-bar__btn--mid fdl-booking-bar__btn--stack">
+              <span class="fdl-booking-bar__btn-main">¥1280</span>
+              <span class="fdl-booking-bar__btn-sub">套餐A</span>
+            </button>
+            <button type="button" class="fdl-booking-bar__btn fdl-booking-bar__btn--primary fdl-booking-bar__btn--right-cap fdl-booking-bar__btn--mid fdl-booking-bar__btn--stack">
+              <span class="fdl-booking-bar__btn-main">¥1580</span>
+              <span class="fdl-booking-bar__btn-sub">套餐B（推荐）</span>
+            </button>
+          </div>
+        </div>
+        <div class="fdl-booking-bar__safe-area" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  document.querySelectorAll(".fdl-booking-bar").forEach(function (bar) {
+    bar.addEventListener("click", function (e) {
+      var t = e.target;
+      if (t.closest(".fdl-booking-bar__details") || t.closest(".fdl-booking-bar__btn")) {
+        e.preventDefault();
+      }
+    });
+  });
+})();
+  </script>
+</body>
+</html>

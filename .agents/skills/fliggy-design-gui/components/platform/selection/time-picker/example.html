@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — 时间选择（日历浮层）示例</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-time-picker-demo__open {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 24px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  background: var(--color-white);
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-time-picker-demo__open:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+/* ========== fdl-time-picker ========== */
+.fdl-time-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background: color-mix(in srgb, var(--color-darkgray) 70%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fdl-time-picker--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fdl-time-picker__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 750px;
+  height: 85vh;
+  background: var(--color-white);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+}
+
+.fdl-time-picker--visible .fdl-time-picker__panel {
+  transform: translateY(0);
+}
+
+.fdl-time-picker__header {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  height: 88px;
+  border-bottom: 1px solid var(--color-bg);
+}
+
+.fdl-time-picker__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-time-picker__close {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  color: var(--color-darkgray);
+  background: none;
+  cursor: pointer;
+  transform: translateY(-50%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-time-picker__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fdl-time-picker__close:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+.fdl-time-picker__body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fdl-time-picker__weekdays {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: 60px;
+  padding: 0 24px;
+  background: var(--color-white);
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--color-darkgray) 2%, transparent);
+}
+
+.fdl-time-picker__weekday {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--color-midgray);
+}
+
+.fdl-time-picker__weekday--weekend {
+  color: var(--color-pay-1);
+}
+
+.fdl-time-picker__month-bar {
+  position: sticky;
+  top: 60px;
+  z-index: 9;
+  padding: 18px 0;
+  font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--color-darkgray);
+  background: var(--color-white);
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--color-darkgray) 5%, transparent);
+}
+
+.fdl-time-picker__months {
+  padding-bottom: 24px;
+}
+
+.fdl-time-picker__month {
+  padding: 0 24px;
+}
+
+.fdl-time-picker__month-heading {
+  padding: 40px 0 20px;
+  font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--color-darkgray);
+}
+
+.fdl-time-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px 12px;
+}
+
+.fdl-time-picker__cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+  border-radius: var(--radius-m);
+  gap: 2px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-time-picker__cell:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.fdl-time-picker__cell-num {
+  font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+
+.fdl-time-picker__cell-label {
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--color-lightgray);
+}
+
+.fdl-time-picker__cell-price {
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--color-pay-1);
+}
+
+.fdl-time-picker__tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0 4px;
+  border-radius: var(--radius-s);
+  background: var(--color-brand-1);
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--color-darkgray);
+}
+
+.fdl-time-picker__cell--disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+.fdl-time-picker__cell--in-range {
+  background-color: var(--color-brand-4);
+}
+
+.fdl-time-picker__cell--selected {
+  background-color: var(--color-brand-1);
+}
+
+.fdl-time-picker__cell--range-start,
+.fdl-time-picker__cell--range-end {
+  background-color: var(--color-brand-1);
+}
+
+.fdl-time-picker__cell--range-start::after,
+.fdl-time-picker__cell--range-end::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--color-brand-4);
+  pointer-events: none;
+}
+
+.fdl-time-picker__cell--range-start::after {
+  left: 50%;
+}
+
+.fdl-time-picker__cell--range-end::before {
+  right: 50%;
+}
+
+.fdl-time-picker__cell--in-range .fdl-time-picker__cell-num,
+.fdl-time-picker__cell--range-start .fdl-time-picker__cell-num,
+.fdl-time-picker__cell--range-end .fdl-time-picker__cell-num {
+  position: relative;
+  z-index: 1;
+}
+  </style>
+</head>
+<body>
+  <button type="button" class="fdl-time-picker-demo__open" data-fdl-time-picker-open>打开日历选择器</button>
+
+  <div class="fdl-time-picker" id="fdl-time-picker" aria-hidden="true">
+    <div
+      class="fdl-time-picker__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fdl-time-picker-title"
+    >
+      <header class="fdl-time-picker__header">
+        <h2 class="fdl-time-picker__title" id="fdl-time-picker-title">选择日期</h2>
+        <button type="button" class="fdl-time-picker__close" aria-label="关闭" data-fdl-time-picker-close>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              d="M24 3C35.598 3 45 12.402 45 24C45 35.598 35.598 45 24 45C12.402 45 3 35.598 3 24C3 12.402 12.402 3 24 3ZM24 6C14.0595 6 6 14.0595 6 24C6 33.9405 14.0595 42 24 42C33.9405 42 42 33.9405 42 24C42 14.0595 33.9405 6 24 6ZM18.696 16.575L24 21.879L29.304 16.575C29.5869 16.3018 29.9658 16.1506 30.3591 16.154C30.7524 16.1574 31.1286 16.3152 31.4067 16.5933C31.6848 16.8714 31.8426 17.2476 31.846 17.6409C31.8494 18.0342 31.6982 18.4131 31.425 18.696L26.121 24L31.425 29.304C31.6982 29.5869 31.8494 29.9658 31.846 30.3591C31.8426 30.7524 31.6848 31.1286 31.4067 31.4067C31.1286 31.6848 30.7524 31.8426 30.3591 31.846C29.9658 31.8494 29.5869 31.6982 29.304 31.425L24 26.121L18.696 31.425C18.4131 31.6982 18.0342 31.8494 17.6409 31.846C17.2476 31.8426 16.8714 31.6848 16.5933 31.4067C16.3152 31.1286 16.1574 30.7524 16.154 30.3591C16.1506 29.9658 16.3018 29.5869 16.575 29.304L21.879 24L16.575 18.696C16.3018 18.4131 16.1506 18.0342 16.154 17.6409C16.1574 17.2476 16.3152 16.8714 16.5933 16.5933C16.8714 16.3152 17.2476 16.1574 17.6409 16.154C18.0342 16.1506 18.4131 16.3018 18.696 16.575Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+      </header>
+
+      <div class="fdl-time-picker__body" id="fdl-time-picker-body">
+        <div class="fdl-time-picker__weekdays">
+          <div class="fdl-time-picker__weekday fdl-time-picker__weekday--weekend">日</div>
+          <div class="fdl-time-picker__weekday">一</div>
+          <div class="fdl-time-picker__weekday">二</div>
+          <div class="fdl-time-picker__weekday">三</div>
+          <div class="fdl-time-picker__weekday">四</div>
+          <div class="fdl-time-picker__weekday">五</div>
+          <div class="fdl-time-picker__weekday fdl-time-picker__weekday--weekend">六</div>
+        </div>
+        <div class="fdl-time-picker__month-bar" id="fdl-time-picker-month-bar" aria-live="polite"></div>
+        <div class="fdl-time-picker__months" id="fdl-time-picker-months"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var overlay = document.getElementById("fdl-time-picker");
+  var bodyEl = document.getElementById("fdl-time-picker-body");
+  var monthsContainer = document.getElementById("fdl-time-picker-months");
+  var monthBar = document.getElementById("fdl-time-picker-month-bar");
+  var startDate = null;
+  var endDate = null;
+
+  function parseLocalDate(str) {
+    var p = str.split("-");
+    var y = parseInt(p[0], 10);
+    var m = parseInt(p[1], 10) - 1;
+    var d = parseInt(p[2], 10);
+    return new Date(y, m, d);
+  }
+
+  function sameDay(a, b) {
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
+  }
+
+  function openPicker() {
+    overlay.classList.add("fdl-time-picker--visible");
+    overlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closePicker() {
+    overlay.classList.remove("fdl-time-picker--visible");
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  document.querySelector("[data-fdl-time-picker-open]").addEventListener("click", openPicker);
+  document.querySelectorAll("[data-fdl-time-picker-close]").forEach(function (btn) {
+    btn.addEventListener("click", closePicker);
+  });
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) closePicker();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && overlay.classList.contains("fdl-time-picker--visible")) closePicker();
+  });
+
+  function pad(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function formatMonthKey(year, monthIndex) {
+    return year + "-" + pad(monthIndex + 1);
+  }
+
+  function generateMonth(year, monthIndex) {
+    var monthWrap = document.createElement("div");
+    monthWrap.className = "fdl-time-picker__month";
+    monthWrap.dataset.month = formatMonthKey(year, monthIndex);
+
+    var heading = document.createElement("div");
+    heading.className = "fdl-time-picker__month-heading";
+    heading.textContent = year + "年" + (monthIndex + 1) + "月";
+    monthWrap.appendChild(heading);
+
+    var grid = document.createElement("div");
+    grid.className = "fdl-time-picker__grid";
+
+    var first = new Date(year, monthIndex, 1);
+    var last = new Date(year, monthIndex + 1, 0);
+    var daysInMonth = last.getDate();
+    var startDow = first.getDay();
+
+    var i;
+    for (i = 0; i < startDow; i++) {
+      var padCell = document.createElement("div");
+      padCell.className = "fdl-time-picker__cell fdl-time-picker__cell--disabled";
+      grid.appendChild(padCell);
+    }
+
+    for (var day = 1; day <= daysInMonth; day++) {
+      var dateStr = year + "-" + pad(monthIndex + 1) + "-" + pad(day);
+      var cell = document.createElement("div");
+      cell.className = "fdl-time-picker__cell";
+      cell.dataset.date = dateStr;
+      cell.setAttribute("role", "button");
+      cell.setAttribute("tabindex", "0");
+
+      var label = "";
+      if (day === 1) label = "今天";
+      if (day === 10) label = "可约";
+
+      var num = document.createElement("span");
+      num.className = "fdl-time-picker__cell-num";
+      num.textContent = String(day);
+
+      cell.appendChild(num);
+      if (label) {
+        var lb = document.createElement("span");
+        lb.className = "fdl-time-picker__cell-label";
+        lb.textContent = label;
+        cell.appendChild(lb);
+      }
+      if (day === 15) {
+        var price = document.createElement("span");
+        price.className = "fdl-time-picker__cell-price";
+        price.textContent = "¥500";
+        cell.appendChild(price);
+      }
+      if (day === 1) {
+        var tag = document.createElement("span");
+        tag.className = "fdl-time-picker__tag";
+        tag.textContent = "休";
+        cell.appendChild(tag);
+      }
+
+      grid.appendChild(cell);
+    }
+
+    monthWrap.appendChild(grid);
+    monthsContainer.appendChild(monthWrap);
+  }
+
+  var today = new Date();
+  var m;
+  for (m = 0; m < 12; m++) {
+    var cursor = new Date(today.getFullYear(), today.getMonth() + m, 1);
+    generateMonth(cursor.getFullYear(), cursor.getMonth());
+  }
+
+  var firstHeading = monthsContainer.querySelector(".fdl-time-picker__month-heading");
+  if (firstHeading) monthBar.textContent = firstHeading.textContent;
+
+  function updateDaySelection() {
+    monthsContainer.querySelectorAll(".fdl-time-picker__cell").forEach(function (cell) {
+      cell.classList.remove(
+        "fdl-time-picker__cell--selected",
+        "fdl-time-picker__cell--in-range",
+        "fdl-time-picker__cell--range-start",
+        "fdl-time-picker__cell--range-end"
+      );
+      var ds = cell.dataset.date;
+      if (!ds) return;
+      var cellDate = parseLocalDate(ds);
+
+      if (startDate && endDate && sameDay(startDate, endDate)) {
+        if (sameDay(cellDate, startDate)) {
+          cell.classList.add("fdl-time-picker__cell--selected");
+        }
+        return;
+      }
+
+      if (startDate && sameDay(cellDate, startDate)) {
+        cell.classList.add("fdl-time-picker__cell--selected");
+        if (endDate) cell.classList.add("fdl-time-picker__cell--range-start");
+      }
+      if (endDate && sameDay(cellDate, endDate)) {
+        cell.classList.add("fdl-time-picker__cell--selected", "fdl-time-picker__cell--range-end");
+      }
+      if (startDate && endDate && cellDate > startDate && cellDate < endDate) {
+        cell.classList.add("fdl-time-picker__cell--in-range");
+      }
+    });
+  }
+
+  function onCellActivate(cell) {
+    if (cell.classList.contains("fdl-time-picker__cell--disabled")) return;
+    var ds = cell.dataset.date;
+    if (!ds) return;
+    var selected = parseLocalDate(ds);
+
+    if (!startDate || (startDate && endDate)) {
+      startDate = selected;
+      endDate = null;
+    } else {
+      if (selected < startDate) {
+        startDate = selected;
+      } else {
+        endDate = selected;
+      }
+    }
+    updateDaySelection();
+  }
+
+  monthsContainer.addEventListener("click", function (e) {
+    var cell = e.target.closest(".fdl-time-picker__cell");
+    if (!cell || !monthsContainer.contains(cell)) return;
+    onCellActivate(cell);
+  });
+
+  monthsContainer.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var cell = e.target.closest(".fdl-time-picker__cell");
+    if (!cell || !monthsContainer.contains(cell)) return;
+    e.preventDefault();
+    onCellActivate(cell);
+  });
+
+  function stickyThreshold() {
+    var weekdays = bodyEl.querySelector(".fdl-time-picker__weekdays");
+    var bar = bodyEl.querySelector(".fdl-time-picker__month-bar");
+    return (weekdays ? weekdays.offsetHeight : 60) + (bar ? bar.offsetHeight : 72);
+  }
+
+  function onScroll() {
+    var th = stickyThreshold();
+    var bodyRect = bodyEl.getBoundingClientRect();
+    var line = bodyRect.top + th;
+    var current = "";
+    monthsContainer.querySelectorAll(".fdl-time-picker__month").forEach(function (monthEl) {
+      var rect = monthEl.getBoundingClientRect();
+      if (rect.top <= line) {
+        var h = monthEl.querySelector(".fdl-time-picker__month-heading");
+        if (h) current = h.textContent;
+      }
+    });
+    if (current) monthBar.textContent = current;
+  }
+
+  bodyEl.addEventListener("scroll", onScroll);
+})();
+  </script>
+</body>
+</html>

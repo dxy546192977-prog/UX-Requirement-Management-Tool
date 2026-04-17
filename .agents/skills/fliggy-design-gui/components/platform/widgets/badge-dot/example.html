@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDG — badge-dot（通知徽标）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 30px 18px 48px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-preview-section {
+  background: var(--color-white);
+  padding: 30px 24px;
+  border-radius: var(--radius-m);
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(15, 19, 26, 0.06);
+}
+
+.fdl-preview-section h3 {
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-bg);
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--color-darkgray);
+  line-height: 1.4;
+}
+
+.fdl-component-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+/* --- fdl-badge 基础 --- */
+.fdl-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-pay-1);
+  color: var(--color-white);
+  font-style: normal;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fdl-badge--dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.fdl-badge--single-digit {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+}
+
+.fdl-badge--multi-digit {
+  height: 30px;
+  min-width: 30px;
+  max-width: 55px;
+  border-radius: 15px;
+  padding: 4px 9px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.fdl-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.fdl-icon-wrapper .fdl-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-preview-section">
+    <h3>组件基础预览</h3>
+    <div class="fdl-component-row">
+      <div class="fdl-badge fdl-badge--dot" title="不带数字" role="status" aria-label="有新通知"></div>
+      <div class="fdl-badge fdl-badge--single-digit" title="单位数">1</div>
+      <div class="fdl-badge fdl-badge--multi-digit" title="多位数">99+</div>
+      <div class="fdl-badge fdl-badge--multi-digit" title="短文案">通知</div>
+    </div>
+  </div>
+
+  <div class="fdl-preview-section">
+    <h3>附加在图标角上</h3>
+    <div class="fdl-component-row">
+      <div class="fdl-icon-wrapper">
+        <span aria-hidden="true">🔔</span>
+        <div class="fdl-badge fdl-badge--dot" role="status" aria-label="有新通知"></div>
+      </div>
+      <div class="fdl-icon-wrapper">
+        <span aria-hidden="true">🛒</span>
+        <div class="fdl-badge fdl-badge--single-digit">3</div>
+      </div>
+      <div class="fdl-icon-wrapper">
+        <span aria-hidden="true">✉️</span>
+        <div class="fdl-badge fdl-badge--multi-digit">New</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

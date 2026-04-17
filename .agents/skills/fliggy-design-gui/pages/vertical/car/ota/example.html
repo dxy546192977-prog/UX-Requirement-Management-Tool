@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <style>
+/* ---- inlined: modules/car-ota-quote-card/quote-card-styles.css ---- */
+/* 租车报价卡片 — 与 spec 一致，供整页 example-full 引用 */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  width: 714px;
+  background: #FFFFFF;
+  border-radius: 12px;
+}
+.card-header {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 18px 0 6px 24px;
+  gap: 12px;
+  width: 714px;
+  height: 66px;
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 12px 12px 0 0;
+}
+.card-title {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 140%;
+  color: #0F131A;
+}
+.card-title.golden {
+  color: #805540;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.title-arrow { width: 18px; height: 18px; }
+.tab-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 24px;
+  width: 714px;
+  height: 90px;
+  border-radius: 12px;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  width: 333px;
+  height: 66px;
+  background: #F2F3F5;
+}
+.tab-item:first-child { border-radius: 12px 0 0 12px; }
+.tab-item:last-child { border-radius: 0 12px 12px 0; }
+.tab-inner {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  gap: 6px;
+  width: 321px;
+  height: 54px;
+  border-radius: 9px;
+}
+.tab-item.active .tab-inner { background: #FFFFFF; }
+.tab-text {
+  font-size: 24px;
+  line-height: 140%;
+  text-align: center;
+  color: #0F131A;
+}
+.tab-item.active .tab-text { font-weight: 500; }
+.tab-item:not(.active) .tab-text { font-weight: 400; }
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 24px 24px 18px;
+  gap: 12px;
+  width: 714px;
+}
+.info-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0 0 0 6px;
+  gap: 6px;
+}
+.info-text {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 140%;
+  color: #0F131A;
+}
+.info-text.highlight { color: #149AA8; }
+.info-text.gray { color: #919499; }
+.info-divider {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 140%;
+  color: #D2D4D9;
+}
+.tags-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 0;
+  gap: 6px;
+}
+.tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0 6px;
+  height: 28px;
+  border-radius: 4px;
+  font-size: 20px;
+  line-height: 140%;
+  text-align: center;
+}
+.tag.primary { background: #F2FEFF; color: #149AA8; }
+.tag.default { background: #F7F8FA; color: #5C5F66; }
+.vendor-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 0 0 6px;
+  gap: 6px;
+}
+.vendor-badge {
+  font-family: 'Fliggy Fonts', 'PingFang SC', sans-serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 100%;
+  color: #805540;
+}
+.vendor-text {
+  font-size: 24px;
+  line-height: 140%;
+  color: #5C5F66;
+}
+.arrow-icon { width: 12px; height: 12px; }
+.location-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 6px;
+}
+.location-icon { width: 30px; height: 30px; }
+.price-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 24px;
+  width: 672px;
+  height: 84px;
+}
+.price-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0;
+  gap: 12px;
+  flex: 1;
+}
+.price-main {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 0;
+  gap: 5px;
+}
+.stock-warning {
+  font-size: 24px;
+  line-height: 100%;
+  color: #FF5533;
+}
+.price-symbol {
+  font-family: 'Alibaba Sans 102', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  color: #FF5533;
+}
+.price-number {
+  font-family: 'Fliggy Sans 102', sans-serif;
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 31px;
+  color: #FF5533;
+}
+.price-unit {
+  font-size: 24px;
+  line-height: 100%;
+  color: #FF5533;
+}
+.discount-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 6px;
+}
+.discount-tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 4px;
+  gap: 4px;
+  height: 28px;
+  background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+  border-radius: 4px;
+}
+.discount-text {
+  font-size: 20px;
+  line-height: 140%;
+  color: #FF5533;
+}
+.discount-divider {
+  width: 1px;
+  height: 14px;
+  border: 1px dashed #FFB2A3;
+}
+.total-price {
+  font-size: 22px;
+  line-height: 140%;
+  color: #5C5F66;
+}
+.help-icon { width: 24px; height: 24px; }
+.book-btn {
+  width: 84px;
+  height: 84px;
+  background: #FF8C1A;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+.book-btn-text {
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 36px;
+  text-align: center;
+  color: #FFFFFF;
+}
+.benefits-footer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 24px;
+  gap: 8px;
+  width: 714px;
+  background: linear-gradient(172.13deg, #FFFFFF 1.62%, #FEF5EC 89.49%);
+  border: 2px solid #FFFFFF;
+  border-radius: 0 0 12px 12px;
+}
+.benefits-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+}
+.benefit-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 12px;
+  flex: 1;
+}
+.benefit-icon { width: 24px; height: 24px; }
+.benefit-text {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 140%;
+  color: #805540;
+}
+
+
+/* ---- inlined: modules/car-ota-recommend-card/recommend-card-styles.css ---- */
+.vehicle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 30px 18px 12px;
+  gap: 12px;
+  isolation: isolate;
+  position: relative;
+  width: 714px;
+  height: 261px;
+  background: #FFFFFF;
+  border-radius: 12px;
+}
+.eco-tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 6px;
+  position: absolute;
+  width: 120px;
+  height: 36px;
+  left: 0;
+  top: 0;
+  background: #F2FEFF;
+  border-radius: 12px 0;
+  z-index: 2;
+}
+.eco-tag-icon { width: 18px; height: 18px; flex: none; }
+.eco-tag-text {
+  width: 80px;
+  height: 28px;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 140%;
+  color: #149AA8;
+  flex: none;
+}
+.vehicle-info-wrapper {
+  width: 678px;
+  height: 139px;
+  flex: none;
+  align-self: stretch;
+  z-index: 0;
+}
+.vehicle-info {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  gap: 24px;
+  isolation: isolate;
+  position: absolute;
+  width: 660.73px;
+  height: 127px;
+  left: 18px;
+  top: 30px;
+}
+.vehicle-image {
+  position: relative;
+  width: 190px;
+  height: 127px;
+  flex: none;
+  z-index: 0;
+}
+.vehicle-image .car-img {
+  position: absolute;
+  width: 190px;
+  height: 127px;
+  left: 0;
+  top: 0;
+  object-fit: contain;
+}
+.vr-icon {
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  left: 55px;
+  top: 48px;
+  z-index: 2;
+}
+.vehicle-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 6px;
+  width: 346px;
+  height: 82px;
+  flex: none;
+  z-index: 1;
+}
+.vehicle-name {
+  width: 209px;
+  height: 45px;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  color: #0F131A;
+  flex: none;
+}
+.vehicle-tags-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  width: 346px;
+  max-width: 346px;
+  height: 31px;
+  flex: none;
+}
+.vehicle-tags {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 12px;
+  width: 346px;
+  height: 31px;
+  flex: none;
+  align-self: stretch;
+}
+.vehicle-tag {
+  height: 31px;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 140%;
+  color: #5C5F66;
+  flex: none;
+}
+.vehicle-card .tag-divider {
+  width: 0;
+  height: 14px;
+  border: 1px solid #F2F3F5;
+  flex: none;
+}
+.vehicle-card .divider {
+  position: absolute;
+  width: 678px;
+  height: 0;
+  left: 18px;
+  top: 169px;
+  border: 1px solid #F2F3F5;
+}
+.vehicle-card .quote-section {
+  width: 678px;
+  height: 68px;
+  position: relative;
+  flex: none;
+  align-self: stretch;
+  z-index: 1;
+}
+.vehicle-card .quote-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0;
+  gap: 201px;
+  position: absolute;
+  height: 31px;
+  left: 0;
+  right: 0;
+  top: calc(50% - 31px / 2 - 18.5px);
+}
+.license-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 12px;
+  width: 124px;
+  height: 31px;
+  flex: none;
+}
+.license-tag {
+  position: relative;
+  width: 37px;
+  height: 31px;
+  flex: none;
+}
+.license-highlight {
+  position: absolute;
+  width: 36px;
+  height: 12px;
+  left: 0;
+  top: 13px;
+  background: linear-gradient(90deg, #FFE866 0%, rgba(255, 232, 102, 0.0001) 100%);
+}
+.license-text {
+  position: absolute;
+  width: 37px;
+  height: 31px;
+  left: 0;
+  top: 0;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  color: #0F131A;
+}
+.year-tag {
+  width: 75px;
+  height: 31px;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  color: #0F131A;
+  flex: none;
+}
+.vc-price-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 0;
+  gap: 12px;
+  width: 81px;
+  height: 27px;
+  flex: none;
+}
+.vc-price-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 0;
+  gap: 5px;
+  width: 81px;
+  height: 24px;
+  flex: none;
+}
+.vc-price-symbol {
+  width: 14px;
+  height: 24px;
+  font-family: 'Alibaba Sans 102', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  color: #FF5533;
+  flex: none;
+}
+.vc-price-value {
+  width: 40px;
+  height: 23px;
+  font-family: 'Fliggy Sans 102', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 23px;
+  color: #FF5533;
+  flex: none;
+}
+.vc-price-unit {
+  width: 27px;
+  height: 18px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+  color: #FF5533;
+  flex: none;
+}
+.vehicle-card .discount-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+  gap: 6px;
+  isolation: isolate;
+  position: absolute;
+  height: 31px;
+  left: 0;
+  right: 0;
+  top: calc(50% - 31px / 2 + 18.5px);
+}
+.vehicle-card .discount-tag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 4px;
+  gap: 4px;
+  width: 101px;
+  height: 28px;
+  background: linear-gradient(90deg, rgba(255, 230, 224, 0.0001) 0%, #FFE6E0 100%);
+  border-radius: 4px;
+  flex: none;
+  z-index: 0;
+}
+.vehicle-card .discount-text {
+  width: 93px;
+  height: 28px;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 140%;
+  color: #FF5533;
+  flex: none;
+}
+.vehicle-card .total-price {
+  width: 119px;
+  height: 31px;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  color: #5C5F66;
+  flex: none;
+  z-index: 1;
+}
+.vehicle-card .help-icon {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  z-index: 2;
+}
+
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>飞猪租车 OTA — 整页串联预览</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alibaba Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --ota-page-bg: #F2F3F5;
+  --ota-white: #FFFFFF;
+  --ota-dark: #0F131A;
+  --ota-mid: #5C5F66;
+  --ota-light: #919499;
+  --ota-line: #F2F3F5;
+  --ota-border: #D2D4D9;
+  --ota-teal: #149AA8;
+  --ota-pay: #FF5533;
+  --ota-pay-cta: #FF8C1A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin: 0;
+  background: var(--ota-page-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+.ota-page {
+  position: relative;
+  width: 750px;
+  height: 4505px;
+  margin: 0 auto;
+  background: var(--ota-page-bg);
+  overflow: hidden;
+}
+.ota-head-slot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 750px;
+  height: 524px;
+}
+.ota-summary-slot {
+  position: absolute;
+  left: 0;
+  top: 500px;
+  width: 750px;
+  height: 335px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.ota-quote-slot {
+  position: absolute;
+  left: 18px;
+  top: 839px;
+  width: 714px;
+  height: 3602px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.ota-home-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 750px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ota-page-bg);
+}
+.ota-home-indicator-bar {
+  width: 268px;
+  height: 10px;
+  background: #0F131A;
+  border-radius: 100px;
+  opacity: 0.2;
+}
+.quote-stack-item {
+  flex-shrink: 0;
+  width: 714px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.quote-stack-item > .card { flex-shrink: 0; }
+.card-header--arrow {
+  justify-content: space-between !important;
+  padding-right: 24px !important;
+}
+.expand-collapse-icon { transform: rotate(90deg); }
+.expand-collapse-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 48px;
+  gap: 12px;
+  width: 714px;
+  height: 60px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+.expand-collapse-text {
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 140%;
+  color: #5C5F66;
+}
+.ota-section-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 0 0 24px;
+  gap: 6px;
+  width: 714px;
+  height: 39px;
+  background: #FFFFFF;
+  box-sizing: border-box;
+}
+.ota-section-title-text {
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 140%;
+  color: #0F131A;
+}
+/* hero */
+.ota-hero-inner { position: relative; width: 750px; height: 524px; font-family: 'PingFang SC', sans-serif; }
+.ota-hero-cover { position: absolute; left: 0; top: 0; width: 750px; height: 524px; object-fit: cover; }
+.ota-hero-nav { position: absolute; left: 0; top: 88px; width: 750px; height: 88px; }
+.ota-hero-nav-inner { position: relative; width: 750px; height: 88px; }
+.ota-hero-back { position: absolute; left: 18px; top: calc(50% - 30px); width: 60px; height: 60px; }
+.ota-hero-more { position: absolute; right: 18px; top: calc(50% - 30px); width: 60px; height: 60px; }
+.ota-hero-play { position: absolute; left: calc(50% - 45px); top: 236px; width: 90px; height: 90px; }
+.ota-hero-tabs {
+  position: absolute; left: 24px; top: 424px;
+  display: flex; flex-direction: row; align-items: center;
+  padding: 6px 18px 6px 6px; gap: 24px; width: 420px; height: 40px;
+  background: rgba(0,0,0,0.6); border-radius: 36px; box-sizing: border-box;
+}
+.ota-hero-tabs-inner { display: flex; flex-direction: row; align-items: center; gap: 24px; width: 100%; }
+.ota-hero-vr { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+.ota-hero-pill {
+  display: flex; justify-content: center; align-items: center;
+  padding: 0 12px; height: 28px; background: #fff; border-radius: 24px;
+}
+.ota-hero-pill span { font-weight: 500; font-size: 20px; color: #0F131A; }
+.ota-hero-vr-t { font-size: 20px; color: #fff; }
+.ota-hero-tab { font-size: 20px; color: #fff; }
+.ota-hero-album-wrap { display: flex; align-items: center; gap: 18px; }
+.ota-hero-album-div { width: 1px; height: 20px; background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 52.86%, rgba(216,216,216,0) 100%); }
+.ota-hero-album { display: flex; align-items: center; gap: 6px; font-size: 20px; color: #fff; }
+.ota-hero-hint {
+  position: absolute; left: 480px; top: 424px;
+  display: flex; align-items: center; padding: 6px 18px;
+  width: 246px; height: 40px; background: rgba(0,0,0,0.6); border-radius: 36px; box-sizing: border-box;
+}
+.ota-hero-hint span { font-size: 20px; color: #fff; }
+.ota-hero-progress { position: absolute; left: 24px; top: 476px; width: 702px; height: 6px; background: rgba(0,0,0,0.6); border-radius: 12px; }
+/* vehicle summary */
+.car-vehicle-card {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 18px 42px; gap: 6px; width: 750px; height: 123px;
+  background: #fff; border-radius: 24px; box-sizing: border-box;
+}
+.car-v-title-row { display: flex; width: 100%; justify-content: space-between; align-items: center; }
+.car-v-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.car-v-name { font-weight: 500; font-size: 36px; line-height: 140%; color: #0F131A; }
+.car-v-badges { display: flex; align-items: center; gap: 6px; }
+.car-v-eco { font-size: 24px; line-height: 140%; color: #149AA8; }
+.car-v-local { font-size: 24px; line-height: 140%; color: #5C5F66; }
+.car-v-tags { display: flex; flex-direction: row; align-items: center; gap: 12px; flex-wrap: wrap; }
+.car-v-tag { font-size: 22px; line-height: 140%; color: #5C5F66; }
+.car-v-div { width: 0; height: 14px; border: 1px solid #F2F3F5; }
+/* vip */
+.ota-vip-bar { margin: 0; }
+.vip-bar {
+  display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+  padding: 0 24px; gap: 29px; width: 714px; height: 72px;
+  background: #FFFFFF; border-radius: 12px; box-sizing: border-box;
+}
+.vip-content { display: flex; flex-direction: row; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.vip-icon { height: 25px; display: block; }
+.vip-text { font-weight: 400; font-size: 24px; line-height: 140%; color: #0F131A; flex: 1; }
+.coupon-btn {
+  display: flex; justify-content: center; align-items: center;
+  width: 84px; height: 48px; background: #FF5533; border-radius: 42px; flex-shrink: 0;
+}
+.coupon-btn span { font-weight: 500; font-size: 24px; line-height: 140%; color: #FFFFFF; }
+/* pickup */
+.ota-pickup {
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  padding: 18px 24px 18px 42px; gap: 12px; width: 750px; height: 116px;
+  background: linear-gradient(180deg, #FFFFFF 50%, #F2F3F5 100%);
+  border-radius: 24px 24px 0 0; box-sizing: border-box;
+}
+.ota-pickup-line1 { display: flex; align-items: center; gap: 6px; }
+.ota-pickup-line1 span { font-size: 24px; line-height: 140%; color: #0F131A; }
+.ota-pickup-line2 { display: flex; align-items: center; gap: 18px; }
+.ota-pickup-line2 > span { font-size: 24px; line-height: 140%; color: #0F131A; }
+.ota-pickup-pill {
+  display: flex; justify-content: center; align-items: center;
+  padding: 2px 12px; height: 32px; border: 1px solid #D2D4D9; border-radius: 30px; box-sizing: border-box;
+}
+.ota-pickup-pill span { font-size: 20px; color: #5C5F66; }
+.card-title.golden img { display: inline-block; vertical-align: middle; }
+
+  </style>
+</head>
+<body>
+  <div class="ota-page">
+    <section class="ota-head-slot" aria-label="头图">
+      <div class="ota-hero-inner">
+  <img class="ota-hero-cover" src="https://img.alicdn.com/imgextra/i1/O1CN017o1Hyp21jDVpTQmof_!!6000000007020-55-tps-750-524.svg" alt="">
+  <div class="ota-hero-nav">
+    <div class="ota-hero-nav-inner">
+      <img class="ota-hero-back" src="https://img.alicdn.com/imgextra/i3/O1CN01wFYuzI1T9lvT0y85w_!!6000000002340-55-tps-60-60.svg" alt="返回">
+      <img class="ota-hero-more" src="https://img.alicdn.com/imgextra/i4/O1CN014qW13l1HnpAguN8Rk_!!6000000000803-55-tps-60-60.svg" alt="更多">
+    </div>
+  </div>
+  <img class="ota-hero-play" src="https://img.alicdn.com/imgextra/i1/O1CN01LK1P9o1a0nTVKQo03_!!6000000003268-55-tps-90-90.svg" alt="">
+  <div class="ota-hero-tabs">
+    <div class="ota-hero-tabs-inner">
+      <div class="ota-hero-vr"><div class="ota-hero-pill"><span>视频</span></div><span class="ota-hero-vr-t">VR</span></div>
+      <span class="ota-hero-tab">外观</span><span class="ota-hero-tab">前排</span><span class="ota-hero-tab">后排</span>
+      <div class="ota-hero-album-wrap">
+        <div class="ota-hero-album-div"></div>
+        <div class="ota-hero-album"><span>相册</span><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 2L8.5 6L4.5 10" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="ota-hero-hint"><span>年款/颜色等以门店为准</span></div>
+  <div class="ota-hero-progress"></div>
+</div>
+    </section>
+    <section class="ota-summary-slot" aria-label="车型摘要">
+      <div class="car-vehicle-card">
+  <div class="car-v-title-row">
+    <div class="car-v-title">
+      <span class="car-v-name">坦克300</span>
+      <div class="car-v-badges">
+        <img src="https://img.alicdn.com/imgextra/i4/O1CN015MdGMN1kLXZRx7DZM_!!6000000004667-55-tps-24-24.svg" width="24" height="24" alt="">
+        <span class="car-v-eco">低碳车型</span>
+        <span class="car-v-local">本地牌·不限行</span>
+        <img src="https://img.alicdn.com/imgextra/i2/O1CN01FCC1lq229K5baTxZH_!!6000000007077-55-tps-24-24.svg" width="24" height="24" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="car-v-tags">
+    <span class="car-v-tag">经济型</span><span class="car-v-div"></span>
+    <span class="car-v-tag">增程式</span><span class="car-v-div"></span>
+    <span class="car-v-tag">5座4门</span><span class="car-v-div"></span>
+    <span class="car-v-tag">自动挡</span><span class="car-v-div"></span>
+    <span class="car-v-tag">自动挡</span><span class="car-v-div"></span>
+    <span class="car-v-tag">自动挡</span><span class="car-v-div"></span>
+    <span class="car-v-tag">自动挡</span>
+  </div>
+</div>
+<div class="vip-bar ota-vip-bar">
+  <div class="vip-content">
+    <img class="vip-icon" src="https://img.alicdn.com/imgextra/i2/O1CN015dil2U20FcIhHmiUk_!!6000000006820-55-tps-72-25.svg" alt="88VIP">
+    <span class="vip-text">专项优惠 ¥ 200 新能源车可享6折</span>
+  </div>
+  <div class="coupon-btn"><span>领券</span></div>
+</div>
+<div class="ota-pickup">
+  <div class="ota-pickup-line1"><span>乌鲁木齐天山国际机场站</span></div>
+  <div class="ota-pickup-line2">
+    <span>5月10日 10:00</span>
+    <div class="ota-pickup-pill"><span>2天</span></div>
+    <span>5月12日 10:00</span>
+  </div>
+</div>
+    </section>
+    <section class="ota-quote-slot" aria-label="报价列表">
+<div class="quote-stack-item" style="height:318px;"><div class="card">
+    <div class="card-header"><span class="card-title">品牌周·精选车</span></div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">1年内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">免费上门取还车</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-text">橙诺租车·4.0分·查看评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:408px;"><div class="card">
+    <div class="card-header"><span class="card-title">总价最低·特惠车</span></div>
+    <div class="tab-container">
+      <div class="tab-item active"><div class="tab-inner"><span class="tab-text">到店取车 ¥120</span></div></div>
+      <div class="tab-item"><div class="tab-inner"><span class="tab-text">送车上门 ¥140</span></div></div>
+    </div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">6个月内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">自行到店，距门店直线20公里</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-text">飞租租车·33评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:408px;"><div class="card">
+    <div class="card-header"><span class="card-title">品质新车</span></div>
+    <div class="tab-container">
+      <div class="tab-item active"><div class="tab-inner"><span class="tab-text">到店取车 ¥128</span></div></div>
+      <div class="tab-item"><div class="tab-inner"><span class="tab-text">送车上门 ¥148</span></div></div>
+    </div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">6个月内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">自行到店，距门店直线20公里</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">飞猪优选</span>
+        <span class="vendor-text">优选门店·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:398px;"><div class="card">
+    <div class="card-header"><span class="card-title">飞猪优选车</span></div>
+    <div class="card-content">
+      <div class="info-row" style="flex-direction:column;gap:6px;">
+        <span class="info-text">2年内车龄</span>
+        <span class="info-text">自行到店，距门店直线20公里</span>
+        <span class="info-text gray">可选：收费上门送取车</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">飞猪优选</span>
+        <span class="vendor-text">小八租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:398px;"><div class="card">
+    <div class="card-header"><span class="card-title">飞猪优选车</span></div>
+    <div class="card-content">
+      <div class="info-row" style="flex-direction:column;gap:6px;">
+        <span class="info-text">2年内车龄</span>
+        <span class="info-text">取·自行前往门店取车，距门店直线500米</span>
+        <span class="info-text">还·自行前往门店还车，距门店直线500米</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">飞猪优选</span>
+        <span class="vendor-text">小八租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:408px;"><div class="card">
+    <div class="card-header"><span class="card-title">全国连锁·大牌好车</span></div>
+    <div class="tab-container">
+      <div class="tab-item active"><div class="tab-inner"><span class="tab-text">到店取车 ¥130</span></div></div>
+      <div class="tab-item"><div class="tab-inner"><span class="tab-text">送车上门 ¥150</span></div></div>
+    </div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">1年内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">自行到店，距门店直线20公里</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">全国连锁</span>
+        <span class="vendor-text">一嗨租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:318px;"><div class="card">
+    <div class="card-header card-header--arrow">
+      <span class="card-title">小伤免赔·剐蹭无忧车</span>
+      <img src="https://img.alicdn.com/imgextra/i1/O1CN01xsDgqr232k0tTUtp3_!!6000000007198-55-tps-18-18.svg" class="title-arrow" alt="">
+    </div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">1年内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">免费上门取还车</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">小伤免赔</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-text">安心租·4.8分·查看评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main"><span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:406px;"><div class="card">
+    <div class="card-header">
+      <span class="card-title golden">一口价·舒心租车 <img src="https://img.alicdn.com/imgextra/i1/O1CN01xsDgqr232k0tTUtp3_!!6000000007198-55-tps-18-18.svg" class="title-arrow" alt=""></span>
+    </div>
+    <div class="card-content">
+      <div class="info-row" style="width:100%;flex-wrap:wrap;">
+        <div style="display:flex;gap:6px;">
+          <span class="info-text">3年内车龄</span>
+          <span class="info-divider">｜</span>
+          <span class="info-text">站内取还车</span>
+        </div>
+        <div class="location-row" style="margin-left:6px;width:100%;">
+          <img src="https://img.alicdn.com/imgextra/i2/O1CN01NtziQk1dGm8jPxKjr_!!6000000003709-55-tps-30-30.svg" class="location-icon" alt="">
+          <span class="vendor-text">飞猪租车中心天山国际机场T2</span>
+        </div>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">行车记录仪</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">全国连锁</span>
+        <span class="vendor-text">一嗨租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main">
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">一口价¥364</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+    <div class="benefits-footer">
+      <div class="benefits-row">
+        <div class="benefit-item"><img src="https://img.alicdn.com/imgextra/i2/O1CN013FQ6Fa1UqecnkBBPZ_!!6000000002569-55-tps-24-24.svg" class="benefit-icon" alt=""><span class="benefit-text">车损全额免赔</span></div>
+        <div class="benefit-item"><img src="https://img.alicdn.com/imgextra/i3/O1CN01yyfazU1gwOz6PZMRy_!!6000000004206-55-tps-24-24.svg" class="benefit-icon" alt=""><span class="benefit-text">免费道路救援</span></div>
+        <div class="benefit-item"><img src="https://img.alicdn.com/imgextra/i4/O1CN013Gi60x1yV4QuEvid0_!!6000000006583-55-tps-24-24.svg" class="benefit-icon" alt=""><span class="benefit-text">免折旧停运费</span></div>
+      </div>
+      <div class="benefits-row">
+        <div class="benefit-item"><img src="https://img.alicdn.com/imgextra/i1/O1CN01jxZVo7217f2IgZHLM_!!6000000006938-55-tps-24-24.svg" class="benefit-icon" alt=""><span class="benefit-text">还车免验车</span></div>
+        <div class="benefit-item"><img src="https://img.alicdn.com/imgextra/i1/O1CN01qO7AgZ1YEsQ31GYXZ_!!6000000003028-55-tps-24-24.svg" class="benefit-icon" alt=""><span class="benefit-text">免费取消</span></div>
+        <div class="benefit-item"><img src="https://img.alicdn.com/imgextra/i2/O1CN011dV7bP20rdAlc5swH_!!6000000006903-55-tps-24-24.svg" class="benefit-icon" alt=""><span class="benefit-text">免加油/充电服务费</span></div>
+      </div>
+    </div>
+  </div></div>
+<div class="quote-stack-item" style="height:60px;"><div class="expand-collapse-btn" role="button">
+    <span class="expand-collapse-text">查看更多1个报价</span>
+    <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="expand-collapse-icon" alt="">
+  </div></div>
+<div class="quote-stack-item" style="height:39px;"><div class="ota-section-title">
+    <img src="https://img.alicdn.com/imgextra/i1/O1CN01UupLJs26cPi250OKM_!!6000000007682-55-tps-30-30.svg" width="30" height="30" alt="">
+    <span class="ota-section-title-text">热销车型推荐</span>
+  </div></div>
+<div class="quote-stack-item" style="height:261px;"><div class="vehicle-card">
+    <div class="eco-tag">
+      <img class="eco-tag-icon" src="https://img.alicdn.com/imgextra/i4/O1CN015MdGMN1kLXZRx7DZM_!!6000000004667-55-tps-24-24.svg" alt="">
+      <span class="eco-tag-text">低碳车型</span>
+    </div>
+    <div class="vehicle-info-wrapper">
+      <div class="vehicle-info">
+        <div class="vehicle-image">
+          <img class="car-img" src="https://img.alicdn.com/imgextra/i1/O1CN01EPWWzl1LyawxWX0yd_!!6000000001368-55-tps-190-127.svg" alt="">
+          <img class="vr-icon" src="https://img.alicdn.com/imgextra/i3/O1CN01204x9a2A0B6ijuEeU_!!6000000008140-55-tps-80-30.svg" alt="">
+        </div>
+        <div class="vehicle-details">
+          <div class="vehicle-name">特斯拉Model3</div>
+          <div class="vehicle-tags-wrapper">
+            <div class="vehicle-tags">
+              <span class="vehicle-tag">舒适型</span><div class="tag-divider"></div>
+              <span class="vehicle-tag">5座</span><div class="tag-divider"></div>
+              <span class="vehicle-tag">纯电动</span><div class="tag-divider"></div>
+              <span class="vehicle-tag">1.5L增城市</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="quote-section">
+      <div class="quote-row">
+        <div class="license-info">
+          <div class="license-tag"><div class="license-highlight"></div><span class="license-text">浙A</span></div>
+          <span class="year-tag">2024款</span>
+        </div>
+        <div class="vc-price-section">
+          <div class="vc-price-container">
+            <span class="vc-price-symbol">¥</span><span class="vc-price-value">90</span><span class="vc-price-unit">/天</span>
+          </div>
+        </div>
+      </div>
+      <div class="discount-row">
+        <div class="discount-tag"><span class="discount-text">已优惠¥10</span></div>
+        <span class="total-price">总价¥440起</span>
+        <img class="help-icon" src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" alt="">
+      </div>
+    </div>
+  </div></div>
+
+    </section>
+    <div class="ota-home-indicator" aria-hidden="true"><div class="ota-home-indicator-bar"></div></div>
+  </div>
+</body>
+</html>
