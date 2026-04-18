@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>按钮组件 (Button Skill) 预览</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-midgray: #5c5f66;
+            --color-lightgray: #919499;
+            --color-indigo-1: #6666ff;
+            --color-indigo-4: #EBEBFF;
+            --color-warning-1: #ff3333;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+            --color-bg: #f2f3f5;
+            --radius-xl: 36px;
+            --radius-l: 24px;
+            --radius-m: 12px;
+            --radius-s: 6px;
+        }
+
+        /* 预览环境样式 */
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 50px 20px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+
+        .button-showcase {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            width: 313px;
+        }
+
+        /* 
+         ========================================
+         == 按钮 (Button) Skill 组件
+         ========================================
+        */
+
+        /* 基础按钮样式 */
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            width: 100%;
+            padding: 20px 32px;
+            gap: 8px;
+            
+            border-radius: var(--radius-l);
+            border: none;
+            box-sizing: border-box;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 1.4;
+        }
+
+        /* 图标占位 (默认隐藏) */
+        .btn-icon {
+            display: none;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* 层级=强 (Primary) */
+        .btn-primary {
+            background-color: var(--color-indigo-1);
+            color: #FFFFFF;
+        }
+        .btn-primary:hover {
+            background-color: #5555EE;
+        }
+
+        /* 层级=中 (Secondary) */
+        .btn-secondary {
+            background-color: var(--color-indigo-4);
+            color: var(--color-indigo-1);
+        }
+        .btn-secondary:hover {
+            background-color: #DDDDFF;
+        }
+
+        /* 层级=弱 (Tertiary) */
+        .btn-tertiary {
+            background-color: var(--color-bg);
+            color: var(--color-darkgray);
+        }
+        .btn-tertiary:hover {
+            background-color: #E5E6E8;
+        }
+
+        /* 层级=失效 (Disabled) */
+        .btn:disabled {
+            background-color: var(--color-bg);
+            color: var(--color-darkgray);
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="button-showcase">
+        <!-- 强按钮 (Primary) -->
+        <button class="btn btn-primary">立即下单</button>
+        
+        <!-- 中按钮 (Secondary) -->
+        <button class="btn btn-secondary">按钮文字</button>
+        
+        <!-- 弱按钮 (Tertiary) -->
+        <button class="btn btn-tertiary">按钮文字</button>
+
+        <!-- 失效按钮 (Disabled) -->
+        <button class="btn" disabled>按钮文字</button>
+    </div>
+
+</body>
+</html>

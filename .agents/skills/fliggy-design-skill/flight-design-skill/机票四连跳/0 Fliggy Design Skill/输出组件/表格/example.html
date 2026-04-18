@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>表格组件预览</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-midgray: #5c5f66;
+            --color-lightgray: #919499;
+            --color-indigo-1: #6666ff;
+            --color-indigo-4: #EBEBFF;
+            --color-warning-1: #ff3333;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+            --color-bg: #f2f3f5;
+            --radius-xl: 36px;
+            --radius-l: 24px;
+            --radius-m: 12px;
+            --radius-s: 6px;
+        }
+
+        /* 预览环境样式 */
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            justify-content: center;
+            padding: 50px 20px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+
+        /* 
+         ========================================
+         == 表格 (Table) Skill 组件
+         ========================================
+         原生 Markdown 表格样式，白底 36px 圆角容器。
+        */
+
+        /* 表格容器 */
+        .table-wrapper {
+            width: 690px;
+            margin-top: 24px;
+            border-radius: var(--radius-xl);
+            background: var(--color-white);
+            overflow: hidden;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 表格主体 */
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+        }
+
+        /* 表头 */
+        .table-wrapper thead th {
+            background: var(--color-bg);
+            padding: 24px;
+            font-weight: 500;
+            font-size: 26px;
+            color: var(--color-darkgray);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        /* 表体单元格 */
+        .table-wrapper tbody td {
+            padding: 24px;
+            font-weight: 400;
+            font-size: 26px;
+            color: var(--color-darkgray);
+            text-align: left;
+            background: var(--color-white);
+        }
+
+        /* 行分割线 */
+        .table-wrapper tbody tr {
+            border-bottom: 1px solid var(--color-bg);
+        }
+
+        .table-wrapper tbody tr:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 表格组件 -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>航班</th>
+                    <th>起飞</th>
+                    <th>到达</th>
+                    <th>价格</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>MU5101</td>
+                    <td>07:15</td>
+                    <td>09:35</td>
+                    <td>¥680</td>
+                </tr>
+                <tr>
+                    <td>CA1501</td>
+                    <td>07:30</td>
+                    <td>09:55</td>
+                    <td>¥720</td>
+                </tr>
+                <tr>
+                    <td>HO1252</td>
+                    <td>07:45</td>
+                    <td>10:00</td>
+                    <td>¥550</td>
+                </tr>
+                <tr>
+                    <td>FM9102</td>
+                    <td>08:00</td>
+                    <td>10:20</td>
+                    <td>¥610</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
