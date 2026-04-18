@@ -1,6 +1,20 @@
 {
   "version": 1,
   "skills": {
+    "UXdesign-buff": {
+      "source": "omaxqh/UXdesign-buff",
+      "sourceType": "github",
+      "computedHash": "9b8ddb0f470c6f5c7456c5eef313d239ba7970842b077c505ec41f6aa86b499b",
+      "skillFolderHash": "733b447080f6910048f916438d6ad21886dd3853",
+      "skillPath": ""
+    },
+    "ceo": {
+      "source": "omaxqh/ceo",
+      "sourceType": "github",
+      "computedHash": "a21186ebdb09bad9acc4af110260c8b4d047bff81ddaac86680a4b9a7ee0b269",
+      "skillFolderHash": "848077816f0a894aeb2f0701021b6b75b791220d",
+      "skillPath": ""
+    },
     "fliggy-design-gui": {
       "source": "tibers.hxf/FliggyDesignGUISkill",
       "sourceType": "internal",
@@ -13,6 +27,20 @@
       "sourceType": "internal",
       "computedHash": "5b2c0f55d3d253d32c2b28a92af88f7132bf8a1113de5ab32bff314200741f02",
       "skillPath": "Fliggy Design Skill"
+    },
+    "idea": {
+      "source": "omaxqh/idea",
+      "sourceType": "github",
+      "computedHash": "4cfd92f9007681d6f0b036df570234d115be3038bdbbfbdf0e1dd92742cb9173",
+      "skillFolderHash": "2232441684872b54bba3311db1d4080c45b906a4",
+      "skillPath": ""
+    },
+    "yuque": {
+      "source": "trip-tools/mcpcli",
+      "sourceType": "internal",
+      "computedHash": "960dd8becf49e57ff7dd3f1ab3e3f9ae5fc273f7a1551cbdf81f85fa32037eed",
+      "commitHash": "e773ca293ddec6db2be47ba79ccc739ab277e206",
+      "skillPath": "skills/yuque"
     },
     "yuque-doc-fetch": {
       "source": "trip/mtop-devtools",

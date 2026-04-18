@@ -19,6 +19,16 @@ This skill focuses on:
 
 This skill does not generate final design稿 itself. It prepares the brief for downstream design execution.
 
+## Mandatory Triple-Skill Pass（与项目规则一致）
+
+凡执行本 skill 的 PRD 解析/拆解，**必须先**按仓库规则读取并贯彻以下三份 skill（路径相对仓库根目录）：
+
+- `.agents/skills/idea/SKILL.md` — 发散、假设、取舍与待验证点
+- `.agents/skills/ceo/SKILL.md` — 商业与战略层面的挑战与补强
+- `.agents/skills/uxdesign-buff/SKILL.md` — 体验与路径层面的设计评审视角（有 Figma/MCP 时优先按其取证顺序）
+
+输出 Markdown 须在「页面/模块与 fliggy-design-gui 指令」之外，包含三个独立章节：**发散拆解（idea）**、**商业与战略压测（ceo）**、**体验与设计评审视角（UXdesign-buff）**。详见 `.cursor/rules/prd-triple-skill-decomposition.mdc`。
+
 ## When To Use
 
 Use this skill when the user asks to:
@@ -31,6 +41,8 @@ Use this skill when the user asks to:
 - 为 `fliggy-design-gui` 准备输入
 
 ## Default Workflow
+
+0. **Triple-skill load.** `Read` 上述三个 `SKILL.md`，再开始拆解。
 
 1. Read the PRD source.
    If the input is a Yuque link, fetch title and body first.
@@ -54,7 +66,9 @@ Use this skill when the user asks to:
    - `modify` -> `Type B`
    - `reuse` -> direct reuse, no standalone redraw needed
 
-6. Produce a Markdown brief.
+6. Produce idea / ceo / UXdesign-buff 三章（见上节「Mandatory Triple-Skill Pass」）。
+
+7. Produce a Markdown brief (page/module + fliggy-design-gui instructions).
    The brief must be directly usable as downstream AI input.
 
 ## Output Rules
@@ -187,6 +201,7 @@ Bad instruction:
 
 The output is successful only if:
 
+- the three sections **发散拆解（idea）**, **商业与战略压测（ceo）**, **体验与设计评审视角（UXdesign-buff）** are all present and grounded in the PRD
 - another AI can read it and immediately start producing design稿
 - page list is explicit
 - module list is explicit

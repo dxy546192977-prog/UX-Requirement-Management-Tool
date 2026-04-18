@@ -1742,6 +1742,12 @@ function openModal(reqId) {
     + (req.prd_url
       ? '<a href="' + req.prd_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
       : '<button class="modal-link-add-prd" onclick="event.preventDefault();promptPrdUrl(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ 添加 PRD</button>')
+    + ((req.prd_url && API_BASE)
+      ? '<button class="modal-link" onclick="event.preventDefault();openPrdRawPreview(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>读取正文</button>'
+      : '')
+    + ((req.prd_url && API_BASE)
+      ? '<button class="modal-link" onclick="event.preventDefault();downloadPrdImages(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下载图片</button>'
+      : '')
     + (req.design_url
       ? '<a href="' + req.design_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>设计稿</a>'
       : '<button class="modal-link-add-design" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>+ 添加设计稿</button>')
@@ -2007,6 +2013,116 @@ async function fetchYuqueDocInfo(prdUrl) {
       throw new Error("Request timed out");
     }
     throw err;
+  }
+}
+
+async function fetchYuqueDocAssets(prdUrl) {
+  if (!API_BASE) {
+    throw new Error("未配置 API_BASE，请使用代理模式打开看板");
+  }
+  var controller = new AbortController();
+  var timeoutId = setTimeout(function() { controller.abort(); }, 20000);
+  try {
+    var res = await fetch(
+      API_BASE + "/api/yuque/doc-assets?url=" + encodeURIComponent(prdUrl),
+      { signal: controller.signal }
+    );
+    clearTimeout(timeoutId);
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      throw new Error(err.error || ("HTTP " + res.status));
+    }
+    return await res.json();
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === "AbortError") throw new Error("请求超时");
+    throw err;
+  }
+}
+
+function _buildPrdRawPreviewHtml(req, assets) {
+  var bodyText = assets.body_text || assets.body || "";
+  var images = Array.isArray(assets.images) ? assets.images : [];
+  var imageRows = images.map(function(item) {
+    return '<li style="margin-bottom:6px;word-break:break-all;">'
+      + '<a href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(item.url) + '</a>'
+      + '</li>';
+  }).join("");
+
+  return '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>'
+    + escapeHtml(req.name || "PRD 正文预览")
+    + '</title><style>'
+    + 'body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,sans-serif;padding:24px;line-height:1.6;background:#fff;color:#111;}'
+    + 'h1{font-size:22px;margin:0 0 8px;}'
+    + '.meta{color:#666;font-size:13px;margin-bottom:16px;}'
+    + '.block{border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin-bottom:16px;background:#fafafa;}'
+    + 'pre{white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.7;margin:0;}'
+    + '</style></head><body>'
+    + '<h1>' + escapeHtml(assets.title || req.name || "PRD 文档") + '</h1>'
+    + '<div class="meta">作者：' + escapeHtml(assets.creator || "未知")
+    + ' | 图片：' + (images.length || 0) + ' 张</div>'
+    + '<div class="block"><strong>PRD 链接</strong><br/><a href="' + escapeHtml(req.prd_url || "") + '" target="_blank" rel="noopener noreferrer">'
+    + escapeHtml(req.prd_url || "") + '</a></div>'
+    + '<div class="block"><strong>正文文本</strong><pre>' + escapeHtml(bodyText || "正文为空") + '</pre></div>'
+    + '<div class="block"><strong>图片 URL 列表</strong>'
+    + (imageRows ? '<ul>' + imageRows + '</ul>' : '<div>未识别到图片链接</div>')
+    + '</div></body></html>';
+}
+
+async function openPrdRawPreview(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !req.prd_url) {
+    showToast("请先添加 PRD 链接", "error");
+    return;
+  }
+  if (!API_BASE) {
+    showToast("请通过代理模式打开（http://localhost:3001）", "error");
+    return;
+  }
+  try {
+    showToast("正在读取语雀 PRD 正文…", "success");
+    var assets = await fetchYuqueDocAssets(req.prd_url);
+    var html = _buildPrdRawPreviewHtml(req, assets);
+    var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    var blobUrl = URL.createObjectURL(blob);
+    window.open(blobUrl, "_blank", "noopener,noreferrer");
+    setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 60000);
+  } catch (err) {
+    showToast("读取正文失败：" + err.message, "error");
+  }
+}
+
+async function downloadPrdImages(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req || !req.prd_url) {
+    showToast("请先添加 PRD 链接", "error");
+    return;
+  }
+  if (!API_BASE) {
+    showToast("请通过代理模式打开（http://localhost:3001）", "error");
+    return;
+  }
+  try {
+    showToast("正在提取 PRD 图片列表…", "success");
+    var assets = await fetchYuqueDocAssets(req.prd_url);
+    var images = Array.isArray(assets.images) ? assets.images : [];
+    if (!images.length) {
+      showToast("未识别到可下载图片", "error");
+      return;
+    }
+    images.forEach(function(item, idx) {
+      setTimeout(function() {
+        var a = document.createElement("a");
+        a.href = API_BASE + item.proxy_download_url;
+        a.download = "";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, idx * 250);
+    });
+    showToast("已触发 " + images.length + " 张图片下载", "success");
+  } catch (err) {
+    showToast("下载图片失败：" + err.message, "error");
   }
 }
 

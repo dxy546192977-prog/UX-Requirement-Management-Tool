@@ -15,6 +15,18 @@
 
 {summary}
 
+## 发散拆解（idea）
+
+{idea_divergence_and_assumptions}
+
+## 商业与战略压测（ceo）
+
+{ceo_challenge_and_clarifications}
+
+## 体验与设计评审视角（UXdesign-buff）
+
+{ux_path_risks_and_figma_notes}
+
 ## 涉及页面
 
 - {page_1}

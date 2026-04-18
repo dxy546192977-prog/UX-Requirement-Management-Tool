@@ -1,0 +1,110 @@
+{
+  "schema_version": "v1",
+  "meta": {
+    "project_name": "超长标题边界测试用例——验证系统对超过常规长度的项目名称和问题标题的渲染能力，确保HTML不会被截断或破坏，同时保持页面布局的稳定性和可读性",
+    "review_slug": "long-titles-sample",
+    "report_mode": "self-check",
+    "review_date": "2026-04-01",
+    "reviewer": "Codex UXdesign-buff",
+    "requested_input_node": "4:400",
+    "reviewed_node": "4:400",
+    "reviewed_node_reason": null,
+    "report_language": "zh-CN",
+    "language_source": "explicit_override",
+    "run_id": "run_fixture_long_titles_001",
+    "input_hash": "fixture-long-titles",
+    "template_version": "human-report-html-v1",
+    "renderer_version": "UXdesign-buff-renderer-v2",
+    "created_at": "2026-04-01T12:00:00Z",
+    "updated_at": "2026-04-01T12:15:00Z"
+  },
+  "intake": {
+    "source_artifacts": ["figma:get_metadata", "figma:get_screenshot"],
+    "figma_intake_url": "https://www.figma.com/design/AAAAA/Long-Titles?node-id=4-400",
+    "figma_file_key": "AAAAA",
+    "figma_intake_node": "4:400",
+    "figma_intake_node_type": "frame",
+    "ingest_status": "success",
+    "selected_unit_ids": ["4:400", "4:401", "4:402", "4:403"],
+    "high_precision_unit_ids": ["4:400", "4:401"],
+    "structural_only_unit_ids": [],
+    "deferred_unit_ids": [],
+    "tool_limits": []
+  },
+  "coverage": {
+    "fully_read_unit_ids": ["4:400", "4:401", "4:402", "4:403"],
+    "partially_read_unit_ids": [],
+    "screenshot_validated_unit_ids": ["4:400"],
+    "open_tooling_gaps": []
+  },
+  "background": {
+    "page_type": "边界测试页面",
+    "product_type": "超长文本测试",
+    "industry": "测试",
+    "target_user": "质量验证人员",
+    "core_scenario": "验证超长标题不会破坏HTML渲染",
+    "business_goal": "确保系统鲁棒性",
+    "workflow_position": "边界测试",
+    "summary": "用于测试超长标题的边界场景",
+    "assumptions": [],
+    "unknowns": [],
+    "confidence": "high"
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_001",
+      "source_type": "figma",
+      "node_ref": "4:400",
+      "artifact_ref": "long-title-frame",
+      "read_method": "get_design_context",
+      "confidence": "high",
+      "raw_ref": ".UXUXdesign-buff/long-titles-sample/context.json",
+      "tags": ["long-title"]
+    }
+  ],
+  "issues": [
+    {
+      "stable_id": "long-title-001__ghi789",
+      "display_number": "ISSUE-001",
+      "title": "这是一个超长的问题标题，用于测试当问题标题超过两百个字符时系统的渲染能力和布局稳定性，确保不会出现文字截断、HTML结构破坏或页面布局错乱等问题，同时验证CSS样式能够正确处理超长文本的换行和溢出情况",
+      "category": "foundational experience checks",
+      "severity": "high",
+      "confidence": "high",
+      "status": "active",
+      "evidence_ids": ["ev_001"],
+      "problem_summary": "超长标题测试问题描述，验证长文本在问题摘要字段中的展示效果。",
+      "impact_summary": "长文本可能导致布局问题。",
+      "recommendation_summary": "需要验证CSS对长文本的处理能力。",
+      "discussion_prompts": ["系统如何处理超长标题？"]
+    }
+  ],
+  "priorities": {
+    "highest_priority_issue_id": "long-title-001__ghi789",
+    "top_issue_ids": ["long-title-001__ghi789"],
+    "open_questions": [
+      {
+        "question_id": "q_001",
+        "title": "超长标题的最佳处理方式是什么？",
+        "status": "open",
+        "related_issue_ids": ["long-title-001__ghi789"]
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "a_001",
+        "title": "验证各种长度标题的渲染效果。",
+        "status": "todo",
+        "related_issue_ids": ["long-title-001__ghi789"]
+      }
+    ]
+  },
+  "history": {
+    "previous_run_id": null,
+    "previous_review_date": null,
+    "new_issue_ids": [],
+    "resolved_issue_ids": [],
+    "changed_issue_ids": [],
+    "severity_changed_issue_ids": [],
+    "recommendation_changed_issue_ids": []
+  }
+}

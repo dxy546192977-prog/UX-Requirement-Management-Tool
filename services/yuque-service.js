@@ -1,6 +1,8 @@
 'use strict';
 
 const https = require('https');
+const http = require('http');
+const { URL } = require('url');
 
 /**
  * 从语雀 URL 中解析出 group_login / book_slug / doc_slug
@@ -20,6 +22,10 @@ function parseYuqueUrl(yuqueUrl) {
   } catch {
     return null;
   }
+}
+
+function _pickDocBody(docData) {
+  return docData.body_lake || docData.body || docData.body_draft || docData.description || '';
 }
 
 /**
@@ -86,9 +92,7 @@ async function fetchPrdFull(config, prdUrl) {
   if (!parts) throw new Error(`无法解析语雀 URL: ${prdUrl}`);
 
   const docData = await fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
-
-  // 正文优先级：body_lake（语雀私有格式）> body（HTML）> body_draft > description
-  const body = docData.body_lake || docData.body || docData.body_draft || docData.description || '';
+  const body = _pickDocBody(docData);
 
   return {
     title:   docData.title   || 'Untitled',
@@ -96,8 +100,169 @@ async function fetchPrdFull(config, prdUrl) {
            || (docData.user    && docData.user.name)
            || 'Unknown',
     description: docData.description || '',
-    body
+    body,
+    body_text: extractTextFromDocBody(body)
   };
 }
 
-module.exports = { parseYuqueUrl, fetchYuqueDocMeta, fetchYuqueDocContent, fetchPrdFull };
+function extractTextFromDocBody(body) {
+  if (!body) return '';
+  // Try parse as JSON (body_lake sometimes is a structured JSON string)
+  try {
+    const parsed = typeof body === 'string' ? JSON.parse(body) : body;
+    const text = _walkForText(parsed).join('\n').trim();
+    if (text) return text;
+  } catch (_) {
+    // body is likely raw markdown or HTML string
+  }
+
+  const str = String(body);
+  if (/<[a-z][\s\S]*>/i.test(str)) {
+    return str
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+  return str.replace(/\s+/g, ' ').trim();
+}
+
+function _walkForText(node) {
+  if (node == null) return [];
+  if (typeof node === 'string') return [node];
+  if (typeof node === 'number' || typeof node === 'boolean') return [String(node)];
+  if (Array.isArray(node)) return node.flatMap(_walkForText);
+  if (typeof node === 'object') {
+    const out = [];
+    if (typeof node.text === 'string') out.push(node.text);
+    if (typeof node.title === 'string') out.push(node.title);
+    if (typeof node.description === 'string') out.push(node.description);
+    Object.keys(node).forEach((k) => {
+      if (k === 'text' || k === 'title' || k === 'description') return;
+      out.push(..._walkForText(node[k]));
+    });
+    return out;
+  }
+  return [];
+}
+
+function extractImageUrlsFromDoc(docData) {
+  const candidates = new Set();
+
+  const fields = [
+    docData && docData.body_lake,
+    docData && docData.body,
+    docData && docData.body_draft,
+    docData && docData.description
+  ].filter(Boolean);
+
+  fields.forEach((field) => {
+    const str = String(field);
+    // 1) HTML img src
+    const imgSrcRegex = /<img[^>]+src=["']([^"']+)["']/gi;
+    let m1;
+    while ((m1 = imgSrcRegex.exec(str)) !== null) {
+      const normalized = _normalizeImageUrl(m1[1]);
+      if (normalized) candidates.add(normalized);
+    }
+
+    // 2) Generic URL scan
+    const urlRegex = /https?:\/\/[^\s"'<>\\]+/gi;
+    let m2;
+    while ((m2 = urlRegex.exec(str)) !== null) {
+      const normalized = _normalizeImageUrl(m2[0]);
+      if (normalized && _looksLikeImageUrl(normalized)) candidates.add(normalized);
+    }
+  });
+
+  return Array.from(candidates);
+}
+
+function _normalizeImageUrl(raw) {
+  if (!raw) return null;
+  let u = String(raw).trim();
+  if (!u) return null;
+  if (u.startsWith('//')) u = 'https:' + u;
+  if (!/^https?:\/\//i.test(u)) return null;
+  return u;
+}
+
+function _looksLikeImageUrl(url) {
+  const lower = url.toLowerCase();
+  if (/\.(png|jpe?g|gif|webp|bmp|svg)(\?|$)/.test(lower)) return true;
+  // Yuque / Ali internal image domains often have no extension.
+  if (lower.includes('/yuque') || lower.includes('alicdn.com') || lower.includes('aliyuncs.com')) return true;
+  return false;
+}
+
+function fetchRemoteBinary(url, options) {
+  const opts = options || {};
+  const maxRedirects = Number.isInteger(opts.maxRedirects) ? opts.maxRedirects : 3;
+  return _fetchRemoteBinaryInternal(url, maxRedirects);
+}
+
+function _fetchRemoteBinaryInternal(url, redirectsLeft) {
+  return new Promise((resolve, reject) => {
+    let parsed;
+    try {
+      parsed = new URL(url);
+    } catch (err) {
+      reject(new Error('Invalid URL: ' + err.message));
+      return;
+    }
+    const lib = parsed.protocol === 'http:' ? http : https;
+    const req = lib.request({
+      hostname: parsed.hostname,
+      port: parsed.port || (parsed.protocol === 'http:' ? 80 : 443),
+      path: parsed.pathname + parsed.search,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'RequirementsManagement/1.0',
+        'Accept': '*/*'
+      },
+      rejectUnauthorized: false
+    }, (res) => {
+      const statusCode = res.statusCode || 0;
+      if ([301, 302, 307, 308].includes(statusCode) && res.headers.location) {
+        if (redirectsLeft <= 0) {
+          reject(new Error('Too many redirects'));
+          return;
+        }
+        const nextUrl = new URL(res.headers.location, parsed).toString();
+        resolve(_fetchRemoteBinaryInternal(nextUrl, redirectsLeft - 1));
+        return;
+      }
+      if (statusCode < 200 || statusCode >= 300) {
+        reject(new Error(`Remote responded with ${statusCode}`));
+        return;
+      }
+      const chunks = [];
+      res.on('data', (chunk) => chunks.push(chunk));
+      res.on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        resolve({
+          buffer,
+          contentType: res.headers['content-type'] || 'application/octet-stream'
+        });
+      });
+    });
+
+    req.on('error', (err) => reject(new Error('Remote request failed: ' + err.message)));
+    req.setTimeout(15000, () => {
+      req.destroy();
+      reject(new Error('Remote request timed out'));
+    });
+    req.end();
+  });
+}
+
+module.exports = {
+  parseYuqueUrl,
+  fetchYuqueDocMeta,
+  fetchYuqueDocContent,
+  fetchPrdFull,
+  extractTextFromDocBody,
+  extractImageUrlsFromDoc,
+  fetchRemoteBinary
+};

@@ -1,0 +1,72 @@
+{
+  "labels": {
+    "report_mode_self": "Self-check · Design Review Report",
+    "report_mode_agent": "Agent Handoff · Design Review Report",
+    "review_slug_chip_label": "Review Slug",
+    "review_date_chip_label": "Review Date",
+    "report_language_chip_label": "Language",
+    "ingest_status_chip_label": "Ingest Status",
+    "reviewer_label": "Reviewer",
+    "figma_file_label": "Figma File",
+    "figma_node_label": "Review Node",
+    "verdict_label": "Current Verdict",
+    "changes_title": "Changes Since Last Review",
+    "new_issues_label": "New Issues",
+    "resolved_issues_label": "Resolved Issues",
+    "changed_issues_label": "Current Change",
+    "highest_priority_section_title": "Highest-Priority Issue",
+    "issue_label": "Core Issue",
+    "diagnosis_label": "Diagnosis",
+    "why_first_label": "Why This Comes First",
+    "recommended_direction_label": "Recommended Direction",
+    "need_to_confirm_label": "Need To Confirm",
+    "background_title": "Background and Evidence",
+    "full_review_title": "Full Review",
+    "three_flow_title": "Three-Flow Consistency",
+    "three_flow_synthesis_label": "Overall Reading",
+    "resolution_tracks_title": "Structural Summary",
+    "issue_distribution_label": "Issue Distribution",
+    "resolution_paths_label": "Resolution Sequence",
+    "key_risk_label": "Key Risk",
+    "actions_title": "Open Questions and Next Actions",
+    "open_questions_title": "Open Questions",
+    "next_actions_title": "Next Actions",
+    "background_basis_title": "Review Basis",
+    "background_boundaries_title": "Review Boundaries",
+    "unknown": "unknown",
+    "none": "None for now.",
+    "no_prior_review": "This is the baseline review for this slug, so no previous version is being compared yet.",
+    "no_changes": "The current issue set is unchanged from the last pass.",
+    "problem_label": "Problem:",
+    "solution_label": "Solution:"
+  },
+  "severity": {
+    "high": "High Priority",
+    "medium": "Medium Priority",
+    "low": "Low Priority",
+    "critical": "Critical Priority"
+  },
+  "confidence": {
+    "high": "High Confidence",
+    "medium": "Medium Confidence",
+    "low": "Low Confidence",
+    "medium-high": "Medium-High Confidence"
+  },
+  "ingest_status": {
+    "success": "Success",
+    "partial": "Partial",
+    "failed": "Failed",
+    "unknown": "unknown"
+  },
+  "categories": {
+    "scenario and fit": "Scenario & Fit",
+    "cognitive and operational cost": "Cognitive & Operational Cost",
+    "mental model and habit": "Mental Model & Habit",
+    "value delivery": "Value Delivery",
+    "baseline experience": "Baseline Experience",
+    "cognitive cost": "Cognitive & Operational Cost",
+    "trust and mental model": "Mental Model & Habit",
+    "continuity and consistency": "Scenario & Fit"
+  },
+  "scaffold_tokens": []
+}

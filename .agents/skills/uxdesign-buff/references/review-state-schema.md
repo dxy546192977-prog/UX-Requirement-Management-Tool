@@ -1,0 +1,412 @@
+# Review State Schema
+
+当你要写入或更新下面这个文件时，使用这份参考：
+
+```text
+UXdesign-buff-reviews/<review-slug>/review-state.json
+```
+
+这份文件只约束机器 sidecar。人类报告结构和对话规则看 `report-contract.md`。
+
+## 用途
+
+`review-state.json` 用来保存结构化的持久状态，让系统可以：
+
+- 不必重新解析整份 HTML，也能恢复上次评审状态
+- 比较不同轮次的结果
+- 持续追踪问题身份
+- 渲染 `Changes Since Last Review`
+
+它不是第二份人类报告。
+
+如果你需要给固定模板提供受限文案槽位，把它写到 hidden scratch 的 `.UXdesign-buff/<review-slug>/report-slots.json`。不要把人类报告长 prose 混进 `review-state.json`。
+
+## v1 顶层结构
+
+```json
+{
+  "schema_version": "v1",
+  "meta": {},
+  "intake": {},
+  "coverage": {},
+  "background": {},
+  "evidence": [],
+  "issues": [],
+  "priorities": {},
+  "history": {},
+  "three_flow_checks": {}
+}
+```
+
+## v1 字段说明
+
+### `schema_version`
+
+- required: yes
+- type: `string`
+- v1 固定值: `"v1"`
+
+### `meta`
+
+运行身份和兼容性元数据。
+
+- `project_name`: `string`, optional
+- `review_slug`: `string`, required
+- `report_mode`: `string`, required, allowed `self-check | agent-review`
+- `review_date`: `string`, required, format `YYYY-MM-DD`
+- `reviewer`: `string`, required
+- `requested_input_node`: `string | null`, optional，用来记录用户原始点名的 node
+- `reviewed_node`: `string | null`, optional，用来记录实际评审的 node；如果上卷到了父级 screen 或 page，要显式写这里
+- `reviewed_node_reason`: `string | null`, optional，说明为什么实际评审节点与原始输入节点不同
+- `report_language`: `string`, required
+- `language_source`: `string`, required, allowed `explicit_override | intake_inference | default_zh_cn`
+- `run_id`: `string`, required
+- `input_hash`: `string | null`, optional
+- `template_version`: `string`, required
+- `renderer_version`: `string`, required
+- `created_at`: `string`, required, ISO 8601 timestamp
+- `updated_at`: `string`, required, ISO 8601 timestamp
+
+### `intake`
+
+规范化后的 intake 状态和本轮选择的审核范围。
+
+- `source_artifacts`: `array<string>`, required
+- `figma_intake_url`: `string | null`, optional
+- `figma_file_key`: `string | null`, optional
+- `figma_intake_node`: `string | null`, optional
+- `figma_intake_node_type`: `string | null`, optional
+- `ingest_status`: `string`, required
+- `selected_unit_ids`: `array<string>`, required
+- `high_precision_unit_ids`: `array<string>`, required
+- `structural_only_unit_ids`: `array<string>`, required
+- `deferred_unit_ids`: `array<string>`, required
+- `tool_limits`: `array<string>`, required
+
+### `coverage`
+
+读取覆盖和验证覆盖。
+
+- `fully_read_unit_ids`: `array<string>`, required
+- `partially_read_unit_ids`: `array<string>`, required
+- `screenshot_validated_unit_ids`: `array<string>`, required
+- `open_tooling_gaps`: `array<string>`, required
+
+### `background`
+
+这里只存结构化背景状态，不写面向人的长 prose。
+
+- `page_type`: `string | null`, optional
+- `product_type`: `string | null`, optional
+- `industry`: `string | null`, optional
+- `target_user`: `string | null`, optional
+- `core_scenario`: `string | null`, optional
+- `business_goal`: `string | null`, optional
+- `workflow_position`: `string | null`, optional
+- `summary`: `string | null`, optional，只允许短结构摘要
+- `assumptions`: `array<string>`, required
+- `unknowns`: `array<string>`, required
+- `confidence`: `string | null`, optional
+
+### `evidence`
+
+证据台账。每一项都必须对机器可用。
+
+每项包含：
+
+- `evidence_id`: `string`, required
+- `source_type`: `string`, required
+- `node_ref`: `string | null`, optional
+- `artifact_ref`: `string | null`, optional
+- `read_method`: `string`, required
+- `confidence`: `string`, required
+- `raw_ref`: `string | null`, optional
+- `tags`: `array<string>`, required
+
+### `issues`
+
+结构化问题状态。稳定问题身份的行为规则定义在 `review-playbook.md`；这里只定义机器字段。
+
+每项包含：
+
+- `stable_id`: `string`, required
+- `display_number`: `string`, required，例如 `ISSUE-001`
+- `title`: `string`, required
+- `category`: `string`, required —— 问题所属的评审维度。
+  标准值：
+  - `scenario and fit`（场景匹配）
+  - `cognitive and operational cost`（认知与操作成本）
+  - `mental model and habit`（用户心智与习惯）
+  - `value delivery`（价值承接）
+  - `baseline experience`（基础体验）
+  
+  向后兼容别名（旧版本可能使用）：
+  - `cognitive cost` → 映射到 `cognitive and operational cost`
+  - `trust and mental model` → 映射到 `mental model and habit`
+  - `continuity and consistency` → 映射到 `scenario and fit`
+- `severity`: `string`, required
+- `confidence`: `string`, required
+- `status`: `string`, required，推荐 `active | resolved | changed | deferred`
+- `evidence_ids`: `array<string>`, required
+- `methodology_source`: `string | null`, optional —— 该问题关联的方法论原则。
+  例如：`Nielsen #4 一致性与标准`、`Sweller 认知负荷理论`、`服务蓝图后台线`。
+  由评审时的检查清单自动关联，用于追踪问题的理论依据。
+  首轮评审时新增，后续修订时保留不变。
+- `problem_summary`: `string | null`, optional，只允许短机器摘要
+- `impact_summary`: `string | null`, optional，只允许短机器摘要
+- `recommendation_summary`: `string | null`, optional，只允许短机器摘要
+- `discussion_prompts`: `array<string>`, required
+
+### `priorities`
+
+结构化优先级状态。
+
+- `highest_priority_issue_id`: `string | null`, optional
+- `top_issue_ids`: `array<string>`, required
+- `open_questions`: `array<object>`, required
+- `next_actions`: `array<object>`, required
+
+每个 `open_questions` 项包含：
+
+- `question_id`: `string`
+- `title`: `string`
+- `status`: `string`
+- `related_issue_ids`: `array<string>`
+
+每个 `next_actions` 项包含：
+
+- `action_id`: `string`
+- `title`: `string`
+- `status`: `string`
+- `related_issue_ids`: `array<string>`
+
+### `history`
+
+结构化的评审 diff 状态。
+
+- `previous_run_id`: `string | null`, optional
+- `previous_review_date`: `string | null`, optional
+- `new_issue_ids`: `array<string>`, required
+- `resolved_issue_ids`: `array<string>`, required
+- `changed_issue_ids`: `array<string>`, required
+- `severity_changed_issue_ids`: `array<string>`, required
+- `recommendation_changed_issue_ids`: `array<string>`, required
+
+### `three_flow_checks`
+
+三流一致性检查的结构化结果，用于复跑和 diff。
+
+- type: `object | null`, optional
+- description: 记录每个旅程阶段（timeline node）的三流检查结果
+
+字段结构：
+
+```json
+{
+  "<stage_id>": {
+    "stage_title": "string —— 旅程阶段名称",
+    "journey_flow": {
+      "status": "pass | fail | partial | not_applicable",
+      "checks_applied": ["string —— 应用的检查项名称"],
+      "issue_refs": ["string —— 关联的 issue stable_id"]
+    },
+    "operation_flow": {
+      "status": "pass | fail | partial | not_applicable",
+      "checks_applied": ["string"],
+      "issue_refs": ["string"]
+    },
+    "mental_flow": {
+      "status": "pass | fail | partial | not_applicable",
+      "checks_applied": ["string"],
+      "issue_refs": ["string"]
+    }
+  }
+}
+```
+
+状态值说明：
+
+- `pass`：该流在此阶段检查通过，未发现问题
+- `fail`：该流在此阶段存在明显问题
+- `partial`：部分检查项通过，部分存在问题
+- `not_applicable`：该流的检查项不适用于此阶段
+
+用途：
+
+- 支持多轮评审的结果比对
+- 支持检查覆盖度的审计
+- 支持三流问题与 issue 的双向关联
+
+示例：
+
+```json
+"three_flow_checks": {
+  "step_1_entry": {
+    "stage_title": "入口页",
+    "journey_flow": {
+      "status": "pass",
+      "checks_applied": ["任务路径完整性", "触点一致性"],
+      "issue_refs": []
+    },
+    "operation_flow": {
+      "status": "fail",
+      "checks_applied": ["系统状态可见性", "操作-反馈对应"],
+      "issue_refs": ["entry-feedback-missing__a1b2c3"]
+    },
+    "mental_flow": {
+      "status": "not_applicable",
+      "checks_applied": [],
+      "issue_refs": []
+    }
+  },
+  "step_2_routing": {
+    "stage_title": "分流选择",
+    "journey_flow": {
+      "status": "fail",
+      "checks_applied": ["任务路径完整性"],
+      "issue_refs": ["routing-self-diagnosis__90f948"]
+    },
+    "operation_flow": {
+      "status": "pass",
+      "checks_applied": ["一致性与标准"],
+      "issue_refs": []
+    },
+    "mental_flow": {
+      "status": "fail",
+      "checks_applied": ["心智模型对齐", "预期管理"],
+      "issue_refs": ["routing-self-diagnosis__90f948"]
+    }
+  }
+}
+```
+
+## 禁止写入的内容
+
+不要存这些东西：
+
+- executive summary 正文
+- 完整问题 prose
+- `why_it_is_a_problem` 这种长段解释
+- 面向人的完整 recommendation 段落
+- 任何可能被误认成正式评审报告的长文本
+
+经验法则：
+
+- 如果一个字段是为了让系统恢复、比较或追踪，它应该放这里
+- 如果一个字段主要是为了说服或解释给人听，它应该进 `report.html`
+
+## 最小示例
+
+```json
+{
+  "schema_version": "v1",
+  "meta": {
+    "project_name": "示例评审",
+    "review_slug": "example-review",
+    "report_mode": "self-check",
+    "review_date": "2026-03-27",
+    "reviewer": "Codex UXdesign-buff",
+    "requested_input_node": "1:2",
+    "reviewed_node": "1:2",
+    "reviewed_node_reason": null,
+    "report_language": "zh-CN",
+    "language_source": "intake_inference",
+    "run_id": "run_001",
+    "input_hash": "abc123",
+    "template_version": "human-report-html-v1",
+    "renderer_version": "UXdesign-buff-v0.7",
+    "created_at": "2026-03-27T10:00:00Z",
+    "updated_at": "2026-03-27T10:15:00Z"
+  },
+  "intake": {
+    "source_artifacts": ["figma:get_metadata", "figma:get_design_context"],
+    "figma_intake_url": "https://www.figma.com/design/FILE123/Test?node-id=1-2",
+    "figma_file_key": "FILE123",
+    "figma_intake_node": "1:2",
+    "figma_intake_node_type": "frame",
+    "ingest_status": "success",
+    "selected_unit_ids": ["1:2", "1:3"],
+    "high_precision_unit_ids": ["1:2"],
+    "structural_only_unit_ids": ["1:3"],
+    "deferred_unit_ids": [],
+    "tool_limits": []
+  },
+  "coverage": {
+    "fully_read_unit_ids": ["1:2"],
+    "partially_read_unit_ids": ["1:3"],
+    "screenshot_validated_unit_ids": ["1:2"],
+    "open_tooling_gaps": []
+  },
+  "background": {
+    "page_type": "移动端弹层流程",
+    "product_type": "会员绑定流程",
+    "industry": "旅行",
+    "target_user": "高意图的权益用户",
+    "core_scenario": "选对路径并完成账号互通",
+    "business_goal": "提升成功绑定率",
+    "workflow_position": "转化后段",
+    "summary": "会员开通与绑定流程",
+    "assumptions": ["用户可能并不知道自己的账号状态"],
+    "unknowns": ["真实回调行为"],
+    "confidence": "medium-high"
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_001",
+      "source_type": "figma",
+      "node_ref": "1:2",
+      "artifact_ref": "intake-board",
+      "read_method": "get_design_context",
+      "confidence": "high",
+      "raw_ref": ".UXdesign-buff/example-review/tool-cache/context-1-2.json",
+      "tags": ["copy", "cta", "hierarchy"]
+    }
+  ],
+  "issues": [
+    {
+      "stable_id": "routing-self-diagnosis__90f948",
+      "display_number": "ISSUE-001",
+      "title": "用户还不知道自己是否有万豪账号，却必须先选开通还是绑定",
+      "category": "scenario and fit",
+      "severity": "high",
+      "confidence": "high",
+      "status": "active",
+      "evidence_ids": ["ev_001"],
+      "methodology_source": "旅程流 > 任务路径完整性",
+      "problem_summary": "入口分流要求用户先推断后台状态",
+      "impact_summary": "容易走错路，失败后还会伤害信任",
+      "recommendation_summary": "优先系统自动判路，或至少提供明确的不确定路径",
+      "discussion_prompts": ["授权后系统能否先检查账号状态？"]
+    }
+  ],
+  "priorities": {
+    "highest_priority_issue_id": "routing-self-diagnosis__90f948",
+    "top_issue_ids": ["routing-self-diagnosis__90f948"],
+    "open_questions": [
+      {
+        "question_id": "q_001",
+        "title": "授权后系统能否先检查账号状态？",
+        "status": "open",
+        "related_issue_ids": ["routing-self-diagnosis__90f948"]
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "a_001",
+        "title": "重写首步判路，不再让用户自己猜账号状态",
+        "status": "pending",
+        "related_issue_ids": ["routing-self-diagnosis__90f948"]
+      }
+    ]
+  },
+  "history": {
+    "previous_run_id": null,
+    "previous_review_date": null,
+    "new_issue_ids": ["routing-self-diagnosis__90f948"],
+    "resolved_issue_ids": [],
+    "changed_issue_ids": [],
+    "severity_changed_issue_ids": [],
+    "recommendation_changed_issue_ids": []
+  }
+}
+```

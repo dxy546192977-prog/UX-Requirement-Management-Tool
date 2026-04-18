@@ -1,0 +1,110 @@
+{
+  "schema_version": "v1",
+  "meta": {
+    "project_name": "最少时间轴节点测试",
+    "review_slug": "minimal-timeline-sample",
+    "report_mode": "self-check",
+    "review_date": "2026-04-01",
+    "reviewer": "Codex UXdesign-buff",
+    "requested_input_node": "2:200",
+    "reviewed_node": "2:200",
+    "reviewed_node_reason": null,
+    "report_language": "zh-CN",
+    "language_source": "explicit_override",
+    "run_id": "run_fixture_minimal_timeline_001",
+    "input_hash": "fixture-minimal-timeline",
+    "template_version": "human-report-html-v1",
+    "renderer_version": "UXdesign-buff-renderer-v2",
+    "created_at": "2026-04-01T10:00:00Z",
+    "updated_at": "2026-04-01T10:15:00Z"
+  },
+  "intake": {
+    "source_artifacts": ["figma:get_metadata", "figma:get_screenshot"],
+    "figma_intake_url": "https://www.figma.com/design/YYYYY/Minimal-Timeline?node-id=2-200",
+    "figma_file_key": "YYYYY",
+    "figma_intake_node": "2:200",
+    "figma_intake_node_type": "frame",
+    "ingest_status": "success",
+    "selected_unit_ids": ["2:200", "2:201", "2:202", "2:203"],
+    "high_precision_unit_ids": ["2:200", "2:201"],
+    "structural_only_unit_ids": [],
+    "deferred_unit_ids": [],
+    "tool_limits": []
+  },
+  "coverage": {
+    "fully_read_unit_ids": ["2:200", "2:201", "2:202", "2:203"],
+    "partially_read_unit_ids": [],
+    "screenshot_validated_unit_ids": ["2:200"],
+    "open_tooling_gaps": []
+  },
+  "background": {
+    "page_type": "简化流程",
+    "product_type": "最小化测试",
+    "industry": "测试",
+    "target_user": "验证人员",
+    "core_scenario": "测试恰好4个时间轴节点的边界场景",
+    "business_goal": "验证最少节点数的渲染和校验",
+    "workflow_position": "测试",
+    "summary": "用于测试最少时间轴节点的场景",
+    "assumptions": [],
+    "unknowns": [],
+    "confidence": "high"
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_001",
+      "source_type": "figma",
+      "node_ref": "2:200",
+      "artifact_ref": "entry",
+      "read_method": "get_design_context",
+      "confidence": "high",
+      "raw_ref": ".UXUXdesign-buff/minimal-timeline-sample/context.json",
+      "tags": ["entry"]
+    }
+  ],
+  "issues": [
+    {
+      "stable_id": "test-issue-001__abc123",
+      "display_number": "ISSUE-001",
+      "title": "测试问题一",
+      "category": "scenario and fit",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "active",
+      "evidence_ids": ["ev_001"],
+      "problem_summary": "这是一个用于测试的问题描述。",
+      "impact_summary": "测试影响说明。",
+      "recommendation_summary": "测试建议。",
+      "discussion_prompts": ["这是一个测试讨论点？"]
+    }
+  ],
+  "priorities": {
+    "highest_priority_issue_id": "test-issue-001__abc123",
+    "top_issue_ids": ["test-issue-001__abc123"],
+    "open_questions": [
+      {
+        "question_id": "q_001",
+        "title": "测试待确认问题？",
+        "status": "open",
+        "related_issue_ids": ["test-issue-001__abc123"]
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "a_001",
+        "title": "测试下一步操作。",
+        "status": "todo",
+        "related_issue_ids": ["test-issue-001__abc123"]
+      }
+    ]
+  },
+  "history": {
+    "previous_run_id": null,
+    "previous_review_date": null,
+    "new_issue_ids": [],
+    "resolved_issue_ids": [],
+    "changed_issue_ids": [],
+    "severity_changed_issue_ids": [],
+    "recommendation_changed_issue_ids": []
+  }
+}

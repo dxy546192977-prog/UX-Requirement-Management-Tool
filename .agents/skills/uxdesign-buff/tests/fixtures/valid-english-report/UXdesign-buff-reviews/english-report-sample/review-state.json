@@ -1,0 +1,146 @@
+{
+  "schema_version": "v1",
+  "meta": {
+    "project_name": "Membership Onboarding Flow",
+    "review_slug": "english-report-sample",
+    "report_mode": "self-check",
+    "review_date": "2026-04-01",
+    "reviewer": "Codex UXdesign-buff",
+    "requested_input_node": "5:500",
+    "reviewed_node": "5:500",
+    "reviewed_node_reason": null,
+    "report_language": "en",
+    "language_source": "explicit_override",
+    "run_id": "run_fixture_english_report_001",
+    "input_hash": "fixture-english-report",
+    "template_version": "human-report-html-v1",
+    "renderer_version": "UXdesign-buff-renderer-v2",
+    "created_at": "2026-04-01T13:00:00Z",
+    "updated_at": "2026-04-01T13:15:00Z"
+  },
+  "intake": {
+    "source_artifacts": ["figma:get_metadata", "figma:get_screenshot", "figma:get_design_context"],
+    "figma_intake_url": "https://www.figma.com/design/BBBBB/Membership-Onboarding?node-id=5-500",
+    "figma_file_key": "BBBBB",
+    "figma_intake_node": "5:500",
+    "figma_intake_node_type": "frame",
+    "ingest_status": "success",
+    "selected_unit_ids": ["5:500", "5:501", "5:502", "5:503"],
+    "high_precision_unit_ids": ["5:500", "5:501"],
+    "structural_only_unit_ids": [],
+    "deferred_unit_ids": [],
+    "tool_limits": []
+  },
+  "coverage": {
+    "fully_read_unit_ids": ["5:500", "5:501", "5:502", "5:503"],
+    "partially_read_unit_ids": [],
+    "screenshot_validated_unit_ids": ["5:500", "5:501"],
+    "open_tooling_gaps": []
+  },
+  "background": {
+    "page_type": "membership onboarding",
+    "product_type": "subscription service",
+    "industry": "SaaS",
+    "target_user": "New users signing up for premium membership",
+    "core_scenario": "User completes membership registration and payment",
+    "business_goal": "Increase conversion rate for premium membership",
+    "workflow_position": "late-stage conversion",
+    "summary": "Membership onboarding flow for premium subscription",
+    "assumptions": ["Users have basic familiarity with subscription services"],
+    "unknowns": ["Payment failure recovery behavior"],
+    "confidence": "high"
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_001",
+      "source_type": "figma",
+      "node_ref": "5:500",
+      "artifact_ref": "onboarding-entry",
+      "read_method": "get_design_context",
+      "confidence": "high",
+      "raw_ref": ".UXUXdesign-buff/english-report-sample/context-5-500.json",
+      "tags": ["entry", "pricing"]
+    },
+    {
+      "evidence_id": "ev_002",
+      "source_type": "figma",
+      "node_ref": "5:501",
+      "artifact_ref": "payment-step",
+      "read_method": "get_screenshot",
+      "confidence": "high",
+      "raw_ref": ".UXUXdesign-buff/english-report-sample/screenshot-5-501.png",
+      "tags": ["payment", "checkout"]
+    }
+  ],
+  "issues": [
+    {
+      "stable_id": "pricing-clarity__abc111",
+      "display_number": "ISSUE-001",
+      "title": "Pricing page lacks clear comparison between free and premium tiers",
+      "category": "problem and value",
+      "severity": "high",
+      "confidence": "high",
+      "status": "active",
+      "evidence_ids": ["ev_001"],
+      "problem_summary": "Users cannot quickly understand the value difference between plans.",
+      "impact_summary": "Reduced conversion due to unclear value proposition.",
+      "recommendation_summary": "Add a comparison table highlighting key differences.",
+      "discussion_prompts": ["What features should be emphasized in the comparison?"]
+    },
+    {
+      "stable_id": "payment-recovery__def222",
+      "display_number": "ISSUE-002",
+      "title": "Payment failure page does not provide clear next steps",
+      "category": "foundational experience checks",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "active",
+      "evidence_ids": ["ev_002"],
+      "problem_summary": "After payment failure, users are left without guidance.",
+      "impact_summary": "Users may abandon the flow instead of retrying.",
+      "recommendation_summary": "Add retry button and alternative payment options.",
+      "discussion_prompts": ["Should we offer customer support contact on this page?"]
+    }
+  ],
+  "priorities": {
+    "highest_priority_issue_id": "pricing-clarity__abc111",
+    "top_issue_ids": ["pricing-clarity__abc111", "payment-recovery__def222"],
+    "open_questions": [
+      {
+        "question_id": "q_001",
+        "title": "What features should be emphasized in the pricing comparison?",
+        "status": "open",
+        "related_issue_ids": ["pricing-clarity__abc111"]
+      },
+      {
+        "question_id": "q_002",
+        "title": "Should we offer customer support contact on payment failure page?",
+        "status": "open",
+        "related_issue_ids": ["payment-recovery__def222"]
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "a_001",
+        "title": "Design a clear pricing comparison table.",
+        "status": "todo",
+        "related_issue_ids": ["pricing-clarity__abc111"]
+      },
+      {
+        "action_id": "a_002",
+        "title": "Add retry and alternative payment options to failure page.",
+        "status": "todo",
+        "related_issue_ids": ["payment-recovery__def222"]
+      }
+    ]
+  },
+  "history": {
+    "previous_run_id": null,
+    "previous_review_date": null,
+    "new_issue_ids": [],
+    "resolved_issue_ids": [],
+    "changed_issue_ids": [],
+    "severity_changed_issue_ids": [],
+    "recommendation_changed_issue_ids": []
+  }
+}

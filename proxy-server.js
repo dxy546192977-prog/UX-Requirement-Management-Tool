@@ -140,6 +140,42 @@ function readBody(req) {
   });
 }
 
+function getYuqueConfigOrError(res) {
+  const config = loadConfig();
+  if (!config) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+    return null;
+  }
+  if (!config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Yuque API Token not configured. Please update config.json with your token.' }));
+    return null;
+  }
+  return config;
+}
+
+function getFileExtFromUrl(url, contentType) {
+  const byType = {
+    'image/jpeg': '.jpg',
+    'image/png': '.png',
+    'image/gif': '.gif',
+    'image/webp': '.webp',
+    'image/svg+xml': '.svg',
+    'image/bmp': '.bmp'
+  };
+  if (contentType && byType[contentType.toLowerCase()]) return byType[contentType.toLowerCase()];
+
+  try {
+    const parsed = new URL(url);
+    const ext = path.extname(parsed.pathname || '').toLowerCase();
+    if (ext && ext.length <= 5) return ext;
+  } catch (_) {
+    // ignore
+  }
+  return '.bin';
+}
+
 // ==================== HTTP Server ====================
 const PORT = 3001;
 
@@ -263,6 +299,107 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify(response));
     } catch (err) {
       console.error('[Yuque] Error:', err.message);
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
+  // GET /api/yuque/doc-assets?url=... — 读取 PRD 正文 + 图片列表
+  if (pathname === '/api/yuque/doc-assets' && req.method === 'GET') {
+    const yuqueUrl = parsed.searchParams.get('url');
+    if (!yuqueUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Missing "url" query parameter' }));
+      return;
+    }
+
+    const config = getYuqueConfigOrError(res);
+    if (!config) return;
+
+    try {
+      const parts = yuqueSvc.parseYuqueUrl(yuqueUrl);
+      if (!parts) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid Yuque URL format' }));
+        return;
+      }
+
+      const docData = await yuqueSvc.fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
+      const prdFull = await yuqueSvc.fetchPrdFull(config, yuqueUrl);
+      const imageUrls = yuqueSvc.extractImageUrlsFromDoc(docData);
+
+      const imageItems = imageUrls.map((url, idx) => ({
+        index: idx,
+        url,
+        proxy_download_url: `/api/yuque/doc-images/download?url=${encodeURIComponent(yuqueUrl)}&index=${idx}`
+      }));
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        title: prdFull.title,
+        creator: prdFull.creator,
+        description: prdFull.description,
+        body: prdFull.body,
+        body_text: prdFull.body_text || '',
+        image_count: imageItems.length,
+        images: imageItems
+      }));
+    } catch (err) {
+      console.error('[Yuque Assets] Error:', err.message);
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
+  // GET /api/yuque/doc-images/download?url=...&index=...
+  if (pathname === '/api/yuque/doc-images/download' && req.method === 'GET') {
+    const yuqueUrl = parsed.searchParams.get('url');
+    const indexRaw = parsed.searchParams.get('index');
+    if (!yuqueUrl || indexRaw == null) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Both "url" and "index" query parameters are required' }));
+      return;
+    }
+    const index = Number(indexRaw);
+    if (!Number.isInteger(index) || index < 0) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid "index" query parameter' }));
+      return;
+    }
+
+    const config = getYuqueConfigOrError(res);
+    if (!config) return;
+
+    try {
+      const parts = yuqueSvc.parseYuqueUrl(yuqueUrl);
+      if (!parts) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid Yuque URL format' }));
+        return;
+      }
+
+      const docData = await yuqueSvc.fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
+      const imageUrls = yuqueSvc.extractImageUrlsFromDoc(docData);
+      const target = imageUrls[index];
+      if (!target) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: `Image index out of range: ${index}` }));
+        return;
+      }
+
+      const fetched = await yuqueSvc.fetchRemoteBinary(target);
+      const ext = getFileExtFromUrl(target, fetched.contentType);
+      const filename = `yuque-image-${index + 1}${ext}`;
+
+      res.writeHead(200, {
+        'Content-Type': fetched.contentType || 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${filename}"`
+      });
+      res.end(fetched.buffer);
+    } catch (err) {
+      console.error('[Yuque Image Download] Error:', err.message);
       res.writeHead(502, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: err.message }));
     }
@@ -397,6 +534,8 @@ server.listen(PORT, () => {
   console.log(`  POST /api/data                       - Save requirements`);
   console.log(`  GET  /api/yuque/doc?url=             - Fetch Yuque doc meta`);
   console.log(`  GET  /api/yuque/doc-content?url=     - Fetch Yuque doc full content`);
+  console.log(`  GET  /api/yuque/doc-assets?url=      - Fetch Yuque body + images`);
+  console.log(`  GET  /api/yuque/doc-images/download? - Download one extracted image`);
   console.log(`  POST /api/ai-design/jobs             - Create AI design job`);
   console.log(`  GET  /api/ai-design/jobs/:id         - Get job status & result`);
   console.log(`  POST /api/ai-design/jobs/:id/retry   - Retry a failed job`);

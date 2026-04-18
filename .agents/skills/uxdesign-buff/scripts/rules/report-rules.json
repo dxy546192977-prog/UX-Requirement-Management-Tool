@@ -1,0 +1,121 @@
+{
+  "sections": {
+    "required_ids": [
+      "review-overview",
+      "executive-summary",
+      "highest-priority-issue",
+      "background-and-evidence",
+      "full-review",
+      "issue-list",
+      "three-flow-consistency",
+      "resolution-tracks",
+      "open-questions",
+      "next-actions"
+    ]
+  },
+  "state_schema": {
+    "required_top_level_keys": [
+      "schema_version",
+      "meta",
+      "intake",
+      "coverage",
+      "background",
+      "evidence",
+      "issues",
+      "priorities",
+      "history"
+    ],
+    "required_meta_fields": [
+      "project_name",
+      "report_language",
+      "language_source",
+      "template_version",
+      "renderer_version"
+    ],
+    "required_issue_fields": [
+      "stable_id",
+      "display_number"
+    ],
+    "forbidden_keys": [
+      "what_i_see",
+      "why_it_is_a_problem",
+      "what_misunderstanding_it_reveals",
+      "likely_consequence",
+      "recommended_direction",
+      "adopted_or_recommended_path",
+      "executive_summary"
+    ],
+    "schema_version": "v1"
+  },
+  "html_structure": {
+    "required_markers": {
+      "body_marker": "data-UXdesign-buff-report=\"v1\"",
+      "template_markers": ["UXdesign-buff-template", "human-report-html-v1"]
+    },
+    "executive_summary": {
+      "tag": "aside",
+      "required_class": "hero-panel",
+      "parent_id": "review-overview"
+    },
+    "issue_list": {
+      "parent_id": "full-review"
+    },
+    "resolution_tracks": {
+      "grid_class": "three-col",
+      "panel_class": "panel",
+      "required_panel_count": 3
+    },
+    "actions_grid": {
+      "container_class": "actions-grid",
+      "children_ids": ["open-questions", "next-actions"]
+    }
+  },
+  "timeline": {
+    "parent_id": "three-flow-consistency",
+    "container_class": "timeline",
+    "node_class": "timeline-node",
+    "min_nodes": 4,
+    "max_nodes": 8,
+    "node_structure": {
+      "required_children": [
+        {
+          "class": "timeline-stage",
+          "children": [
+            {"class": "timeline-dot"},
+            {"class": "timeline-stage-title"}
+          ]
+        },
+        {
+          "class": "timeline-card",
+          "children": [
+            {"class": "timeline-summary"}
+          ],
+          "blocks": {
+            "class": "timeline-block",
+            "min_count": 1
+          }
+        }
+      ]
+    },
+    "block_labels": {
+      "problem": ["问题：", "问题:", "Problem:", "Problem："],
+      "solution": ["解法：", "解法:", "Solution:", "Solution：", "Fix:", "Fix："]
+    }
+  },
+  "render_fragment_classes": [
+    "issue-card",
+    "issue-meta",
+    "timeline-node",
+    "timeline-stage",
+    "timeline-dot",
+    "timeline-stage-text",
+    "timeline-stage-title",
+    "timeline-stage-summary",
+    "timeline-card",
+    "timeline-summary",
+    "timeline-block",
+    "inline-label",
+    "methodology-source",
+    "flow-pass"
+  ]
+}

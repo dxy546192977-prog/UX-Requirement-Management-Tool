@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="UXdesign-buff-template" content="human-report-html-v1">
+  <title>超长标题边界测试用例——验证系统对超过常规长度的项目名称和问题标题的渲染能力，确保HTML不会被截断或破坏，同时保持页面布局的稳定性和可读性 - UXdesign-buff Review</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #efe7dc;
+      --paper: rgba(255, 251, 246, 0.92);
+      --paper-strong: #fffaf4;
+      --ink: #1f1a17;
+      --muted: #695d55;
+      --line: rgba(76, 61, 50, 0.16);
+      --accent: #a44a2f;
+      --accent-soft: rgba(164, 74, 47, 0.12);
+      --support: #275a58;
+      --support-soft: rgba(39, 90, 88, 0.12);
+      --shadow: 0 24px 72px rgba(64, 43, 28, 0.12);
+      --shadow-soft: 0 14px 36px rgba(64, 43, 28, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --content: min(1320px, calc(100vw - 28px));
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --sans: "Avenir Next", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+      --mono: "SFMono-Regular", "IBM Plex Mono", "Menlo", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      background:
+        radial-gradient(circle at top left, rgba(164, 74, 47, 0.14), transparent 24%),
+        radial-gradient(circle at 88% 12%, rgba(39, 90, 88, 0.12), transparent 18%),
+        linear-gradient(180deg, #f6f0e8 0%, var(--bg) 100%);
+    }
+
+    .page {
+      width: var(--content);
+      margin: 24px auto 64px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero,
+    .section,
+    .issue-card,
+    .track-card,
+    .flow-card,
+    .timeline-card {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: grid;
+      gap: 24px;
+      grid-template-columns: minmax(0, 1.26fr) minmax(280px, 360px);
+      align-items: start;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      min-height: 100%;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(164, 74, 47, 0.16), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow,
+    .chip,
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(164, 74, 47, 0.12);
+    }
+
+    .meta-chip,
+    .chip {
+      background: rgba(255, 255, 255, 0.58);
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 0;
+    }
+
+    .hero h1 {
+      margin: 12px 0 24px;
+      font-family: var(--serif);
+      font-size: clamp(32px, 4.1vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      max-width: none;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: none;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .chip-row {
+      margin-top: auto;
+      padding-top: 28px;
+      align-self: flex-start;
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(255, 250, 244, 0.9), rgba(250, 243, 235, 0.82));
+      border: 1px solid rgba(76, 61, 50, 0.1);
+    }
+
+    .kicker {
+      display: grid;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .diagnosis {
+      display: grid;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .diagnosis strong {
+      display: block;
+      font-size: 13px;
+      font-family: var(--mono);
+      color: var(--support);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .diagnosis p {
+      margin: 0;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .chip-row,
+    .evidence-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section {
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .section-header {
+      display: grid;
+      gap: 8px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+
+    .section-header h2,
+    .priority-card h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(24px, 2.6vw, 34px);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+    }
+
+    .section-header p {
+      margin: 0;
+      max-width: 56ch;
+      color: var(--muted);
+    }
+
+    .two-col,
+    .three-col {
+      display: grid;
+      gap: 18px;
+    }
+
+    .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .panel {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid rgba(76, 61, 50, 0.1);
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 600;
+      letter-spacing: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+    }
+
+    .panel p,
+    .panel ul,
+    .panel ol {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.72;
+    }
+
+    .priority-card {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(255, 250, 244, 0.96), rgba(247, 237, 226, 0.92)),
+        radial-gradient(circle at 88% 14%, rgba(164, 74, 47, 0.12), transparent 34%);
+      border: 1px solid rgba(76, 61, 50, 0.14);
+      box-shadow: var(--shadow);
+    }
+
+    .priority-grid,
+    .actions-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    }
+
+    .issue-list,
+    .track-list,
+    .flow-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .issue-card,
+    .track-card,
+    .flow-card {
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .issue-card header,
+    .track-card header,
+    .flow-card header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+    }
+
+    .issue-card > header h3,
+    .track-card > header h3,
+    .flow-card > header h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.05;
+    }
+
+    .issue-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-left: auto;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .split-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .split-list .row {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+      align-items: start;
+      padding-top: 10px;
+      border-top: 1px solid rgba(76, 61, 50, 0.08);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .timeline-node {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .timeline-stage {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      align-items: start;
+      align-self: stretch;
+    }
+
+    .timeline-stage::after {
+      content: "";
+      grid-row: 3;
+      justify-self: start;
+      margin-left: 15px;
+      width: 1px;
+      height: calc(100% + 18px);
+      background: rgba(76, 61, 50, 0.14);
+    }
+
+    .timeline-node:last-child .timeline-stage::after {
+      display: none;
+    }
+
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(164, 74, 47, 0.22);
+      background: var(--paper-strong);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .timeline-stage-text {
+      grid-row: 2;
+      display: grid;
+      gap: 4px;
+    }
+
+    .timeline-stage-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .timeline-stage-summary {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .timeline-card {
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-summary {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.72;
+      color: var(--ink);
+    }
+
+    .timeline-block {
+      display: grid;
+      gap: 8px;
+    }
+
+    .timeline-block + .timeline-block {
+      padding-top: 14px;
+      border-top: 1px solid rgba(76, 61, 50, 0.08);
+    }
+
+    .timeline-block h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .timeline-block p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.72;
+    }
+
+    .inline-label {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .methodology-source {
+      font-size: 0.85em;
+      color: #888;
+      font-style: italic;
+      margin-left: 0.5em;
+    }
+
+    .label {
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    .ordered-actions {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 1080px) {
+      .priority-grid,
+      .actions-grid,
+      .two-col,
+      .three-col {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+      }
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .priority-grid,
+      .actions-grid,
+      .two-col,
+      .three-col {
+        grid-template-columns: 1fr;
+      }
+      .timeline-node {
+        grid-template-columns: 104px minmax(0, 1fr);
+        gap: 12px;
+      }
+      .timeline-stage-text {
+        gap: 2px;
+      }
+      .timeline-stage-summary {
+        display: none;
+      }
+      .chip-row {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100vw - 20px, 100%); margin: 12px auto 42px; }
+      .hero, .section, .issue-card, .track-card, .flow-card, .timeline-card, .priority-card { padding: 18px; }
+      .hero h1 { max-width: none; }
+      .split-list .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-UXdesign-buff-report="v1">
+  <main class="page">
+    <section class="hero" id="review-overview" data-structure="review-overview-shell">
+      <div class="hero-main">
+        <span class="eyebrow">自查模式 · 设计评审报告</span>
+        <h1 data-slot="project-name">超长标题边界测试用例——验证系统对超过常规长度的项目名称和问题标题的渲染能力，确保HTML不会被截断或破坏，同时保持页面布局的稳定性和可读性</h1>
+        <p class="lede" data-slot="overall-diagnosis">这是一个用于测试超长文本渲染能力的诊断描述，需要验证当整体诊断内容较长时页面布局是否能保持稳定，文字是否能正确换行显示而不会溢出容器边界。</p>
+        <div class="chip-row">
+          <span class="chip">评审标识: long-titles-sample</span>
+          <span class="chip">日期: 2026-04-01</span>
+          <span class="chip">语言: zh-CN</span>
+          <span class="chip">读取状态: 成功</span>
+        </div>
+      </div>
+      <aside class="hero-panel" id="executive-summary" data-section-role="executive-summary-panel">
+        <div class="kicker">
+          <span>评审器: Codex UXdesign-buff</span>
+          <span>Figma 文件: AAAAA</span>
+          <span>评审节点: 4:400</span>
+        </div>
+        <div class="diagnosis">
+          <strong>当前评估</strong>
+          <p>当前评估内容也设置为较长的文本，用于测试verdict字段在超长情况下的展示效果，确保不会出现显示异常。</p>
+          <div class="evidence-row">
+            <span class="meta-chip">这是一个超长的优先级标签用于测试chip组件的渲染能力</span>
+            <span class="meta-chip">第二个超长标签验证多个chip同时存在时的布局表现</span>
+            <span class="meta-chip">第三个超长标签确保chip换行时不会破坏整体布局</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="changes-since-last-review">
+      <div class="section-header">
+        <h2>本次更新</h2>
+      </div>
+      <div class="three-col">
+        <div class="panel"><h3>新增问题</h3><p>首轮评审，无历史对比数据。</p></div>
+        <div class="panel"><h3>已解决问题</h3><p>暂无。</p></div>
+        <div class="panel"><h3>本次变化</h3><p>暂无。</p></div>
+      </div>
+    </section>
+
+    <section class="priority-card" id="highest-priority-issue">
+      <div class="section-header">
+        <h2>最高优先级问题</h2>
+      </div>
+      <div class="priority-grid">
+        <div class="split-list">
+          <div class="panel">
+            <h3>核心问题</h3>
+            <p>ISSUE-001 · 这是一个超长的问题标题，用于测试当问题标题超过两百个字符时系统的渲染能力和布局稳定性，确保不会出现文字截断、HTML结构破坏或页面布局错乱等问题，同时验证CSS样式能够正确处理超长文本的换行和溢出情况</p>
+            <p class="footer-note">foundational experience checks · 高优先级 · 高置信</p>
+          </div>
+          <div class="panel">
+            <h3>诊断</h3>
+            <p>这是一个超长的诊断段落，用于测试highest_priority_issue区域的文本渲染能力。当诊断内容较长时，需要确保段落能够正确换行，不会溢出面板边界，同时保持良好的可读性和视觉层次。</p>
+          </div>
+          <div class="panel">
+            <h3>为何优先</h3>
+            <p>为什么优先处理这个问题的说明也设置为较长的文本，用于测试why_first字段在超长情况下的展示效果，确保布局稳定。</p>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>修改建议</h3>
+          <p>修改建议字段同样使用较长的文本内容，验证recommended_direction在超长情况下能够正确显示，不会截断或破坏HTML结构。</p>
+          <h3 style="margin-top:16px;">需确认</h3>
+          <p>需要确认的内容也使用较长文本，测试need_to_confirm字段的长文本处理能力。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-and-evidence">
+      <div class="section-header">
+        <h2>评审依据与边界</h2>
+      </div>
+      <div class="two-col">
+        <div class="panel"><h3>评审依据</h3><p>这是一段较长的评审依据说明，用于测试background_and_evidence区域的panel组件在内容较长时的渲染效果。</p></div>
+        <div class="panel"><h3>评审边界</h3><p>评审边界说明也使用较长的文本，验证多段长文本在同一区域内的布局稳定性。</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="full-review">
+      <div class="section-header">
+        <h2>完整评审</h2>
+      </div>
+      <div class="issue-list" id="issue-list" data-structure="issue-card-list"><article class="issue-card">
+  <header>
+    <h3>ISSUE-001 · 这是一个超长的问题标题，用于测试当问题标题超过两百个字符时系统的渲染能力和布局稳定性，确保不会出现文字截断、HTML结构破坏或页面布局错乱等问题，同时验证CSS样式能够正确处理超长文本的换行和溢出情况</h3>
+    <div class="issue-meta">foundational experience checks · 高优先级 · 高置信</div>
+  </header>
+  <div class="split-list">
+    <div class="panel">
+      <h3>诊断</h3>
+      <p>问题卡片内的诊断内容使用超长文本，验证issue-card组件对长文本的处理能力。</p>
+    </div>
+    <div class="panel">
+      <h3>修改建议</h3>
+      <p>修改建议也使用超长文本进行测试。</p>
+    </div>
+    <div class="panel">
+      <h3>需确认</h3>
+      <p>确认项同样使用较长文本。</p>
+    </div>
+  </div>
+</article></div>
+    </section>
+
+    <section class="section" id="three-flow-consistency" data-structure="three-flow-timeline">
+      <div class="section-header">
+        <h2>三流一致性</h2>
+      </div>
+      <div class="timeline"><article class="timeline-node">
+  <div class="timeline-stage">
+    <div class="timeline-dot">01</div>
+    <div class="timeline-stage-text">
+      <div class="timeline-stage-title">这是一个超长的时间轴阶段标题用于测试timeline-stage-title组件对超过一百个字符的长标题的渲染能力</div>
+              <div class="timeline-stage-summary">阶段摘要也使用较长的文本内容来测试timeline-stage-summary组件。</div>
+    </div>
+  </div>
+  <div class="timeline-card">
+    <p class="timeline-summary">时间轴摘要使用超长文本验证timeline-summary组件的渲染稳定性。</p>
+    <div class="timeline-block">
+      <h3>超长的block标题用于测试timeline-block组件的h3标题渲染能力</h3>
+      <p><span class="inline-label">问题：</span> 问题描述字段使用较长的文本内容，验证inline-label和段落文本的组合展示效果。</p>
+      <p><span class="inline-label">解法：</span> 解法描述字段同样使用较长的文本，确保solution部分能够正确换行显示。</p>
+    </div>
+  </div>
+</article>
+<article class="timeline-node">
+  <div class="timeline-stage">
+    <div class="timeline-dot">02</div>
+    <div class="timeline-stage-text">
+      <div class="timeline-stage-title">第二个超长阶段标题继续测试时间轴组件对连续多个长标题的处理能力和布局稳定性</div>
+              <div class="timeline-stage-summary">第二阶段摘要。</div>
+    </div>
+  </div>
+  <div class="timeline-card">
+    <p class="timeline-summary">第二个节点的时间轴摘要。</p>
+    <div class="timeline-block">
+      <h3>第二个超长block标题</h3>
+      <p><span class="inline-label">问题：</span> 第二个问题描述。</p>
+      <p><span class="inline-label">解法：</span> 第二个解法描述。</p>
+    </div>
+  </div>
+</article>
+<article class="timeline-node">
+  <div class="timeline-stage">
+    <div class="timeline-dot">03</div>
+    <div class="timeline-stage-text">
+      <div class="timeline-stage-title">第三个阶段标题</div>
+              <div class="timeline-stage-summary">第三阶段摘要。</div>
+    </div>
+  </div>
+  <div class="timeline-card">
+    <p class="timeline-summary">第三个节点摘要。</p>
+    <div class="timeline-block">
+      <h3>第三个block标题</h3>
+      <p><span class="inline-label">问题：</span> 第三个问题。</p>
+      <p><span class="inline-label">解法：</span> 第三个解法。</p>
+    </div>
+  </div>
+</article>
+<article class="timeline-node">
+  <div class="timeline-stage">
+    <div class="timeline-dot">04</div>
+    <div class="timeline-stage-text">
+      <div class="timeline-stage-title">第四个阶段标题</div>
+              <div class="timeline-stage-summary">第四阶段摘要。</div>
+    </div>
+  </div>
+  <div class="timeline-card">
+    <p class="timeline-summary">第四个节点摘要。</p>
+    <div class="timeline-block">
+      <h3>第四个block标题</h3>
+      <p><span class="inline-label">问题：</span> 第四个问题。</p>
+      <p><span class="inline-label">解法：</span> 第四个解法。</p>
+    </div>
+  </div>
+</article></div>
+      <div class="panel">
+        <h3>整体判断</h3>
+        <p>三流一致性整体判断使用超长文本，验证synthesis段落在较长内容时的展示效果，确保不会出现布局问题。</p>
+      </div>
+    </section>
+
+    <section class="section" id="resolution-tracks" data-structure="resolution-summary">
+      <div class="section-header">
+        <h2>结构摘要</h2>
+      </div>
+      <div class="three-col">
+        <div class="panel">
+          <h3>问题分布</h3>
+          <p>问题分布描述使用较长文本测试resolution_tracks区域的panel组件。</p>
+        </div>
+        <div class="panel">
+          <h3>分三批推进</h3>
+          <p>推进路径描述也使用较长文本进行验证。</p>
+        </div>
+        <div class="panel">
+          <h3>关键风险</h3>
+          <p>关键风险描述同样使用较长文本，确保三个panel都能正确处理长文本。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>待确认与下一步</h2>
+      </div>
+      <div class="actions-grid" data-structure="closing-actions-grid">
+        <div class="panel" id="open-questions">
+          <h3>待确认</h3>
+          <ol class="ordered-actions"><li>超长标题的最佳处理方式是什么？</li></ol>
+        </div>
+        <div class="panel" id="next-actions">
+          <h3>下一步</h3>
+          <ol class="ordered-actions"><li>验证各种长度标题的渲染效果。</li></ol>
+        </div>
+      </div>
+      <p class="footer-note">产物路径：UXdesign-buff-reviews/long-titles-sample/report.html · run_id: run_fixture_long_titles_001 · 评审节点: 4:400</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,110 @@
+{
+  "schema_version": "v1",
+  "meta": {
+    "project_name": "最多时间轴节点测试",
+    "review_slug": "max-timeline-sample",
+    "report_mode": "self-check",
+    "review_date": "2026-04-01",
+    "reviewer": "Codex UXdesign-buff",
+    "requested_input_node": "3:300",
+    "reviewed_node": "3:300",
+    "reviewed_node_reason": null,
+    "report_language": "zh-CN",
+    "language_source": "explicit_override",
+    "run_id": "run_fixture_max_timeline_001",
+    "input_hash": "fixture-max-timeline",
+    "template_version": "human-report-html-v1",
+    "renderer_version": "UXdesign-buff-renderer-v2",
+    "created_at": "2026-04-01T11:00:00Z",
+    "updated_at": "2026-04-01T11:15:00Z"
+  },
+  "intake": {
+    "source_artifacts": ["figma:get_metadata", "figma:get_screenshot"],
+    "figma_intake_url": "https://www.figma.com/design/ZZZZZ/Max-Timeline?node-id=3-300",
+    "figma_file_key": "ZZZZZ",
+    "figma_intake_node": "3:300",
+    "figma_intake_node_type": "frame",
+    "ingest_status": "success",
+    "selected_unit_ids": ["3:300", "3:301", "3:302", "3:303", "3:304", "3:305", "3:306", "3:307"],
+    "high_precision_unit_ids": ["3:300", "3:301", "3:302", "3:303"],
+    "structural_only_unit_ids": [],
+    "deferred_unit_ids": [],
+    "tool_limits": []
+  },
+  "coverage": {
+    "fully_read_unit_ids": ["3:300", "3:301", "3:302", "3:303", "3:304", "3:305", "3:306", "3:307"],
+    "partially_read_unit_ids": [],
+    "screenshot_validated_unit_ids": ["3:300"],
+    "open_tooling_gaps": []
+  },
+  "background": {
+    "page_type": "复杂流程",
+    "product_type": "最大化测试",
+    "industry": "测试",
+    "target_user": "验证人员",
+    "core_scenario": "测试恰好8个时间轴节点的边界场景",
+    "business_goal": "验证最大节点数的渲染和校验",
+    "workflow_position": "测试",
+    "summary": "用于测试最多时间轴节点的场景",
+    "assumptions": [],
+    "unknowns": [],
+    "confidence": "high"
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_001",
+      "source_type": "figma",
+      "node_ref": "3:300",
+      "artifact_ref": "complex-flow",
+      "read_method": "get_design_context",
+      "confidence": "high",
+      "raw_ref": ".UXUXdesign-buff/max-timeline-sample/context.json",
+      "tags": ["complex"]
+    }
+  ],
+  "issues": [
+    {
+      "stable_id": "max-test-001__def456",
+      "display_number": "ISSUE-001",
+      "title": "复杂流程测试问题",
+      "category": "cognitive and operational cost",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "active",
+      "evidence_ids": ["ev_001"],
+      "problem_summary": "复杂流程中的测试问题描述。",
+      "impact_summary": "测试影响说明。",
+      "recommendation_summary": "测试建议。",
+      "discussion_prompts": ["如何简化这个复杂流程？"]
+    }
+  ],
+  "priorities": {
+    "highest_priority_issue_id": "max-test-001__def456",
+    "top_issue_ids": ["max-test-001__def456"],
+    "open_questions": [
+      {
+        "question_id": "q_001",
+        "title": "复杂流程是否可以简化？",
+        "status": "open",
+        "related_issue_ids": ["max-test-001__def456"]
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "a_001",
+        "title": "评估流程简化可能性。",
+        "status": "todo",
+        "related_issue_ids": ["max-test-001__def456"]
+      }
+    ]
+  },
+  "history": {
+    "previous_run_id": null,
+    "previous_review_date": null,
+    "new_issue_ids": [],
+    "resolved_issue_ids": [],
+    "changed_issue_ids": [],
+    "severity_changed_issue_ids": [],
+    "recommendation_changed_issue_ids": []
+  }
+}
