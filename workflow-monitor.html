@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>流程看板</title>
+  <style>
+    :root {
+      --bg-primary: #0f1117;
+      --bg-card: #222533;
+      --bg-soft: #1a1d27;
+      --text-primary: #e8eaed;
+      --text-secondary: #9aa0a6;
+      --text-muted: #6b7280;
+      --border: #2e3347;
+      --ok: #34d399;
+      --warn: #f59e0b;
+      --risk: #ef4444;
+      --accent: #4f8cff;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px clamp(16px, 3vw, 40px) 28px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
+    }
+    .title { font-size: 22px; font-weight: 700; }
+    .sub { margin-top: 6px; color: var(--text-secondary); font-size: 13px; }
+    .meta { color: var(--text-muted); font-size: 12px; }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .hidden-in-boss { display: block; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(79, 140, 255, 0.1);
+    }
+
+    /* 决策层 */
+    .decision {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .decision-main { display: grid; gap: 10px; }
+    .label {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+    .decision-value { font-size: 24px; font-weight: 700; }
+    .decision-reason { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      background: var(--bg-soft);
+    }
+    .metric .k { color: var(--text-muted); font-size: 11px; margin-bottom: 4px; }
+    .metric .v { font-size: 18px; font-weight: 700; }
+
+    /* 行动层 */
+    .action-layer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .blocker-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .blocker-desc { color: var(--text-secondary); font-size: 13px; line-height: 1.45; }
+    .action-list { margin-top: 8px; padding-left: 18px; color: var(--text-secondary); }
+    .action-list li { margin: 6px 0; line-height: 1.4; }
+
+    /* 证据层 */
+    details {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 12px 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+      border-bottom: 1px solid transparent;
+    }
+    details[open] summary { border-bottom-color: var(--border); }
+    .details-body { padding: 12px 14px; }
+    .link-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .evidence-link {
+      text-decoration: none;
+      border: 1px solid rgba(79, 140, 255, 0.25);
+      background: rgba(79, 140, 255, 0.08);
+      color: var(--accent);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .link-ok { border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.08); color: #86efac; }
+    .link-bad { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.08); color: #fca5a5; }
+    .link-unknown { border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.08); color: #fbbf24; }
+
+    .stage-flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .stage {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      background: var(--bg-soft);
+      min-height: 96px;
+    }
+    .stage-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+    .stage-status {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .s-pass { background: rgba(52, 211, 153, 0.2); color: #86efac; }
+    .s-blocked, .s-fail { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .s-running { background: rgba(79, 140, 255, 0.2); color: #93c5fd; }
+    .s-pending { background: rgba(107, 114, 128, 0.2); color: #cbd5e1; }
+    .stage-note { color: var(--text-muted); font-size: 12px; line-height: 1.35; }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .tech-list { padding-left: 18px; color: var(--text-secondary); }
+    .tech-list li { margin: 6px 0; font-size: 13px; }
+    .hidden-by-simple { display: none; }
+
+    .debug-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .debug-row label { color: var(--text-secondary); font-size: 13px; display: inline-flex; gap: 6px; }
+    .debug-row input {
+      width: 78px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      color: var(--text-primary);
+      padding: 6px 8px;
+    }
+
+    @media (max-width: 1024px) {
+      .decision, .action-layer, .tech-grid, .link-grid { grid-template-columns: 1fr; }
+      .stage-flow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="card header">
+      <div>
+        <h1 class="title">机票流程业务看板</h1>
+        <p class="sub">先看结论，再看卡点，再看下一步动作。</p>
+      </div>
+      <div class="toolbar">
+        <button id="bossModeBtn" class="btn active" type="button">老板视图</button>
+        <button id="opsModeBtn" class="btn" type="button">流程视图</button>
+      </div>
+    </section>
+
+    <!-- 决策层 -->
+    <section class="decision">
+      <article class="card decision-main">
+        <div>
+          <div class="label">放行建议</div>
+          <div id="releaseDecision" class="decision-value">-</div>
+        </div>
+        <div id="releaseReason" class="decision-reason">-</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="k">风险等级</div>
+            <div id="riskLevel" class="v">-</div>
+          </div>
+          <div class="metric">
+            <div class="k">主卡点</div>
+            <div id="mainBlockerShort" class="v">-</div>
+          </div>
+          <div class="metric">
+            <div class="k">关键问题数</div>
+            <div id="keyIssues" class="v">-</div>
+          </div>
+        </div>
+      </article>
+      <article class="card hidden-in-boss" id="taskMetaCard">
+        <div class="label">当前任务</div>
+        <div id="taskId" class="decision-value" style="font-size:20px;">-</div>
+        <div id="updatedAt" class="meta" style="margin-top:10px;">-</div>
+        <div class="meta" style="margin-top:8px;">总状态：<span id="overallStatus">-</span></div>
+        <div class="meta" style="margin-top:4px;">阻断数：<span id="blockingCount">-</span></div>
+      </article>
+    </section>
+
+    <!-- 行动层 -->
+    <section class="action-layer">
+      <article class="card">
+        <div class="label">当前卡点</div>
+        <div id="mainBlocker" class="blocker-name">-</div>
+        <div id="mainBlockerDesc" class="blocker-desc">-</div>
+      </article>
+      <article class="card">
+        <div class="label">下一步动作（按顺序）</div>
+        <ol id="nextActions" class="action-list"></ol>
+      </article>
+    </section>
+
+    <!-- 证据层 -->
+    <details open class="hidden-in-boss" id="flowDetails">
+      <summary>流程概览（通俗版）</summary>
+      <div class="details-body">
+        <div id="stageFlow" class="stage-flow"></div>
+      </div>
+    </details>
+
+    <details class="hidden-in-boss" id="evidenceDetails">
+      <summary>证据文件（点击可打开）</summary>
+      <div class="details-body">
+        <div id="evidenceLinks" class="link-grid"></div>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    const stageNameMap = {
+      "Phase 0": "需求输入",
+      "Phase 1": "需求结构化",
+      "Phase 1.2": "需求质检",
+      "Phase 1.5": "对标检查",
+      "Phase 2": "设计产出",
+      "Phase 3": "质量审查",
+      "Phase 4": "交付准备"
+    };
+
+    const statusNameMap = {
+      pass: "已通过",
+      blocked: "需处理",
+      fail: "需处理",
+      running: "进行中",
+      pending: "待开始"
+    };
+
+    async function loadData() {
+      return {
+        taskId: "MOCK-FLIGHT-20260419-001",
+        updatedAt: "2026-04-19 21:24",
+        phase12: {
+          gate_result: "PASS_WITH_NOTES",
+          blocking_count: 0,
+          structure_check: "PASS",
+          awesome_checks: {
+            styleguide_branding: "PASS",
+            color_typography: "PASS",
+            usability_review: "PASS",
+            user_testing: "ADVISORY"
+          }
+        },
+        phase3: {
+          result: "PASS_WITH_NOTES",
+          key_issues: 0,
+          medium_issues: 1
+        },
+        phase4: {
+          status: "ready",
+          benchmark_source: "gztchan/awesome-design",
+          benchmark_dimensions: ["styleguide_branding", "color_typography", "usability_review", "user_testing"],
+          benchmark_notes: "保持飞猪首页骨架，新增轻量价格提醒入口；强调信息层级、可读性和可验证路径。"
+        },
+        evidence: [
+          { phase: "Phase 0/1", name: "PRD拆解文档", path: "./skills/fliggy-flight-design-skill/mock-tests/prd-decompose-mock-flight-home-price-alert.md" },
+          { phase: "Phase 1.2", name: "需求质检记录", path: "./skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase1.2-gstack-awesome-review-mock-flight-home-price-alert.md" },
+          { phase: "Phase 1.5", name: "对标映射记录", path: "./skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase1.5-awesome-benchmark-mapping-mock-flight-home-price-alert.md" },
+          { phase: "Phase 2", name: "设计产出页面", path: "./skills/fliggy-flight-design-skill/mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html" },
+          { phase: "Phase 3", name: "质量审查报告", path: "./skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase3-review-report-mock-flight-home-price-alert.md" },
+          { phase: "Phase 4", name: "交付包(JSON)", path: "./skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase4-figma-handoff-mock-flight-home-price-alert.json" }
+        ]
+      };
+    }
+
+    async function checkEvidenceLinks(evidence) {
+      const map = {};
+      let brokenCount = 0;
+      const byPhase = {};
+
+      if (location.protocol === "file:") {
+        evidence.forEach(item => {
+          map[item.path] = "unknown";
+          byPhase[item.phase] = "unknown";
+        });
+        return { map, brokenCount, byPhase };
+      }
+
+      for (const item of evidence) {
+        try {
+          const res = await fetch(item.path, { method: "HEAD", cache: "no-store" });
+          const ok = res.ok;
+          map[item.path] = ok ? "ok" : "bad";
+          byPhase[item.phase] = ok ? "ok" : "bad";
+          if (!ok) brokenCount += 1;
+        } catch (_) {
+          map[item.path] = "bad";
+          byPhase[item.phase] = "bad";
+          brokenCount += 1;
+        }
+      }
+      return { map, brokenCount, byPhase };
+    }
+
+    function computeStatuses(data, evidenceHealth) {
+      const hasBenchmark = Boolean(data.phase4.benchmark_source) &&
+        Array.isArray(data.phase4.benchmark_dimensions) &&
+        data.phase4.benchmark_dimensions.length > 0 &&
+        Boolean(data.phase4.benchmark_notes);
+
+      const phase01Evidence = evidenceHealth.byPhase["Phase 0/1"];
+      const phase12Evidence = evidenceHealth.byPhase["Phase 1.2"];
+      const phase15Evidence = evidenceHealth.byPhase["Phase 1.5"];
+      const phase2Evidence = evidenceHealth.byPhase["Phase 2"];
+      const phase3Evidence = evidenceHealth.byPhase["Phase 3"];
+      const phase4Evidence = evidenceHealth.byPhase["Phase 4"];
+
+      const phase0Status = phase01Evidence === "bad" ? "blocked" : "pass";
+      const phase1Status = phase0Status === "blocked" ? "blocked" : "pass";
+      const phase12Status = (data.phase12.blocking_count === 0 &&
+        ["PASS", "PASS_WITH_NOTES"].includes(data.phase12.gate_result) &&
+        phase12Evidence !== "bad") ? "pass" : "blocked";
+      const phase15Status = (hasBenchmark && phase15Evidence !== "bad") ? "pass" : "blocked";
+      const phase2Status = (phase12Status === "pass" && phase2Evidence !== "bad") ? "pass" : "blocked";
+      const phase3Status = (data.phase3.key_issues > 0 || phase3Evidence === "bad") ? "blocked" : "pass";
+      const phase4Status = (data.phase3.key_issues > 0 || !hasBenchmark || data.phase4.status !== "ready" || phase4Evidence === "bad")
+        ? "blocked"
+        : "pass";
+
+      const phases = [
+        { id: "Phase 0", status: phase0Status, notes: "输入文档可用" },
+        { id: "Phase 1", status: phase1Status, notes: "结构化可进入下一步" },
+        { id: "Phase 1.2", status: phase12Status, notes: "无阻断项才能继续" },
+        { id: "Phase 1.5", status: phase15Status, notes: "对标字段完整" },
+        { id: "Phase 2", status: phase2Status, notes: "设计产出证据可用" },
+        { id: "Phase 3", status: phase3Status, notes: "关键问题需清零" },
+        { id: "Phase 4", status: phase4Status, notes: "满足交付放行条件" }
+      ];
+
+      const overall = phases.some(p => p.status === "blocked" || p.status === "fail") ? "风险中" : "可交付";
+
+      const releaseDecision = overall === "可交付" ? "建议放行" : "暂不放行";
+      const releaseReasonParts = [];
+      if (data.phase12.blocking_count > 0) releaseReasonParts.push("需求质检还有阻断项");
+      if (data.phase3.key_issues > 0) releaseReasonParts.push("质量审查关键问题未清零");
+      if (!hasBenchmark) releaseReasonParts.push("对标字段不完整");
+      if (evidenceHealth.brokenCount > 0) releaseReasonParts.push("部分证据文件失效");
+      if (releaseReasonParts.length === 0) releaseReasonParts.push("当前条件满足，可进入交付");
+
+      let riskLevel = "低";
+      if (data.phase3.key_issues > 0 || data.phase12.blocking_count > 0) riskLevel = "高";
+      else if (evidenceHealth.brokenCount > 0 || !hasBenchmark) riskLevel = "中";
+
+      return {
+        phases,
+        overall,
+        hasBenchmark,
+        phase4Status,
+        releaseDecision,
+        releaseReason: releaseReasonParts.join("；"),
+        riskLevel
+      };
+    }
+
+    function getMainBlocker(computed, data, evidenceHealth) {
+      const blockedStage = computed.phases.find(p => p.status === "blocked" || p.status === "fail");
+      if (!blockedStage) {
+        return {
+          name: "无卡点，可进入交付",
+          desc: "当前流程关键条件已满足，建议进入交付准备并发起导入。"
+        };
+      }
+
+      const stageName = stageNameMap[blockedStage.id] || blockedStage.id;
+      let desc = blockedStage.notes;
+      if (blockedStage.id === "Phase 1.2" && data.phase12.blocking_count > 0) {
+        desc = `阻断项 ${data.phase12.blocking_count} 个，需先清零后再继续。`;
+      } else if (blockedStage.id === "Phase 3" && data.phase3.key_issues > 0) {
+        desc = `关键问题 ${data.phase3.key_issues} 个，需修复后再放行。`;
+      } else if (evidenceHealth.brokenCount > 0) {
+        desc = "有证据文件失效，无法完成可追溯校验。";
+      }
+      return { name: stageName, desc };
+    }
+
+    function getNextActions(computed, data, evidenceHealth) {
+      const actions = [];
+      if (data.phase12.blocking_count > 0) {
+        actions.push("需求负责人：修复“需求质检”阻断项，完成标准为 blocking_count = 0。");
+      }
+      if (data.phase3.key_issues > 0) {
+        actions.push("设计/评审负责人：清零关键问题，完成标准为 key_issues = 0。");
+      }
+      if (!computed.hasBenchmark) {
+        actions.push("方案负责人：补齐对标字段（来源、维度、说明）。");
+      }
+      if (evidenceHealth.brokenCount > 0) {
+        actions.push("执行负责人：修复失效证据链接，保证每阶段至少有一条可用证据。");
+      }
+      if (actions.length === 0) {
+        actions.push("交付负责人：按清单执行导入，进入 Figma 精修。");
+      }
+      return actions.slice(0, 3);
+    }
+
+    function render(data, evidenceHealth) {
+      const computed = computeStatuses(data, evidenceHealth);
+      const blocker = getMainBlocker(computed, data, evidenceHealth);
+      const nextActions = getNextActions(computed, data, evidenceHealth);
+
+      document.getElementById("taskId").textContent = data.taskId;
+      document.getElementById("updatedAt").textContent = `更新时间：${data.updatedAt}`;
+      document.getElementById("overallStatus").textContent = computed.overall;
+      document.getElementById("blockingCount").textContent = String(data.phase12.blocking_count);
+      document.getElementById("keyIssues").textContent = String(data.phase3.key_issues);
+      document.getElementById("releaseDecision").textContent = computed.releaseDecision;
+      document.getElementById("releaseDecision").style.color = computed.releaseDecision === "建议放行" ? "var(--ok)" : "var(--risk)";
+      document.getElementById("releaseReason").textContent = computed.releaseReason;
+      document.getElementById("riskLevel").textContent = computed.riskLevel;
+      document.getElementById("riskLevel").style.color = computed.riskLevel === "高" ? "var(--risk)" : (computed.riskLevel === "中" ? "var(--warn)" : "var(--ok)");
+
+      document.getElementById("mainBlocker").textContent = blocker.name;
+      document.getElementById("mainBlockerShort").textContent = blocker.name;
+      document.getElementById("mainBlockerDesc").textContent = blocker.desc;
+      document.getElementById("nextActions").innerHTML = nextActions.map(x => `<li>${x}</li>`).join("");
+
+      document.getElementById("stageFlow").innerHTML = computed.phases.map(p => `
+        <div class="stage">
+          <div class="stage-title">${stageNameMap[p.id] || p.id}</div>
+          <span class="stage-status s-${p.status}">${statusNameMap[p.status] || p.status}</span>
+          <div class="stage-note">${p.notes}</div>
+        </div>
+      `).join("");
+
+      document.getElementById("evidenceLinks").innerHTML = data.evidence.map(item => {
+        const state = evidenceHealth.map[item.path] || "unknown";
+        const tag = state === "ok" ? "可用" : (state === "bad" ? "失效" : "未校验");
+        const cls = state === "ok" ? "link-ok" : (state === "bad" ? "link-bad" : "link-unknown");
+        return `<a class="evidence-link ${cls}" href="${item.path}" target="_blank" rel="noopener noreferrer">${item.name}<br/>状态：${tag}</a>`;
+      }).join("");
+    }
+
+    function setViewMode(mode) {
+      const boss = mode === "boss";
+      document.getElementById("bossModeBtn").classList.toggle("active", boss);
+      document.getElementById("opsModeBtn").classList.toggle("active", !boss);
+      document.querySelectorAll(".hidden-in-boss").forEach(el => {
+        el.style.display = boss ? "none" : "";
+      });
+      if (boss) {
+        document.getElementById("flowDetails").open = false;
+        document.getElementById("evidenceDetails").open = false;
+      }
+    }
+
+    (async function init() {
+      const original = await loadData();
+      const state = JSON.parse(JSON.stringify(original));
+      const evidenceHealth = await checkEvidenceLinks(state.evidence);
+      render(state, evidenceHealth);
+      setViewMode("boss");
+
+      document.getElementById("bossModeBtn").addEventListener("click", () => setViewMode("boss"));
+      document.getElementById("opsModeBtn").addEventListener("click", () => setViewMode("ops"));
+    })();
+  </script>
+</body>
+</html>

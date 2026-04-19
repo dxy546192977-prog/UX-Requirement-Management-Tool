@@ -16,6 +16,7 @@ V1 不直接写 Figma 原生节点，统一采用 HTML to Figma 导入路径。
 - `preview_screenshots`：每个页面至少一张全页截图
 - `review_summary`：审查结论与阻断项状态
 - `import_guide`：导入操作说明
+- `benchmark_*`：Google awesome-design 对标追溯字段
 
 ### 2. 最小字段约束
 
@@ -24,6 +25,13 @@ V1 不直接写 Figma 原生节点，统一采用 HTML to Figma 导入路径。
   "figma_handoff": {
     "status": "ready",
     "delivery_mode": "html-to-figma",
+    "benchmark_source": "gztchan/awesome-design",
+    "benchmark_dimensions": [
+      "styleguide_branding",
+      "color_typography",
+      "usability_review"
+    ],
+    "benchmark_notes": "沿用飞猪页面骨架，仅在信息层级和可用性提示上对标增强",
     "html_files": [
       {
         "page_id": "vertical.flight.home",
@@ -57,6 +65,15 @@ V1 不直接写 Figma 原生节点，统一采用 HTML to Figma 导入路径。
 }
 ```
 
+## 对标字段约束
+
+- `benchmark_source`：固定 `gztchan/awesome-design`
+- `benchmark_dimensions`：至少包含以下三项：
+  - `styleguide_branding`
+  - `color_typography`
+  - `usability_review`
+- `benchmark_notes`：必须可审计地描述“应用点 + 取舍点”，禁止只写链接。
+
 ## 状态机
 
 `draft -> reviewed -> ready -> imported -> refined`
@@ -74,6 +91,7 @@ V1 不直接写 Figma 原生节点，统一采用 HTML to Figma 导入路径。
 - 如果 `key_issues > 0`，`status` 不能是 `ready`
 - 如果结论为 `FAIL`，必须阻断导入建议
 - 如果结论为 `PASS_WITH_NOTES`，需列出 remaining notes
+- 如果 `benchmark_dimensions` 缺失或 `benchmark_notes` 为空，`status` 不能是 `ready`
 
 ## 导入说明模板
 

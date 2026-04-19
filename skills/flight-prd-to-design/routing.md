@@ -8,8 +8,8 @@
 
 | route_key | page_id | 基线物料 | 状态 | 执行策略 |
 |---|---|---|---|---|
-| home | `vertical.flight.home` | `机票四连跳/pages/vertical/flight/home/example-full.html` | supported | 正常执行 |
-| booking | `vertical.flight.booking` | `机票四连跳/pages/vertical/flight/booking/example-full.html` | supported | 正常执行 |
+| home | `vertical.flight.home` | `skills/fliggy-flight-design-skill/playbooks/flight-funnel/1 首页/首页.html` | supported | 正常执行 |
+| booking | `vertical.flight.booking` | `skills/fliggy-flight-design-skill/playbooks/flight-funnel/3 下单页/下单页.html` | supported | 正常执行 |
 | list | `vertical.flight.list` | 无稳定闭包 | partial | 降级 |
 | ota | `vertical.flight.ota` | 无稳定闭包 | partial | 降级 |
 | unknown | 未识别 | 无 | unsupported | 人工确认 |
@@ -71,7 +71,7 @@
   "route_key": "list",
   "route_status": "partial",
   "execution_mode": "fallback-insert",
-  "resolved_baseline_artifact": "pages/vertical/flight/home/example-full.html",
+  "resolved_baseline_artifact": "skills/fliggy-flight-design-skill/playbooks/flight-funnel/1 首页/首页.html",
   "fallback_reason": "list page baseline missing in v1, mapped to nearest slot in home"
 }
 ```

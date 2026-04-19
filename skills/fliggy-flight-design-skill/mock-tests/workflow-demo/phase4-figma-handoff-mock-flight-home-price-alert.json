@@ -1,0 +1,36 @@
+{
+  "figma_handoff": {
+    "status": "ready",
+    "delivery_mode": "html-to-figma",
+    "benchmark_source": "gztchan/awesome-design",
+    "benchmark_dimensions": [
+      "styleguide_branding",
+      "color_typography",
+      "usability_review",
+      "user_testing"
+    ],
+    "benchmark_notes": "保持飞猪首页骨架，新增轻量价格提醒入口；强调信息层级、可读性和可验证路径。",
+    "html_files": [
+      {
+        "page_id": "vertical.flight.home",
+        "path": "skills/fliggy-flight-design-skill/mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html"
+      }
+    ],
+    "review_evidence": {
+      "phase12_gate_report": "skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase1.2-gstack-awesome-review-mock-flight-home-price-alert.md",
+      "phase15_benchmark_report": "skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase1.5-awesome-benchmark-mapping-mock-flight-home-price-alert.md",
+      "phase3_review_report": "skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase3-review-report-mock-flight-home-price-alert.md"
+    },
+    "review_summary": {
+      "result": "PASS_WITH_NOTES",
+      "key_issues": 0,
+      "medium_issues": 1
+    },
+    "import_checklist": [
+      "HTML to Figma 插件导入",
+      "检查字体映射（Fliggy Sans 102）",
+      "检查 price-alert 组件图层是否独立",
+      "核对 CTA 两种视觉状态（立即订阅/已订阅）"
+    ]
+  }
+}

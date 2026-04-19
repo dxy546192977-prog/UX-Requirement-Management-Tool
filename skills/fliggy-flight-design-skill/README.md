@@ -1,29 +1,80 @@
-# 机票 SKILL 项目说明
+# 飞猪机票设计 Skill（可安装包）
 
-这个项目主要用于飞猪机票场景下的设计 Agent 与页面模块规范沉淀。
+本文件夹为 **Agent Skill 标准布局**：根目录 `SKILL.md` 为执行入口，`references/` 为格式与流程真相源，`scripts/` 为可自动化脚本，`assets/` 为可复用模板；`playbooks/flight-funnel/` 为页面与组件物料库（机票漏斗 playbook），`mock-tests/` 为演示与样例输出。
 
-## 目录结构
+## 安装方式
 
-- `../flight-prd-to-design/SKILL.md`：PRD 到设计稿统一入口（首期推荐入口）
-- `SKILL.md`：Agent 的主编排说明（核心入口）
-- `agent.md`：面向人类的项目概览与使用说明
-- `机票Skill设计方案.md`：架构设计与演进记录
-- `机票四连跳/`：页面与模块规范主体（首页、listing、OTA、订单详情等）
-- `需求/`：业务需求与专项模块资料（如海免商品推荐）
+### Cursor
 
-## 首期推荐工作流
+将本目录**整个拷贝**到：
 
-- 统一入口：`skills/flight-prd-to-design/SKILL.md`
-- 团队 SOP：`docs/flight-prd-to-figma-workflow.md`
-- 拆解模板：`skills/prd-recognition/template.md`
+- 项目内：`<你的项目>/.cursor/skills/fliggy-flight-design-skill/`
+- 或用户级：`%USERPROFILE%\.cursor\skills\fliggy-flight-design-skill\`
+
+在规则或对话中引导模型：**加载** `fliggy-flight-design-skill/SKILL.md`。
+
+### Claude Code / 通用 `.claude/skills`
+
+拷贝到：
+
+- `~/.claude/skills/fliggy-flight-design-skill/`
+
+确保 `SKILL.md` 位于该文件夹根目录。
+
+### 验证安装
+
+1. 确认存在文件：`SKILL.md`、`references/workflow-master.md`、`playbooks/flight-funnel/0 Fliggy Design Skill/SKILL.md`。
+2. （可选）运行静态检查：
+
+```bash
+python scripts/validate_design_html.py mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html
+```
+
+## 目录结构（标准）
+
+```text
+fliggy-flight-design-skill/
+├── SKILL.md              # Agent 主入口：职责、触发、步骤、输出标准
+├── README.md             # 本文件
+├── Workflow.md           # 流程锚点（与 references/workflow-master.md 一致）
+├── 设计哲学.md           # 行为协议全文（与 references/agent-protocol.md 一致）
+├── 自我进化.md           # 与 references/self-evolution-log.md 一致
+├── references/           # 格式要求、闸门、状态机、协议索引
+├── scripts/              # Figma 解析、HTML 校验等
+├── assets/               # 执行计划、审查报告、交接 JSON、HTML 骨架模板
+├── playbooks/            # 场景化物料编排
+│   └── flight-funnel/    # 机票漏斗：页面与组件物料（含 0 Fliggy Design Skill）
+├── mock-tests/           # 工作流演示与 mock 产出
+└── 需求/                 # 业务专项资料（若有）
+```
+
+## 与其它 Skill 的关系
+
+- **编排总入口**（若已安装）：`flight-prd-to-design`（PRD → 设计 → Figma）。
+- **本包定位**：机票域 **执行层** 物料 + 规则 + 模板；详细阶段衔接见 `references/workflow-master.md` 首节「项目位置与职责边界」。
+
+## 首期推荐工作流（与本仓库其它目录联用时）
+
+- 统一入口（若存在于本仓库）：`skills/flight-prd-to-design/SKILL.md`
+- 团队 SOP（若存在）：`docs/flight-prd-to-figma-workflow.md`
+- 拆解模板（若存在）：`skills/prd-recognition/template.md`
+- 执行主锚：`Workflow.md` 或 `references/workflow-master.md`
+
+## 生成规则基线（强制摘要）
+
+- 设计生成前必读：`playbooks/flight-funnel/0 Fliggy Design Skill/SKILL.md`
+- 读取顺序：入口 SKILL → 按需组件 `README.md` → 必要时 `example.html`；禁止全量读取所有组件
+- 技术约束摘要见 `references/html-and-token-standard.md`
+- mock 与实验性 HTML 放在 `mock-tests/`，避免污染物料库
 
 ## 文档类型约定
 
-- `SKILL.md`：流程与行为规范，给 Agent 执行使用
-- `框架组件.md`、`框架结构.md`、`page-frame.md`：页面骨架层文档
-- `spec.md`：页面模块规范（配置、结构、示例）
+- `SKILL.md`：流程与行为规范（Agent）
+- `框架组件.md`、`框架结构.md`、`page-frame.md`：页面骨架层
+- `spec.md`：模块配置与变体
 - `README.md`：模块说明或目录索引
 
-## 清理说明
+## 维护约定
 
-已清理临时计划文档（`.aone_copilot/plans` 下自动生成的任务与实施计划），保留页面规范、模块说明和项目级文档。
+- 修改流程时：同时更新 `Workflow.md` 与 `references/workflow-master.md`（保持内容一致）。
+- 修改 Agent 行为协议时：同时更新 `设计哲学.md` 与 `references/agent-protocol.md`。

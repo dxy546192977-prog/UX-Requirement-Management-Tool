@@ -1,7 +1,5 @@
 ## 机票 Skill 设计方案
 
-> **标准 Skill 副本**：与本文件同步的 Markdown 见 `references/workflow-master.md`（安装分发时以 `references/` 为准亦可）。
-
 > **核心愿景**：**PRD → 设计稿 → 审查 → Figma** 全自动化流水线。你只在关键节点逐模块拍板。
 
 ---

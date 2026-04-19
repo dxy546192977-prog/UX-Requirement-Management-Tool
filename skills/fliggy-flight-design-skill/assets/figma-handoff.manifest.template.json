@@ -1,0 +1,35 @@
+{
+  "figma_handoff": {
+    "status": "draft",
+    "delivery_mode": "html-to-figma",
+    "benchmark_source": "gztchan/awesome-design",
+    "benchmark_dimensions": [
+      "styleguide_branding",
+      "color_typography",
+      "usability_review",
+      "user_testing"
+    ],
+    "benchmark_notes": "",
+    "html_files": [
+      {
+        "page_id": "vertical.flight.home",
+        "path": ""
+      }
+    ],
+    "review_evidence": {
+      "phase12_gate_report": "",
+      "phase15_benchmark_report": "",
+      "phase3_review_report": ""
+    },
+    "review_summary": {
+      "result": "",
+      "key_issues": 0,
+      "medium_issues": 0
+    },
+    "import_checklist": [
+      "HTML to Figma 插件导入",
+      "检查字体映射",
+      "检查关键模块图层是否独立"
+    ]
+  }
+}

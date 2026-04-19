@@ -7,6 +7,7 @@
 > 下游设计 Skill：fliggy-design-gui
 > 交付目标：{delivery_target: html-only | html-to-figma}
 > 场景范围：{scope: flight-only-v1}
+> 对标来源：{benchmark_source: gztchan/awesome-design}
 
 ## 使用方式
 
@@ -28,6 +29,12 @@
 ## 体验与设计评审视角（UXdesign-buff）
 
 {ux_path_risks_and_figma_notes}
+
+## Google 对标映射
+
+- benchmark_source：{gztchan/awesome-design}
+- benchmark_dimensions：{styleguide_branding, color_typography, usability_review}
+- benchmark_notes：{how_applied_and_tradeoffs}
 
 ## 涉及页面
 
@@ -60,6 +67,9 @@
 - route_status：{supported|partial|unsupported}
 - execution_mode：{normal|fallback-insert|human-confirmation}
 - fallback_reason：{fallback_reason_or_none}
+- benchmark_source：{gztchan/awesome-design}
+- benchmark_dimensions：{styleguide_branding|color_typography|usability_review|toolchain_readiness}
+- benchmark_notes：{module_level_benchmark_notes}
 
 #### 可直接发给 AI 的执行指令
 
@@ -83,6 +93,9 @@
 - route_status：{supported|partial|unsupported}
 - execution_mode：{normal|fallback-insert|human-confirmation}
 - fallback_reason：{fallback_reason_or_none}
+- benchmark_source：{gztchan/awesome-design}
+- benchmark_dimensions：{styleguide_branding|color_typography|usability_review|toolchain_readiness}
+- benchmark_notes：{module_level_benchmark_notes}
 
 #### 可直接发给 AI 的执行指令
 
@@ -102,6 +115,7 @@
 - 对于 `create` 类型模块，按在现有页面插入新模块的方式产出。
 - 对于 `reuse` 类型模块，只需在整体方案中保留并说明原因。
 - 如果信息不足，请先列出假设，再继续产出设计稿。
+- 输出必须体现 Google 对标结果：样式一致性、信息层级、可用性风险和导入可执行性。
 
 ## Figma 交付包（执行后回填）
 
@@ -110,6 +124,13 @@
   "figma_handoff": {
     "status": "draft",
     "delivery_mode": "{html-only|html-to-figma}",
+    "benchmark_source": "gztchan/awesome-design",
+    "benchmark_dimensions": [
+      "styleguide_branding",
+      "color_typography",
+      "usability_review"
+    ],
+    "benchmark_notes": "{handoff_level_benchmark_notes}",
     "html_files": [],
     "preview_screenshots": [],
     "review_summary": {

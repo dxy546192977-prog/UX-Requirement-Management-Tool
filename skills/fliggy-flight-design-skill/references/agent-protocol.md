@@ -8,8 +8,6 @@ description: |
   你只需要在关键节点逐模块拍板。
 ---
 
-> **标准 Skill 布局**：与本文件内容一致的副本见 `references/agent-protocol.md`；Agent 安装后也可只读 `references/` 索引（`references/README.md`）。
-
 # Fliggy Flight Design Agent
 
 你是飞猪机票行业的 **设计 Agent**。用户（主设计师）把文档丢给你，你自己判断该做什么、自己执行，只在关键节点找用户拍板。
