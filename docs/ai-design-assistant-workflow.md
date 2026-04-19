@@ -1,5 +1,7 @@
 # AI 设计助理工作流
 
+> 机票 PRD 到设计稿到 Figma 的首期落地流程请优先参考：`docs/flight-prd-to-figma-workflow.md`
+
 > Branch: `feature/ai-design-assistant-flow`
 > Version: V1.0
 
@@ -36,13 +38,13 @@ PM 提 PRD 链接
        │
        ▼
 ┌─────────────┐
-│ Phase 2     │  AI 拆解需求 → 生成摘要 + 页面列表
+│ Phase 2     │  AI 拆解需求（支持图文多模态）→ 生成摘要 + 页面列表
 │ 需求拆解    │
 └──────┬──────┘
        │
        ▼
 ┌─────────────┐
-│ Phase 3     │  AI 逐页面拆解模块 → 模块名 + 意图 + 处理方式 + 备注
+│ Phase 3     │  AI 逐页面拆解模块（默认 ai_*）→ 模块名 + 意图 + 处理方式 + 备注
 │ 设计方案    │
 └──────┬──────┘
        │
@@ -69,7 +71,7 @@ PM 提 PRD 链接
 
 ## 配置说明
 
-复制 `config.example.json` 为 `config.json`，填写以下字段：
+复制 `config/config.example.json` 为 `config/config.json`，填写以下字段：
 
 ```json
 {
@@ -79,13 +81,24 @@ PM 提 PRD 链接
   "ai_provider": "openai",
   "ai_api_base": "https://api.openai.com",
   "ai_api_key": "你的 AI API Key",
-  "ai_model": "gpt-4o-mini"
+  "ai_model": "gpt-4o-mini",
+
+  "ai_decompose_provider": "openai",
+  "ai_decompose_api_base": "https://openrouter.ai/api",
+  "ai_decompose_api_key": "你的 OpenRouter API Key",
+  "ai_decompose_model": "qwen/qwen2.5-vl-72b-instruct",
+  "ai_decompose_max_images": 8
 }
 ```
 
 **支持的 `ai_provider`：**
 - `openai` — 任何 OpenAI 兼容接口（包括 Azure、第三方中转等）
 - `qwen` / `dashscope` — 阿里云通义千问（DashScope 接口）
+
+**阶段配置规则：**
+- `Phase 2 (decomposing)`：优先读取 `ai_decompose_*`；若未配置则回退到默认 `ai_*`
+- `Phase 3 (planning)`：始终读取默认 `ai_*`
+- `Phase 2` 会自动从 PRD 正文提取图片 URL，并与正文一起发给多模态模型（`ai_decompose_max_images` 控制上限）
 
 ---
 

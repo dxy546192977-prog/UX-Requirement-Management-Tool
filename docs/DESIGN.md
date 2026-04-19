@@ -2,6 +2,11 @@
 > 设计系统主文档 · Design System Master Reference
 > 版本 v1.0 · 2026-04-16
 
+## 文档边界
+
+本文件仅维护设计系统与交互规范（视觉、组件、动效、可访问性）。
+项目运行方式、开发流程与配置说明统一维护在 `README.md`。
+
 ---
 
 ## 一、产品定位与设计哲学
@@ -409,5 +414,4 @@ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
 
 ---
 
-*本文档由 Aone Copilot 基于 ui-ux-pro-max 设计系统能力生成，应随产品迭代持续更新。*
-*如需扩展页面级设计规范，在 `design-system/pages/` 目录下创建对应页面文件。*
+*本文档应随产品迭代持续更新，确保视觉与交互规范和当前实现保持一致。*

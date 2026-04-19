@@ -4,11 +4,18 @@
 
 ## 目录结构
 
+- `../flight-prd-to-design/SKILL.md`：PRD 到设计稿统一入口（首期推荐入口）
 - `SKILL.md`：Agent 的主编排说明（核心入口）
 - `agent.md`：面向人类的项目概览与使用说明
 - `机票Skill设计方案.md`：架构设计与演进记录
 - `机票四连跳/`：页面与模块规范主体（首页、listing、OTA、订单详情等）
 - `需求/`：业务需求与专项模块资料（如海免商品推荐）
+
+## 首期推荐工作流
+
+- 统一入口：`skills/flight-prd-to-design/SKILL.md`
+- 团队 SOP：`docs/flight-prd-to-figma-workflow.md`
+- 拆解模板：`skills/prd-recognition/template.md`
 
 ## 文档类型约定
 

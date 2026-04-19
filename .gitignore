@@ -5,6 +5,7 @@ openapi.json
 node_modules/
 
 # 敏感配置（包含 API Token）
+config/config.json
 config.json
 
 # 临时文件
@@ -12,3 +13,6 @@ screenshot.png
 *.DS_Store
 .DS_Store
 .gstack/
+
+# IDE/Agent 配置物理目录（根目录的 .vscode、.cursor、.agents 等为目录联接，勿删）
+_ide-config-store/

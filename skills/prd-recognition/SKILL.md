@@ -15,6 +15,8 @@ This skill focuses on:
 - identifying pages and modules
 - classifying each module as `create`, `modify`, or `reuse`
 - mapping work items into `fliggy-design-gui` execution instructions
+- adding routing-ready fields (`page_id`, `baseline_artifact`, `module_slug`)
+- adding delivery contract fields (`delivery_target`, `review_required`, `figma_handoff`)
 - outputting a Markdown brief that can be downloaded or pasted into another AI
 
 This skill does not generate final design稿 itself. It prepares the brief for downstream design execution.
@@ -60,6 +62,10 @@ Use this skill when the user asks to:
    - `intent`
    - `change_type`
    - `notes`
+   - `page_id`
+   - `baseline_artifact`
+   - `module_slug` (if matched)
+   - `review_required` (default `true`)
 
 5. Map each module to execution type.
    - `create` -> `Type A`
@@ -70,6 +76,10 @@ Use this skill when the user asks to:
 
 7. Produce a Markdown brief (page/module + fliggy-design-gui instructions).
    The brief must be directly usable as downstream AI input.
+8. Attach the delivery contract section.
+   Must include:
+   - `delivery_target` (`html-only` or `html-to-figma`)
+   - `figma_handoff` skeleton for downstream fill-in
 
 ## Output Rules
 
@@ -79,6 +89,8 @@ Use this skill when the user asks to:
 - Each module must include a concrete execution instruction.
 - Mention `fliggy-design-gui` explicitly as the downstream design skill.
 - If information is missing, state assumptions before continuing.
+- The brief must be routable (not only descriptive), with explicit `page_id` and baseline path.
+- The brief must include Figma handoff contract even before files are generated.
 
 ## Markdown Structure
 
@@ -90,6 +102,8 @@ Use this structure:
 > 需求 ID：{id}
 > PRD 链接：{url}
 > 下游设计 Skill：fliggy-design-gui
+> 交付目标：{delivery_target}
+> 场景范围：{scope}
 
 ## 使用方式
 将下方页面或模块片段直接发给 AI，要求其基于 fliggy-design-gui 输出设计稿方案。
@@ -101,6 +115,11 @@ Use this structure:
 - 页面 A
 - 页面 B
 
+## 页面路由摘要
+| 页面 | page_id | 路由状态 | 基线物料 |
+|---|---|---|---|
+| 页面 A | vertical.flight.home | supported | pages/vertical/flight/home/example-full.html |
+
 ## 页面 1：{page}
 
 ### 模块 1：{module_name}
@@ -108,6 +127,14 @@ Use this structure:
 - 执行类型：Type A / Type B / Direct Reuse
 - 设计意图：{intent}
 - 备注：{notes}
+- page_id：{page_id}
+- baseline_artifact：{baseline_artifact}
+- module_slug：{module_slug}
+- delivery_target：{delivery_target}
+- review_required：{true|false}
+- route_status：{supported|partial|unsupported}
+- execution_mode：{normal|fallback-insert|human-confirmation}
+- fallback_reason：{fallback_reason_or_none}
 
 #### 可直接发给 AI 的执行指令
 请使用 fliggy-design-gui 能力处理该模块。
@@ -177,6 +204,24 @@ Good instruction:
 额外约束：价格排序默认为第一优先级，需要兼容低价日历联动。
 ```
 
+Add Figma handoff contract block at the end:
+
+```json
+{
+  "figma_handoff": {
+    "status": "draft",
+    "delivery_mode": "html-to-figma",
+    "html_files": [],
+    "preview_screenshots": [],
+    "review_summary": {
+      "result": "PENDING",
+      "key_issues": 0,
+      "medium_issues": 0
+    }
+  }
+}
+```
+
 Bad instruction:
 
 ```markdown
@@ -196,6 +241,8 @@ Bad instruction:
 - Do not invent a completely new IA unless the PRD explicitly asks for a redesign.
 - Do not skip the module-level instruction block.
 - Do not collapse all work into one generic paragraph.
+- Do not omit `page_id` and `baseline_artifact`.
+- Do not output a brief without `figma_handoff` section.
 
 ## Success Criteria
 
@@ -207,3 +254,5 @@ The output is successful only if:
 - module list is explicit
 - each module has an actionable instruction
 - `fliggy-design-gui` is named as the downstream execution skill
+- each module has routing-ready fields (`page_id`, `baseline_artifact`)
+- the document includes `delivery_target` and a `figma_handoff` contract block

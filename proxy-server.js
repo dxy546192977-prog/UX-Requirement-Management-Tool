@@ -2,22 +2,66 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const yuqueSvc   = require('./services/yuque-service');
 const aiDesignSvc = require('./services/ai-design-service');
 
 // ==================== Config ====================
-const CONFIG_PATH = path.join(__dirname, 'config.json');
+const CONFIG_PATH = path.join(__dirname, 'config', 'config.json');
+const LEGACY_CONFIG_PATH = path.join(__dirname, 'config.json');
 const DATA_PATH = path.join(__dirname, 'data', 'local_requirements.json');
+const DEFAULT_OSS_BUCKET = 'designacceleration';
+const DEFAULT_OSS_REGION = 'oss-cn-beijing';
+const DEFAULT_OSS_FILE_KEY = 'requirements.json';
+const DINGTALK_WEBHOOK_PREFIX = 'https://oapi.dingtalk.com/robot/send';
 
 function loadConfig() {
-  try {
-    const raw = fs.readFileSync(CONFIG_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error('[Config] Failed to read config.json:', err.message);
-    return null;
+  const candidates = [CONFIG_PATH, LEGACY_CONFIG_PATH];
+  for (const cfgPath of candidates) {
+    try {
+      const raw = fs.readFileSync(cfgPath, 'utf-8');
+      return JSON.parse(raw);
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        console.error(`[Config] Failed to read ${cfgPath}:`, err.message);
+      }
+    }
   }
+  console.error('[Config] Failed to read config/config.json (and legacy config.json)');
+  return null;
+}
+
+function saveConfig(config) {
+  try {
+    const configDir = path.dirname(CONFIG_PATH);
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir, { recursive: true });
+    }
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
+    return true;
+  } catch (err) {
+    console.error('[Config] Failed to write config/config.json:', err.message);
+    return false;
+  }
+}
+
+function normalizeAiKey(value) {
+  const key = String(value || '').trim();
+  if (!key || key === 'YOUR_AI_API_KEY_HERE') return '';
+  return key;
+}
+
+function hasAnyAiKey(config) {
+  if (!config) return false;
+  return Boolean(normalizeAiKey(config.ai_api_key) || normalizeAiKey(config.ai_decompose_api_key));
+}
+
+function normalizeDingTalkWebhook(url) {
+  const val = String(url || '').trim();
+  if (!val) return '';
+  if (!val.startsWith(DINGTALK_WEBHOOK_PREFIX)) return '';
+  return val;
 }
 
 // ==================== Yuque URL Parser ====================
@@ -144,12 +188,12 @@ function getYuqueConfigOrError(res) {
   const config = loadConfig();
   if (!config) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+    res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
     return null;
   }
   if (!config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Yuque API Token not configured. Please update config.json with your token.' }));
+    res.end(JSON.stringify({ error: 'Yuque API Token not configured. Please update config/config.json with your token.' }));
     return null;
   }
   return config;
@@ -174,6 +218,140 @@ function getFileExtFromUrl(url, contentType) {
     // ignore
   }
   return '.bin';
+}
+
+function getOssConfig(config) {
+  if (!config) return null;
+  const accessKeyId = String(config.oss_access_key_id || '').trim();
+  const accessKeySecret = String(config.oss_access_key_secret || '').trim();
+  if (!accessKeyId || !accessKeySecret || accessKeyId === 'YOUR_OSS_ACCESS_KEY_ID' || accessKeySecret === 'YOUR_OSS_ACCESS_KEY_SECRET') {
+    return null;
+  }
+  const bucket = String(config.oss_bucket || DEFAULT_OSS_BUCKET).trim();
+  const region = String(config.oss_region || DEFAULT_OSS_REGION).trim();
+  const fileKey = String(config.oss_file_key || DEFAULT_OSS_FILE_KEY).trim();
+  const host = `${bucket}.${region}.aliyuncs.com`;
+  return { accessKeyId, accessKeySecret, bucket, region, fileKey, host };
+}
+
+function getOssReadTarget(config) {
+  const bucket = String((config && config.oss_bucket) || DEFAULT_OSS_BUCKET).trim();
+  const region = String((config && config.oss_region) || DEFAULT_OSS_REGION).trim();
+  const fileKey = String((config && config.oss_file_key) || DEFAULT_OSS_FILE_KEY).trim();
+  const host = `${bucket}.${region}.aliyuncs.com`;
+  return { bucket, region, fileKey, host };
+}
+
+function postJsonToRemoteUrl(targetUrl, payload) {
+  return new Promise((resolve, reject) => {
+    let parsed;
+    try {
+      parsed = new URL(targetUrl);
+    } catch {
+      reject(new Error('Invalid URL'));
+      return;
+    }
+    if (parsed.protocol !== 'https:') {
+      reject(new Error('Only https URL is allowed'));
+      return;
+    }
+
+    const body = JSON.stringify(payload || {});
+    const req = https.request({
+      hostname: parsed.hostname,
+      port: parsed.port || 443,
+      path: parsed.pathname + parsed.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body, 'utf8')
+      }
+    }, (res) => {
+      let chunks = '';
+      res.on('data', (chunk) => { chunks += chunk; });
+      res.on('end', () => {
+        resolve({ statusCode: res.statusCode || 500, body: chunks });
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => req.destroy(new Error('DingTalk request timed out')));
+    req.write(body);
+    req.end();
+  });
+}
+
+function requestHttps(options, body) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      let chunks = '';
+      res.on('data', (chunk) => { chunks += chunk; });
+      res.on('end', () => resolve({ statusCode: res.statusCode, headers: res.headers, body: chunks }));
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => {
+      req.destroy(new Error('HTTPS request timed out'));
+    });
+    if (body) req.write(body);
+    req.end();
+  });
+}
+
+async function loadRequirementsFromOss(config) {
+  const oss = getOssReadTarget(config);
+
+  const options = {
+    hostname: oss.host,
+    port: 443,
+    path: `/${oss.fileKey}?t=${Date.now()}`,
+    method: 'GET'
+  };
+  const res = await requestHttps(options);
+  if (res.statusCode !== 200) {
+    throw new Error(`OSS GET returned ${res.statusCode}`);
+  }
+  const parsed = JSON.parse(res.body || '{}');
+  if (!Array.isArray(parsed.requirements)) {
+    throw new Error('OSS requirements.json format invalid');
+  }
+  return parsed;
+}
+
+function buildOssAuthHeaders(oss, method, filePath, contentType) {
+  const date = new Date().toUTCString();
+  const stringToSign = `${method}\n\n${contentType}\n${date}\n/${oss.bucket}/${filePath}`;
+  const signature = crypto
+    .createHmac('sha1', oss.accessKeySecret)
+    .update(stringToSign, 'utf8')
+    .digest('base64');
+  return {
+    Date: date,
+    Authorization: `OSS ${oss.accessKeyId}:${signature}`
+  };
+}
+
+async function saveRequirementsToOss(config, payload) {
+  const oss = getOssConfig(config);
+  if (!oss) return false;
+
+  const body = JSON.stringify(payload, null, 2);
+  const contentType = 'application/json';
+  const authHeaders = buildOssAuthHeaders(oss, 'PUT', oss.fileKey, contentType);
+
+  const options = {
+    hostname: oss.host,
+    port: 443,
+    path: `/${oss.fileKey}`,
+    method: 'PUT',
+    headers: {
+      ...authHeaders,
+      'Content-Type': contentType,
+      'Content-Length': Buffer.byteLength(body, 'utf8')
+    }
+  };
+
+  const res = await requestHttps(options, body);
+  if (res.statusCode >= 200 && res.statusCode < 300) return true;
+  throw new Error(`OSS PUT returned ${res.statusCode}: ${res.body || ''}`);
 }
 
 // ==================== HTTP Server ====================
@@ -206,13 +384,29 @@ const server = http.createServer(async (req, res) => {
   // GET /api/data - Load saved requirements
   if (pathname === '/api/data' && req.method === 'GET') {
     try {
+      const config = loadConfig();
+      if (config) {
+        try {
+          const ossData = await loadRequirementsFromOss(config);
+          if (ossData) {
+            console.log(`[Data] Loaded ${ossData.requirements.length} requirements from OSS`);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(ossData));
+            return;
+          }
+        } catch (ossErr) {
+          console.warn('[Data] OSS load failed, fallback to local file:', ossErr.message);
+        }
+      }
+
       if (fs.existsSync(DATA_PATH)) {
         const raw = fs.readFileSync(DATA_PATH, 'utf-8');
+        console.log('[Data] Loaded requirements from local file fallback');
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(raw);
       } else {
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ requirements: null }));
+        res.end(JSON.stringify({ requirements: [] }));
       }
     } catch (err) {
       console.error('[Data] Load error:', err.message);
@@ -222,11 +416,123 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // GET /api/config/client - 前端可读配置（基于 config/config.json）
+  if (pathname === '/api/config/client' && req.method === 'GET') {
+    const config = loadConfig() || {};
+    const hasWebhook = Boolean(normalizeDingTalkWebhook(config.dingtalk_webhook));
+    const hasOssConfig = Boolean(getOssConfig(config));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      has_dingtalk_webhook: hasWebhook,
+      dingtalk_webhook: hasWebhook ? normalizeDingTalkWebhook(config.dingtalk_webhook) : '',
+      has_oss_config: hasOssConfig
+    }));
+    return;
+  }
+
+  // POST /api/config/dingtalk-webhook - 设置钉钉 webhook（写入 config/config.json）
+  if (pathname === '/api/config/dingtalk-webhook' && req.method === 'POST') {
+    let body;
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid JSON body' }));
+      return;
+    }
+    const webhookUrl = normalizeDingTalkWebhook(body && body.webhookUrl);
+    if (!webhookUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid DingTalk webhook URL' }));
+      return;
+    }
+    const config = loadConfig() || {};
+    config.dingtalk_webhook = webhookUrl;
+    if (!saveConfig(config)) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to save config/config.json' }));
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true }));
+    return;
+  }
+
+  // POST /api/config/dingtalk-webhook/clear - 清空钉钉 webhook（写入 config/config.json）
+  if (pathname === '/api/config/dingtalk-webhook/clear' && req.method === 'POST') {
+    const config = loadConfig() || {};
+    config.dingtalk_webhook = '';
+    if (!saveConfig(config)) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to save config/config.json' }));
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true }));
+    return;
+  }
+
+  // POST /api/notify/dingtalk - 使用 config/config.json 内 webhook 发送通知
+  if (pathname === '/api/notify/dingtalk' && req.method === 'POST') {
+    let body;
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid JSON body' }));
+      return;
+    }
+    const message = body && body.message;
+    if (!message || typeof message !== 'object') {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'message is required' }));
+      return;
+    }
+    const config = loadConfig() || {};
+    const webhookUrl = normalizeDingTalkWebhook(config.dingtalk_webhook);
+    if (!webhookUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'DingTalk webhook not configured in config/config.json' }));
+      return;
+    }
+    try {
+      const result = await postJsonToRemoteUrl(webhookUrl, message);
+      if (result.statusCode < 200 || result.statusCode >= 300) {
+        res.writeHead(502, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: `DingTalk returned ${result.statusCode}`, detail: result.body || '' }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
   // POST /api/data - Save requirements
   if (pathname === '/api/data' && req.method === 'POST') {
     try {
       const body = await readBody(req);
       const data = JSON.parse(body);
+      const requirements = Array.isArray(data && data.requirements) ? data.requirements : [];
+      const payload = { requirements };
+
+      const config = loadConfig();
+      if (config) {
+        try {
+          const saved = await saveRequirementsToOss(config, payload);
+          if (saved) {
+            console.log(`[Data] Saved ${requirements.length} requirements to OSS`);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, storage: 'oss' }));
+            return;
+          }
+        } catch (ossErr) {
+          console.warn('[Data] OSS save failed, fallback to local file:', ossErr.message);
+        }
+      }
 
       // Ensure data directory exists
       const dataDir = path.dirname(DATA_PATH);
@@ -234,11 +540,11 @@ const server = http.createServer(async (req, res) => {
         fs.mkdirSync(dataDir, { recursive: true });
       }
 
-      fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2), 'utf-8');
-      console.log(`[Data] Saved ${data.requirements ? data.requirements.length : 0} requirements`);
+      fs.writeFileSync(DATA_PATH, JSON.stringify(payload, null, 2), 'utf-8');
+      console.log(`[Data] Saved ${requirements.length} requirements to local file fallback`);
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
+      res.end(JSON.stringify({ success: true, storage: 'local_fallback' }));
     } catch (err) {
       console.error('[Data] Save error:', err.message);
       res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -260,13 +566,13 @@ const server = http.createServer(async (req, res) => {
     const config = loadConfig();
     if (!config) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
       return;
     }
 
     if (!config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Yuque API Token not configured. Please update config.json with your token.' }));
+      res.end(JSON.stringify({ error: 'Yuque API Token not configured. Please update config/config.json with your token.' }));
       return;
     }
 
@@ -432,13 +738,13 @@ const server = http.createServer(async (req, res) => {
     const config = loadConfig();
     if (!config) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
       return;
     }
 
-    const isMock = !config.ai_api_key || config.ai_api_key === 'YOUR_AI_API_KEY_HERE';
+    const isMock = !hasAnyAiKey(config);
     if (isMock) {
-      console.log('[AiDesign] No ai_api_key — running in MOCK mode');
+      console.log('[AiDesign] No valid ai_api_key / ai_decompose_api_key — running in MOCK mode');
     }
 
     const job = aiDesignSvc.createJob(reqId, prdUrl, config, yuqueSvc, { skillKey: skill });
@@ -471,7 +777,7 @@ const server = http.createServer(async (req, res) => {
     const config = loadConfig();
     if (!config) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config.json' }));
+      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
       return;
     }
 
@@ -517,6 +823,11 @@ const server = http.createServer(async (req, res) => {
 
   // ---- Static Files (fallback) ----
   if (req.method === 'GET' && !pathname.startsWith('/api/')) {
+    if (pathname === '/config/config.json' || pathname === '/config.json') {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Config file is not publicly accessible' }));
+      return;
+    }
     serveStaticFile(pathname, res);
     return;
   }
@@ -536,6 +847,10 @@ server.listen(PORT, () => {
   console.log(`  GET  /api/yuque/doc-content?url=     - Fetch Yuque doc full content`);
   console.log(`  GET  /api/yuque/doc-assets?url=      - Fetch Yuque body + images`);
   console.log(`  GET  /api/yuque/doc-images/download? - Download one extracted image`);
+  console.log(`  GET  /api/config/client              - Read client runtime config`);
+  console.log(`  POST /api/config/dingtalk-webhook    - Save DingTalk webhook`);
+  console.log(`  POST /api/config/dingtalk-webhook/clear - Clear DingTalk webhook`);
+  console.log(`  POST /api/notify/dingtalk            - Send DingTalk notification`);
   console.log(`  POST /api/ai-design/jobs             - Create AI design job`);
   console.log(`  GET  /api/ai-design/jobs/:id         - Get job status & result`);
   console.log(`  POST /api/ai-design/jobs/:id/retry   - Retry a failed job`);
@@ -543,13 +858,16 @@ server.listen(PORT, () => {
 
   const config = loadConfig();
   if (!config || !config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
-    console.warn('[Server] WARNING: Yuque API Token not configured! Please update config.json');
+    console.warn('[Server] WARNING: Yuque API Token not configured! Please update config/config.json');
   } else {
     console.log('[Server] Yuque API Token loaded successfully');
   }
-  if (!config || !config.ai_api_key || config.ai_api_key === 'YOUR_AI_API_KEY_HERE') {
+  if (!hasAnyAiKey(config)) {
     console.warn('[Server] WARNING: AI API Key not configured! AI design assistant will not work.');
   } else {
     console.log(`[Server] AI provider: ${config.ai_provider || 'openai'} / model: ${config.ai_model || 'gpt-4o-mini'}`);
+    if (config.ai_decompose_provider || config.ai_decompose_model || normalizeAiKey(config.ai_decompose_api_key)) {
+      console.log(`[Server] AI decompose override: provider=${config.ai_decompose_provider || config.ai_provider || 'openai'} / model=${config.ai_decompose_model || config.ai_model || 'gpt-4o-mini'}`);
+    }
   }
 });

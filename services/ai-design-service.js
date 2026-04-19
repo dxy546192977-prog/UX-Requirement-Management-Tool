@@ -9,7 +9,9 @@
  *   Phase 3 — designPlan   : 生成每个模块的设计意图与建议处理方式
  *
  * 第一版实现：内存任务表（服务重启后正在跑的任务状态丢失，结果在调用方写回 OSS）。
- * AI 调用通过 config.ai_provider 配置（支持 openai / qwen / custom）。
+ * AI 调用支持按阶段配置：
+ * - 默认阶段（planning）：config.ai_*
+ * - PRD 拆解阶段（decomposing）：优先 config.ai_decompose_*，缺省回退 config.ai_*
  */
 
 const https = require('https');
@@ -124,9 +126,45 @@ function retryJob(jobId, config, yuqueSvc) {
 
 // ---------- 流水线实现 ----------
 
+function _normalizeKey(value) {
+  const key = String(value || '').trim();
+  if (!key || key === 'YOUR_AI_API_KEY_HERE') return '';
+  return key;
+}
+
 function _isMockMode(config) {
-  const key = (config.ai_api_key || '').trim();
-  return !key || key === 'YOUR_AI_API_KEY_HERE';
+  const defaultKey = _normalizeKey(config.ai_api_key);
+  const decomposeKey = _normalizeKey(config.ai_decompose_api_key);
+  return !defaultKey && !decomposeKey;
+}
+
+function _resolveStageAiConfig(config, stage) {
+  const isDecompose = stage === 'decomposing';
+  const providerRaw = isDecompose
+    ? (config.ai_decompose_provider || config.ai_provider || 'openai')
+    : (config.ai_provider || 'openai');
+  const provider = String(providerRaw || 'openai').toLowerCase();
+
+  const model = isDecompose
+    ? (config.ai_decompose_model || config.ai_model || (provider === 'qwen' || provider === 'dashscope' ? 'qwen-plus' : 'gpt-4o-mini'))
+    : (config.ai_model || (provider === 'qwen' || provider === 'dashscope' ? 'qwen-plus' : 'gpt-4o-mini'));
+
+  const apiKey = isDecompose
+    ? (_normalizeKey(config.ai_decompose_api_key) || _normalizeKey(config.ai_api_key))
+    : _normalizeKey(config.ai_api_key);
+
+  const apiBase = isDecompose
+    ? (config.ai_decompose_api_base || config.ai_api_base || 'https://api.openai.com')
+    : (config.ai_api_base || 'https://api.openai.com');
+
+  const decomposeMaxImagesRaw = Number(config.ai_decompose_max_images);
+  const decomposeMaxImages = Number.isFinite(decomposeMaxImagesRaw) && decomposeMaxImagesRaw > 0
+    ? Math.min(Math.floor(decomposeMaxImagesRaw), 20)
+    : 8;
+
+  const visionEnabled = isDecompose && provider === 'openai';
+
+  return { provider, model, apiKey, apiBase, stage, visionEnabled, decomposeMaxImages };
 }
 
 async function _runJob(job, config, yuqueSvc) {
@@ -147,15 +185,26 @@ async function _runJob(job, config, yuqueSvc) {
     throw new Error('PRD 抓取失败: ' + err.message);
   }
 
-  const bodyText = _stripHtml(prdContent.body || prdContent.description || '');
+  const rawBody = prdContent.body || prdContent.description || '';
+  const bodyText = _stripHtml(rawBody);
+  const imageUrls = _extractImageUrls(rawBody);
 
   // Phase 2: 结构化需求拆解
   _updateJob(job, { stage: 'decomposing' });
   console.log(`[AiDesign] Job ${job.id} — Phase 2: decomposing requirement`);
 
+  const decomposeAiConfig = _resolveStageAiConfig(config, 'decomposing');
+  console.log(`[AiDesign] Job ${job.id} — Decompose model: ${decomposeAiConfig.provider}/${decomposeAiConfig.model}`);
+  if (imageUrls.length) {
+    console.log(`[AiDesign] Job ${job.id} — PRD images detected: ${imageUrls.length}`);
+  }
+
   let decomposeResult;
   try {
-    decomposeResult = await _callAi(config, _buildDecomposePrompt(prdContent.title, bodyText, job.skill_key));
+    decomposeResult = await _callAi(
+      decomposeAiConfig,
+      _buildDecomposePrompt(prdContent.title, bodyText, job.skill_key, imageUrls, decomposeAiConfig)
+    );
   } catch (err) {
     throw new Error('需求拆解失败: ' + err.message);
   }
@@ -166,9 +215,12 @@ async function _runJob(job, config, yuqueSvc) {
   _updateJob(job, { stage: 'planning' });
   console.log(`[AiDesign] Job ${job.id} — Phase 3: generating design plan`);
 
+  const planAiConfig = _resolveStageAiConfig(config, 'planning');
+  console.log(`[AiDesign] Job ${job.id} — Plan model: ${planAiConfig.provider}/${planAiConfig.model}`);
+
   let planResult;
   try {
-    planResult = await _callAi(config, _buildPlanPrompt(prdContent.title, bodyText, parsed, job.skill_key));
+    planResult = await _callAi(planAiConfig, _buildPlanPrompt(prdContent.title, bodyText, parsed, job.skill_key));
   } catch (err) {
     throw new Error('设计方案生成失败: ' + err.message);
   }
@@ -309,7 +361,7 @@ function _buildMockModules(pages, prdTitle, skillKey) {
 
 const PRD_HTML_SKILL_USER_LINE = '帮我将上传的prd文档拆解成能够生成html的分条信息';
 
-function _buildDecomposePrompt(title, bodyText, skillKey) {
+function _buildDecomposePrompt(title, bodyText, skillKey, imageUrls, aiConfig) {
   const htmlSkill = skillKey === 'prd_html_decompose';
   const systemBase = htmlSkill
     ? `你是资深前端信息架构师，专注于把 PRD 拆成「可逐条喂给 HTML 单页生成器」的结构化输入。
@@ -324,11 +376,13 @@ function _buildDecomposePrompt(title, bodyText, skillKey) {
     ? `\n注意：pages 尽量拆到「一个 URL/一个主界面」粒度，便于每个页面对应一份 HTML 说明。`
     : '';
 
-  return [
-    { role: 'system', content: systemBase },
-    {
-      role: 'user',
-      content: `请分析以下 PRD，输出 JSON 对象，包含：
+  const decomposeMaxImages = Number.isInteger(aiConfig && aiConfig.decomposeMaxImages) && aiConfig.decomposeMaxImages > 0
+    ? aiConfig.decomposeMaxImages
+    : 8;
+  const visionEnabled = Boolean(aiConfig && aiConfig.visionEnabled);
+  const finalImageUrls = Array.isArray(imageUrls) ? imageUrls.slice(0, decomposeMaxImages) : [];
+
+  const userText = `请分析以下 PRD，输出 JSON 对象，包含：
 - summary: 字符串，一句话说明核心诉求（≤80字）
 - pages: 字符串数组，涉及的页面名称列表（如"首页"、"列表页"、"下单页"等）
 ${userExtra}
@@ -337,9 +391,16 @@ PRD 标题：${title}
 
 PRD 正文（可能是 HTML/Markdown 格式）：
 ${bodyText.slice(0, 6000)}
+${finalImageUrls.length ? `\n\n图片理解要求：以下图片属于 PRD 内容，请结合图片信息完成拆解。若图片与正文冲突，以图片中真实 UI/信息结构为准并在总结里体现。` : ''}
 
 直接输出 JSON，不要有任何其他内容。示例：
-{"summary":"优化机票搜索体验，新增低价日历模块","pages":["首页","列表页"]}`
+{"summary":"优化机票搜索体验，新增低价日历模块","pages":["首页","列表页"]}`;
+
+  return [
+    { role: 'system', content: systemBase },
+    {
+      role: 'user',
+      content: _buildVisionUserContent(userText, finalImageUrls, visionEnabled)
     }
   ];
 }
@@ -389,20 +450,20 @@ ${fieldsHtml}
 
 // ---------- AI 调用 ----------
 
-async function _callAi(config, messages) {
-  const provider = (config.ai_provider || 'openai').toLowerCase();
+async function _callAi(aiConfig, messages) {
+  const provider = (aiConfig.provider || 'openai').toLowerCase();
 
   if (provider === 'qwen' || provider === 'dashscope') {
-    return _callQwen(config, messages);
+    return _callQwen(aiConfig, messages);
   }
   // 默认 OpenAI 兼容接口
-  return _callOpenAiCompat(config, messages);
+  return _callOpenAiCompat(aiConfig, messages);
 }
 
-function _callOpenAiCompat(config, messages) {
-  const apiBase = config.ai_api_base || 'https://api.openai.com';
-  const apiKey  = config.ai_api_key  || '';
-  const model   = config.ai_model    || 'gpt-4o-mini';
+function _callOpenAiCompat(aiConfig, messages) {
+  const apiBase = aiConfig.apiBase || 'https://api.openai.com';
+  const apiKey  = aiConfig.apiKey  || '';
+  const model   = aiConfig.model   || 'gpt-4o-mini';
 
   const body = JSON.stringify({ model, messages, temperature: 0.3, max_tokens: 2000 });
 
@@ -416,9 +477,9 @@ function _callOpenAiCompat(config, messages) {
   });
 }
 
-function _callQwen(config, messages) {
-  const apiKey = config.ai_api_key || '';
-  const model  = config.ai_model   || 'qwen-plus';
+function _callQwen(aiConfig, messages) {
+  const apiKey = aiConfig.apiKey || '';
+  const model  = aiConfig.model  || 'qwen-plus';
 
   const body = JSON.stringify({
     model,
@@ -434,6 +495,20 @@ function _callQwen(config, messages) {
     if (!choice) throw new Error('Qwen 返回内容为空');
     return choice.message.content;
   });
+}
+
+function _buildVisionUserContent(text, imageUrls, visionEnabled) {
+  if (!visionEnabled || !Array.isArray(imageUrls) || imageUrls.length === 0) {
+    return text;
+  }
+  const content = [{ type: 'text', text }];
+  imageUrls.forEach((url) => {
+    content.push({
+      type: 'image_url',
+      image_url: { url }
+    });
+  });
+  return content;
 }
 
 function _httpsPost(url, headers, body) {
@@ -546,6 +621,55 @@ function _stripHtml(html) {
     .replace(/&amp;/g, '&')
     .replace(/\s{2,}/g, ' ')
     .trim();
+}
+
+function _extractImageUrls(rawBody) {
+  const source = String(rawBody || '');
+  if (!source.trim()) return [];
+
+  const found = new Set();
+
+  // HTML: <img src="...">
+  const imgSrcRegex = /<img[^>]+src=["']([^"']+)["']/gi;
+  let matchImg;
+  while ((matchImg = imgSrcRegex.exec(source)) !== null) {
+    const normalized = _normalizeImageUrl(matchImg[1]);
+    if (normalized) found.add(normalized);
+  }
+
+  // Markdown: ![alt](url)
+  const mdImgRegex = /!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/gi;
+  let matchMd;
+  while ((matchMd = mdImgRegex.exec(source)) !== null) {
+    const normalized = _normalizeImageUrl(matchMd[1]);
+    if (normalized) found.add(normalized);
+  }
+
+  // Generic URL scan
+  const urlRegex = /https?:\/\/[^\s"'<>\\]+/gi;
+  let matchUrl;
+  while ((matchUrl = urlRegex.exec(source)) !== null) {
+    const normalized = _normalizeImageUrl(matchUrl[0]);
+    if (normalized && _looksLikeImageUrl(normalized)) found.add(normalized);
+  }
+
+  return Array.from(found);
+}
+
+function _normalizeImageUrl(url) {
+  const raw = String(url || '').trim();
+  if (!raw) return '';
+  if (raw.startsWith('//')) return 'https:' + raw;
+  if (!/^https?:\/\//i.test(raw)) return '';
+  return raw;
+}
+
+function _looksLikeImageUrl(url) {
+  const lower = String(url || '').toLowerCase();
+  if (!lower) return false;
+  if (/\.(png|jpe?g|gif|webp|bmp|svg)(\?|$)/.test(lower)) return true;
+  if (lower.includes('/yuque') || lower.includes('alicdn.com') || lower.includes('aliyuncs.com')) return true;
+  return false;
 }
 
 module.exports = { createJob, getJob, retryJob };
