@@ -2775,7 +2775,7 @@ function renderAiDesignSection(req) {
     queued:             '排队等待中…',
     processing:         _stageLabel(ai.stage),
     needs_confirmation: '分析完成，请确认',
-    completed:          '已确认',
+    completed:          ai.html_output_path ? 'H5 设计稿已生成' : '已确认',
     failed:             '执行失败'
   };
   var statusLabel = statusLabelMap[ai.status] || ai.status;
@@ -2785,11 +2785,16 @@ function renderAiDesignSection(req) {
     + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>'
     + '重跑</button>';
 
-  var confirmBtn = (ai.status === 'needs_confirmation')
-    ? '<button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')">'
+  var confirmBtn = '';
+  if (ai.status === 'needs_confirmation') {
+    confirmBtn = '<button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')">'
       + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
-      + '确认方案</button>'
-    : '';
+      + '确认方案</button>';
+  } else if (ai.status === 'completed' && ai.html_output_path) {
+    confirmBtn = '<a class="ai-btn ai-btn-confirm" href="/' + ai.html_output_path + '" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;">'
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+      + '预览 H5</a>';
+  }
 
   var html = '<div class="ai-section">'
     + header
@@ -2883,9 +2888,10 @@ function renderAiDesignSection(req) {
 
 function _stageLabel(stage) {
   var map = {
-    fetching_prd: '正在拉取 PRD 正文…',
-    decomposing:  '正在拆解需求…',
-    planning:     '正在生成设计方案…'
+    fetching_prd:  '正在拉取 PRD 正文…',
+    decomposing:   '正在拆解需求…',
+    planning:      '正在生成设计方案…',
+    generating_h5: '正在生成 H5 设计稿…'
   };
   return map[stage] || 'AI 处理中…';
 }
@@ -2897,18 +2903,20 @@ function _stageLabel(stage) {
 function _calcAiProgress(ai) {
   // 各阶段在整体进度中的区间 [start%, end%]
   var stageRanges = {
-    fetching_prd: [2,  25],
-    decomposing:  [25, 60],
-    planning:     [60, 92]
+    fetching_prd:  [2,  20],
+    decomposing:   [20, 45],
+    planning:      [45, 65],
+    generating_h5: [65, 95]
   };
   // 各阶段预估持续秒数
   var stageDurations = {
-    fetching_prd: 15,
-    decomposing:  30,
-    planning:     60
+    fetching_prd:  15,
+    decomposing:   30,
+    planning:      30,
+    generating_h5: 60
   };
   // 总预估秒数
-  var totalEstSec = 105;
+  var totalEstSec = 135;
 
   var stage = ai.stage || (ai.status === 'queued' ? 'queued' : 'fetching_prd');
 
@@ -3077,14 +3085,15 @@ function startAiPolling(reqId, jobId) {
 
       // 更新本地数据
       req.ai_design = {
-        status:     job.status,
-        stage:      job.stage,
-        job_id:     job.id,
-        summary:    job.summary,
-        pages:      job.pages || [],
-        modules:    job.modules || [],
-        last_error: job.last_error,
-        updated_at: job.updated_at
+        status:           job.status,
+        stage:            job.stage,
+        job_id:           job.id,
+        summary:          job.summary,
+        pages:            job.pages || [],
+        modules:          job.modules || [],
+        last_error:       job.last_error,
+        html_output_path: job.html_output_path || null,
+        updated_at:       job.updated_at
       };
 
       // 若 modal 当前打开的是这个 req，刷新 AI 区块
@@ -3099,6 +3108,13 @@ function startAiPolling(reqId, jobId) {
 
         if (job.status === 'needs_confirmation') {
           showToast('AI 拆解完成，请在需求详情中确认方案', 'success');
+        } else if (job.status === 'completed') {
+          var h5Path = job.html_output_path;
+          if (h5Path) {
+            showToast('H5 设计稿已生成，可在需求详情中预览', 'success');
+          } else {
+            showToast('AI 设计方案已确认', 'success');
+          }
         } else if (job.status === 'failed') {
           showToast('AI 拆解失败：' + (job.last_error || '未知错误'), 'error');
         }
@@ -3137,19 +3153,50 @@ function _refreshAiSectionIfOpen(req) {
 /**
  * 确认 AI 设计方案（把 needs_confirmation -> completed，所有模块标为 confirmed）
  */
-function confirmAiDesign(reqId) {
+async function confirmAiDesign(reqId) {
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req || !req.ai_design) return;
 
-  req.ai_design.status = 'completed';
-  if (req.ai_design.modules) {
-    req.ai_design.modules.forEach(function(m) { m.status = 'confirmed'; });
+  var jobId = req.ai_design.job_id;
+  if (!jobId || !API_BASE) {
+    // 无后端连接时，仅本地确认
+    req.ai_design.status = 'completed';
+    if (req.ai_design.modules) {
+      req.ai_design.modules.forEach(function(m) { m.status = 'confirmed'; });
+    }
+    req.updated_at = todayStr();
+    saveData();
+    renderKanban();
+    openModal(reqId);
+    showToast('AI 设计方案已确认', 'success');
+    return;
   }
-  req.updated_at = todayStr();
-  saveData();
-  renderKanban();
-  openModal(reqId);
-  showToast('AI 设计方案已确认', 'success');
+
+  // 调后端 confirm 接口，触发 H5 生成
+  try {
+    var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId + '/confirm', { method: 'POST' });
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      showToast('确认失败：' + (err.error || res.status), 'error');
+      return;
+    }
+    var job = await res.json();
+
+    req.ai_design.status = job.status;
+    req.ai_design.stage = job.stage;
+    if (req.ai_design.modules) {
+      req.ai_design.modules.forEach(function(m) { m.status = 'confirmed'; });
+    }
+    req.updated_at = todayStr();
+    saveData();
+    openModal(reqId);
+    showToast('方案已确认，正在生成 H5 设计稿...', 'success');
+
+    // 轮询 H5 生成进度
+    startAiPolling(reqId, jobId);
+  } catch (err) {
+    showToast('网络错误：' + err.message, 'error');
+  }
 }
 
 /**

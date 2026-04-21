@@ -810,6 +810,29 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // POST /api/ai-design/jobs/:id/confirm — 确认方案并触发 H5 生成
+  const jobConfirmMatch = pathname.match(/^\/api\/ai-design\/jobs\/([^/]+)\/confirm$/);
+  if (jobConfirmMatch && req.method === 'POST') {
+    const jobId  = jobConfirmMatch[1];
+    const config = loadConfig();
+    if (!config) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
+      return;
+    }
+
+    const job = aiDesignSvc.confirmJob(jobId, config, yuqueSvc);
+    if (!job) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `Job ${jobId} not found` }));
+      return;
+    }
+    console.log(`[AiDesign] Confirmed job ${jobId}, H5 generation started`);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(job));
+    return;
+  }
+
   // GET /api/yuque/doc-content?url=... — 读取 PRD 正文
   if (pathname === '/api/yuque/doc-content' && req.method === 'GET') {
     const yuqueUrl = parsed.searchParams.get('url');

@@ -239,55 +239,128 @@ async function _runJob(job, config, yuqueSvc) {
 
   const modules = _parsePlanResult(planResult, parsed.pages, job.skill_key);
 
-  // Phase 4: H5 生成（仅 fliggy_flight_prd_to_h5 skill）
-  let htmlOutputPath = null;
-  if (job.skill_key === 'fliggy_flight_prd_to_h5') {
-    _updateJob(job, { stage: 'generating_h5' });
-    console.log(`[AiDesign] Job ${job.id} — Phase 4: generating H5`);
-
-    const h5AiConfig = _resolveStageAiConfig(config, 'planning');
-    console.log(`[AiDesign] Job ${job.id} — H5 model: ${h5AiConfig.provider}/${h5AiConfig.model}`);
-
-    try {
-      const h5Result = await _callAi(h5AiConfig, _buildH5Prompt(prdContent.title, bodyText, parsed, modules));
-      htmlOutputPath = await _saveH5Output(job.id, h5Result);
-      console.log(`[AiDesign] Job ${job.id} — H5 saved to: ${htmlOutputPath}`);
-    } catch (h5Err) {
-      console.warn(`[AiDesign] Job ${job.id} — H5 generation failed (non-fatal): ${h5Err.message}`);
-    }
-  }
-
+  // Phase 4 (H5 生成) 移至 confirmJob，等用户确认方案后再触发
   _updateJob(job, {
     status:           'needs_confirmation',
     stage:            null,
     summary:          parsed.summary,
     pages:            parsed.pages,
     modules,
-    html_output_path: htmlOutputPath
+    prd_title:        prdContent.title,
+    prd_body_text:    bodyText,
+    html_output_path: null
   });
 
-  console.log(`[AiDesign] Job ${job.id} — Done. ${modules.length} modules identified.${htmlOutputPath ? ' H5 ready.' : ''}`);
+  console.log(`[AiDesign] Job ${job.id} — Done. ${modules.length} modules identified. Awaiting confirmation.`);
 }
 
-// ---------- H5 生成 ----------
+// ---------- H5 生成（确认方案后触发）----------
 
-const FLIGGY_FLIGHT_H5_SYSTEM = `你是飞猪机票 UX 工程师，负责根据 PRD 拆解结果生成符合飞猪设计规范的移动端 H5 页面。
+/**
+ * 确认方案并触发 H5 生成
+ * 用户点击「确认方案」后调用，异步生成 H5 文件
+ */
+function confirmJob(jobId, config, yuqueSvc) {
+  const job = jobs.get(jobId);
+  if (!job) return null;
+  if (job.status !== 'needs_confirmation') return job;
 
-核心约束（必须严格遵守）：
-1. 输出单文件 HTML，内联所有 CSS，不引用外部资源
-2. viewport: <meta name="viewport" content="width=750, user-scalable=no">
-3. 使用 :root + var(--*) token 管理颜色、圆角、间距
-4. 飞猪品牌色：主色 #FF6600（橙），辅色 #1677FF（蓝），背景 #F5F5F5，卡片白 #FFFFFF
-5. 字体层级：标题 32px/28px，正文 26px，辅助 22px，说明 20px（单位 px，基于 750px 设计稿）
-6. 主流程布局：flex + column，禁止 position:absolute 编排主模块
-7. 模块间距统一用 gap 控制，相邻模块垂直空白不超过 24px
-8. 固定头部必须用 padding-top 补偿内容区偏移
-9. 只输出完整可运行的 HTML 代码，不要任何解释文字、Markdown 代码块标记`;
+  // 标记模块为已确认
+  if (job.modules) {
+    job.modules.forEach(m => { m.status = 'confirmed'; });
+  }
+
+  // 异步触发 H5 生成
+  _updateJob(job, { status: 'processing', stage: 'generating_h5' });
+  _runH5Generation(job, config, yuqueSvc).catch(err => {
+    console.error(`[AiDesign] Job ${job.id} H5 generation error:`, err.message);
+    _updateJob(job, { status: 'failed', stage: null, last_error: 'H5 生成失败: ' + err.message });
+  });
+
+  return job;
+}
+
+async function _runH5Generation(job, config, yuqueSvc) {
+  console.log(`[AiDesign] Job ${job.id} — Phase 4: generating H5 (post-confirm)`);
+
+  // 如果 prd_body_text 不在 job 里（旧 Job），尝试重新拉取
+  let bodyText = job.prd_body_text || '';
+  let prdTitle = job.prd_title || '';
+  if (!bodyText && job.prd_url) {
+    try {
+      const prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
+      bodyText = prdContent.body_text || prdContent.body || '';
+      prdTitle = prdContent.title || '';
+    } catch (err) {
+      console.warn(`[AiDesign] Job ${job.id} — PRD re-fetch failed: ${err.message}`);
+    }
+  }
+
+  const h5AiConfig = _resolveStageAiConfig(config, 'planning');
+  console.log(`[AiDesign] Job ${job.id} — H5 model: ${h5AiConfig.provider}/${h5AiConfig.model}`);
+
+  const h5Result = await _callAi(h5AiConfig, _buildH5Prompt(prdTitle, bodyText, {
+    summary: job.summary,
+    pages: job.pages
+  }, job.modules));
+
+  const htmlOutputPath = await _saveH5Output(job.id, h5Result);
+  console.log(`[AiDesign] Job ${job.id} — H5 saved to: ${htmlOutputPath}`);
+
+  _updateJob(job, {
+    status: 'completed',
+    stage: null,
+    html_output_path: htmlOutputPath
+  });
+}
+
+const FLIGGY_FLIGHT_H5_SYSTEM = `你是飞猪机票资深 UX 工程师，负责根据 PRD 拆解结果生成严格符合飞猪设计规范的移动端 H5 页面。
+
+=== 格式硬约束（违反任何一条即为不合格）===
+
+1. 文件形态：单文件 .html，样式仅内联 <style>，禁止外链 CSS 和 JS
+2. 视口（强制）：<meta name="viewport" content="width=750, user-scalable=no">
+3. Design Token（强制）：
+   - 颜色、圆角等一律通过 var(--token-name) 引用
+   - :root 中集中定义所有 token，hex 仅出现在 :root
+   - 品牌色 var(--color-indigo-1) #FF6600：仅用于按钮文字、链接，禁止大面积铺底
+4. 布局与间距：
+   - 页面水平边距：30px
+   - 间距体系：6 的倍数（6/12/18/24/30/36/42/48px）
+   - 主内容纵向 flex，禁止 position:absolute 做纵向排版
+   - 相邻模块垂直空白不超过 24px
+5. 字体层级（基于 750px 设计稿）：
+   - 大标题：36px/700
+   - 标题：32px/600 或 28px/600
+   - 正文：26px/400
+   - 辅助：22px/400
+   - 说明：20px/400
+6. 图片：使用 Unsplash 真实图 + 尺寸参数，禁止纯色大块占位
+   - URL 模板：https://images.unsplash.com/photo-{ID}?w={w}&h={h}&fit=crop
+7. 类名前缀：fdl-*
+8. 卡片规范：
+   - 白底卡片仅用于固定组件（交通卡、商品卡、下单卡等）
+   - Markdown 说明性文本铺在 #F7F8FA 背景上，禁止用白底卡片包一层
+9. 颜色体系：
+   - 主色/品牌色：#FF6600（橙）
+   - 辅助蓝：#1677FF
+   - 背景色：#F7F8FA
+   - 卡片白：#FFFFFF
+   - 价格色：#FF4D00
+   - 成功色：#00B578
+   - 文字色：#1A1A1A / #333333 / #666666 / #999999
+
+=== 输出要求 ===
+
+只输出完整可运行的 HTML 代码。
+不要任何解释文字、Markdown 代码块标记（如 \`\`\`html）。
+不要输出 "以下是..." 等前缀说明。
+直接以 <!DOCTYPE html> 开头。`;
 
 function _buildH5Prompt(title, bodyText, decomposed, modules) {
   const pageList = (decomposed.pages || []).join('、') || '首页';
   const moduleList = (modules || []).map((m) =>
-    `- ${m.name}（${m.page || ''}）：${m.intent || ''}${m.notes ? '；' + m.notes : ''}`
+    `- ${m.name}（${m.page || ''}，${m.change_type || 'create'}）：${m.intent || ''}${m.notes ? '；备注：' + m.notes : ''}`
   ).join('\n');
 
   return [
@@ -296,22 +369,25 @@ function _buildH5Prompt(title, bodyText, decomposed, modules) {
       role: 'user',
       content: `请根据以下飞猪机票需求拆解结果，生成一个完整的移动端 H5 页面。
 
-PRD 标题：${title}
-需求摘要：${decomposed.summary || ''}
-涉及页面：${pageList}
+## PRD 信息
+- 标题：${title}
+- 需求摘要：${decomposed.summary || ''}
+- 涉及页面：${pageList}
 
-模块清单：
+## 已确认的模块清单
 ${moduleList}
 
-PRD 正文摘要：
-${(bodyText || '').slice(0, 3000)}
+## PRD 正文
+${(bodyText || '').slice(0, 6000)}
 
-要求：
-1. 以"首页"或第一个页面为主体生成 H5
-2. 包含顶部导航栏、主要业务模块、底部操作区
-3. 使用飞猪橙色品牌风格，卡片式布局
-4. 所有文案使用 PRD 中的真实业务内容，不要用 Lorem ipsum 占位
-5. 直接输出完整 HTML，不要任何前缀说明`
+## 生成要求
+1. 以第一个页面为主体，完整还原 PRD 中描述的所有模块和交互
+2. 包含完整的页面结构：顶部导航栏、主要业务模块、底部操作区
+3. 所有文案必须使用 PRD 中的真实业务内容（如站名、车次、价格等），禁止用占位文字
+4. 弹窗/浮层类模块：默认隐藏，提供触发按钮可交互展示
+5. 必须包含完整的 :root token 定义（颜色、圆角、阴影等）
+6. 使用 Unsplash 真实图片，禁止纯色占位
+7. 直接输出完整 HTML，以 <!DOCTYPE html> 开头`
     }
   ];
 }
@@ -324,14 +400,15 @@ async function _saveH5Output(jobId, h5Content) {
   const fenceMatch = html.match(/```(?:html)?\s*([\s\S]+?)```/i);
   if (fenceMatch) html = fenceMatch[1].trim();
 
-  const outputDir = pathModule.join(__dirname, '..', 'outputs', 'flight');
+  // 输出到 pages/ 目录，方便直接预览
+  const outputDir = pathModule.join(__dirname, '..', 'pages');
   fsModule.mkdirSync(outputDir, { recursive: true });
 
   const fileName = `${jobId}.html`;
   const filePath = pathModule.join(outputDir, fileName);
   fsModule.writeFileSync(filePath, html, 'utf8');
 
-  return pathModule.join('outputs', 'flight', fileName);
+  return pathModule.join('pages', fileName);
 }
 
 /**
@@ -772,4 +849,4 @@ function _looksLikeImageUrl(url) {
   return false;
 }
 
-module.exports = { createJob, getJob, retryJob };
+module.exports = { createJob, getJob, retryJob, confirmJob };
