@@ -3,6 +3,7 @@
 const https = require('https');
 const http = require('http');
 const { URL } = require('url');
+const { execFile } = require('child_process');
 
 /**
  * 从语雀 URL 中解析出 group_login / book_slug / doc_slug
@@ -84,14 +85,66 @@ function _yuqueGet(config, apiPath) {
 }
 
 /**
+ * 通过 ali-mcpcli skylark_resolve_url 获取文档 doc_id，再用 skylark_doc_detail 读取正文
+ * 适用于语雀 OpenAPI Token 无权限访问的文档（降级方案）
+ */
+function fetchPrdViaCliMcp(prdUrl) {
+  return new Promise((resolve, reject) => {
+    // 统一域名：aliyuque.antfin.com → yuque.antfin.com
+    const normalizedUrl = prdUrl.replace('aliyuque.antfin.com', 'yuque.antfin.com');
+
+    execFile('ali-mcpcli', ['call', 'skylark', 'skylark_resolve_url', JSON.stringify({ url: normalizedUrl })], { timeout: 15000 }, (err, stdout) => {
+      if (err) return reject(new Error('ali-mcpcli resolve_url failed: ' + err.message));
+      try {
+        const result = JSON.parse(stdout);
+        if (!result.ok || !result.data || !result.data.id) {
+          return reject(new Error('skylark_resolve_url returned no doc id'));
+        }
+        const docId = result.data.id;
+        execFile('ali-mcpcli', ['call', 'skylark', 'skylark_doc_detail', JSON.stringify({ doc_id: docId })], { timeout: 15000 }, (err2, stdout2) => {
+          if (err2) return reject(new Error('ali-mcpcli doc_detail failed: ' + err2.message));
+          try {
+            const result2 = JSON.parse(stdout2);
+            if (!result2.ok || !result2.data) return reject(new Error('skylark_doc_detail returned no data'));
+            resolve(result2.data);
+          } catch (e) {
+            reject(new Error('Failed to parse skylark_doc_detail response: ' + e.message));
+          }
+        });
+      } catch (e) {
+        reject(new Error('Failed to parse skylark_resolve_url response: ' + e.message));
+      }
+    });
+  });
+}
+
+/**
  * 一站式：给定 PRD URL，返回 { title, creator, description, body }
  * body 是 markdown/lake 正文字符串（可能为空字符串，若 API 不返回正文）
+ * 当 OpenAPI Token 无权限（404）时，自动降级使用 ali-mcpcli 读取
  */
 async function fetchPrdFull(config, prdUrl) {
   const parts = parseYuqueUrl(prdUrl);
   if (!parts) throw new Error(`无法解析语雀 URL: ${prdUrl}`);
 
-  const docData = await fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
+  let docData;
+  try {
+    docData = await fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
+  } catch (err) {
+    // 当 OpenAPI 返回 404 时，尝试用 ali-mcpcli 降级读取
+    if (err.message && err.message.includes('404')) {
+      console.warn(`[Yuque] OpenAPI 404，尝试 ali-mcpcli 降级读取: ${prdUrl}`);
+      try {
+        docData = await fetchPrdViaCliMcp(prdUrl);
+      } catch (cliErr) {
+        console.warn(`[Yuque] ali-mcpcli 降级也失败: ${cliErr.message}`);
+        throw err; // 抛出原始错误
+      }
+    } else {
+      throw err;
+    }
+  }
+
   const body = _pickDocBody(docData);
 
   return {
