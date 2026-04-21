@@ -3174,7 +3174,16 @@ async function retryAiDesign(reqId, jobId) {
   }
 
   try {
-    var res = await fetch(url, { method: 'POST' });
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // 传入 req_id、prd_url、skill_key，后端重启后 Job 丢失时可用这些参数重新创建
+      body: JSON.stringify({
+        req_id:    req.id,
+        prd_url:   req.prd_url || '',
+        skill_key: (req.ai_design && req.ai_design.skill_key) || 'default'
+      })
+    });
     if (!res.ok) {
       var err = await res.json().catch(function() { return {}; });
       showToast('重跑失败：' + (err.error || res.status), 'error');
