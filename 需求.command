@@ -1,0 +1,26 @@
+#!/bin/bash
+# 双击此文件即可启动需求看板
+
+cd "$(dirname "$0")"
+
+# 检查 node 是否安装
+if ! command -v node &> /dev/null; then
+  echo "❌ 未找到 node，请先安装 Node.js：https://nodejs.org"
+  read -p "按任意键退出..."
+  exit 1
+fi
+
+# 关闭已有的 proxy-server 进程
+pkill -f "node proxy-server.js" 2>/dev/null
+sleep 1
+
+echo "🚀 正在启动需求看板后端服务..."
+echo "📌 启动后请在浏览器访问：http://localhost:3001"
+echo "⌨️  按 Ctrl+C 可停止服务"
+echo ""
+
+# 自动打开浏览器
+sleep 2 && open "http://localhost:3001" &
+
+# 启动代理服务
+node proxy-server.js
