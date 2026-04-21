@@ -631,9 +631,9 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const docData = await yuqueSvc.fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
       const prdFull = await yuqueSvc.fetchPrdFull(config, yuqueUrl);
-      const imageUrls = yuqueSvc.extractImageUrlsFromDoc(docData);
+      // 从 prdFull.body 提取图片（fetchPrdFull 内部已包含 404 降级逻辑）
+      const imageUrls = yuqueSvc.extractImageUrlsFromDoc({ body: prdFull.body, body_lake: prdFull.body });
 
       const imageItems = imageUrls.map((url, idx) => ({
         index: idx,
