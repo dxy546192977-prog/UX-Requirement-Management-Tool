@@ -184,20 +184,24 @@ async function _runJob(job, config, yuqueSvc) {
     prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
   } catch (err) {
     // fliggy_flight_prd_to_h5 skill 降级：PRD 无法抓取时，用需求 ID 和 URL 作为最小上下文继续生成 H5
-    if (job.skill_key === 'fliggy_flight_prd_to_h5') {
-      console.warn(`[AiDesign] Job ${job.id} — PRD fetch failed, falling back to minimal context: ${err.message}`);
-      prdContent = {
-        title:       `需求 ${job.req_id} — 飞猪机票需求`,
-        creator:     'Unknown',
-        description: `PRD 链接：${job.prd_url}\n\n注意：PRD 文档无法自动抓取（${err.message}），以下 H5 基于需求 ID 和飞猪机票设计规范生成，请人工核对业务细节。`,
-        body:        `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
-        body_text:   `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
-        imageUrls:   [],
-        source:      'fallback'
-      };
-    } else {
-      throw new Error('PRD 抓取失败: ' + err.message);
-    }
+    // 降级：任何 skill 下语雀抓取失败，均用 PRD 链接作为最小上下文继续生成
+    console.warn(`[AiDesign] Job ${job.id} — PRD fetch failed, falling back to minimal context: ${err.message}`);
+    prdContent = {
+      title:       `需求 ${job.req_id}`,
+      creator:     'Unknown',
+      description: `PRD 链接：${job.prd_url}\n\n注意：PRD 文档无法自动抓取（${err.message}），以下方案基于需求 ID 和设计规范生成，请人工核对业务细节。`,
+      body:        `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
+      body_text:   `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
+      imageUrls:   [],
+      source:      'fallback'
+    };</thinking>
+
+找到根本原因了！降级逻辑只对 `fliggy_flight_prd_to_h5` 这个 skill 生效，默认 skill 语雀失败会直接报错。
+
+现在把降级逻辑扩展到所有 skill：
+<tool_calls>
+<tool>
+<tool_name>file_replace
   }
 
   const rawBody = prdContent.body || prdContent.description || '';
