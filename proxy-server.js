@@ -143,8 +143,8 @@ const MIME_TYPES = {
 };
 
 function serveStaticFile(pathname, res) {
-  // Default to index.html
-  if (pathname === '/') pathname = '/index.html';
+  // Default to online-index.html（需求看板入口）
+  if (pathname === '/') pathname = '/online-index.html';
 
   const filePath = path.join(__dirname, pathname);
 
