@@ -194,14 +194,7 @@ async function _runJob(job, config, yuqueSvc) {
       body_text:   `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
       imageUrls:   [],
       source:      'fallback'
-    };</thinking>
-
-找到根本原因了！降级逻辑只对 `fliggy_flight_prd_to_h5` 这个 skill 生效，默认 skill 语雀失败会直接报错。
-
-现在把降级逻辑扩展到所有 skill：
-<tool_calls>
-<tool>
-<tool_name>file_replace
+    };
   }
 
   const rawBody = prdContent.body || prdContent.description || '';
