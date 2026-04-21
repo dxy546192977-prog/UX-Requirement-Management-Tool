@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — long-press（上下文气泡菜单）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 24px 48px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+/* ========== fdl-long-press ========== */
+.fdl-long-press {
+  --fdl-long-press-surface: color-mix(in srgb, var(--color-white) 96%, transparent);
+  position: relative;
+  width: 268px;
+  filter: drop-shadow(0 4px 18px color-mix(in srgb, var(--color-darkgray) 15%, transparent));
+}
+
+.fdl-long-press__arrow {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  border-bottom: 12px solid var(--fdl-long-press-surface);
+}
+
+.fdl-long-press__body {
+  width: 100%;
+  background: var(--fdl-long-press-surface);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.fdl-long-press__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fdl-long-press__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 18px 24px;
+  gap: 18px;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.fdl-long-press__item:hover,
+.fdl-long-press__item:focus-visible {
+  background-color: color-mix(in srgb, var(--color-darkgray) 4%, transparent);
+  outline: none;
+}
+
+.fdl-long-press__item:active {
+  background-color: color-mix(in srgb, var(--color-darkgray) 6%, transparent);
+}
+
+.fdl-long-press__list > li:not(:last-child) .fdl-long-press__item {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-darkgray) 6%, transparent);
+}
+
+.fdl-long-press__icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--color-darkgray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fdl-long-press__icon svg {
+  display: block;
+}
+
+.fdl-long-press__text {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  white-space: nowrap;
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-long-press">
+    <div class="fdl-long-press__arrow" aria-hidden="true"></div>
+    <div class="fdl-long-press__body">
+      <ul class="fdl-long-press__list" role="menu" aria-label="更多操作">
+        <li role="none">
+          <button type="button" class="fdl-long-press__item" role="menuitem">
+            <span class="fdl-long-press__icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </span>
+            <span class="fdl-long-press__text">复制</span>
+          </button>
+        </li>
+        <li role="none">
+          <button type="button" class="fdl-long-press__item" role="menuitem">
+            <span class="fdl-long-press__icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>
+            </span>
+            <span class="fdl-long-press__text">截图</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>

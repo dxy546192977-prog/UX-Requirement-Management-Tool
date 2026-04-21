@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>火车 OTA — 整页串联预览</title>
+  <style>
+
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alibaba Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+
+body { margin: 0; background: #F2F3F5; }
+.train-ota-full {
+  width: 750px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: stretch;
+  padding-bottom: 24px;
+}
+.train-ota-full > * { flex-shrink: 0; }
+
+/* === train-ota-title === */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.title-container {
+            width: 750px;
+            height: 176px;
+            display: flex;
+            flex-direction: column;
+        }
+        .status-bar {
+            width: 750px;
+            height: 88px;
+        }
+        .status-bar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .nav-bar {
+            width: 750px;
+            height: 88px;
+            position: relative;
+        }
+        .back-button {
+            width: 48px;
+            height: 48px;
+            position: absolute;
+            left: 24px;
+            top: calc(50% - 24px);
+        }
+        .back-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .date-picker {
+            width: 260px;
+            height: 34px;
+            position: absolute;
+            left: calc(50% - 130px);
+            top: calc(50% - 17px);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 9px;
+        }
+        .date-text {
+            width: 231px;
+            height: 34px;
+            font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 500;
+            font-size: 34px;
+            line-height: 100%;
+            color: #0F131A;
+            text-align: center;
+        }
+        .dropdown-arrow {
+            width: 20px;
+            height: 20px;
+        }
+        .dropdown-arrow img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .right-buttons {
+            width: 120px;
+            height: 48px;
+            position: absolute;
+            right: 24px;
+            top: calc(50% - 24px);
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 24px;
+        }
+        .action-button {
+            width: 48px;
+            height: 48px;
+        }
+        .action-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .favorite-button {
+            display: none;
+        }
+/* === train-ota-itinerary === */
+@font-face {
+            font-family: "Alibaba Sans 102";
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+            font-weight: 700;
+            font-display: swap;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+.trip-card-container {
+            width: 750px;
+            height: 171px;
+            background-color: #FFFFFF;
+            padding: 30px 59px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .trip-card-frame {
+            width: 632px;
+            height: 141px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .od-row {
+            width: 632px;
+            height: 93px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .station-left {
+            width: 181px;
+            height: 93px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        .time-left {
+            font-family: "Alibaba Sans 102", sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 48px;
+            color: #0F131A;
+            text-align: left;
+        }
+        .city-left {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 30px;
+            line-height: 34px;
+            color: #0F131A;
+        }
+        .info-middle {
+            width: 245px;
+            height: 74px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+        }
+        .duration {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 22px;
+            color: #5C5F66;
+            text-align: center;
+        }
+        .arrow-icon {
+            width: 245px;
+            height: 9.3px;
+            position: absolute;
+            top: 28px;
+            left: 0;
+        }
+        .train-info {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 26px;
+            line-height: 26px;
+            color: #5C5F66;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+        }
+        .station-right {
+            width: 182px;
+            height: 93px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        .time-right {
+            font-family: "Alibaba Sans 102", sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 48px;
+            color: #0F131A;
+            text-align: right;
+        }
+        .city-right {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 30px;
+            line-height: 34px;
+            color: #0F131A;
+            text-align: right;
+        }
+        .tags-row {
+            width: 453px;
+            height: 24px;
+            display: flex;
+            flex-direction: row;
+            padding: 0 12px;
+            gap: 12px;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .tag-item {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            color: #5C5F66;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tag-arrow {
+            width: 7px;
+            height: 12px;
+        }
+        .divider {
+            width: 1px;
+            height: 18px;
+            border-left: 1px solid #D2D4D9;
+        }
+/* === train-ota-promo-bar === */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.marketing-banner {
+            width: 750px;
+            min-height: 96px;
+            padding: 24px 12px 0;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .content-bar {
+            width: 726px;
+            height: 72px;
+            padding: 0 24px;
+            gap: 12px;
+            background: #F7F8FA;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            align-self: stretch;
+        }
+        .brand-icon {
+            width: 66.83px;
+            height: 30px;
+            object-fit: contain;
+        }
+        .text-area {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            flex-grow: 1;
+            align-items: center;
+        }
+        .text-container {
+            width: 313px;
+            height: 34px;
+        }
+        .text {
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .tag-badge {
+            display: none;
+            width: 108px;
+            height: 36px;
+            border: 1px solid rgba(255, 85, 51, 0.5);
+            border-radius: 6px;
+        }
+        .view-button {
+            width: 100px;
+            height: 42px;
+            padding: 6px 24px;
+            border: 1px solid rgba(92, 95, 102, 0.5);
+            border-radius: 21px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 30px;
+            color: #5C5F66;
+        }
+/* === train-ota-seat-section === */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.seat-container {
+            width: 750px;
+            height: 166px;
+            display: flex;
+            flex-direction: column;
+        }
+        .gradient-transition {
+            width: 750px;
+            height: 48px;
+            position: relative;
+        }
+        .gradient-layer {
+            width: 750px;
+            height: 48px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(0deg, #F2F3F5 0%, #FFFFFF 100%);
+        }
+        .white-mask {
+            width: 750px;
+            height: 23.51px;
+            position: absolute;
+            left: 0;
+            top: 24.49px;
+            background: #FFFFFF;
+        }
+        .seat-tab-container {
+            width: 750px;
+            height: 118px;
+            padding: 0 18px;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .seat-tab-row {
+            width: 714px;
+            height: 118px;
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            background: #FFFFFF;
+        }
+        .seat-card {
+            width: 169.5px;
+            flex-grow: 1;
+            padding: 18px;
+            border-radius: 12px;
+            position: relative;
+            isolation: isolate;
+            background: #F7F8FA;
+        }
+        .seat-card.selected {
+            background: #FFF7CC;
+        }
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .seat-name {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: #0F131A;
+            text-align: center;
+        }
+        .subtitle-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .price {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+            text-align: right;
+        }
+        .separator {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            opacity: 0.2;
+        }
+        .ticket-status {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .ticket-status.rush {
+            color: #FF5533;
+        }
+        .discount-tag {
+            width: 57px;
+            height: 26px;
+            padding: 0 6px;
+            border-radius: 12px 0px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F2F3F5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .seat-card.selected .discount-tag {
+            background: #FFF099;
+        }
+        .discount-text {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .check-icon {
+            width: 24px;
+            height: 21px;
+            position: absolute;
+            right: -0.5px;
+            bottom: 0;
+        }
+/* === train-ota-quote-section === */
+@font-face {
+            font-family: "Alibaba Sans 102";
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+            font-weight: 700;
+            font-display: swap;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+.quote-container {
+            width: 750px;
+            padding: 24px 0 0;
+            background: linear-gradient(178.91deg, #FFFFFF 0.94%, #F2F3F5 6.2%);
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .quote-col {
+            width: 714px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quote-card {
+            width: 714px;
+            background: #FFFFFF;
+            border: 3px solid #FFFFFF;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .quote-card .main-content {
+            padding: 24px 24px 6px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .quote-card .left-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .price-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .price-component {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+        }
+        .price-symbol {
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-size: 24px;
+            line-height: 24px;
+            font-weight: 700;
+            color: #FF5533;
+        }
+        .price-value {
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-size: 48px;
+            line-height: 42px;
+            font-weight: 700;
+            color: #FF5533;
+        }
+        .additional-tag {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 24px;
+            line-height: 140%;
+            font-weight: 500;
+            color: #FF5533;
+        }
+        .discount-row {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            align-items: center;
+        }
+        .discount-tag {
+            background: linear-gradient(90deg, #FFE6E0 0%, rgba(255,230,224,0.0001) 100%);
+            border-radius: 4px;
+            padding: 0 4px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 4px;
+        }
+        .discount-text {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 20px;
+            line-height: 140%;
+            font-weight: 400;
+            color: #FF5533;
+        }
+        .arrow-right {
+            width: 12px;
+            height: 12px;
+        }
+        .book-button {
+            width: 84px;
+            height: 84px;
+            background: #FF8C1A;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 36px;
+            line-height: 140%;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+        .benefit-wrapper {
+            width: 714px;
+            height: 106px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+            overflow: visible;
+        }
+        .benefit-corner {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            line-height: 0;
+            flex-shrink: 0;
+        }
+        .benefit-corner img {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+        .benefit-bar {
+            width: 714px;
+            height: 82px;
+            padding: 18px 18px 24px 30px;
+            background: linear-gradient(90.19deg, #FEF5EC 0.19%, rgba(254,245,236,0.8) 67.41%, rgba(254,245,236,0) 99.94%);
+            border-radius: 0px 12px 0px 0px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .benefit-inner-row {
+            width: 666px;
+            height: 36px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+        .benefit-content-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 18px 0 0;
+            gap: 70px;
+            width: 650px;
+            height: 36px;
+            overflow: hidden;
+        }
+        .benefit-title {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 26px;
+            line-height: 140%;
+            font-weight: 500;
+            color: #805540;
+            flex-shrink: 0;
+        }
+        .benefit-list {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .benefit-item {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .benefit-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+        }
+        .benefit-text {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 22px;
+            line-height: 24px;
+            font-weight: 400;
+            color: #805540;
+        }
+        .benefit-arrow {
+            width: 12px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .quote-card .content-area {
+            padding: 30px 24px 24px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .description {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 24px;
+            line-height: 140%;
+            font-weight: 400;
+            color: #5C5F66;
+        }
+        .info-row {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            align-items: center;
+        }
+        .help-icon {
+            width: 24px;
+            height: 24px;
+        }
+        .benefit-bar.hidden {
+            display: none;
+        }
+/* === train-ota-watermark === */
+
+  </style>
+</head>
+<body>
+  <div class="train-ota-full">
+<div class="title-container">
+        <div class="status-bar">
+            <img src="https://gw.alicdn.com/imgextra/i1/O1CN01deGvLF1vPATvevmnO_!!6000000006164-2-tps-1500-176.png" alt="状态栏">
+        </div>
+        <div class="nav-bar">
+            <div class="back-button">
+                <img src="https://gw.alicdn.com/imgextra/i3/O1CN01dBwqei1JXSFT4il24_!!6000000001038-2-tps-96-96.png" alt="返回">
+            </div>
+            <div class="date-picker">
+                <span class="date-text">07月12日 周四</span>
+                <div class="dropdown-arrow">
+                    <img src="https://gw.alicdn.com/imgextra/i2/O1CN01FWYB3a1Y0g8p5xZwe_!!6000000002997-2-tps-40-40.png" alt="下拉">
+                </div>
+            </div>
+            <div class="right-buttons">
+                <div class="action-button favorite-button"><img src="" alt="收藏"></div>
+                <div class="action-button share-button">
+                    <img src="https://gw.alicdn.com/imgextra/i3/O1CN01l8Tobu1SZ8EzkiMqw_!!6000000002260-2-tps-96-96.png" alt="分享">
+                </div>
+                <div class="action-button more-button">
+                    <img src="https://gw.alicdn.com/imgextra/i2/O1CN0149F4C520yxVlAJypo_!!6000000006919-2-tps-96-96.png" alt="更多">
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="trip-card-container">
+        <div class="trip-card-frame">
+            <div class="od-row">
+                <div class="station-left">
+                    <div class="time-left">11:39</div>
+                    <div class="city-left">杭州东</div>
+                </div>
+                <div class="info-middle">
+                    <div class="duration">6时33分</div>
+                    <img class="arrow-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01ncg4Hq1SAOqxZXacR_!!6000000002206-2-tps-490-19.png" alt="">
+                    <div class="train-info">
+                        G1234·时刻表
+                        <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                    </div>
+                </div>
+                <div class="station-right">
+                    <div class="time-right">18:12</div>
+                    <div class="city-right">北京南</div>
+                </div>
+            </div>
+            <div class="tags-row">
+                <div class="tag-item">
+                    退改说明
+                    <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                </div>
+                <div class="divider"></div>
+                <div class="tag-item">
+                    积分兑换
+                    <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                </div>
+                <div class="divider"></div>
+                <div class="tag-item">
+                    复兴号·静音
+                    <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="marketing-banner">
+        <div class="content-bar">
+            <img class="brand-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01mdYvc926IGHaFwV3R_!!6000000007638-2-tps-134-60.png" alt="品牌">
+            <div class="text-area">
+                <div class="text-container">
+                    <div class="text">5元优惠券待使用，1天后失效</div>
+                </div>
+                <div class="tag-badge"></div>
+            </div>
+            <button type="button" class="view-button">查看</button>
+        </div>
+    </div>
+<div class="seat-container">
+        <div class="gradient-transition">
+            <div class="gradient-layer"></div>
+            <div class="white-mask"></div>
+        </div>
+        <div class="seat-tab-container">
+            <div class="seat-tab-row">
+                <div class="seat-card selected">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">二等座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥599</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status">有票</span>
+                        </div>
+                    </div>
+                    <img class="check-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01yETKoa1ecacVOX8Lc_!!6000000003892-2-tps-47-42.png" alt="">
+                </div>
+                <div class="seat-card">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">一等座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥1007</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status rush">抢票</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="seat-card">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">商务座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥599</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status">12张</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="seat-card">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">无座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥599</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status">有票</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="quote-container">
+        <div class="quote-col">
+            <div class="quote-card">
+                <div class="main-content">
+                    <div class="left-content">
+                        <div class="price-row">
+                            <div class="price-component">
+                                <span class="price-symbol">¥</span>
+                                <span class="price-value">593</span>
+                            </div>
+                            <div class="additional-tag">+¥46退票保障</div>
+                        </div>
+                        <div class="discount-row">
+                            <div class="discount-tag">
+                                <span class="discount-text">限时共减¥8</span>
+                                <img class="arrow-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01BFu2lb1gOVfyAWvcR_!!6000000004132-2-tps-24-24.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-button">订</div>
+                </div>
+                <div class="benefit-wrapper">
+                    <div class="benefit-corner">
+                        <img src="https://gw.alicdn.com/imgextra/i2/O1CN01NadoQY1m2QGoFkOUq_!!6000000004896-2-tps-48-48.png" alt="">
+                    </div>
+                    <div class="benefit-bar">
+                        <div class="benefit-inner-row">
+                            <div class="benefit-content-row">
+                                <span class="benefit-title">超值5大权益</span>
+                                <div class="benefit-list">
+                                    <div class="benefit-item">
+                                        <img class="benefit-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01Uo2liw1p4f3MVReMj_!!6000000005307-2-tps-48-48.png" alt="">
+                                        <span class="benefit-text">退票赔付保障</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <img class="benefit-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01Uo2liw1p4f3MVReMj_!!6000000005307-2-tps-48-48.png" alt="">
+                                        <span class="benefit-text">免登12306账号</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <img class="benefit-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01Uo2liw1p4f3MVReMj_!!6000000005307-2-tps-48-48.png" alt="">
+                                        <span class="benefit-text">免登12306账号</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="benefit-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01TlvSMg1ezUQJ3fkTm_!!6000000003942-2-tps-24-48.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="quote-card">
+                <div class="content-area">
+                    <div class="left-content">
+                        <div class="price-row">
+                            <div class="price-component">
+                                <span class="price-symbol">¥</span>
+                                <span class="price-value">599</span>
+                            </div>
+                        </div>
+                        <div class="discount-row">
+                            <div class="discount-tag">
+                                <span class="discount-text">限时共减¥8</span>
+                                <img class="arrow-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01BFu2lb1gOVfyAWvcR_!!6000000004132-2-tps-24-24.png" alt="">
+                            </div>
+                        </div>
+                        <div class="description">登录12306购票 累积12306积分和飞猪里程</div>
+                    </div>
+                    <div class="book-button">订</div>
+                </div>
+            </div>
+            <div class="quote-card">
+                <div class="content-area">
+                    <div class="left-content">
+                        <div class="price-row">
+                            <div class="price-component">
+                                <span class="price-symbol">¥</span>
+                                <span class="price-value">593</span>
+                            </div>
+                            <div class="additional-tag">+¥25免登预订</div>
+                        </div>
+                        <div class="discount-row">
+                            <div class="discount-tag">
+                                <span class="discount-text">限时共减¥8</span>
+                                <img class="arrow-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01BFu2lb1gOVfyAWvcR_!!6000000004132-2-tps-24-24.png" alt="">
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <img class="help-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01Kg7eOG1lMkEDHWRLD_!!6000000004805-2-tps-48-48.png" alt="">
+                            <span class="description">免登12306账号</span>
+                        </div>
+                    </div>
+                    <div class="book-button">订</div>
+                </div>
+                <div class="benefit-bar hidden"></div>
+            </div>
+        </div>
+    </div>
+<img src="https://gw.alicdn.com/imgextra/i3/O1CN01dA4l2P1wMFWuJLxsf_!!6000000006293-2-tps-1500-232.png" width="750" height="116" alt="飞猪水印">
+  </div>
+</body>
+</html>

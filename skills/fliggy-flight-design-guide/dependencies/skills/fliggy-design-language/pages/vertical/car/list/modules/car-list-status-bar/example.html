@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>租车 LIST · 上状态栏</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #F2F3F5; font-family: 'PingFang SC', sans-serif; }
+    .status-bar {
+      width: 750px;
+      height: 88px;
+      background: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      color: #0F131A;
+    }
+    .status-bar__time { font-size: 28px; font-weight: 600; }
+    .status-bar__icons { display: flex; gap: 10px; align-items: center; }
+    .status-bar__icons svg { height: 22px; width: auto; }
+  </style>
+</head>
+<body>
+  <div class="status-bar">
+    <span class="status-bar__time">9:41</span>
+    <div class="status-bar__icons" aria-hidden="true">
+      <svg viewBox="0 0 17 11" width="19" height="12" fill="currentColor"><path d="M0 10.7h17V8.9H0v1.8zm0-4.45h17V4.45H0v1.8z"/></svg>
+      <svg viewBox="0 0 15 11" width="17" height="12" fill="currentColor"><path d="M7.5 2C4.46 2 2 4.24 2 7h11c0-2.76-2.46-5-5.5-5z"/></svg>
+      <svg viewBox="0 0 27 13" width="27" height="13" fill="currentColor"><rect x="0" y="3" width="22" height="7" rx="2"/><rect x="24" y="5" width="3" height="3" rx="0.5"/></svg>
+    </div>
+  </div>
+</body>
+</html>

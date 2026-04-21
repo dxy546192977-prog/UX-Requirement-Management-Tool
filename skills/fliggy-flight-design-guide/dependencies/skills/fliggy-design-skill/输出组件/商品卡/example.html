@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>商品卡组件预览（酒店 / POI / 签证 / 套餐商品）</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-midgray: #5c5f66;
+            --color-lightgray: #919499;
+            --color-indigo-1: #6666ff;
+            --color-indigo-4: #EBEBFF;
+            --color-warning-1: #ff3333;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+            --color-bg: #f2f3f5;
+            --radius-xl: 36px;
+            --radius-l: 24px;
+            --radius-m: 12px;
+            --radius-s: 6px;
+        }
+
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 500;
+            font-display: swap;
+        }
+
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 48px;
+            padding: 50px 20px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+
+        .section-label {
+            font-size: 24px;
+            color: var(--color-lightgray);
+            margin-bottom: -30px;
+        }
+
+        /* 
+         ========================================
+         == 商品卡 (Info Card) Skill 组件
+         ========================================
+         左图右文通用卡片，4 种变体共享同一套样式。
+        */
+
+        .info-card-wrapper {
+            padding-top: 24px;
+            width: 690px;
+        }
+        
+        .info-card {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            gap: 24px;
+        }
+
+        /* 左侧图片 */
+        .card-image {
+            width: 140px;
+            height: 210px;
+            border-radius: var(--radius-l);
+            flex-shrink: 0;
+            background-color: #e0e0e0;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        
+        /* 右侧内容区 */
+        .card-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+        }
+        
+        /* 上部信息 */
+        .content-main {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .title-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 42px;
+        }
+        
+        .card-title {
+            font-size: 30px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+            line-height: 1.4;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        .title-tag {
+            background: var(--color-bg);
+            border-radius: var(--radius-s);
+            padding: 0 8px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 22px;
+            color: var(--color-lightgray);
+            flex-shrink: 0;
+        }
+
+        .info-line {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 24px;
+            line-height: 1.4;
+            min-height: 34px;
+        }
+        
+        .info-line .rating {
+            font-weight: 500;
+            color: var(--color-indigo-1);
+        }
+        
+        .info-line .description {
+            color: var(--color-midgray);
+        }
+        
+        /* 下部价格与操作区 */
+        .content-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .price-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .price {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        
+        .price .prefix {
+            font-size: 20px;
+            color: var(--color-darkgray);
+            margin-bottom: 2px;
+        }
+        
+        .price .currency {
+            font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-darkgray);
+        }
+
+        .price .amount-major {
+            font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-size: 42px;
+            line-height: 0.64;
+            font-weight: 400;
+            color: var(--color-darkgray);
+        }
+        
+        .price .amount-minor {
+            font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-size: 28px;
+            line-height: 0.64;
+            font-weight: 400;
+            color: var(--color-darkgray);
+        }
+
+        .price .suffix {
+            font-size: 20px;
+            color: var(--color-darkgray);
+            margin-bottom: 2px;
+        }
+        
+        .discount-tag {
+            font-size: 20px;
+            color: var(--color-pay-1);
+            min-height: 28px;
+            line-height: 28px;
+        }
+        
+        .action-button {
+            width: 96px;
+            height: 60px;
+            background: var(--color-indigo-4);
+            border-radius: var(--radius-l);
+            border: none;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-indigo-1);
+            cursor: pointer;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================== -->
+    <!-- 变体 A：酒店卡                  -->
+    <!-- ============================== -->
+    <p class="section-label">变体=酒店卡</p>
+    <div class="info-card-wrapper">
+        <article class="info-card">
+            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=140&h=210&fit=crop');"></div>
+            <div class="card-content">
+                <div class="content-main">
+                    <div class="title-line">
+                        <h3 class="card-title">杭州西湖国宾馆</h3>
+                        <span class="title-tag">豪华型</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="rating">4.9分 | 超棒</span>
+                        <span class="description">90%用户推荐</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="description">西湖/灵隐寺度假区</span>
+                    </div>
+                </div>
+                <footer class="content-footer">
+                    <div class="price-area">
+                        <div class="price">
+                            <span class="currency">¥</span>
+                            <span class="amount-major">1280</span>
+                            <span class="suffix">起</span>
+                        </div>
+                        <div class="discount-tag">优惠¥80</div>
+                    </div>
+                    <button class="action-button">预订</button>
+                </footer>
+            </div>
+        </article>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 变体 B：POI 卡                  -->
+    <!-- ============================== -->
+    <p class="section-label">变体=POI 卡</p>
+    <div class="info-card-wrapper">
+        <article class="info-card">
+            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1598177183224-b3cec6da6b04?w=140&h=210&fit=crop');"></div>
+            <div class="card-content">
+                <div class="content-main">
+                    <div class="title-line">
+                        <h3 class="card-title">故宫博物院</h3>
+                    </div>
+                    <div class="info-line">
+                        <span class="rating">4.8分 | 超棒</span>
+                        <span class="description">999+条点评</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="description">东城区 | 距市中心2.5km</span>
+                    </div>
+                </div>
+                <footer class="content-footer">
+                    <div class="price-area">
+                        <div class="price">
+                            <span class="prefix">会员价</span>
+                            <span class="currency">¥</span>
+                            <span class="amount-major">40</span>
+                            <span class="suffix">起</span>
+                        </div>
+                        <div class="discount-tag"></div>
+                    </div>
+                    <button class="action-button">购票</button>
+                </footer>
+            </div>
+        </article>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 变体 C：签证卡                  -->
+    <!-- ============================== -->
+    <p class="section-label">变体=签证卡</p>
+    <div class="info-card-wrapper">
+        <article class="info-card">
+            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1553619948-505cc1cdc320?w=140&h=210&fit=crop');"></div>
+            <div class="card-content">
+                <div class="content-main">
+                    <div class="title-line">
+                        <h3 class="card-title">泰国个人旅游签证</h3>
+                    </div>
+                    <div class="info-line">
+                        <span class="rating">销量999+ | 99%出签率</span>
+                        <span class="description">可加急办理</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="description">无需邮寄护照</span>
+                    </div>
+                </div>
+                <footer class="content-footer">
+                    <div class="price-area">
+                        <div class="price">
+                            <span class="currency">¥</span>
+                            <span class="amount-major">258</span>
+                            <span class="amount-minor">.99</span>
+                            <span class="suffix">起</span>
+                        </div>
+                        <div class="discount-tag">领券再减</div>
+                    </div>
+                    <button class="action-button">办理</button>
+                </footer>
+            </div>
+        </article>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 变体 D：套餐商品卡              -->
+    <!-- ============================== -->
+    <p class="section-label">变体=套餐商品卡</p>
+    <div class="info-card-wrapper">
+        <article class="info-card">
+            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1617650555983-eaf0230972c2?w=140&h=210&fit=crop');"></div>
+            <div class="card-content">
+                <div class="content-main">
+                    <div class="title-line">
+                        <h3 class="card-title">龙井茶叶特级250g 新茶上市</h3>
+                    </div>
+                    <div class="info-line">
+                        <span class="rating">月销8000+</span>
+                        <span class="description">杭州西湖产区</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="description">官方旗舰店</span>
+                    </div>
+                </div>
+                <footer class="content-footer">
+                    <div class="price-area">
+                        <div class="price">
+                            <span class="currency">¥</span>
+                            <span class="amount-major">199</span>
+                        </div>
+                        <div class="discount-tag">满200减20</div>
+                    </div>
+                    <button class="action-button">购买</button>
+                </footer>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

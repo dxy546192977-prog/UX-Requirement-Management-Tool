@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="icon" href="data:," />
+    <script defer src="../../embed-autosize.js"></script>
+    <style>
+      :root {
+        --design-width: 750;
+        --canvas-height: 0;
+        --scale: 1;
+        --text-dark: #0f131a;
+        --text-mid: #5c5f66;
+        --badge-charge: #ff5533;
+        --badge-free: #149aa8;
+        --button-bg: #f7f8fa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #f2f3f5;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        overflow-x: hidden;
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          sans-serif;
+      }
+
+      img {
+        display: block;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      .viewport {
+        position: relative;
+        width: calc(var(--design-width) * 1px * var(--scale));
+        height: calc(var(--canvas-height) * 1px * var(--scale));
+      }
+
+      .canvas {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 750px;
+        transform: translateX(-50%) scale(var(--scale));
+        transform-origin: top center;
+      }
+
+      .facilities-panel {
+        position: relative;
+        width: 750px;
+        padding: 24px 18px 30px;
+        overflow: hidden;
+        border-radius: 24px;
+        background: #ffffff;
+      }
+
+      .panel-title {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 36px;
+        font-weight: 500;
+        line-height: 50px;
+        white-space: nowrap;
+      }
+
+      .gallery-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+        width: 840px;
+        height: 153px;
+      }
+
+      .gallery-card {
+        position: relative;
+        width: 272px;
+        height: 153px;
+        overflow: hidden;
+        border-radius: 12px;
+        flex: 0 0 auto;
+      }
+
+      .gallery-card::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0) 46%,
+          rgba(0, 0, 0, 0.34) 100%
+        );
+      }
+
+      .gallery-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .gallery-title {
+        position: absolute;
+        left: 12px;
+        bottom: 6px;
+        z-index: 1;
+        margin: 0;
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 31px;
+        white-space: nowrap;
+      }
+
+      .facilities-grid {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+        width: 714px;
+      }
+
+      .facilities-column {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        width: 357px;
+      }
+
+      .facility-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 357px;
+        min-height: 39px;
+      }
+
+      .facility-icon {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 auto;
+        object-fit: contain;
+      }
+
+      .facility-text {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 39px;
+        white-space: nowrap;
+      }
+
+      .facility-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 52px;
+        height: 28px;
+        padding: 0 6px;
+        border: 1px solid currentColor;
+        border-radius: 4px;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 28px;
+        white-space: nowrap;
+      }
+
+      .facility-badge.charge {
+        color: var(--badge-charge);
+      }
+
+      .facility-badge.free {
+        color: var(--badge-free);
+      }
+
+      .view-all {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px auto 0;
+        width: 240px;
+        height: 60px;
+        border-radius: 42px;
+        background: var(--button-bg);
+      }
+
+      .view-all-text {
+        margin: 0;
+        color: var(--text-mid);
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 39px;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="canvas">
+        <section class="facilities-panel" data-node-id="8586:50103">
+          <h2 class="panel-title" data-node-id="8586:50104">酒店设施</h2>
+
+          <div class="gallery-row" data-node-id="8590:51906">
+            <article class="gallery-card" data-node-id="8586:50134">
+              <img
+                class="gallery-image"
+                alt=""
+                src="https://gw.alicdn.com/imgextra/i4/O1CN01KXBqcG1alyGmYg5G8_!!6000000003371-2-tps-544-306.png"
+                data-node-id="8590:51905"
+              />
+              <p class="gallery-title" data-node-id="8586:50135">无边泳池(2)</p>
+            </article>
+
+            <article class="gallery-card" data-node-id="8586:50136">
+              <img
+                class="gallery-image"
+                alt=""
+                src="https://gw.alicdn.com/imgextra/i1/O1CN01kdPiss227wtwcjTxt_!!6000000007074-2-tps-544-306.png"
+                data-node-id="8590:51922"
+              />
+              <p class="gallery-title" data-node-id="8586:50137">儿童乐园(6)</p>
+            </article>
+
+            <article class="gallery-card" data-node-id="8586:50138">
+              <img
+                class="gallery-image"
+                alt=""
+                src="https://gw.alicdn.com/imgextra/i1/O1CN01nQSwMG22DRebupPy1_!!6000000007086-2-tps-544-306.png"
+                data-node-id="8590:51923"
+              />
+              <p class="gallery-title" data-node-id="8586:50139">水上乐园(2)</p>
+            </article>
+          </div>
+
+          <div class="facilities-grid" data-node-id="8586:50106">
+            <div class="facilities-column" data-node-id="8590:51907">
+              <div class="facility-item" data-node-id="8586:50107">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i1/O1CN01HwHQ731VFqPOYfol4_!!6000000002624-2-tps-64-64.png"
+                  data-node-id="8590:51911"
+                />
+                <p class="facility-text" data-node-id="8586:50109">酒店前台</p>
+              </div>
+
+              <div class="facility-item" data-node-id="8586:50110">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i4/O1CN01BkXDTe1QuXWPlbE8J_!!6000000002036-2-tps-64-64.png"
+                  data-node-id="8590:51913"
+                />
+                <p class="facility-text" data-node-id="8586:50112">停车场</p>
+                <span class="facility-badge charge" data-node-id="8586:50113"
+                  >收费</span
+                >
+              </div>
+
+              <div class="facility-item" data-node-id="8586:50114">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i4/O1CN01WvTCJr1PegBsXt51n_!!6000000001866-2-tps-64-64.png"
+                  data-node-id="8590:51914"
+                />
+                <p class="facility-text" data-node-id="8586:50116">无烟楼层</p>
+              </div>
+
+              <div class="facility-item" data-node-id="8586:50117">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i1/O1CN01r6tAAe1cjLE3w8kkv_!!6000000003636-2-tps-64-64.png"
+                  data-node-id="8590:51915"
+                />
+                <p class="facility-text" data-node-id="8586:50119">餐厅</p>
+              </div>
+            </div>
+
+            <div class="facilities-column" data-node-id="8590:51908">
+              <div class="facility-item" data-node-id="8586:50131">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i4/O1CN01903Ijo1o2XbUUZTar_!!6000000005167-2-tps-64-64.png"
+                  data-node-id="8590:51916"
+                />
+                <p class="facility-text" data-node-id="8586:50133">行李免费寄存</p>
+              </div>
+
+              <div class="facility-item" data-node-id="8586:50120">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i1/O1CN01nPl42V1GWaeZDwHvz_!!6000000000630-2-tps-64-64.png"
+                  data-node-id="8590:51917"
+                />
+                <p class="facility-text" data-node-id="8586:50122">儿童乐园</p>
+                <span class="facility-badge free" data-node-id="8586:50123"
+                  >免费</span
+                >
+              </div>
+
+              <div class="facility-item" data-node-id="8586:50124">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i1/O1CN01T0jnFY2479RWY2TTj_!!6000000007343-2-tps-64-64.png"
+                  data-node-id="8590:51918"
+                />
+                <p class="facility-text" data-node-id="8586:50126">泳池</p>
+                <span class="facility-badge free" data-node-id="8586:50127"
+                  >免费</span
+                >
+              </div>
+
+              <div class="facility-item" data-node-id="8586:50128">
+                <img
+                  class="facility-icon"
+                  alt=""
+                  src="https://gw.alicdn.com/imgextra/i3/O1CN01zHpIgu1NzAgD5M6Q3_!!6000000001640-2-tps-64-64.png"
+                  data-node-id="8586:50129"
+                />
+                <p class="facility-text" data-node-id="8586:50130">健身房</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="view-all" data-node-id="8586:50140">
+            <p class="view-all-text">查看全部设施</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const designWidth = 750;
+        const sidePadding = 0;
+        const canvas = document.querySelector(".canvas");
+
+        function updateScale() {
+          const availableWidth = Math.max(320, window.innerWidth - sidePadding);
+          const scale = Math.min(1, availableWidth / designWidth);
+          document.documentElement.style.setProperty("--scale", scale.toFixed(4));
+          document.documentElement.style.setProperty(
+            "--canvas-height",
+            String(canvas.offsetHeight)
+          );
+        }
+
+        updateScale();
+        window.addEventListener("resize", updateScale, { passive: true });
+        window.addEventListener("load", updateScale, { passive: true });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>租车 OTA · 报价卡片（多变体 demo）</title>
+  <link rel="stylesheet" href="quote-card-styles.css">
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Alibaba Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-display: swap;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F2F3F5;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">品牌周·精选车</span></div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">1年内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">免费上门取还车</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">行车记录仪</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">倒车影像</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-text">橙诺租车·4.0分·查看评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main">
+            <span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">总价最低·特惠车</span></div>
+    <div class="tab-container">
+      <div class="tab-item active"><div class="tab-inner"><span class="tab-text">到店取车 ¥120</span></div></div>
+      <div class="tab-item"><div class="tab-inner"><span class="tab-text">送车上门 ¥140</span></div></div>
+    </div>
+    <div class="card-content">
+      <div class="info-row">
+        <span class="info-text highlight">6个月内新车</span>
+        <span class="info-divider">｜</span>
+        <span class="info-text">自行到店，距门店直线20公里</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">行车记录仪</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">儿童座椅</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-text">飞租租车·33评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main">
+            <span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">飞猪优选车</span></div>
+    <div class="card-content">
+      <div class="info-row" style="flex-direction: column; gap: 6px;">
+        <span class="info-text">2年内车龄</span>
+        <span class="info-text">取·自行前往门店取车，距门店直线500米</span>
+        <span class="info-text">还·自行前往门店还车，距门店直线500米</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">雪地胎</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">飞猪优选</span>
+        <span class="vendor-text">小八租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main">
+            <span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">飞猪优选车</span></div>
+    <div class="card-content">
+      <div class="info-row" style="flex-direction: column; gap: 6px;">
+        <span class="info-text">2年内车龄</span>
+        <span class="info-text">自行到店，距门店直线20公里</span>
+        <span class="info-text gray">可选：收费上门送取车</span>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">雪地胎</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">飞猪优选</span>
+        <span class="vendor-text">小八租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main" style="justify-content: flex-start;">
+            <span class="stock-warning">仅剩1辆</span>
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">总价¥364起</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title golden">
+        一口价·舒心租车
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01xsDgqr232k0tTUtp3_!!6000000007198-55-tps-18-18.svg" class="title-arrow" alt="">
+      </span>
+    </div>
+    <div class="card-content">
+      <div class="info-row" style="width: 100%; flex-wrap: wrap;">
+        <div style="display: flex; gap: 6px;">
+          <span class="info-text">3年内车龄</span>
+          <span class="info-divider">｜</span>
+          <span class="info-text">站内取还车</span>
+        </div>
+        <div class="location-row" style="margin-left: 6px; width: 100%;">
+          <img src="https://img.alicdn.com/imgextra/i2/O1CN01NtziQk1dGm8jPxKjr_!!6000000003709-55-tps-30-30.svg" class="location-icon" alt="">
+          <span class="vendor-text">飞猪租车中心天山国际机场T2</span>
+        </div>
+      </div>
+      <div class="tags-row">
+        <span class="tag primary">免费取消</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">雪地胎</span>
+        <span class="tag default">雪地胎</span>
+      </div>
+      <div class="vendor-row">
+        <span class="vendor-badge">全国连锁</span>
+        <span class="vendor-text">一嗨租车·5.0分·200评价</span>
+        <img src="https://img.alicdn.com/imgextra/i1/O1CN01aKQD5T1ui7FdOOnA8_!!6000000006070-55-tps-12-12.svg" class="arrow-icon" alt="">
+      </div>
+      <div class="price-section">
+        <div class="price-info">
+          <div class="price-main">
+            <span class="price-symbol">¥</span>
+            <span class="price-number">234</span>
+            <span class="price-unit">/天</span>
+          </div>
+          <div class="discount-row">
+            <div class="discount-tag">
+              <span class="discount-text">福利券</span>
+              <div class="discount-divider"></div>
+              <span class="discount-text">2项已优惠¥10</span>
+            </div>
+            <span class="total-price">一口价¥364</span>
+            <img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" class="help-icon" alt="">
+          </div>
+        </div>
+        <div class="book-btn"><span class="book-btn-text">订</span></div>
+      </div>
+    </div>
+    <div class="benefits-footer">
+      <div class="benefits-row">
+        <div class="benefit-item">
+          <img src="https://img.alicdn.com/imgextra/i2/O1CN013FQ6Fa1UqecnkBBPZ_!!6000000002569-55-tps-24-24.svg" class="benefit-icon" alt="">
+          <span class="benefit-text">车损全额免赔</span>
+        </div>
+        <div class="benefit-item">
+          <img src="https://img.alicdn.com/imgextra/i3/O1CN01yyfazU1gwOz6PZMRy_!!6000000004206-55-tps-24-24.svg" class="benefit-icon" alt="">
+          <span class="benefit-text">免费道路救援</span>
+        </div>
+        <div class="benefit-item">
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN013Gi60x1yV4QuEvid0_!!6000000006583-55-tps-24-24.svg" class="benefit-icon" alt="">
+          <span class="benefit-text">免折旧停运费</span>
+        </div>
+      </div>
+      <div class="benefits-row">
+        <div class="benefit-item">
+          <img src="https://img.alicdn.com/imgextra/i1/O1CN01jxZVo7217f2IgZHLM_!!6000000006938-55-tps-24-24.svg" class="benefit-icon" alt="">
+          <span class="benefit-text">还车免验车</span>
+        </div>
+        <div class="benefit-item">
+          <img src="https://img.alicdn.com/imgextra/i1/O1CN01qO7AgZ1YEsQ31GYXZ_!!6000000003028-55-tps-24-24.svg" class="benefit-icon" alt="">
+          <span class="benefit-text">免费取消</span>
+        </div>
+        <div class="benefit-item">
+          <img src="https://img.alicdn.com/imgextra/i2/O1CN011dV7bP20rdAlc5swH_!!6000000006903-55-tps-24-24.svg" class="benefit-icon" alt="">
+          <span class="benefit-text">免加油/充电服务费</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

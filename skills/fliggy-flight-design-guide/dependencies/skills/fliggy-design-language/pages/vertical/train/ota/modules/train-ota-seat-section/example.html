@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车 OTA — 座席区</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background: #F5F5F5;
+            font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .seat-container {
+            width: 750px;
+            height: 166px;
+            display: flex;
+            flex-direction: column;
+        }
+        .gradient-transition {
+            width: 750px;
+            height: 48px;
+            position: relative;
+        }
+        .gradient-layer {
+            width: 750px;
+            height: 48px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(0deg, #F2F3F5 0%, #FFFFFF 100%);
+        }
+        .white-mask {
+            width: 750px;
+            height: 23.51px;
+            position: absolute;
+            left: 0;
+            top: 24.49px;
+            background: #FFFFFF;
+        }
+        .seat-tab-container {
+            width: 750px;
+            height: 118px;
+            padding: 0 18px;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .seat-tab-row {
+            width: 714px;
+            height: 118px;
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            background: #FFFFFF;
+        }
+        .seat-card {
+            width: 169.5px;
+            flex-grow: 1;
+            padding: 18px;
+            border-radius: 12px;
+            position: relative;
+            isolation: isolate;
+            background: #F7F8FA;
+        }
+        .seat-card.selected {
+            background: #FFF7CC;
+        }
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .seat-name {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: #0F131A;
+            text-align: center;
+        }
+        .subtitle-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .price {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+            text-align: right;
+        }
+        .separator {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            opacity: 0.2;
+        }
+        .ticket-status {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .ticket-status.rush {
+            color: #FF5533;
+        }
+        .discount-tag {
+            width: 57px;
+            height: 26px;
+            padding: 0 6px;
+            border-radius: 12px 0px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #F2F3F5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .seat-card.selected .discount-tag {
+            background: #FFF099;
+        }
+        .discount-text {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .check-icon {
+            width: 24px;
+            height: 21px;
+            position: absolute;
+            right: -0.5px;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="seat-container">
+        <div class="gradient-transition">
+            <div class="gradient-layer"></div>
+            <div class="white-mask"></div>
+        </div>
+        <div class="seat-tab-container">
+            <div class="seat-tab-row">
+                <div class="seat-card selected">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">二等座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥599</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status">有票</span>
+                        </div>
+                    </div>
+                    <img class="check-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01yETKoa1ecacVOX8Lc_!!6000000003892-2-tps-47-42.png" alt="">
+                </div>
+                <div class="seat-card">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">一等座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥1007</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status rush">抢票</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="seat-card">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">商务座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥599</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status">12张</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="seat-card">
+                    <div class="discount-tag"><span class="discount-text">8.6折</span></div>
+                    <div class="card-content">
+                        <div class="seat-name">无座</div>
+                        <div class="subtitle-row">
+                            <span class="price">¥599</span>
+                            <span class="separator">/</span>
+                            <span class="ticket-status">有票</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

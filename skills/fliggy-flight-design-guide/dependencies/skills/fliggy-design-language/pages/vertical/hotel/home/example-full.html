@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>酒店首页 — 整页串联预览</title>
+  <style>
+
+body { margin: 0; background: #F2F3F5; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; padding-bottom: 24px; }
+.hotel-home-full {
+  width: 750px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  padding-bottom: 8px;
+}
+.hotel-home-full > .hotel-full__guess-row,
+.hotel-home-full > .bottom-bar { flex-shrink: 0; }
+.hotel-full__hero { width: 750px; align-self: center; }
+.hotel-full__search-pull {
+  width: 750px;
+  align-self: center;
+  margin-top: -48px;
+  position: relative;
+  z-index: 2;
+}
+.hotel-full__guess-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  width: 750px;
+  align-self: center;
+}
+.hotel-full__guess-row .hotel-card { margin-left: 0; }
+
+/* --- modules/hotel-home-banner/example.html --- */
+@font-face {
+            font-family: 'SF Pro Text';
+            src: local('San Francisco'), local('Helvetica Neue'), local('Arial');
+        }
+
+        
+
+        .banner-component {
+            position: relative;
+            width: 750px;
+            height: 332px;
+            background: #FFFFFF;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .banner-component__background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-component__overlay {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            box-sizing: border-box;
+            width: 100%;
+            height: 88px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 28px 0 66px;
+            color: #FFFFFF;
+        }
+
+        .status-bar__time {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 600;
+            font-size: 30px;
+        }
+
+        .status-bar__icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navigation-bar {
+            box-sizing: border-box;
+            width: 100%;
+            height: 88px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 18px;
+        }
+
+        .navigation-bar__actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 60px;
+            background: rgba(15, 19, 26, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            cursor: pointer;
+        }
+/* --- modules/hotel-home-search/example.html --- */
+@font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        
+
+        .search-module {
+            position: relative;
+            width: 750px;
+            background-color: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .search-tabs {
+            display: flex;
+            height: 106px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, #FFFFFF 100%),
+                url('https://gw.alicdn.com/imgextra/i4/O1CN01FSz93q1FyEwrjl4rJ_!!6000000000555-2-tps-1500-200.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(10px);
+            border-radius: 24px 24px 0 0;
+            position: relative;
+            align-items: flex-end;
+        }
+
+        .search-tabs__item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .tab__image {
+            width: 110px;
+            height: 56px;
+            object-fit: contain;
+            margin-top: -8px;
+        }
+
+        .search-tabs__item--active {
+            height: 106px;
+            background-color: #FFFFFF;
+            border-radius: 24px 24px 0 0;
+            z-index: 2;
+        }
+
+        .search-tabs__item--active .tab__image {
+            margin-top: -2px;
+        }
+
+        .search-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 0 30px 24px 30px;
+            background-color: #FFFFFF;
+            border-radius: 0 0 24px 24px;
+            position: relative;
+            top: -6px;
+            z-index: 1;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-form__row {
+            display: flex;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .search-form__divider {
+            border: none;
+            height: 1px;
+            background-color: #F2F3F5;
+            margin: 0;
+        }
+
+        .form-field--city {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 36px;
+            font-weight: 500;
+            color: #0F131A;
+            cursor: pointer;
+        }
+        .form-field--search {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 20px 0 42px;
+            color: #919499;
+            font-size: 36px;
+        }
+        .spaced-char {
+            letter-spacing: 5px;
+        }
+        .form-field--location {
+            cursor: pointer;
+        }
+
+        .date-row-container {
+            justify-content: flex-start;
+        }
+
+        .date-selection-group {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 470px;
+        }
+
+        .form-field--date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .date-value {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            font-weight: 400;
+            color: #0F131A;
+        }
+        .date-value__number {
+            font-family: 'Fliggy Sans 102', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        .date-value__unit {
+            font-size: 28px;
+            position: relative;
+            bottom: 3px;
+        }
+
+        .date-label {
+            font-size: 28px;
+            color: #919499;
+            position: relative;
+            top: 4px;
+        }
+
+        .form-field--nights {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .nights-chip {
+            border: 1px solid #0F131A;
+            border-radius: 40px;
+            padding: 1px 12px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #0F131A;
+            margin: 0 -1px;
+            white-space: nowrap;
+        }
+        .nights-line {
+            width: 8px;
+            height: 1px;
+            background-color: #000000;
+        }
+
+        .occupancy-price-row {
+            justify-content: flex-start;
+        }
+
+        .form-field--occupancy {
+            width: 356px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            cursor: pointer;
+        }
+        .occupancy-item {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+        .occupancy-item__number {
+            font-family: 'Fliggy Sans 102', sans-serif;
+            font-weight: 500;
+            font-size: 36px;
+            line-height: 1.4;
+            color: #0F131A;
+        }
+        .occupancy-item__label {
+            font-size: 30px;
+            font-weight: 500;
+            color: #0F131A;
+        }
+
+        .form-field--price {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            cursor: pointer;
+            width: 310px;
+        }
+        .price-divider {
+             width: 1px;
+             height: 40px;
+             background-color: rgba(210, 212, 217, 0.5);
+        }
+        .price-label {
+            font-size: 30px;
+            color: #919499;
+        }
+
+        .hot-searches {
+            position: relative;
+        }
+        .hot-searches__scroll-container {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hot-searches__scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .hot-searches__tag {
+            flex-shrink: 0;
+            padding: 9px 14px;
+            background: #F7F8FA;
+            border-radius: 12px;
+            font-size: 24px;
+            color: #5C5F66;
+            text-decoration: none;
+        }
+        .hot-searches__fade {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55px;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 47.5%);
+            pointer-events: none;
+        }
+
+        .search-button {
+            width: 100%;
+            height: 84px;
+            background: #FFE033;
+            border-radius: 132px;
+            border: none;
+            font-size: 30px;
+            font-weight: 500;
+            color: #0F131A;
+            cursor: pointer;
+        }
+
+        .guarantee {
+            text-align: center;
+        }
+        .guarantee__image {
+            width: 100%;
+            height: 29px;
+            display: block;
+        }
+
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .icon-arrow-down { width: 32px; height: 32px; }
+        .icon-search { width: 42px; height: 42px; }
+        .icon-location { width: 36px; height: 36px; }
+/* --- modules/hotel-home-inspiration/example.html --- */
+
+
+        .inspiration-module {
+            position: relative;
+            width: 750px;
+            height: 338px;
+            background: #FFFFFF;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .inspiration-module__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            height: 78px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .header__title {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 1.4;
+            color: #0F131A;
+            margin: 0;
+        }
+
+        .header__subtitle {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 1.4;
+            color: #919499;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header__subtitle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .inspiration-module__content {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 18px;
+            padding-left: 18px;
+            padding-bottom: 18px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .inspiration-module__content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .inspiration-item {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            width: 274px;
+            height: 242px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            color: #FFFFFF;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .inspiration-item--small {
+            width: 202px;
+        }
+
+        .inspiration-item__tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 4px;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        .inspiration-item__video-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+        }
+
+        .inspiration-item__overlay {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 18px 24px;
+            box-sizing: border-box;
+            background: linear-gradient(180deg, rgba(22, 22, 22, 0) 0%, rgba(22, 22, 22, 0.8) 67.79%);
+            text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.32);
+        }
+
+        .item-overlay__title {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .item-overlay__subtitle {
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+/* --- modules/hotel-home-promo-row/example.html --- */
+
+
+        .promo-cards {
+            width: 750px;
+            height: 116px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 18px;
+            box-sizing: border-box;
+            padding: 0 18px;
+        }
+
+        .promo-card {
+            position: relative;
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: #0F131A;
+            flex-shrink: 0;
+        }
+
+        .promo-card--large {
+            width: 274px;
+        }
+
+        .promo-card--small {
+            width: 202px;
+            padding-left: 24px;
+        }
+
+        .card__content {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+
+        .card__title {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .card__subtitle {
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 1.4;
+            color: #919499;
+            margin: 0;
+        }
+
+        .card__decoration {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 80px;
+            height: 80px;
+            pointer-events: none;
+        }
+
+        .promo-card--animated .card__image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+/* --- modules/hotel-home-hotel-card/example.html --- */
+@font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Alibaba Sans 102';
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+            font-weight: 700;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'SF Pro Text';
+            src: local('San Francisco'), local('Helvetica');
+        }
+
+        
+
+        .hotel-card {
+            position: relative;
+            width: 348px;
+            height: 522px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0px 0px 26px;
+            gap: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-left: 8px;
+        }
+
+        .hotel-card__image-container {
+            position: relative;
+            width: 348px;
+            height: 348px;
+            flex-shrink: 0;
+        }
+
+        .hotel-card__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hotel-card__brand-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px 6px;
+            background: #FEEBD8;
+            border-radius: 4px;
+            color: #5D3521;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        .hotel-card__distance-info {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            display: flex;
+            align-items: center;
+            padding: 4px 18px 4px 6px;
+            gap: 3px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 18px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .hotel-card__distance-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hotel-card__distance-text {
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        .hotel-card__info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 9px;
+            width: 324px;
+        }
+
+        .hotel-card__title-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hotel-card__title {
+            font-weight: 500;
+            font-size: 28px;
+            line-height: 1.4;
+            color: #0F131A;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 8px;
+        }
+
+        .hotel-card__type-tag {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: 28px;
+            background: #F7F8FA;
+            border-radius: 6px;
+            color: #919499;
+            font-size: 20px;
+            line-height: 1.4;
+            flex-shrink: 0;
+        }
+
+        .hotel-card__rating {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            height: 34px;
+        }
+
+        .hotel-card__rating-score {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 1.4;
+            color: #6666FF;
+        }
+
+        .hotel-card__rating-text {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 1.4;
+            color: #6666FF;
+        }
+
+        .hotel-card__rating-comment {
+            font-size: 24px;
+            line-height: 1.4;
+            color: #0F131A;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotel-card__service-tags {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            height: 28px;
+        }
+
+        .service-tag {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 28px;
+            border: 1px solid rgba(128, 85, 64, 0.5);
+            border-radius: 4px;
+            font-size: 20px;
+            color: #805540;
+        }
+
+        .service-tag--two-part .tag-part-1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: 100%;
+            background: linear-gradient(98.58deg, #6E5A4F 0%, #564131 98.33%);
+            border-radius: 3px 0px 0px 3px;
+            color: #FEF5EC;
+        }
+
+        .service-tag--two-part .tag-part-2 {
+            padding: 0 6px;
+        }
+
+        .service-tag--simple {
+             padding: 0 6px;
+        }
+
+        .hotel-card__price-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 2px;
+            width: 100%;
+            height: 36px;
+        }
+
+        .price__currency {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 1;
+            color: #FF5533;
+        }
+        .price__amount {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 0.8;
+            color: #FF5533;
+        }
+        .price__suffix {
+            font-size: 18px;
+            line-height: 1;
+            color: #FF5533;
+        }
+
+        .price__original {
+            color: #919499;
+            font-size: 18px;
+            line-height: 1;
+            text-decoration: line-through;
+            margin-left: 6px;
+        }
+/* --- modules/hotel-home-tabbar/example.html --- */
+
+
+        .bottom-bar {
+            position: relative;
+            width: 750px;
+            height: 145px;
+            background: #FFFFFF;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .bottom-bar__nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            height: 100%;
+            padding-top: 12px;
+            box-sizing: border-box;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #0F131A;
+            text-align: center;
+            width: 20%;
+        }
+
+        .nav-item__icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-item__icon svg {
+            display: block;
+        }
+
+        .nav-item__label {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 22px;
+            line-height: 31px;
+        }
+
+        .nav-item--recommend {
+            justify-content: center;
+        }
+
+        .nav-item--recommend .nav-item__icon {
+            width: 78px;
+            height: 78px;
+        }
+  </style>
+</head>
+<body>
+<div class="hotel-home-full">
+  <div class="hotel-full__hero">
+    <div class="banner-component">
+
+            <img class="banner-component__background" src="https://gw.alicdn.com/imgextra/i4/O1CN01vG4iXF1SpA6Re1UVb_!!6000000002295-2-tps-1500-664.png" alt="广告横幅背景">
+
+            <div class="banner-component__overlay">
+
+                <div class="status-bar">
+                    <div class="status-bar__time">9:42</div>
+                    <div class="status-bar__icons">
+                        <div class="icon-signal">
+                            <svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 8H26C27.1046 8 28 8.89543 28 10V22C28 23.1046 27.1046 24 26 24H24C22.8954 24 22 23.1046 22 22V10C22 8.89543 22.8954 8 24 8Z" fill="white"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M15 12H17C18.1046 12 19 12.8954 19 14V22C19 23.1046 18.1046 24 17 24H15C13.8954 24 13 23.1046 13 22V14C13 12.8954 13.8954 12 15 12Z" fill="white"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 15H8C9.10457 15 10 15.8954 10 17V22C10 23.1046 9.10457 24 8 24H6C4.89543 24 4 23.1046 4 22V17C4 15.8954 4.89543 15 6 15Z" fill="white"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M33 4H35C36.1046 4 37 4.89543 37 6V22C37 23.1046 36.1046 24 35 24H33C31.8954 24 31 23.1046 31 22V6C31 4.89543 31.8954 4 33 4Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="icon-wifi">
+                            <svg width="32" height="28" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.2654 17.8792C17.5444 17.8792 18.7872 18.2152 19.8822 18.8561L20.3259 19.1157C20.6623 19.3126 20.7214 19.7733 20.4456 20.0483L16.6575 23.826C16.4248 24.058 16.0475 24.058 15.8148 23.826L12.051 20.0726C11.7765 19.7988 11.8337 19.3404 12.1672 19.1421L12.6059 18.8813C13.711 18.2242 14.9695 17.8792 16.2654 17.8792Z" fill="white"/>
+                            <path d="M16.2653 10.9397C19.447 10.9397 22.5018 11.9952 24.9904 13.9498L25.3421 14.2261C25.6225 14.4463 25.6471 14.8613 25.3948 15.113L23.1332 17.3682C22.924 17.5768 22.5931 17.6008 22.3559 17.4245L22.0802 17.2196C20.3994 15.9705 18.3727 15.3004 16.2653 15.3004C14.145 15.3004 12.1065 15.9788 10.4201 17.2423L10.1441 17.4491C9.90692 17.6268 9.57473 17.6034 9.36493 17.3942L7.10421 15.1397C6.85236 14.8886 6.87627 14.4746 7.15537 14.254L7.50508 13.9775C9.99957 12.0055 13.0683 10.9397 16.2653 10.9397Z" fill="white"/>
+                            <path d="M16.2654 4C21.3148 4 26.1435 5.78114 29.9655 9.04589L30.2918 9.32455C30.5554 9.54976 30.571 9.95115 30.3255 10.1959L28.0713 12.4439C27.8529 12.6617 27.5038 12.6769 27.2671 12.479L26.988 12.2457C23.9788 9.72943 20.2071 8.36071 16.2654 8.36071C12.3103 8.36071 8.52654 9.73886 5.51282 12.2708L5.2336 12.5054C4.99699 12.7042 4.64717 12.6893 4.4284 12.4711L2.17451 10.2235C1.92939 9.97907 1.94447 9.57836 2.20729 9.35293L2.53228 9.07417C6.35905 5.79178 11.2011 4 16.2654 4Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="icon-battery">
+                            <svg width="50" height="28" viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M48 10C49.1046 10 50 10.8954 50 12V16C50 17.1046 49.1046 18 48 18V10Z" fill="white"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2H40C43.3137 2 46 4.68629 46 8V20C46 23.3137 43.3137 26 40 26H6C2.68629 26 0 23.3137 0 20V8C0 4.68629 2.68629 2 6 2ZM6 4C3.79086 4 2 5.79086 2 8V20C2 22.2091 3.79086 24 6 24H40C42.2091 24 44 22.2091 44 20V8C44 5.79086 42.2091 4 40 4H6Z" fill="white"/>
+                            <rect x="4" y="6" width="38" height="16" rx="2" fill="white"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-bar">
+                    <a href="#" class="nav-button">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M38.0781 44.94C38.3431 45.2243 38.4873 45.6004 38.4804 45.989C38.4736 46.3776 38.3162 46.7484 38.0413 47.0232C37.7665 47.2981 37.3957 47.4555 37.0071 47.4623C36.6185 47.4692 36.2424 47.325 35.9581 47.06L19.9581 31.06C19.6772 30.7787 19.5194 30.3975 19.5194 30C19.5194 29.6025 19.6772 29.2212 19.9581 28.94L35.9581 12.94C36.2424 12.675 36.6185 12.5308 37.0071 12.5376C37.3957 12.5445 37.7665 12.7019 38.0413 12.9768C38.3162 13.2516 38.4736 13.6224 38.4804 14.011C38.4873 14.3996 38.3431 14.7756 38.0781 15.06L23.1401 30L38.0801 44.94H38.0781Z" fill="white"/>
+                        </svg>
+                    </a>
+
+                    <div class="navigation-bar__actions">
+                        <a href="#" class="nav-button">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M38.5 11.5C40.7543 11.5 42.9163 12.3996 44.5104 14.0009C46.1045 15.6021 47 17.7739 47 20.0385V39.9615C47 42.2261 46.1045 44.3979 44.5104 45.9991C42.9163 47.6004 40.7543 48.5 38.5 48.5H21.5C19.2457 48.5 17.0837 47.6004 15.4896 45.9991C13.8955 44.3979 13 42.2261 13 39.9615V20.0385C13 17.7739 13.8955 15.6021 15.4896 14.0009C17.0837 12.3996 19.2457 11.5 21.5 11.5H38.5ZM44.1681 27.1083C41.9156 28.6246 39.4357 29.7681 36.8227 30.4952C36.4054 31.9907 35.5126 33.308 34.2806 34.2463C33.0486 35.1846 31.5448 35.6924 29.9988 35.6922C28.4527 35.6921 26.949 35.1839 25.7172 34.2454C24.4854 33.3068 23.5929 31.9893 23.1759 30.4938C20.5637 29.7682 18.0846 28.6256 15.8333 27.1097V39.9615C15.8333 41.4712 16.4304 42.9191 17.4931 43.9866C18.5558 45.0541 19.9971 45.6538 21.5 45.6538H38.5C40.0029 45.6538 41.4442 45.0541 42.5069 43.9866C43.5696 42.9191 44.1667 41.4712 44.1667 39.9615L44.1681 27.1083ZM30 24.3077C28.8728 24.3077 27.7918 24.7575 26.9948 25.5581C26.1978 26.3588 25.75 27.4447 25.75 28.5769C25.75 29.7092 26.1978 30.7951 26.9948 31.5957C27.7918 32.3964 28.8728 32.8462 30 32.8462C31.1272 32.8462 32.2082 32.3964 33.0052 31.5957C33.8022 30.7951 34.25 29.7092 34.25 28.5769C34.25 27.4447 33.8022 26.3588 33.0052 25.5581C32.2082 24.7575 31.1272 24.3077 30 24.3077ZM38.5 14.3462H21.5C19.9971 14.3462 18.5558 14.9459 17.4931 16.0134C16.4304 17.0809 15.8333 18.5288 15.8333 20.0385V23.5819C17.9686 25.3045 20.3981 26.6224 23.0031 27.4712C23.2646 25.7958 24.1132 24.2693 25.3959 23.1668C26.6787 22.0643 28.3113 21.4583 29.9995 21.4579C31.6877 21.4576 33.3205 22.0629 34.6038 23.1649C35.887 24.2669 36.7362 25.7931 36.9983 27.4683C39.6032 26.6217 42.0324 25.3046 44.1667 23.5819V20.0385C44.1667 18.5288 43.5696 17.0809 42.5069 16.0134C41.4442 14.9459 40.0029 14.3462 38.5 14.3462Z" fill="white"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="nav-button">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M31.9632 26.5138C32.8822 27.0441 33.5529 27.9178 33.8277 28.9426C34.1025 29.9674 33.959 31.0594 33.4287 31.9783C32.8984 32.8973 32.0248 33.568 31 33.8428C29.9752 34.1177 28.8832 33.9741 27.9642 33.4438C27.0452 32.9135 26.3745 32.0399 26.0997 31.0151C25.8249 29.9903 25.9684 28.8983 26.4987 27.9793C27.029 27.0604 27.9026 26.3897 28.9274 26.1149C29.9522 25.84 31.0442 25.9835 31.9632 26.5138ZM43.9632 25.9783C45.0242 25.9783 46.0417 26.3998 46.792 27.1501C47.5422 27.9003 47.9637 28.9178 47.9637 29.9788C47.9637 31.0398 47.5422 32.0574 46.792 32.8076C46.0417 33.5579 45.0242 33.9793 43.9632 33.9793C42.9022 33.9793 41.8847 33.5579 41.1344 32.8076C40.3842 32.0574 39.9627 31.0398 39.9627 29.9788C39.9627 28.9178 40.3842 27.9003 41.1344 27.1501C41.8847 26.3998 42.9022 25.9783 43.9632 25.9783ZM17.9637 26.5153C18.4303 26.7718 18.8411 27.1189 19.1718 27.5362C19.5026 27.9535 19.7467 28.4326 19.8899 28.9454C20.0331 29.4583 20.0725 29.9946 20.0057 30.5229C19.9389 31.0511 19.7673 31.5608 19.501 32.0219C19.2347 32.483 18.8791 32.8863 18.4549 33.2081C18.0307 33.53 17.5465 33.7639 17.0307 33.8962C16.5149 34.0285 15.9779 34.0565 15.4512 33.9786C14.9244 33.9007 14.4186 33.7183 13.9632 33.4423C13.0684 32.9 12.4217 32.0287 12.1617 31.0151C11.9017 30.0016 12.0492 28.9266 12.5725 28.0205C13.0958 27.1144 13.9532 26.4494 14.961 26.168C15.9688 25.8867 17.0467 26.0113 17.9637 26.5153Z" fill="white"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+  <div class="hotel-full__search-pull">
+    <div class="search-module">
+
+            <nav class="search-tabs">
+                <a href="#" class="search-tabs__item search-tabs__item--active">
+                    <img class="tab__image" src="https://gw.alicdn.com/imgextra/i3/O1CN01bbfHlb1aynMMDjuUq_!!6000000003399-2-tps-220-112.png" alt="国内">
+                </a>
+                <a href="#" class="search-tabs__item">
+                    <img class="tab__image" src="https://gw.alicdn.com/imgextra/i2/O1CN015tHSJf1O9FORgbn5y_!!6000000001662-2-tps-220-100.png" alt="国际">
+                </a>
+                <a href="#" class="search-tabs__item">
+                    <img class="tab__image" src="https://gw.alicdn.com/imgextra/i1/O1CN01om44tl1aYEO6Yzkij_!!6000000003341-2-tps-220-100.png" alt="民宿">
+                </a>
+                <a href="#" class="search-tabs__item">
+                    <img class="tab__image" src="https://gw.alicdn.com/imgextra/i1/O1CN01NwGqJJ26YI91y7veu_!!6000000007673-2-tps-220-100.png" alt="钟点房">
+                </a>
+            </nav>
+
+            <div class="search-panel">
+                <form class="search-form" action="#">
+                    <div class="search-form__row">
+                        <div class="form-field--city">
+                            <span>杭州</span>
+                            <span class="icon icon-arrow-down">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.0711 11.6688C23.2745 11.6543 23.4774 11.7022 23.6528 11.8063C23.8282 11.9104 23.9675 12.0656 24.0522 12.2511C24.1368 12.4366 24.1627 12.6436 24.1264 12.8443C24.0901 13.0449 23.9933 13.2297 23.8491 13.3738L16.7791 20.4448C16.6862 20.5378 16.5759 20.6115 16.4545 20.6619C16.3331 20.7122 16.203 20.7381 16.0716 20.7381C15.9401 20.7381 15.81 20.7122 15.6886 20.6619C15.5672 20.6115 15.4569 20.5378 15.3641 20.4448L8.29306 13.3748C8.1529 13.235 8.05739 13.0568 8.01863 12.8626C7.97986 12.6685 7.99959 12.4673 8.0753 12.2843C8.15101 12.1014 8.2793 11.9451 8.44393 11.8352C8.60855 11.7253 8.8021 11.6667 9.00006 11.6668H23.0001C23.0241 11.6668 23.0481 11.6668 23.0711 11.6688Z" fill="#0F131A"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="form-field--search">
+                            <span class="icon icon-search">
+                                <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M30.1481 28.5994C32.1562 26.2329 33.2558 23.2286 33.25 20.125C33.25 12.8765 27.3735 7 20.125 7C12.8765 7 7 12.8765 7 20.125C7 27.3735 12.8765 33.25 20.125 33.25C23.275 33.25 26.2456 32.1405 28.5994 30.1481L29.4376 29.4376L30.1481 28.5994ZM36.9364 35.0805C37.0617 35.2016 37.1617 35.3464 37.2305 35.5065C37.2993 35.6667 37.3355 35.8389 37.337 36.0132C37.3385 36.1874 37.3053 36.3603 37.2393 36.5216C37.1733 36.6829 37.0759 36.8294 36.9526 36.9526C36.8294 37.0759 36.6829 37.1733 36.5216 37.2393C36.3603 37.3053 36.1874 37.3385 36.0132 37.337C35.8389 37.3355 35.6667 37.2993 35.5065 37.2305C35.3464 37.1617 35.2016 37.0617 35.0805 36.9364L30.2951 32.1519C27.4546 34.5609 23.8495 35.8806 20.125 35.875C11.4266 35.875 4.375 28.8234 4.375 20.125C4.375 11.4266 11.4266 4.375 20.125 4.375C28.8234 4.375 35.875 11.4266 35.875 20.125C35.875 24.0012 34.475 27.5511 32.1519 30.2951L36.9364 35.0805Z" fill="#919499"/>
+                                </svg>
+                            </span>
+                            <span>位<span class="spaced-char">置/</span>品<span class="spaced-char">牌/</span>酒店</span>
+                        </div>
+                        <div class="form-field--location">
+                            <span class="icon icon-location">
+                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 11.4545C14.3836 11.4545 11.4545 14.3836 11.4545 18C11.4545 21.6164 14.3836 24.5455 18 24.5455C21.6164 24.5455 24.5455 21.6164 24.5455 18C24.5455 14.3836 21.6164 11.4545 18 11.4545ZM19.6364 3.37091V1.125C19.6364 0.50368 19.1327 0 18.5114 0H17.4886C16.8673 0 16.3636 0.50368 16.3636 1.125V3.37091C9.54 4.12364 4.12364 9.54 3.37091 16.3636H1.125C0.50368 16.3636 0 16.8673 0 17.4886V18.5114C0 19.1327 0.50368 19.6364 1.125 19.6364H3.37091C4.12364 26.46 9.54 31.8764 16.3636 32.6291V34.875C16.3636 35.4963 16.8673 36 17.4886 36H18.5114C19.1327 36 19.6364 35.4963 19.6364 34.875V32.6291C26.46 31.8764 31.8764 26.46 32.6291 19.6364H34.875C35.4963 19.6364 36 19.1327 36 18.5114V17.4886C36 16.8673 35.4963 16.3636 34.875 16.3636H32.6291C31.8764 9.54 26.46 4.12364 19.6364 3.37091ZM18 29.4545C11.6673 29.4545 6.54545 24.3327 6.54545 18C6.54545 11.6673 11.6673 6.54545 18 6.54545C24.3327 6.54545 29.4545 11.6673 29.4545 18C29.4545 24.3327 24.3327 29.4545 18 29.4545Z" fill="#6666FF"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <hr class="search-form__divider">
+
+                    <div class="search-form__row date-row-container">
+                        <div class="date-selection-group">
+                            <div class="form-field--date">
+                                <div class="date-value">
+                                    <span class="date-value__number">4</span><span class="date-value__unit">月</span>
+                                    <span class="date-value__number">2</span><span class="date-value__unit">日</span>
+                                </div>
+                                <span class="date-label">今天</span>
+                            </div>
+                            <div class="form-field--nights">
+                                <div class="nights-line"></div>
+                                <span class="nights-chip">1晚</span>
+                                <div class="nights-line"></div>
+                            </div>
+                            <div class="form-field--date form-field--date-end">
+                                <div class="date-value">
+                                    <span class="date-value__number">4</span><span class="date-value__unit">月</span>
+                                    <span class="date-value__number">3</span><span class="date-value__unit">日</span>
+                                </div>
+                                <span class="date-label">明天</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="search-form__divider">
+
+                    <div class="search-form__row occupancy-price-row">
+                        <div class="form-field--occupancy">
+                            <div class="occupancy-item">
+                                <span class="occupancy-item__number">1</span>
+                                <span class="occupancy-item__label">间房</span>
+                            </div>
+                            <div class="occupancy-item">
+                                <span class="occupancy-item__number">1</span>
+                                <span class="occupancy-item__label">成人</span>
+                            </div>
+                            <div class="occupancy-item">
+                                <span class="occupancy-item__number">0</span>
+                                <span class="occupancy-item__label">儿童</span>
+                            </div>
+                            <span class="icon icon-arrow-down">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.0711 11.6688C23.2745 11.6543 23.4774 11.7022 23.6528 11.8063C23.8282 11.9104 23.9675 12.0656 24.0522 12.2511C24.1368 12.4366 24.1627 12.6436 24.1264 12.8443C24.0901 13.0449 23.9933 13.2297 23.8491 13.3738L16.7791 20.4448C16.6862 20.5378 16.5759 20.6115 16.4545 20.6619C16.3331 20.7122 16.203 20.7381 16.0716 20.7381C15.9401 20.7381 15.81 20.7122 15.6886 20.6619C15.5672 20.6115 15.4569 20.5378 15.3641 20.4448L8.29306 13.3748C8.1529 13.235 8.05739 13.0568 8.01863 12.8626C7.97986 12.6685 7.99959 12.4673 8.0753 12.2843C8.15101 12.1014 8.2793 11.9451 8.44393 11.8352C8.60855 11.7253 8.8021 11.6667 9.00006 11.6668H23.0001C23.0241 11.6668 23.0481 11.6668 23.0711 11.6688Z" fill="#0F131A"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="form-field--price">
+                            <div class="price-divider"></div>
+                            <span class="price-label">价<span class="spaced-char">格/</span>星级</span>
+                        </div>
+                    </div>
+
+                    <hr class="search-form__divider">
+
+                </form>
+
+                <div class="hot-searches">
+                    <div class="hot-searches__scroll-container">
+                        <a href="#" class="hot-searches__tag">西湖风景区</a>
+                        <a href="#" class="hot-searches__tag">杭州东站</a>
+                        <a href="#" class="hot-searches__tag">雷峰塔</a>
+                        <a href="#" class="hot-searches__tag">萧山国际机场</a>
+                        <a href="#" class="hot-searches__tag">西溪湿地</a>
+                        <a href="#" class="hot-searches__tag">灵隐寺</a>
+                    </div>
+                    <div class="hot-searches__fade"></div>
+                </div>
+
+                <button class="search-button" type="submit">搜索酒店</button>
+
+                <div class="guarantee">
+                    <img class="guarantee__image" src="https://gw.alicdn.com/imgextra/i4/O1CN014dqp1O1k6QV6OrKMF_!!6000000004634-2-tps-1380-58.png" alt="7x24小时服务・品牌直营 双重积分・信用住 先住后付">
+                </div>
+            </div>
+        </div>
+  </div>
+  <div class="inspiration-module">
+          <div class="inspiration-module__header">
+              <h2 class="header__title">当季热门灵感</h2>
+              <a href="#" class="header__subtitle">
+                  <span>更多灵感城市</span>
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.75781 2.04797L13.0772 7.36734C13.9363 8.22649 13.9363 9.61946 13.0772 10.4786L7.75781 15.798" stroke="#919499" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+              </a>
+          </div>
+
+          <div class="inspiration-module__content">
+
+              <a href="#" class="inspiration-item" style="background-image: url('https://gw.alicdn.com/imgextra/i1/O1CN01Nfi0a01HGqejKnlv8_!!6000000000731-2-tps-548-484.png');">
+                  <div class="inspiration-item__tag">亲子度假</div>
+                  <div class="inspiration-item__overlay">
+                      <h3 class="item-overlay__title">四川·成都</h3>
+                      <p class="item-overlay__subtitle">看熊猫幼崽宝宝打滚</p>
+                  </div>
+              </a>
+
+              <a href="#" class="inspiration-item inspiration-item--small" style="background-image: url('https://gw.alicdn.com/imgextra/i4/O1CN01ftpdDJ1ZL7QtluPfA_!!6000000003177-2-tps-404-484.png');">
+                  <div class="inspiration-item__tag">亲子度假</div>
+                  <div class="inspiration-item__video-icon">
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="16" cy="16" r="16" fill="black" fill-opacity="0.5"/>
+                          <path d="M14.6245 22.2473C14.325 22.4383 13.9834 22.5413 13.6343 22.5458C13.2853 22.5504 12.9413 22.4563 12.6376 22.2732C12.3338 22.0901 12.0812 22.8246 11.9053 21.5037C11.7295 21.1827 11.6368 20.8179 11.6367 20.4464V11.5553C11.6367 11.1836 11.7294 10.8186 11.9053 10.4975C12.0811 10.1765 12.3339 9.9108 12.6378 9.72768C12.9417 9.54457 13.2858 9.45056 13.635 9.45525C13.9842 9.45993 14.326 9.56316 14.6255 9.75437L21.5877 14.2005C21.8799 14.3871 22.1217 14.651 22.2897 14.9666C22.4576 15.2822 22.5458 15.6387 22.5458 16.0014C22.5458 16.364 22.4576 16.7205 22.2897 17.0361C22.1217 17.3517 21.8799 17.6157 21.5877 17.8023L14.6255 22.2473H14.6245Z" fill="white"/>
+                      </svg>
+                  </div>
+                  <div class="inspiration-item__overlay">
+                      <h3 class="item-overlay__title">上海</h3>
+                      <p class="item-overlay__subtitle">东方明珠夜景</p>
+                  </div>
+              </a>
+
+              <a href="#" class="inspiration-item inspiration-item--small" style="background-image: url('https://gw.alicdn.com/imgextra/i2/O1CN01qMIHiw1DkNjTTOv8c_!!6000000000254-2-tps-404-484.png');">
+                  <div class="inspiration-item__tag">周边游玩</div>
+                   <div class="inspiration-item__video-icon">
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="16" cy="16" r="16" fill="black" fill-opacity="0.5"/>
+                          <path d="M14.6245 22.2473C14.325 22.4383 13.9834 22.5413 13.6343 22.5458C13.2853 22.5504 12.9413 22.4563 12.6376 22.2732C12.3338 22.0901 12.0812 22.8246 11.9053 21.5037C11.7295 21.1827 11.6368 20.8179 11.6367 20.4464V11.5553C11.6367 11.1836 11.7294 10.8186 11.9053 10.4975C12.0811 10.1765 12.3339 9.9108 12.6378 9.72768C12.9417 9.54457 13.2858 9.45056 13.635 9.45525C13.9842 9.45993 14.326 9.56316 14.6255 9.75437L21.5877 14.2005C21.8799 14.3871 22.1217 14.651 22.2897 14.9666C22.4576 15.2822 22.5458 15.6387 22.5458 16.0014C22.5458 16.364 22.4576 16.7205 22.2897 17.0361C22.1217 17.3517 21.8799 17.6157 21.5877 17.8023L14.6255 22.2473H14.6245Z" fill="white"/>
+                      </svg>
+                  </div>
+                  <div class="inspiration-item__overlay">
+                      <h3 class="item-overlay__title">杭州</h3>
+                      <p class="item-overlay__subtitle">雷峰塔的赏台</p>
+                  </div>
+              </a>
+
+          </div>
+      </div>
+  <div class="promo-cards">
+
+          <a href="#" class="promo-card promo-card--large promo-card--animated">
+              <img class="card__image" src="https://gw.alicdn.com/imgextra/i4/O1CN01ZxNdsz22o5Kuj41Rc_!!6000000007166-54-tps-411-174.apng" alt="品牌闪促">
+          </a>
+
+          <a href="#" class="promo-card promo-card--small">
+              <div class="card__content">
+                  <h3 class="card__title">特价酒店</h3>
+                  <p class="card__subtitle">都是低价</p>
+              </div>
+              <img class="card__decoration" src="https://gw.alicdn.com/imgextra/i2/O1CN01RuTaFB1YKNAiblTUK_!!6000000003040-2-tps-160-160.png" alt="">
+          </a>
+
+          <a href="#" class="promo-card promo-card--small">
+              <div class="card__content">
+                  <h3 class="card__title">爆款直播</h3>
+                  <p class="card__subtitle">周周低价</p>
+              </div>
+              <img class="card__decoration" src="https://gw.alicdn.com/imgextra/i1/O1CN0157L8wy1Gy4Pr1dNtP_!!6000000000690-2-tps-160-160.png" alt="">
+          </a>
+
+      </div>
+  <div class="hotel-full__guess-row">
+    <div class="hotel-card">
+
+            <div class="hotel-card__image-container">
+                <img class="hotel-card__image" src="https://gw.alicdn.com/imgextra/i3/O1CN01AG75Vn26x1X3xX8M0_!!6000000007727-0-tps-696-696.jpg" alt="三亚海棠喜来登酒店">
+
+                <div class="hotel-card__brand-tag">
+                    万豪旗下
+                </div>
+
+                <div class="hotel-card__distance-info">
+                    <div class="hotel-card__distance-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g opacity="0.8">
+                            <path d="M18.3637 4.0875C19.198 4.90008 19.8611 5.87153 20.3139 6.94454C20.7667 8.01755 20.9999 9.17038 20.9999 10.335C20.9999 11.4996 20.7667 12.6525 20.3139 13.7255C19.8611 14.7985 19.198 15.7699 18.3637 16.5825C17.1742 17.7503 15.6735 18.9187 14.484 20.0865C14.1007 20.463 13.554 21.054 12.843 21.861L12.6615 22.0673C12.579 22.1615 12.4773 22.2371 12.3632 22.2889C12.2491 22.3406 12.1253 22.3674 12 22.3674C11.8747 22.3674 11.7508 22.3406 11.6368 22.2889C11.5227 22.2371 11.421 22.1615 11.3385 22.0673C10.5472 21.1628 9.94572 20.508 9.53397 20.1045C8.33847 18.93 6.83172 17.7563 5.63622 16.5825C4.80191 15.7699 4.13881 14.7985 3.68604 13.7255C3.23327 12.6525 3 11.4996 3 10.335C3 9.17038 3.23327 8.01755 3.68604 6.94454C4.13881 5.87153 4.80191 4.90008 5.63622 4.0875C9.15072 0.6375 14.8492 0.6375 18.3637 4.0875ZM12 7.275C10.245 7.275 8.82372 8.685 8.82372 10.4243C8.82372 12.1643 10.2457 13.5743 12 13.5743C13.755 13.5743 15.1762 12.1643 15.1762 10.4243C15.1762 8.68425 13.7542 7.27425 12 7.27425V7.275Z" fill="white"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <span class="hotel-card__distance-text">距您直线距离2km</span>
+                </div>
+            </div>
+
+            <div class="hotel-card__info-container">
+
+                <div class="hotel-card__title-row">
+                    <span class="hotel-card__title">三亚海棠喜来登酒店</span>
+                    <div class="hotel-card__type-tag">豪华</div>
+                </div>
+
+                <div class="hotel-card__rating">
+                    <span class="hotel-card__rating-score">4.9</span>
+                    <span class="hotel-card__rating-text">很好</span>
+                    <span class="hotel-card__rating-comment">“屋顶海景泳池”</span>
+                </div>
+
+                <div class="hotel-card__service-tags">
+                    <div class="service-tag service-tag--two-part">
+                        <span class="tag-part-1">万豪</span>
+                        <span class="tag-part-2">免费早餐</span>
+                    </div>
+                    <div class="service-tag service-tag--simple">
+                        免费停车
+                    </div>
+                </div>
+
+                <div class="hotel-card__price-row">
+                    <span class="price__currency">¥</span>
+                    <span class="price__amount">694</span>
+                    <span class="price__suffix">起</span>
+                    <span class="price__original">¥1010</span>
+                </div>
+
+            </div>
+
+        </div>
+    <div class="hotel-card">
+
+            <div class="hotel-card__image-container">
+                <img class="hotel-card__image" src="https://gw.alicdn.com/imgextra/i3/O1CN01AG75Vn26x1X3xX8M0_!!6000000007727-0-tps-696-696.jpg" alt="三亚海棠喜来登酒店">
+
+                <div class="hotel-card__brand-tag">
+                    万豪旗下
+                </div>
+
+                <div class="hotel-card__distance-info">
+                    <div class="hotel-card__distance-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g opacity="0.8">
+                            <path d="M18.3637 4.0875C19.198 4.90008 19.8611 5.87153 20.3139 6.94454C20.7667 8.01755 20.9999 9.17038 20.9999 10.335C20.9999 11.4996 20.7667 12.6525 20.3139 13.7255C19.8611 14.7985 19.198 15.7699 18.3637 16.5825C17.1742 17.7503 15.6735 18.9187 14.484 20.0865C14.1007 20.463 13.554 21.054 12.843 21.861L12.6615 22.0673C12.579 22.1615 12.4773 22.2371 12.3632 22.2889C12.2491 22.3406 12.1253 22.3674 12 22.3674C11.8747 22.3674 11.7508 22.3406 11.6368 22.2889C11.5227 22.2371 11.421 22.1615 11.3385 22.0673C10.5472 21.1628 9.94572 20.508 9.53397 20.1045C8.33847 18.93 6.83172 17.7563 5.63622 16.5825C4.80191 15.7699 4.13881 14.7985 3.68604 13.7255C3.23327 12.6525 3 11.4996 3 10.335C3 9.17038 3.23327 8.01755 3.68604 6.94454C4.13881 5.87153 4.80191 4.90008 5.63622 4.0875C9.15072 0.6375 14.8492 0.6375 18.3637 4.0875ZM12 7.275C10.245 7.275 8.82372 8.685 8.82372 10.4243C8.82372 12.1643 10.2457 13.5743 12 13.5743C13.755 13.5743 15.1762 12.1643 15.1762 10.4243C15.1762 8.68425 13.7542 7.27425 12 7.27425V7.275Z" fill="white"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <span class="hotel-card__distance-text">距您直线距离2km</span>
+                </div>
+            </div>
+
+            <div class="hotel-card__info-container">
+
+                <div class="hotel-card__title-row">
+                    <span class="hotel-card__title">三亚海棠喜来登酒店</span>
+                    <div class="hotel-card__type-tag">豪华</div>
+                </div>
+
+                <div class="hotel-card__rating">
+                    <span class="hotel-card__rating-score">4.9</span>
+                    <span class="hotel-card__rating-text">很好</span>
+                    <span class="hotel-card__rating-comment">“屋顶海景泳池”</span>
+                </div>
+
+                <div class="hotel-card__service-tags">
+                    <div class="service-tag service-tag--two-part">
+                        <span class="tag-part-1">万豪</span>
+                        <span class="tag-part-2">免费早餐</span>
+                    </div>
+                    <div class="service-tag service-tag--simple">
+                        免费停车
+                    </div>
+                </div>
+
+                <div class="hotel-card__price-row">
+                    <span class="price__currency">¥</span>
+                    <span class="price__amount">694</span>
+                    <span class="price__suffix">起</span>
+                    <span class="price__original">¥1010</span>
+                </div>
+
+            </div>
+
+        </div>
+  </div>
+  <div class="bottom-bar">
+          <nav class="bottom-bar__nav">
+
+              <a href="#" class="nav-item nav-item--recommend">
+                  <div class="nav-item__icon">
+                      <svg width="78" height="78" viewBox="0 0 78 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M39 78C60.5391 78 78 60.5391 78 39C78 17.4609 60.5391 0 39 0C17.4609 0 0 17.4609 0 39C0 60.5391 17.4609 78 39 78Z" fill="#FFE033"/>
+                          <path d="M27.5469 22.4982L37.025 30.7777C38.1554 31.7653 39.8418 31.7653 40.9723 30.7777L50.4504 22.4982" stroke="#0F131A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M29.24 54.6V57.3H32.8V54.6H29.24ZM29.24 58.64V61.62H32.8V58.64H29.24ZM29.24 63V63.92H27.82V52.2C27.38 52.8933 26.8533 53.6133 26.24 54.36L25.76 52.84C27.3733 50.7067 28.5267 48.3267 29.22 45.7L30.62 45.98C30.34 46.9933 29.9667 48.04 29.5 49.12H33.12C32.8133 48.08 32.42 47.0467 31.94 46.02L33.32 45.64C33.7867 46.8133 34.1533 47.9067 34.42 48.92L33.88 49.12H37.7V50.52H34.22V53.24H37.3V54.6H34.22V57.3H37.3V58.64H34.22V61.62H37.92V63H29.24ZM32.8 50.52H29.24V53.24H32.8V50.52ZM25.98 55.36C25.38 55.6533 24.76 55.9333 24.12 56.2V62C24.12 63.12 23.5267 63.68 22.34 63.68H20.5L20.2 62.28C20.8267 62.3467 21.3733 62.38 21.84 62.38C22.3867 62.38 22.66 62.1333 22.66 61.64V56.78C21.6333 57.1267 20.8 57.3933 20.16 57.58L19.8 56.14C20.7467 55.9267 21.7 55.6533 22.66 55.32V50.72H20.1V49.32H22.66V45.62H24.12V49.32H26.14V50.72H24.12V54.76C24.8667 54.4267 25.4867 54.14 25.98 53.9V55.36ZM40.34 47.12H44.88V45.68H46.36V47.12H51.64V45.68H53.12V47.12H57.66V48.44H53.12V49.9H51.64V48.44H46.36V49.88H44.88V48.44H40.34V47.12ZM40.6 51.24H46.24C46.5067 50.68 46.7267 50.1733 46.9 49.72L48.3 49.96L48.06 50.6L47.8 51.24H57.56V52.56H47.14C46.5533 53.6 45.84 54.6 45 55.56V64.04H43.62V56.96C42.8333 57.6667 41.9133 58.38 40.86 59.1L39.96 57.94C42.3333 56.38 44.1733 54.5867 45.48 52.56H40.6V51.24ZM51.92 57.04C52.48 56.6933 53.3133 56.1533 54.42 55.42H47.84V54.1H56.46V55.14C55.4333 55.94 54.4 56.7067 53.36 57.44V58.28H57.76V59.64H53.36V62.34C53.36 63.42 52.8267 63.96 51.76 63.96H49.42L49 62.56C50.0267 62.6267 50.7533 62.66 51.18 62.66C51.6733 62.66 51.92 62.42 51.92 61.94V59.64H46.4V58.28H51.92V57.04Z" fill="#0F131A"/>
+                      </svg>
+                  </div>
+              </a>
+
+              <a href="#" class="nav-item">
+                  <div class="nav-item__icon">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M24.0007 4C28.5012 4 32.2649 7.07826 32.9958 11.1522H33.4326L34.149 11.1696C35.9296 11.242 36.7232 11.4986 37.5225 11.9232C38.4718 12.4304 39.2158 13.171 39.724 14.1159C40.1244 14.8623 40.3777 15.6029 40.4665 17.1536L40.4927 17.8188L40.5 18.187V36.8362L40.4927 37.3333L40.4665 38C40.3777 39.5507 40.1244 40.2899 39.724 41.0362C39.2275 41.9698 38.4604 42.7333 37.5225 43.2275C36.7727 43.6261 36.0287 43.8783 34.4707 43.9667L33.8024 43.9928L33.4326 44H14.697L14.1976 43.9928L13.5278 43.9667C11.9699 43.8783 11.2273 43.6261 10.4775 43.2275C9.53956 42.7333 8.77255 41.9698 8.27604 41.0362C7.84798 40.2406 7.58882 39.4507 7.51893 37.6783L7.5 36.9652V18.187L7.51747 17.4739C7.57134 16.1449 7.73005 15.3681 7.98776 14.7275L8.12316 14.4159L8.27604 14.1159C8.77255 13.1823 9.53956 12.4189 10.4775 11.9246C10.578 11.871 10.677 11.8203 10.7789 11.7725L11.0919 11.6377C11.7355 11.3812 12.5159 11.2232 13.851 11.1696L14.5674 11.1522H15.0042C15.7351 7.07826 19.4988 4 23.9993 4H24.0007ZM14.6373 13.8565L13.9617 13.8739L13.3123 13.9116L12.8129 13.9667L12.6513 13.9928L12.3819 14.0507L12.2742 14.0841L12.1796 14.1174L11.9437 14.2188L11.7602 14.3101C11.3642 14.5217 11.0512 14.8029 10.8095 15.1652L10.6158 15.4986L10.5139 15.729C10.3829 16.0565 10.2955 16.4971 10.2518 17.2464L10.2373 17.542L10.2198 18.187V36.8971L10.2343 37.5681L10.2649 38.1188C10.3261 38.9435 10.4396 39.3217 10.6741 39.7594C10.9289 40.2319 11.2856 40.587 11.7602 40.8406C12.2028 41.0754 12.5668 41.1826 13.3589 41.2435L13.6385 41.2623L14.266 41.287L14.9649 41.2957L33.6947 41.2884L34.3164 41.2638C35.3545 41.2058 35.7491 41.1014 36.2412 40.8406C36.7159 40.587 37.0726 40.2319 37.3274 39.7594C37.5633 39.3188 37.671 38.9565 37.7322 38.1681L37.7511 37.8899L37.7758 37.2652L37.7846 36.5696L37.7773 17.9261L37.7525 17.3072L37.7118 16.758C37.6463 16.113 37.5371 15.7826 37.3274 15.3913C37.0842 14.9293 36.7053 14.5522 36.2412 14.3101C35.803 14.0768 35.4215 13.9623 34.6178 13.9043L34.0805 13.8754L33.4239 13.858H14.6373V13.8565ZM22.121 19.1449C22.535 18.5819 23.1817 18.2343 23.8818 18.1986C24.5818 18.1629 25.2608 18.4429 25.7304 18.9609L25.8804 19.1449L28.0251 22.0609L31.4758 23.1913C32.5448 23.5413 33.2096 24.602 33.0555 25.7116L33.0162 25.9145L32.9594 26.1174C32.9099 26.268 32.845 26.4132 32.7658 26.5507L32.6362 26.7493L30.5134 29.6826L30.4988 33.2971C30.4946 34.4169 29.6872 35.3737 28.5798 35.571L28.3731 35.5971L28.1605 35.6058C28.002 35.6054 27.8439 35.5889 27.6887 35.5565L27.4587 35.4957L24.0007 34.3913L20.5428 35.4957C19.4709 35.8378 18.3065 35.3681 17.7764 34.3797L17.6876 34.1942L17.6133 33.9957C17.5645 33.8448 17.5313 33.6894 17.5143 33.5319L17.5012 33.2971L17.4866 29.6812L15.3653 26.7493C14.7125 25.8485 14.7931 24.6135 15.5574 23.8043L15.7176 23.6522L15.8923 23.5116C16.0213 23.4196 16.1593 23.3409 16.3044 23.2768L16.5257 23.1899L19.9764 22.0594L22.121 19.1449ZM24.0007 21.1696L22.0963 23.7594C21.8577 24.0834 21.5386 24.3401 21.1703 24.5043L20.9446 24.5913L17.8812 25.5957L19.7667 28.2C19.956 28.4609 20.087 28.758 20.1555 29.0696L20.1933 29.3072L20.2079 29.5478L20.2195 32.758L23.2917 31.7783C23.5989 31.6797 23.9236 31.6478 24.2424 31.6797L24.4797 31.7159L24.7127 31.7783L27.7848 32.758L27.7979 29.5478C27.7991 29.2273 27.867 28.9105 27.9974 28.6174L28.1066 28.4029L28.2377 28.2L30.1232 25.5957L27.0598 24.5913C26.7534 24.4911 26.4713 24.3288 26.2313 24.1145L26.061 23.9464L25.9081 23.758L24.0007 21.1696ZM24.0007 6.7058C20.9927 6.7058 18.4898 8.60725 17.7895 11.1507H30.212C29.5116 8.60725 27.0088 6.7058 24.0007 6.7058Z" fill="black"/>
+                      </svg>
+                  </div>
+                  <span class="nav-item__label">我的收藏</span>
+              </a>
+
+              <a href="#" class="nav-item">
+                  <div class="nav-item__icon">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M38.0723 27.4702C40.3092 27.4702 42.1225 29.2835 42.1225 31.5208L42.1221 32.9228C42.122 33.274 41.9852 33.6089 41.7447 33.8587L41.616 33.9761C41.1363 34.3603 40.8522 34.94 40.8522 35.5702C40.8522 36.1216 41.0697 36.6344 41.4454 37.0113L41.616 37.1643C41.9358 37.4204 42.122 37.8079 42.1221 38.2176L42.1225 39.62C42.1225 41.8569 40.3092 43.6702 38.0723 43.6702H23.3382C21.1014 43.6702 19.288 41.8569 19.288 39.6191L19.2889 38.3043C19.2892 37.9345 19.4409 37.5839 19.7039 37.3314L19.8444 37.2137C20.3651 36.8348 20.6788 36.2305 20.6788 35.5702C20.6788 34.9832 20.4309 34.4406 20.0102 34.0611L19.8444 33.9267C19.4957 33.6728 19.2892 33.2675 19.2889 32.8361L19.288 31.5204C19.288 29.2835 21.1014 27.4702 23.3382 27.4702H38.0723ZM31.5 4.5C35.6421 4.5 39 7.85786 39 12V23.7247C39 24.5532 38.3284 25.2247 37.5 25.2247C36.6716 25.2247 36 24.5532 36 23.7247V12C36 9.51472 33.9853 7.5 31.5 7.5H15C12.5147 7.5 10.5 9.51472 10.5 12V36C10.5 38.3965 12.3734 40.3555 14.7356 40.4924L15 40.5C15.8284 40.5 16.5 41.1716 16.5 42C16.5 42.8284 15.8284 43.5 15 43.5C10.8579 43.5 7.5 40.1421 7.5 36V12C7.5 7.85786 10.8579 4.5 15 4.5H31.5ZM38.0723 30.1702H23.3382C22.5925 30.1702 21.988 30.7747 21.988 31.5195V32.2192L22.1012 32.3334C22.8422 33.1238 23.2983 34.155 23.3691 35.2655L23.3788 35.5702C23.3788 36.7959 22.9096 37.9447 22.1012 38.807L21.988 38.9197V39.62C21.988 40.3083 22.5031 40.8764 23.1688 40.9597L23.3382 40.9702H38.0723C38.818 40.9702 39.4225 40.3657 39.4225 39.6204L39.421 38.7997L39.2766 38.6385C38.6262 37.8723 38.2291 36.9101 38.1623 35.8809L38.1522 35.5702C38.1522 34.4247 38.5612 33.3447 39.2766 32.5019L39.421 32.3392L39.4225 31.5204C39.4225 30.8321 38.9074 30.264 38.2417 30.1807L38.0723 30.1702ZM21.3904 19.5285C22.2188 19.5285 22.8904 20.2001 22.8904 21.0285C22.8904 21.8569 22.2188 22.5285 21.3904 22.5285H15.7947C14.9663 22.5285 14.2947 21.8569 14.2947 21.0285C14.2947 20.2001 14.9663 19.5285 15.7947 19.5285H21.3904ZM30.7053 12.5159C31.5337 12.5159 32.2053 13.1875 32.2053 14.0159C32.2053 14.8443 31.5337 15.5159 30.7053 15.5159H15.7947C14.9663 15.5159 14.2947 14.8443 14.2947 14.0159C14.2947 13.1875 14.9663 12.5159 15.7947 12.5159H30.7053Z" fill="#0F131A"/>
+                      </svg>
+                  </div>
+                  <span class="nav-item__label">酒店套餐</span>
+              </a>
+
+              <a href="#" class="nav-item">
+                  <div class="nav-item__icon">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M33.4028 6C35.553 6 37.5389 7.15064 38.6082 9.01612L43.0178 16.7087C44.281 18.9124 44.0197 21.6727 42.3655 23.6002L28.5531 39.6946C26.3951 42.2092 22.6071 42.4983 20.0925 40.3402C19.8612 40.1417 19.6453 39.9259 19.4469 39.6946L5.63448 23.6002C3.98028 21.6727 3.71901 18.9124 4.98219 16.7087L9.39178 9.01612C10.4611 7.15064 12.447 6 14.5972 6H33.4028ZM33.4028 9H14.5972C13.5221 9 12.5292 9.57532 11.9945 10.5081L7.58491 18.2007C6.95332 19.3025 7.08395 20.6826 7.91105 21.6464L21.7234 37.7408C21.8227 37.8565 21.9306 37.9644 22.0462 38.0636C23.3035 39.1427 25.1975 38.9981 26.2766 37.7408L40.089 21.6464C40.9161 20.6826 41.0467 19.3025 40.4151 18.2007L36.0055 10.5081C35.4708 9.57532 34.4779 9 33.4028 9ZM32.7027 20.305C33.2166 20.9547 33.1064 21.8981 32.4567 22.412C30.0418 24.3219 27.0548 25.5 24 25.5C20.9675 25.5 18.0022 24.3393 15.5943 22.4521C14.9423 21.941 14.828 20.9982 15.339 20.3462C15.8501 19.6942 16.7929 19.5799 17.445 20.0909C19.3541 21.5872 21.6861 22.5 24 22.5C26.3312 22.5 28.6811 21.5732 30.5957 20.059C31.2454 19.5451 32.1888 19.6552 32.7027 20.305Z" fill="#0F131A"/>
+                      </svg>
+                  </div>
+                  <span class="nav-item__label">权益中心</span>
+              </a>
+
+              <a href="#" class="nav-item">
+                  <div class="nav-item__icon">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M30.7656 4.5C36.5646 4.5 41.2656 9.20101 41.2656 15V33C41.2656 38.799 36.5646 43.5 30.7656 43.5H17.2656C11.4666 43.5 6.76562 38.799 6.76562 33V15C6.76562 9.20101 11.4666 4.5 17.2656 4.5H30.7656ZM28.5006 7.5H19.5291L19.5304 10.2058C19.5304 11.0343 18.8588 11.7058 18.0304 11.7058C17.202 11.7058 16.5304 11.0343 16.5304 10.2058L16.5296 7.53566C12.7329 7.90546 9.76563 11.1062 9.76563 15V33C9.76563 37.1421 13.1235 40.5 17.2656 40.5H30.7656C34.9078 40.5 38.2656 37.1421 38.2656 33V15C38.2656 11.1062 35.2983 7.90546 31.5016 7.53566L31.5009 10.2058C31.5009 11.0343 30.8293 11.7058 30.0009 11.7058C29.1724 11.7058 28.5009 11.0343 28.5009 10.2058L28.5006 7.5ZM30.0009 28.5697C30.8293 28.5697 31.5009 29.2413 31.5009 30.0697C31.5009 30.8981 30.8293 31.5697 30.0009 31.5697H18.0304C17.202 31.5697 16.5304 30.8981 16.5304 30.0697C16.5304 29.2413 17.202 28.5697 18.0304 28.5697H30.0009ZM30.0009 19.1654C30.8293 19.1654 31.5009 19.837 31.5009 20.6654C31.5009 21.4938 30.8293 22.1654 30.0009 22.1654H18.0304C17.202 22.1654 16.5304 21.4938 16.5304 20.6654C16.5304 19.837 17.202 19.1654 18.0304 19.1654H30.0009Z" fill="#0F131A"/>
+                      </svg>
+                  </div>
+                  <span class="nav-item__label">我的订单</span>
+              </a>
+          </nav>
+
+      </div>
+</div>
+</body>
+</html>

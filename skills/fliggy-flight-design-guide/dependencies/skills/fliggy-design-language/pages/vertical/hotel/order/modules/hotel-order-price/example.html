@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>价格信息模块 - 组件示例</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-bg: #f2f3f5;
+        }
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 500;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'PingFang SC', sans-serif;
+            width: 750px;
+            background: var(--color-bg);
+            padding: 24px;
+        }
+
+        /* 通栏容器 */
+        .price-policy-card {
+            width: 750px;
+            margin-left: -24px;
+            background: var(--color-white);
+        }
+        .price-info-wrapper {
+            padding: 20px 30px;
+        }
+        .price-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .price-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .pay-type {
+            font-size: 30px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pay-type-icon {
+            width: 32px;
+            height: 32px;
+        }
+        .price-display {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+        .price-display .currency {
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--color-pay-1);
+            font-family: 'Fliggy Sans 102', sans-serif;
+        }
+        .price-display .amount {
+            font-size: 36px;
+            font-weight: 500;
+            color: var(--color-pay-1);
+            font-family: 'Fliggy Sans 102', sans-serif;
+        }
+        .price-arrow {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+        .extra-fee {
+            font-size: 24px;
+            color: #919499;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="price-policy-card">
+        <div class="price-info-wrapper">
+            <div class="price-main">
+                <div class="price-left">
+                    <span class="pay-type">
+                        先住后付
+                        <img class="pay-type-icon" src="../../../assets/帮助.png" alt="">
+                    </span>
+                    <div class="price-display">
+                        <span class="currency">¥</span>
+                        <span class="amount">399.00</span>
+                    </div>
+                </div>
+                <img class="price-arrow" src="../../../assets/支付组件进入箭头.png" alt="">
+            </div>
+            <p class="extra-fee">含保险费用 ¥30</p>
+        </div>
+    </div>
+</body>
+</html>

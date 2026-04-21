@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>个人中心工具栏 — mine-toolbar</title>
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-weight: 500;
+      font-display: swap;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f2f3f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-top: 24px;
+    }
+    .fdl-mine-toolbar {
+      width: 750px;
+      background: linear-gradient(180deg, #ffffff 0%, #f2f3f5 7.98%);
+      border-radius: 24px 24px 0 0;
+      padding: 18px;
+    }
+    .fdl-mine-toolbar__row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 714px;
+      height: 154px;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+    .fdl-mine-toolbar__row:last-child {
+      margin-bottom: 0;
+    }
+    .fdl-mine-toolbar__item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 0;
+      gap: 12px;
+      width: 126px;
+      height: 154px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font: inherit;
+    }
+    .fdl-mine-toolbar__icon {
+      width: 48px;
+      height: 48px;
+      position: relative;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .fdl-mine-toolbar__label {
+      font-size: 24px;
+      line-height: 1.4;
+      text-align: center;
+      color: #0f131a;
+    }
+    .fdl-mine-toolbar__badge {
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50%);
+      font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 38px;
+      line-height: 1;
+      text-align: center;
+      color: #6666ff;
+      white-space: nowrap;
+    }
+    .fdl-mine-toolbar__row--tools {
+      position: relative;
+      isolation: isolate;
+    }
+    .fdl-mine-toolbar__item--z0 {
+      z-index: 0;
+    }
+    .fdl-mine-toolbar__item--z1 {
+      z-index: 1;
+    }
+    .fdl-mine-toolbar__item--z2 {
+      z-index: 2;
+    }
+    .fdl-mine-toolbar__item--z3 {
+      z-index: 3;
+    }
+    .fdl-mine-toolbar__item--z4 {
+      z-index: 4;
+    }
+    .fdl-mine-toolbar__dots {
+      display: flex;
+      gap: 6px;
+      position: absolute;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      z-index: 5;
+    }
+    .fdl-mine-toolbar__dot {
+      width: 24px;
+      height: 6px;
+      border-radius: 3px 0;
+    }
+    .fdl-mine-toolbar__dot.is-active {
+      background: #ffe033;
+    }
+    .fdl-mine-toolbar__dot:not(.is-active) {
+      background: #f2f3f5;
+    }
+    .fdl-mine-toolbar__icon--pay {
+      background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01KxkCpw1bvQ3XPBm5Y_!!6000000003527-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--travel {
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01b3lqev1sfhwAUkQbv_!!6000000005794-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--review {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01rtll5n1D4FIKj07y4_!!6000000000162-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--refund {
+      background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01zAUaMA1go9r6VtbBq_!!6000000004188-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--orders {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01OA5BbY1u6Ym2vWa9z_!!6000000005988-2-tps-48-48.png");
+    }
+    /* 第二行：供稿未给独立 CDN 时使用第三行图标作占位，上线替换 */
+    .fdl-mine-toolbar__icon--fav {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01MNCyfT1NGHrj8fv2R_!!6000000001542-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--cart {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01KMvMtc1S1EvprfMl3_!!6000000002186-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--hist {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01OrRvEh1Ug7W1TB9Y6_!!6000000002546-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--coupon {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN019W5mJa1aChlxkA5Ax_!!6000000003294-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--mile {
+      background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01TxsDeJ1FY8NBPAKzj_!!6000000000498-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--info {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01MNCyfT1NGHrj8fv2R_!!6000000001542-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--invoice {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01KMvMtc1S1EvprfMl3_!!6000000002186-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--task {
+      background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01OrRvEh1Ug7W1TB9Y6_!!6000000002546-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--ent {
+      background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN019W5mJa1aChlxkA5Ax_!!6000000003294-2-tps-48-48.png");
+    }
+    .fdl-mine-toolbar__icon--gift {
+      background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01TxsDeJ1FY8NBPAKzj_!!6000000000498-2-tps-48-48.png");
+    }
+  </style>
+</head>
+<body>
+  <nav class="fdl-mine-toolbar" aria-label="个人中心快捷入口">
+    <div class="fdl-mine-toolbar__row">
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--pay" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">待付款</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--travel" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">待出行</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--review" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">待评价</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--refund" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">退款/售后</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--orders" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">全部订单</span>
+      </button>
+    </div>
+    <div class="fdl-mine-toolbar__row">
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--fav" aria-hidden="true">
+          <span class="fdl-mine-toolbar__badge">24</span>
+        </span>
+        <span class="fdl-mine-toolbar__label">我的收藏</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--cart" aria-hidden="true">
+          <span class="fdl-mine-toolbar__badge">12</span>
+        </span>
+        <span class="fdl-mine-toolbar__label">购物车</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--hist" aria-hidden="true">
+          <span class="fdl-mine-toolbar__badge">38</span>
+        </span>
+        <span class="fdl-mine-toolbar__label">浏览历史</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--coupon" aria-hidden="true">
+          <span class="fdl-mine-toolbar__badge">50</span>
+        </span>
+        <span class="fdl-mine-toolbar__label">红包卡券</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--mile" aria-hidden="true">
+          <span class="fdl-mine-toolbar__badge">999</span>
+        </span>
+        <span class="fdl-mine-toolbar__label">我的里程</span>
+      </button>
+    </div>
+    <div class="fdl-mine-toolbar__row fdl-mine-toolbar__row--tools">
+      <button type="button" class="fdl-mine-toolbar__item fdl-mine-toolbar__item--z0">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--info" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">常用信息</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item fdl-mine-toolbar__item--z1">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--invoice" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">发票抬头</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item fdl-mine-toolbar__item--z2">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--task" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">任务中心</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item fdl-mine-toolbar__item--z3">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--ent" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">企业会员</span>
+      </button>
+      <button type="button" class="fdl-mine-toolbar__item fdl-mine-toolbar__item--z4">
+        <span class="fdl-mine-toolbar__icon fdl-mine-toolbar__icon--gift" aria-hidden="true"></span>
+        <span class="fdl-mine-toolbar__label">我的礼物</span>
+      </button>
+      <div class="fdl-mine-toolbar__dots" aria-hidden="true">
+        <span class="fdl-mine-toolbar__dot is-active"></span>
+        <span class="fdl-mine-toolbar__dot"></span>
+      </div>
+    </div>
+  </nav>
+</body>
+</html>

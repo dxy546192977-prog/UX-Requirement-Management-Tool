@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车 OTA — 营销条</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 750px;
+            margin: 0 auto;
+            background: #F5F5F5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .marketing-banner {
+            width: 750px;
+            min-height: 96px;
+            padding: 24px 12px 0;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .content-bar {
+            width: 726px;
+            height: 72px;
+            padding: 0 24px;
+            gap: 12px;
+            background: #F7F8FA;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            align-self: stretch;
+        }
+        .brand-icon {
+            width: 66.83px;
+            height: 30px;
+            object-fit: contain;
+        }
+        .text-area {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            flex-grow: 1;
+            align-items: center;
+        }
+        .text-container {
+            width: 313px;
+            height: 34px;
+        }
+        .text {
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .tag-badge {
+            display: none;
+            width: 108px;
+            height: 36px;
+            border: 1px solid rgba(255, 85, 51, 0.5);
+            border-radius: 6px;
+        }
+        .view-button {
+            width: 100px;
+            height: 42px;
+            padding: 6px 24px;
+            border: 1px solid rgba(92, 95, 102, 0.5);
+            border-radius: 21px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 30px;
+            color: #5C5F66;
+        }
+    </style>
+</head>
+<body>
+    <div class="marketing-banner">
+        <div class="content-bar">
+            <img class="brand-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01mdYvc926IGHaFwV3R_!!6000000007638-2-tps-134-60.png" alt="品牌">
+            <div class="text-area">
+                <div class="text-container">
+                    <div class="text">5元优惠券待使用，1天后失效</div>
+                </div>
+                <div class="tag-badge"></div>
+            </div>
+            <button type="button" class="view-button">查看</button>
+        </div>
+    </div>
+</body>
+</html>

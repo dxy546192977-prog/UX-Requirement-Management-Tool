@@ -19,7 +19,7 @@
 - 不强制绑定任何特定 AI 模型（支持 OpenAI / 通义千问）
 
 **后续可扩展到（留了接口）：**
-- 逐模块生成 HTML 设计草稿（对接 FDG / fliggy-design-skill）
+- 逐模块生成 HTML 设计草稿（对接 FDG / `skills/fliggy-flight-design-guide/dependencies/skills/fliggy-design-skill/SKILL.md`）
 - 设计审查（对接 gstack design-review）
 - 推送到 Figma（对接 HTML to Figma 插件）
 

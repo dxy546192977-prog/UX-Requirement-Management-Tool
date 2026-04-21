@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车 OTA — 报价区</title>
+    <style>
+        @font-face {
+            font-family: "Alibaba Sans 102";
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+            font-weight: 700;
+            font-display: swap;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #F5F5F5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: 'PingFang SC', sans-serif;
+        }
+        .quote-container {
+            width: 750px;
+            padding: 24px 0 0;
+            background: linear-gradient(178.91deg, #FFFFFF 0.94%, #F2F3F5 6.2%);
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .quote-col {
+            width: 714px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quote-card {
+            width: 714px;
+            background: #FFFFFF;
+            border: 3px solid #FFFFFF;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .quote-card .main-content {
+            padding: 24px 24px 6px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .quote-card .left-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .price-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .price-component {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+        }
+        .price-symbol {
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-size: 24px;
+            line-height: 24px;
+            font-weight: 700;
+            color: #FF5533;
+        }
+        .price-value {
+            font-family: 'Alibaba Sans 102', sans-serif;
+            font-size: 48px;
+            line-height: 42px;
+            font-weight: 700;
+            color: #FF5533;
+        }
+        .additional-tag {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 24px;
+            line-height: 140%;
+            font-weight: 500;
+            color: #FF5533;
+        }
+        .discount-row {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            align-items: center;
+        }
+        .discount-tag {
+            background: linear-gradient(90deg, #FFE6E0 0%, rgba(255,230,224,0.0001) 100%);
+            border-radius: 4px;
+            padding: 0 4px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 4px;
+        }
+        .discount-text {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 20px;
+            line-height: 140%;
+            font-weight: 400;
+            color: #FF5533;
+        }
+        .arrow-right {
+            width: 12px;
+            height: 12px;
+        }
+        .book-button {
+            width: 84px;
+            height: 84px;
+            background: #FF8C1A;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 36px;
+            line-height: 140%;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+        .benefit-wrapper {
+            width: 714px;
+            height: 106px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+            overflow: visible;
+        }
+        .benefit-corner {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            line-height: 0;
+            flex-shrink: 0;
+        }
+        .benefit-corner img {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+        .benefit-bar {
+            width: 714px;
+            height: 82px;
+            padding: 18px 18px 24px 30px;
+            background: linear-gradient(90.19deg, #FEF5EC 0.19%, rgba(254,245,236,0.8) 67.41%, rgba(254,245,236,0) 99.94%);
+            border-radius: 0px 12px 0px 0px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .benefit-inner-row {
+            width: 666px;
+            height: 36px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+        .benefit-content-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 18px 0 0;
+            gap: 70px;
+            width: 650px;
+            height: 36px;
+            overflow: hidden;
+        }
+        .benefit-title {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 26px;
+            line-height: 140%;
+            font-weight: 500;
+            color: #805540;
+            flex-shrink: 0;
+        }
+        .benefit-list {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .benefit-item {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .benefit-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+        }
+        .benefit-text {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 22px;
+            line-height: 24px;
+            font-weight: 400;
+            color: #805540;
+        }
+        .benefit-arrow {
+            width: 12px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .quote-card .content-area {
+            padding: 30px 24px 24px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .description {
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 24px;
+            line-height: 140%;
+            font-weight: 400;
+            color: #5C5F66;
+        }
+        .info-row {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            align-items: center;
+        }
+        .help-icon {
+            width: 24px;
+            height: 24px;
+        }
+        .benefit-bar.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="quote-container">
+        <div class="quote-col">
+            <div class="quote-card">
+                <div class="main-content">
+                    <div class="left-content">
+                        <div class="price-row">
+                            <div class="price-component">
+                                <span class="price-symbol">¥</span>
+                                <span class="price-value">593</span>
+                            </div>
+                            <div class="additional-tag">+¥46退票保障</div>
+                        </div>
+                        <div class="discount-row">
+                            <div class="discount-tag">
+                                <span class="discount-text">限时共减¥8</span>
+                                <img class="arrow-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01BFu2lb1gOVfyAWvcR_!!6000000004132-2-tps-24-24.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-button">订</div>
+                </div>
+                <div class="benefit-wrapper">
+                    <div class="benefit-corner">
+                        <img src="https://gw.alicdn.com/imgextra/i2/O1CN01NadoQY1m2QGoFkOUq_!!6000000004896-2-tps-48-48.png" alt="">
+                    </div>
+                    <div class="benefit-bar">
+                        <div class="benefit-inner-row">
+                            <div class="benefit-content-row">
+                                <span class="benefit-title">超值5大权益</span>
+                                <div class="benefit-list">
+                                    <div class="benefit-item">
+                                        <img class="benefit-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01Uo2liw1p4f3MVReMj_!!6000000005307-2-tps-48-48.png" alt="">
+                                        <span class="benefit-text">退票赔付保障</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <img class="benefit-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01Uo2liw1p4f3MVReMj_!!6000000005307-2-tps-48-48.png" alt="">
+                                        <span class="benefit-text">免登12306账号</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <img class="benefit-icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01Uo2liw1p4f3MVReMj_!!6000000005307-2-tps-48-48.png" alt="">
+                                        <span class="benefit-text">免登12306账号</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="benefit-arrow" src="https://gw.alicdn.com/imgextra/i1/O1CN01TlvSMg1ezUQJ3fkTm_!!6000000003942-2-tps-24-48.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="quote-card">
+                <div class="content-area">
+                    <div class="left-content">
+                        <div class="price-row">
+                            <div class="price-component">
+                                <span class="price-symbol">¥</span>
+                                <span class="price-value">599</span>
+                            </div>
+                        </div>
+                        <div class="discount-row">
+                            <div class="discount-tag">
+                                <span class="discount-text">限时共减¥8</span>
+                                <img class="arrow-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01BFu2lb1gOVfyAWvcR_!!6000000004132-2-tps-24-24.png" alt="">
+                            </div>
+                        </div>
+                        <div class="description">登录12306购票 累积12306积分和飞猪里程</div>
+                    </div>
+                    <div class="book-button">订</div>
+                </div>
+            </div>
+            <div class="quote-card">
+                <div class="content-area">
+                    <div class="left-content">
+                        <div class="price-row">
+                            <div class="price-component">
+                                <span class="price-symbol">¥</span>
+                                <span class="price-value">593</span>
+                            </div>
+                            <div class="additional-tag">+¥25免登预订</div>
+                        </div>
+                        <div class="discount-row">
+                            <div class="discount-tag">
+                                <span class="discount-text">限时共减¥8</span>
+                                <img class="arrow-right" src="https://gw.alicdn.com/imgextra/i1/O1CN01BFu2lb1gOVfyAWvcR_!!6000000004132-2-tps-24-24.png" alt="">
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <img class="help-icon" src="https://gw.alicdn.com/imgextra/i1/O1CN01Kg7eOG1lMkEDHWRLD_!!6000000004805-2-tps-48-48.png" alt="">
+                            <span class="description">免登12306账号</span>
+                        </div>
+                    </div>
+                    <div class="book-button">订</div>
+                </div>
+                <div class="benefit-bar hidden"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

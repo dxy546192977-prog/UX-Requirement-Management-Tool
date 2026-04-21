@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 首页多功能频道（home-multi-channel）</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-white: #ffffff;
+  --color-indigo-1: #6666ff;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-bg: #f2f3f5;
+  --radius-m: 12px;
+  --fdl-home-ch-flight-start: #e6f2ff;
+  --fdl-home-ch-flight-end: #b3d8ff;
+  --fdl-home-ch-hotel-bg: #f1f1ff;
+  --fdl-home-ch-rank-bg: #eff9f1;
+  --fdl-home-ch-event-bg: #fcf1ff;
+  --fdl-home-ch-live-bg: #fff5eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-home-channels-demo {
+  width: 702px;
+  margin: 0 auto;
+}
+
+.fdl-home-channels {
+  display: flex;
+  width: 702px;
+  height: 265px;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 11px;
+}
+
+.fdl-home-channels__col {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+
+.fdl-home-channels__head {
+  display: flex;
+  min-height: 46px;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 0 6px 8px;
+  gap: 4px;
+}
+
+.fdl-home-channels__title {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-home-channels__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-indigo-1) 12%, var(--color-white));
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-indigo-1);
+}
+
+.fdl-home-channels__col--flights {
+  background: linear-gradient(180deg, var(--fdl-home-ch-flight-start) 0%, var(--fdl-home-ch-flight-end) 100%);
+}
+
+.fdl-home-channels__flights-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 3px 3px;
+}
+
+.fdl-home-channels__flight-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px;
+  border-radius: 10px;
+  background: linear-gradient(270deg, color-mix(in srgb, var(--color-white) 80%, transparent) 0%, var(--color-white) 100%);
+}
+
+.fdl-home-channels__route {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-home-channels__trip-ico {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background: url("https://gw.alicdn.com/imgextra/i3/O1CN0133ekui1Cw0AJLyMSq_!!6000000000144-2-tps-24-24.png") center / contain no-repeat;
+}
+
+.fdl-home-channels__prices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.fdl-home-channels__prices strong {
+  color: var(--color-darkgray);
+  font-weight: 500;
+}
+
+.fdl-home-channels__prices em {
+  font-style: normal;
+  color: var(--color-pay-1);
+}
+
+.fdl-home-channels__col--hotel {
+  background: var(--fdl-home-ch-hotel-bg);
+}
+
+.fdl-home-channels__media {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--radius-m);
+  background-size: cover;
+  background-position: center;
+}
+
+.fdl-home-channels__media--hotel {
+  background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN011mOaWN1o82MAZH13i_!!6000000005179-2-tps-164-219.png");
+}
+
+.fdl-home-channels__media--rank {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01Rh620k1ML2MD5vZUv_!!6000000001417-2-tps-164-219.png");
+}
+
+.fdl-home-channels__overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 8px;
+  border-radius: 0 0 var(--radius-m) var(--radius-m);
+}
+
+.fdl-home-channels__overlay--hotel {
+  min-height: 78px;
+  background: linear-gradient(180deg, rgba(47, 49, 109, 0) 0%, rgba(47, 49, 109, 0.9) 50%, #2f316d 100%);
+}
+
+.fdl-home-channels__overlay--rank {
+  min-height: 114px;
+  gap: 6px;
+  background: linear-gradient(180deg, rgba(36, 76, 49, 0) 0%, rgba(36, 76, 49, 0.9) 50%, #244c31 100%);
+}
+
+.fdl-home-channels__overlay-title {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-white);
+}
+
+.fdl-home-channels__rank-pill {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  background: linear-gradient(180deg, var(--color-white) 0%, #feebd8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.fdl-home-channels__col--rank {
+  background: var(--fdl-home-ch-rank-bg);
+}
+
+.fdl-home-channels__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fdl-home-channels__sub {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+}
+
+.fdl-home-channels__sub--a {
+  background: var(--fdl-home-ch-event-bg);
+}
+
+.fdl-home-channels__sub--b {
+  background: var(--fdl-home-ch-live-bg);
+}
+
+.fdl-home-channels__sub-media {
+  position: relative;
+  flex: 1;
+  min-height: 80px;
+  border-radius: var(--radius-m);
+  background-size: cover;
+  background-position: center;
+}
+
+.fdl-home-channels__sub-media--a {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01xMkyQ929VUZSTQODX_!!6000000008073-2-tps-164-81.png");
+}
+
+.fdl-home-channels__sub-media--b {
+  background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01oPM3eD1w5lJd2RU4O_!!6000000006257-2-tps-164-81.png");
+}
+
+.fdl-home-channels__sub-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  min-height: 44px;
+  border-radius: 0 0 var(--radius-m) var(--radius-m);
+  background: linear-gradient(180deg, rgba(83, 33, 80, 0) 0%, rgba(83, 33, 80, 0.9) 50%, #532150 100%);
+}
+
+.fdl-home-channels__sub-overlay--b {
+  background: linear-gradient(180deg, rgba(102, 62, 26, 0) 0%, rgba(102, 62, 26, 0.9) 50%, #663e1a 100%);
+}
+
+.fdl-home-channels__sub-title {
+  overflow: hidden;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-white);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fdl-home-channels__live-ico {
+  flex-shrink: 0;
+}
+
+.fdl-home-channels__live-ico rect {
+  fill: var(--color-pay-2);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-home-channels-demo">
+    <section class="fdl-home-channels" aria-label="多功能频道">
+      <article class="fdl-home-channels__col fdl-home-channels__col--flights">
+        <div class="fdl-home-channels__head">
+          <span class="fdl-home-channels__title">特价机票</span>
+        </div>
+        <div class="fdl-home-channels__flights-body">
+          <div class="fdl-home-channels__flight-row">
+            <div class="fdl-home-channels__route">
+              <span>杭州</span>
+              <span class="fdl-home-channels__trip-ico" aria-hidden="true"></span>
+              <span style="width:60px">奥克兰</span>
+            </div>
+            <div class="fdl-home-channels__prices">
+              <strong>¥2239 起</strong><em>3.5 折</em>
+            </div>
+          </div>
+          <div class="fdl-home-channels__flight-row">
+            <div class="fdl-home-channels__route">
+              <span>杭州</span>
+              <span class="fdl-home-channels__trip-ico" aria-hidden="true"></span>
+              <span>北京</span>
+            </div>
+            <div class="fdl-home-channels__prices">
+              <strong>¥1672 起</strong><em>3.5 折</em>
+            </div>
+          </div>
+          <div class="fdl-home-channels__flight-row">
+            <div class="fdl-home-channels__route">
+              <span>杭州</span>
+              <span class="fdl-home-channels__trip-ico" aria-hidden="true"></span>
+              <span>深圳</span>
+            </div>
+            <div class="fdl-home-channels__prices">
+              <strong>¥250 起</strong><em>降 90%</em>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="fdl-home-channels__col fdl-home-channels__col--hotel">
+        <div class="fdl-home-channels__head">
+          <span class="fdl-home-channels__title">天天特惠</span>
+          <span class="fdl-home-channels__badge">酒店</span>
+        </div>
+        <div class="fdl-home-channels__media fdl-home-channels__media--hotel">
+          <div class="fdl-home-channels__overlay fdl-home-channels__overlay--hotel">
+            <span class="fdl-home-channels__overlay-title">桐庐又见水之林客栈（桐庐</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="fdl-home-channels__col fdl-home-channels__col--rank">
+        <div class="fdl-home-channels__head">
+          <span class="fdl-home-channels__title">飞猪榜单</span>
+        </div>
+        <div class="fdl-home-channels__media fdl-home-channels__media--rank">
+          <div class="fdl-home-channels__overlay fdl-home-channels__overlay--rank">
+            <span class="fdl-home-channels__rank-pill">杭州酒店榜</span>
+            <span class="fdl-home-channels__overlay-title">杭州西溪喜来登大酒店</span>
+          </div>
+        </div>
+      </article>
+
+      <div class="fdl-home-channels__col fdl-home-channels__stack">
+        <article class="fdl-home-channels__sub fdl-home-channels__sub--a">
+          <div class="fdl-home-channels__head">
+            <span class="fdl-home-channels__title">演出·赛事</span>
+          </div>
+          <div class="fdl-home-channels__sub-media fdl-home-channels__sub-media--a">
+            <div class="fdl-home-channels__sub-overlay">
+              <span class="fdl-home-channels__sub-title">周杰伦演唱会</span>
+            </div>
+          </div>
+        </article>
+        <article class="fdl-home-channels__sub fdl-home-channels__sub--b">
+          <div class="fdl-home-channels__head">
+            <span class="fdl-home-channels__title">爆款直播</span>
+            <svg class="fdl-home-channels__live-ico" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+              <rect x="12" y="4.5" width="4" height="18" rx="2" />
+              <rect x="5" y="12.5" width="4" height="10" rx="2" />
+              <rect x="19" y="12.5" width="4" height="10" rx="2" />
+            </svg>
+          </div>
+          <div class="fdl-home-channels__sub-media fdl-home-channels__sub-media--b">
+            <div class="fdl-home-channels__sub-overlay fdl-home-channels__sub-overlay--b">
+              <span class="fdl-home-channels__sub-title">全包不约可退</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

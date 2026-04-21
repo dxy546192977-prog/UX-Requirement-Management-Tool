@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>机票首页 — 首屏氛围</title>
+  <style>
+    :root {
+      --color-white: #ffffff;
+      --color-bg: #f2f3f5;
+      --color-darkgray: #0f131a;
+      --color-white-40: rgba(255, 255, 255, 0.4);
+      --color-overlay-btn: rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-darkgray);
+      width: 750px;
+      margin: 0 auto;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 模块根：750×310，背景 + 顶栏叠层 */
+    .fdl-flight-home-atmosphere {
+      position: relative;
+      width: 750px;
+      height: 310px;
+    }
+
+    .fdl-flight-home-atmosphere__canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: url("https://gw.alicdn.com/imgextra/i2/O1CN01WZ8eNv1wPuk5smgbE_!!6000000006301-2-tps-1500-620.png")
+        center top / cover no-repeat;
+    }
+
+    .top-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 750px;
+      height: 310px;
+      z-index: 10;
+    }
+
+    .status-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      z-index: 10;
+    }
+
+    .nav-bar {
+      position: relative;
+      width: 750px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+    }
+
+    .nav-bar__back {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--color-overlay-btn);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-bar__back-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-bar__actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-bar__action-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--color-overlay-btn);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-bar__action-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .top-bar__slider {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      right: 57px;
+      top: 210px;
+      z-index: 10;
+    }
+
+    .top-bar__dot {
+      height: 6px;
+      border-radius: 6px;
+      width: 12px;
+      background: var(--color-white-40);
+    }
+
+    .top-bar__dot--active {
+      width: 18px;
+      background: var(--color-white);
+    }
+
+    .top-bar__gradient {
+      position: absolute;
+      height: 85px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(242, 243, 245, 0) 0%,
+        rgba(242, 243, 245, 0.8) 70%,
+        #f2f3f5 100%
+      );
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+<section class="fdl-flight-home-atmosphere" aria-label="首屏氛围">
+  <div class="fdl-flight-home-atmosphere__canvas" aria-hidden="true"></div>
+
+  <div class="top-bar">
+    <div class="status-bar"></div>
+
+    <nav class="nav-bar">
+      <div class="nav-bar__back" role="button" tabindex="0" aria-label="返回">
+        <svg class="nav-bar__back-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.5 5.5L11 18L22.5 30.5" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="nav-bar__actions">
+        <div class="nav-bar__action-btn" role="button" tabindex="0" aria-label="相机">
+          <svg class="nav-bar__action-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="9" width="27" height="22" rx="3" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+            <circle cx="18.5" cy="19.5" r="5.5" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+            <path d="M13 9L15 5H22L24 9" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="nav-bar__action-btn" role="button" tabindex="0" aria-label="更多">
+          <svg class="nav-bar__action-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="9" cy="18" r="2.5" fill="#FFFFFF"/>
+            <circle cx="18" cy="18" r="2.5" fill="#FFFFFF"/>
+            <circle cx="27" cy="18" r="2.5" fill="#FFFFFF"/>
+          </svg>
+        </div>
+      </div>
+    </nav>
+
+    <div class="top-bar__slider" aria-hidden="true">
+      <div class="top-bar__dot top-bar__dot--active"></div>
+      <div class="top-bar__dot"></div>
+      <div class="top-bar__dot"></div>
+      <div class="top-bar__dot"></div>
+    </div>
+
+    <div class="top-bar__gradient" aria-hidden="true"></div>
+  </div>
+</section>
+
+</body>
+</html>

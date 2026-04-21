@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>租车 OTA · 车辆信息</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #F2F3F5; font-family: 'PingFang SC', sans-serif; }
+    .frame-525 {
+      display: flex; flex-direction: column; align-items: flex-start;
+      padding: 18px 42px; gap: 6px; width: 750px; height: 123px;
+      background: #FFFFFF; border-radius: 24px;
+    }
+    .title-row {
+      display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+      width: 666px; height: 50px;
+    }
+    .title { display: flex; flex-direction: row; align-items: center; gap: 12px; width: 467px; height: 50px; }
+    .car-name {
+      font-weight: 500; font-size: 36px; line-height: 140%; color: #0F131A;
+      display: flex; align-items: center;
+    }
+    .frame-1316 { display: flex; flex-direction: row; align-items: center; gap: 6px; width: 318px; height: 34px; }
+    .eco-icon { width: 24px; height: 24px; }
+    .eco-label { font-weight: 400; font-size: 24px; line-height: 140%; color: #149AA8; }
+    .local-label { font-weight: 400; font-size: 24px; line-height: 140%; color: #5C5F66; }
+    .info-icon { width: 24px; height: 24px; }
+    .car-tags-group { display: flex; flex-direction: row; align-items: center; gap: 12px; width: 611px; height: 31px; }
+    .car-tag { font-weight: 400; font-size: 22px; line-height: 140%; color: #5C5F66; }
+    .tag-divider { width: 0; height: 14px; border: 1px solid #F2F3F5; }
+  </style>
+</head>
+<body>
+  <div class="frame-525">
+    <div class="title-row">
+      <div class="title">
+        <span class="car-name">坦克300</span>
+        <div class="frame-1316">
+          <img class="eco-icon" src="https://img.alicdn.com/imgextra/i4/O1CN015MdGMN1kLXZRx7DZM_!!6000000004667-55-tps-24-24.svg" alt="">
+          <span class="eco-label">低碳车型</span>
+          <span class="local-label">本地牌·不限行</span>
+          <img class="info-icon" src="https://img.alicdn.com/imgextra/i2/O1CN01FCC1lq229K5baTxZH_!!6000000007077-55-tps-24-24.svg" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="car-tags-group">
+      <span class="car-tag">经济型</span><span class="tag-divider"></span>
+      <span class="car-tag">增程式</span><span class="tag-divider"></span>
+      <span class="car-tag">5座4门</span><span class="tag-divider"></span>
+      <span class="car-tag">自动挡</span><span class="tag-divider"></span>
+      <span class="car-tag">自动挡</span><span class="tag-divider"></span>
+      <span class="car-tag">自动挡</span><span class="tag-divider"></span>
+      <span class="car-tag">自动挡</span>
+    </div>
+  </div>
+</body>
+</html>

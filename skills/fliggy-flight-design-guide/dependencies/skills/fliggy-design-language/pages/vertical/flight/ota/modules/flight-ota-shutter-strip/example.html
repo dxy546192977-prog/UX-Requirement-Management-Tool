@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>提示百叶窗示例</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f2f3f5;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    img {
+      display: block;
+    }
+
+    .stage {
+      width: 750px;
+      margin: 0 auto;
+      background: #f2f3f5;
+    }
+
+    .shutter {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      isolation: isolate;
+      width: 750px;
+      height: 67px;
+      padding: 18px 24px 18px 30px;
+    }
+
+    .shutter-dashed {
+      position: absolute;
+      top: 1px;
+      left: 18px;
+      width: 714px;
+      border-top: 1px dashed #d2d4da;
+      z-index: 2;
+    }
+
+    .shutter-main {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 6px;
+      width: 672px;
+      height: 31px;
+      flex: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .shutter-label {
+      width: 88px;
+      height: 31px;
+      flex: none;
+      font-size: 22px;
+      line-height: 31px;
+      font-weight: 600;
+      color: #009daa;
+      white-space: nowrap;
+    }
+
+    .shutter-rights {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      width: 578px;
+      height: 31px;
+      overflow: hidden;
+      flex: none;
+    }
+
+    .shutter-rights-track {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      width: 746px;
+      height: 31px;
+      flex: none;
+      color: #90949a;
+      font-size: 22px;
+      line-height: 31px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .shutter-rights-track span {
+      flex: none;
+    }
+
+    .shutter-rights-track .item-short {
+      width: 88px;
+    }
+
+    .shutter-rights-track .item-mid {
+      width: 146px;
+    }
+
+    .shutter-rights-track .item-long {
+      width: 220px;
+    }
+
+    .shutter-divider {
+      width: 1px;
+      height: 22px;
+      flex: none;
+    }
+
+    .shutter-mask {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 31px;
+      height: 30px;
+      background: linear-gradient(270deg, #f4f5f6 0%, rgba(244, 245, 246, 0.0001) 100%);
+    }
+
+    .shutter-arrow {
+      width: 12px;
+      height: 12px;
+      flex: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <section class="shutter">
+      <div class="shutter-main">
+        <div class="shutter-label">机场提示</div>
+        <div class="shutter-rights">
+          <div class="shutter-rights-track">
+            <span class="item-short">国航快线</span>
+            <img class="shutter-divider" src="https://gw.alicdn.com/imgextra/i4/O1CN01ECpVp31Qe3GP2GbZ2_!!6000000002000-2-tps-1-22.png" alt="">
+            <span class="item-mid">赠¥10接送机券</span>
+            <img class="shutter-divider" src="https://gw.alicdn.com/imgextra/i4/O1CN01ECpVp31Qe3GP2GbZ2_!!6000000002000-2-tps-1-22.png" alt="">
+            <span class="item-long">赠机场免费冰淇淋券包</span>
+            <img class="shutter-divider" src="https://gw.alicdn.com/imgextra/i4/O1CN01ECpVp31Qe3GP2GbZ2_!!6000000002000-2-tps-1-22.png" alt="">
+            <span class="item-long">赠机场免费冰淇淋券包</span>
+          </div>
+          <div class="shutter-mask"></div>
+        </div>
+      </div>
+      <img class="shutter-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN017pJeeo1OH27tRM2ci_!!6000000001679-2-tps-12-12.png" alt="箭头">
+      <div class="shutter-dashed" aria-hidden="true"></div>
+    </section>
+  </div>
+</body>
+</html>

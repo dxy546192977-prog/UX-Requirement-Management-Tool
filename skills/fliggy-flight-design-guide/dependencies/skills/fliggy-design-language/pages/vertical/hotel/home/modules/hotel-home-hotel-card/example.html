@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>酒店首页 — 猜你喜欢 · 酒店卡</title>
+    <style>
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Alibaba Sans 102';
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+            font-weight: 700;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'SF Pro Text';
+            src: local('San Francisco'), local('Helvetica');
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            background-color: #f0f2f5;
+            font-family: 'PingFang SC', sans-serif;
+        }
+
+        .hotel-card {
+            position: relative;
+            width: 348px;
+            height: 522px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0px 0px 26px;
+            gap: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-left: 8px;
+        }
+
+        .hotel-card__image-container {
+            position: relative;
+            width: 348px;
+            height: 348px;
+            flex-shrink: 0;
+        }
+
+        .hotel-card__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hotel-card__brand-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px 6px;
+            background: #FEEBD8;
+            border-radius: 4px;
+            color: #5D3521;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        .hotel-card__distance-info {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            display: flex;
+            align-items: center;
+            padding: 4px 18px 4px 6px;
+            gap: 3px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 18px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .hotel-card__distance-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hotel-card__distance-text {
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        .hotel-card__info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 9px;
+            width: 324px;
+        }
+
+        .hotel-card__title-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hotel-card__title {
+            font-weight: 500;
+            font-size: 28px;
+            line-height: 1.4;
+            color: #0F131A;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 8px;
+        }
+
+        .hotel-card__type-tag {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: 28px;
+            background: #F7F8FA;
+            border-radius: 6px;
+            color: #919499;
+            font-size: 20px;
+            line-height: 1.4;
+            flex-shrink: 0;
+        }
+
+        .hotel-card__rating {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            height: 34px;
+        }
+
+        .hotel-card__rating-score {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 1.4;
+            color: #6666FF;
+        }
+
+        .hotel-card__rating-text {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 1.4;
+            color: #6666FF;
+        }
+
+        .hotel-card__rating-comment {
+            font-size: 24px;
+            line-height: 1.4;
+            color: #0F131A;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotel-card__service-tags {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            height: 28px;
+        }
+
+        .service-tag {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 28px;
+            border: 1px solid rgba(128, 85, 64, 0.5);
+            border-radius: 4px;
+            font-size: 20px;
+            color: #805540;
+        }
+
+        .service-tag--two-part .tag-part-1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 6px;
+            height: 100%;
+            background: linear-gradient(98.58deg, #6E5A4F 0%, #564131 98.33%);
+            border-radius: 3px 0px 0px 3px;
+            color: #FEF5EC;
+        }
+
+        .service-tag--two-part .tag-part-2 {
+            padding: 0 6px;
+        }
+
+        .service-tag--simple {
+             padding: 0 6px;
+        }
+
+        .hotel-card__price-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 2px;
+            width: 100%;
+            height: 36px;
+        }
+
+        .price__currency {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 1;
+            color: #FF5533;
+        }
+        .price__amount {
+            font-family: 'SF Pro Text', sans-serif;
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 0.8;
+            color: #FF5533;
+        }
+        .price__suffix {
+            font-size: 18px;
+            line-height: 1;
+            color: #FF5533;
+        }
+
+        .price__original {
+            color: #919499;
+            font-size: 18px;
+            line-height: 1;
+            text-decoration: line-through;
+            margin-left: 6px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="hotel-card">
+
+        <div class="hotel-card__image-container">
+            <img class="hotel-card__image" src="https://gw.alicdn.com/imgextra/i3/O1CN01AG75Vn26x1X3xX8M0_!!6000000007727-0-tps-696-696.jpg" alt="三亚海棠喜来登酒店">
+
+            <div class="hotel-card__brand-tag">
+                万豪旗下
+            </div>
+
+            <div class="hotel-card__distance-info">
+                <div class="hotel-card__distance-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                        <path d="M18.3637 4.0875C19.198 4.90008 19.8611 5.87153 20.3139 6.94454C20.7667 8.01755 20.9999 9.17038 20.9999 10.335C20.9999 11.4996 20.7667 12.6525 20.3139 13.7255C19.8611 14.7985 19.198 15.7699 18.3637 16.5825C17.1742 17.7503 15.6735 18.9187 14.484 20.0865C14.1007 20.463 13.554 21.054 12.843 21.861L12.6615 22.0673C12.579 22.1615 12.4773 22.2371 12.3632 22.2889C12.2491 22.3406 12.1253 22.3674 12 22.3674C11.8747 22.3674 11.7508 22.3406 11.6368 22.2889C11.5227 22.2371 11.421 22.1615 11.3385 22.0673C10.5472 21.1628 9.94572 20.508 9.53397 20.1045C8.33847 18.93 6.83172 17.7563 5.63622 16.5825C4.80191 15.7699 4.13881 14.7985 3.68604 13.7255C3.23327 12.6525 3 11.4996 3 10.335C3 9.17038 3.23327 8.01755 3.68604 6.94454C4.13881 5.87153 4.80191 4.90008 5.63622 4.0875C9.15072 0.6375 14.8492 0.6375 18.3637 4.0875ZM12 7.275C10.245 7.275 8.82372 8.685 8.82372 10.4243C8.82372 12.1643 10.2457 13.5743 12 13.5743C13.755 13.5743 15.1762 12.1643 15.1762 10.4243C15.1762 8.68425 13.7542 7.27425 12 7.27425V7.275Z" fill="white"/>
+                        </g>
+                    </svg>
+                </div>
+                <span class="hotel-card__distance-text">距您直线距离2km</span>
+            </div>
+        </div>
+
+        <div class="hotel-card__info-container">
+
+            <div class="hotel-card__title-row">
+                <span class="hotel-card__title">三亚海棠喜来登酒店</span>
+                <div class="hotel-card__type-tag">豪华</div>
+            </div>
+
+            <div class="hotel-card__rating">
+                <span class="hotel-card__rating-score">4.9</span>
+                <span class="hotel-card__rating-text">很好</span>
+                <span class="hotel-card__rating-comment">“屋顶海景泳池”</span>
+            </div>
+
+            <div class="hotel-card__service-tags">
+                <div class="service-tag service-tag--two-part">
+                    <span class="tag-part-1">万豪</span>
+                    <span class="tag-part-2">免费早餐</span>
+                </div>
+                <div class="service-tag service-tag--simple">
+                    免费停车
+                </div>
+            </div>
+
+            <div class="hotel-card__price-row">
+                <span class="price__currency">¥</span>
+                <span class="price__amount">694</span>
+                <span class="price__suffix">起</span>
+                <span class="price__original">¥1010</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

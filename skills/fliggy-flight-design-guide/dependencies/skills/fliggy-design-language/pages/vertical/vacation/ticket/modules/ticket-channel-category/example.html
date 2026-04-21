@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>门票频道 — 类目快筛</title>
+  <style>
+    body { margin: 0; background: #e9e9e9; padding: 24px 0; font-family: 'PingFang SC', sans-serif; display: flex; justify-content: center; }
+    .top-nav {
+      box-sizing: border-box; position: relative; width: 750px; padding: 18px 18px 0;
+      background: #FFFFFF; border-radius: 24px 24px 0 0;
+      display: flex; align-items: flex-start; gap: 18px;
+    }
+    .top-nav::before {
+      content: ''; position: absolute; left: 0; top: -15px; width: 200px; height: 80px;
+      background: radial-gradient(50.91% 45.24% at 25.46% 54.76%, #F2F3F5 0%, rgba(247, 248, 250, 0) 100%); z-index: 0;
+    }
+    .top-nav > * { position: relative; z-index: 1; }
+    .location-selector {
+      flex-shrink: 0; display: flex; align-items: center; gap: 4px; padding: 0; border: none; background: none; cursor: pointer; height: 50px;
+    }
+    .location-selector__icon { font-size: 24px; }
+    .location-selector__city { font-size: 30px; font-weight: 600; color: #6666FF; line-height: 1.4; }
+    .location-selector__arrow { font-size: 16px; color: #6666FF; }
+    .separator { flex-shrink: 0; width: 1px; height: 30px; background: #D2D4D9; margin-top: 10px; }
+    .tab-nav {
+      flex-grow: 1; display: flex; align-items: center; gap: 24px; list-style: none; margin: 0; padding: 0; height: 62px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-nav__item {
+      flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 5px 0;
+    }
+    .tab-nav__text { font-size: 26px; line-height: 1.4; color: #0F131A; font-weight: 400; white-space: nowrap; }
+    .tab-nav__item.is-active .tab-nav__text { font-weight: 500; }
+    .tab-nav__item.is-active::after {
+      content: ''; display: block; width: 54px; height: 6px; background: #0F131A; border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav" aria-label="城市与类目">
+    <button type="button" class="location-selector">
+      <span class="location-selector__icon" aria-hidden="true">📍</span>
+      <span class="location-selector__city">杭州</span>
+      <span class="location-selector__arrow" aria-hidden="true">▼</span>
+    </button>
+    <div class="separator" role="presentation"></div>
+    <nav>
+      <ul class="tab-nav">
+        <li class="tab-nav__item is-active"><span class="tab-nav__text">国内</span></li>
+        <li class="tab-nav__item"><span class="tab-nav__text">周边</span></li>
+        <li class="tab-nav__item"><span class="tab-nav__text">全球</span></li>
+        <li class="tab-nav__item"><span class="tab-nav__text">亲子</span></li>
+        <li class="tab-nav__item"><span class="tab-nav__text">必体验</span></li>
+      </ul>
+    </nav>
+  </header>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>POI 信息区 · vacation-detail-poi-section</title>
+  <style>
+    :root {
+      --primary: #0F131A;
+      --muted: #919499;
+      --price: #FF5533;
+    }
+    body { margin: 0; background: #F2F3F5; font-family: 'PingFang SC', sans-serif; padding: 24px 18px; }
+    .poi-card-wrapper { max-width: 714px; margin: 0 auto; background: #FFF; border-radius: 12px; overflow: hidden; }
+    .attraction-info-section { padding: 30px 24px; overflow: hidden; }
+    .attraction-info-section h2 { margin: 0 0 20px; font-size: 36px; font-weight: 500; color: var(--primary); }
+    .attraction-card { display: flex; align-items: center; margin-right: -24px; }
+    .attraction-card__image { width: 164px; height: 164px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+    .attraction-card__details {
+      flex: 1;
+      margin-left: 12px;
+      height: 164px;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      background: linear-gradient(90deg, #F1F8FF, #E7F3FF);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+    }
+    .details-content { display: flex; flex-direction: column; gap: 12px; }
+    .details-content h3 { margin: 0; font-size: 30px; font-weight: 500; color: var(--primary); }
+    .details-content p { margin: 0; font-size: 22px; color: #292C33; display: flex; align-items: center; gap: 8px; }
+    .attraction-card__image--peek { width: 66px; height: 164px; object-fit: cover; border-radius: 12px; margin-left: 12px; flex-shrink: 0; object-position: left center; }
+    .section-title { margin: 0; padding: 24px 24px 16px; font-size: 30px; font-weight: 500; color: var(--primary); }
+    .product-tabs { overflow-x: auto; padding: 0 24px; -webkit-overflow-scrolling: touch; }
+    .product-tabs::-webkit-scrollbar { display: none; }
+    .tabs-list { display: inline-flex; gap: 16px; list-style: none; margin: 0; padding: 14px 0 0; }
+    .tab-item { position: relative; padding: 14px 20px; font-size: 24px; border-radius: 8px; border: none; cursor: pointer; }
+    .tab-item--inactive { background: #F5F6F7; font-weight: 400; color: var(--primary); }
+    .tab-item--active { background: #FFF7CC; font-weight: 500; color: var(--primary); }
+    .tab-item--active .checkmark-corner {
+      position: absolute; bottom: 0; right: 0; width: 24px; height: 21px; background: #FFE033;
+      border-radius: 6px 0 8px 0; display: flex; align-items: center; justify-content: center;
+    }
+    .special-offer-banner {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      padding: 3px 10px; background: #FF8C1A; border-radius: 8px 8px 8px 2px; color: #FFF; font-size: 18px; white-space: nowrap;
+    }
+    .sku-list-section { padding: 24px 24px 30px; }
+    .sku-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 30px; }
+    .sku-card { display: flex; gap: 14px; }
+    .sku-card__image { width: 130px; height: 130px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: #eee; }
+    .sku-card__info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+    .sku-card__info h4 { margin: 0 0 4px; font-size: 30px; font-weight: 500; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sku-card__info .subtitle { margin: 0; font-size: 24px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .info-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+    .price { display: flex; align-items: baseline; color: var(--price); }
+    .price .currency { font-size: 24px; font-weight: 600; }
+    .price .amount { font-size: 36px; font-weight: 600; margin: 0 4px; }
+    .price .suffix { font-size: 24px; }
+    .sales-info { font-size: 20px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="poi-card-wrapper">
+    <section class="attraction-info-section">
+      <h2>所属景区</h2>
+      <div class="attraction-card">
+        <img src="https://picsum.photos/id/1018/164/164" alt="" class="attraction-card__image">
+        <div class="attraction-card__details">
+          <div class="details-content">
+            <h3>北京环球度假区 ›</h3>
+            <p>今日开放 08:00-15:00 (12月01日-12月31日)</p>
+            <p>📍 北京市通州区环球影城地铁站F口</p>
+          </div>
+        </div>
+        <img src="https://picsum.photos/id/1015/66/164" alt="" class="attraction-card__image--peek">
+      </div>
+    </section>
+    <h2 class="section-title">该景区还在卖</h2>
+    <nav class="product-tabs">
+      <ul class="tabs-list">
+        <li class="tab-item tab-item--active">门票<span class="checkmark-corner">✓</span></li>
+        <li class="tab-item tab-item--inactive" style="position:relative;padding-top:20px;"><span class="special-offer-banner">一起买更划算</span>省心套票</li>
+        <li class="tab-item tab-item--inactive">餐饮美食</li>
+        <li class="tab-item tab-item--inactive">一日游</li>
+      </ul>
+    </nav>
+    <section class="sku-list-section">
+      <div class="sku-list">
+        <article class="sku-card">
+          <img class="sku-card__image" src="https://picsum.photos/seed/a/130/130" alt="">
+          <div class="sku-card__info">
+            <div>
+              <h4>指定0.5日门票</h4>
+            </div>
+            <div class="info-bottom">
+              <div class="price"><span class="currency">¥</span><span class="amount">210</span><span class="suffix">起</span></div>
+              <span class="sales-info">月销 299</span>
+            </div>
+          </div>
+        </article>
+        <article class="sku-card">
+          <img class="sku-card__image" src="https://picsum.photos/seed/b/130/130" alt="">
+          <div class="sku-card__info">
+            <div>
+              <h4>非指定日</h4>
+              <p class="subtitle">提前10天订票享早鸟优惠</p>
+            </div>
+            <div class="info-bottom">
+              <div class="price"><span class="currency">¥</span><span class="amount">780</span><span class="suffix">起</span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

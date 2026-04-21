@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>发票报销卡组件</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-lightgray: #919499;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+        }
+
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            justify-content: center;
+            padding: 50px 18px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            margin: 0;
+        }
+
+        .card {
+            width: 714px;
+            background: var(--color-white);
+            border-radius: 12px;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .card-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--color-darkgray);
+            margin: 0 0 18px 0;
+        }
+
+        .invoice-desc {
+            font-size: 28px;
+            color: var(--color-darkgray);
+            margin-bottom: 12px;
+        }
+
+        .info-icon {
+            width: 28px;
+            height: 28px;
+            vertical-align: middle;
+        }
+
+        .invoice-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .invoice-tag {
+            display: inline-block;
+            padding: 6px 10px;
+            border: 1px solid #E6E7EB;
+            border-radius: 4px;
+            font-size: 20px;
+            color: var(--color-lightgray);
+        }
+    </style>
+</head>
+<body>
+
+    <section class="card">
+        <h2 class="card-title">发票报销</h2>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <span class="invoice-desc">下单后在订单详情页申请 
+                <img src="../../../assets/帮助.png" class="info-icon" alt="">
+            </span>
+            <div class="invoice-tags">
+                <span class="invoice-tag">飞猪开票</span>
+                <span class="invoice-tag">可普票</span>
+                <span class="invoice-tag">支持全电票</span>
+                <span class="invoice-tag">代订房费</span>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

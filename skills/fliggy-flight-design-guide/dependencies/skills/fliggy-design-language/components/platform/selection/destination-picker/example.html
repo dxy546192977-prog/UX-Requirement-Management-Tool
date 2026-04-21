@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 目的地选择器示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-destination-picker-demo__open {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 24px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  background: var(--color-white);
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-destination-picker-demo__open:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+/* ========== fdl-destination-picker ========== */
+.fdl-destination-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background: color-mix(in srgb, var(--color-darkgray) 70%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fdl-destination-picker--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fdl-destination-picker__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 750px;
+  height: 90vh;
+  background: var(--color-label);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+}
+
+.fdl-destination-picker--visible .fdl-destination-picker__panel {
+  transform: translateY(0);
+}
+
+.fdl-destination-picker__header {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  height: 88px;
+  background: var(--color-white);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+}
+
+.fdl-destination-picker__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-destination-picker__close {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  color: var(--color-darkgray);
+  background: none;
+  cursor: pointer;
+  transform: translateY(-50%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-destination-picker__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fdl-destination-picker__close:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+.fdl-destination-picker__main {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.fdl-destination-picker__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 36px;
+}
+
+.fdl-destination-picker__sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--color-white);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-darkgray) 4%, transparent);
+}
+
+.fdl-destination-picker__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  margin: 18px;
+  padding: 0 20px;
+  border-radius: var(--radius-m);
+  background: var(--color-label);
+}
+
+.fdl-destination-picker__search-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  color: var(--color-midgray);
+}
+
+.fdl-destination-picker__search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  background: none;
+  outline: none;
+}
+
+.fdl-destination-picker__search-input::placeholder {
+  color: var(--color-lightgray);
+}
+
+.fdl-destination-picker__tabs {
+  height: 80px;
+  width: 100%;
+  background: var(--color-white);
+}
+
+.fdl-destination-picker__tablist {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0 24px;
+  list-style: none;
+  gap: 60px;
+}
+
+.fdl-destination-picker__tab {
+  position: relative;
+}
+
+.fdl-destination-picker__tab-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-destination-picker__tab-link:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+.fdl-destination-picker__tab-text {
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--color-midgray);
+  white-space: nowrap;
+  transition: font-weight 0.2s ease, color 0.2s ease;
+}
+
+.fdl-destination-picker__tab-indicator {
+  width: 54px;
+  height: 6px;
+  border-radius: 9999px;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.fdl-destination-picker__tab--active .fdl-destination-picker__tab-text {
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+
+.fdl-destination-picker__tab--active .fdl-destination-picker__tab-indicator {
+  background: var(--color-darkgray);
+}
+
+.fdl-destination-picker__list {
+  padding-bottom: 24px;
+}
+
+.fdl-destination-picker__group {
+  padding: 0 30px;
+  scroll-margin-top: 8px;
+}
+
+.fdl-destination-picker__group-title {
+  margin: 0;
+  padding: 30px 0 18px;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-destination-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(159px, 1fr));
+  gap: 12px;
+}
+
+.fdl-destination-picker__cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 72px;
+  padding: 0 10px;
+  overflow: hidden;
+  border-radius: var(--radius-s);
+  background: var(--color-white);
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-destination-picker__cell:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-destination-picker__index {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  max-height: 65%;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 10px;
+  overflow-y: auto;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  scrollbar-width: none;
+}
+
+.fdl-destination-picker__index::-webkit-scrollbar {
+  display: none;
+}
+
+.fdl-destination-picker__index-link {
+  padding: 2px 0;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--color-lightgray);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-destination-picker__index-link:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+  </style>
+</head>
+<body>
+  <button type="button" class="fdl-destination-picker-demo__open" data-fdl-destination-picker-open>
+    打开目的地选择器
+  </button>
+
+  <div class="fdl-destination-picker" id="fdl-destination-picker" aria-hidden="true">
+    <div
+      class="fdl-destination-picker__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fdl-destination-picker-title"
+    >
+      <header class="fdl-destination-picker__header">
+        <h2 class="fdl-destination-picker__title" id="fdl-destination-picker-title">选择目的地</h2>
+        <button type="button" class="fdl-destination-picker__close" aria-label="关闭" data-fdl-destination-picker-close>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              d="M24 3C35.598 3 45 12.402 45 24C45 35.598 35.598 45 24 45C12.402 45 3 35.598 3 24C3 12.402 12.402 3 24 3ZM24 6C14.0595 6 6 14.0595 6 24C6 33.9405 14.0595 42 24 42C33.9405 42 42 33.9405 42 24C42 14.0595 33.9405 6 24 6ZM18.696 16.575L24 21.879L29.304 16.575C29.5869 16.3018 29.9658 16.1506 30.3591 16.154C30.7524 16.1574 31.1286 16.3152 31.4067 16.5933C31.6848 16.8714 31.8426 17.2476 31.846 17.6409C31.8494 18.0342 31.6982 18.4131 31.425 18.696L26.121 24L31.425 29.304C31.6982 29.5869 31.8494 29.9658 31.846 30.3591C31.8426 30.7524 31.6848 31.1286 31.4067 31.4067C31.1286 31.6848 30.7524 31.8426 30.3591 31.846C29.9658 31.8494 29.5869 31.6982 29.304 31.425L24 26.121L18.696 31.425C18.4131 31.6982 18.0342 31.8494 17.6409 31.846C17.2476 31.8426 16.8714 31.6848 16.5933 31.4067C16.3152 31.1286 16.1574 30.7524 16.154 30.3591C16.1506 29.9658 16.3018 29.5869 16.575 29.304L21.879 24L16.575 18.696C16.3018 18.4131 16.1506 18.0342 16.154 17.6409C16.1574 17.2476 16.3152 16.8714 16.5933 16.5933C16.8714 16.3152 17.2476 16.1574 17.6409 16.154C18.0342 16.1506 18.4131 16.3018 18.696 16.575Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+      </header>
+
+      <div class="fdl-destination-picker__main">
+        <div class="fdl-destination-picker__scroll" id="fdl-destination-picker-scroll">
+          <div class="fdl-destination-picker__sticky">
+            <div class="fdl-destination-picker__search">
+              <svg class="fdl-destination-picker__search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14z"
+                />
+              </svg>
+              <input
+                class="fdl-destination-picker__search-input"
+                type="search"
+                placeholder="搜索城市/区域/位置"
+                aria-label="搜索城市、区域或位置"
+                autocomplete="off"
+              />
+            </div>
+            <nav class="fdl-destination-picker__tabs" aria-label="目的地范围">
+              <ul class="fdl-destination-picker__tablist" id="fdl-destination-picker-tabs"></ul>
+            </nav>
+          </div>
+          <div class="fdl-destination-picker__list" id="fdl-destination-picker-list"></div>
+        </div>
+        <nav class="fdl-destination-picker__index" id="fdl-destination-picker-index" aria-label="字母索引"></nav>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var overlay = document.getElementById("fdl-destination-picker");
+  var scrollEl = document.getElementById("fdl-destination-picker-scroll");
+  var listEl = document.getElementById("fdl-destination-picker-list");
+  var indexEl = document.getElementById("fdl-destination-picker-index");
+  var tabsEl = document.getElementById("fdl-destination-picker-tabs");
+
+  var tabsData = ["国内", "国际/港澳台"];
+
+  var cityData = {
+    "历史/热门": ["北京", "上海", "广州", "深圳", "成都", "杭州", "重庆", "西安", "苏州", "南京"],
+    A: ["安庆", "安阳", "鞍山", "阿勒泰"],
+    B: ["北京", "保定", "包头", "宝鸡", "本溪", "蚌埠", "北海"],
+    C: ["重庆", "成都", "长沙", "长春", "常州", "沧州", "承德", "郴州", "赤峰"],
+    D: ["大连", "东莞", "大理", "丹东", "大庆", "大同", "德州"],
+    S: ["上海", "深圳", "苏州", "沈阳", "石家庄", "三亚"],
+    X: ["西安", "厦门", "西宁", "徐州", "咸阳", "湘潭"],
+    Z: ["郑州", "珠海", "镇江", "淄博", "张家口", "遵义"]
+  };
+
+  function groupId(key) {
+    return "fdl-dest-group-" + key.replace(/\//g, "-");
+  }
+
+  function indexLabel(key) {
+    return key.indexOf("/") !== -1 ? "热门" : key;
+  }
+
+  function openPanel() {
+    overlay.classList.add("fdl-destination-picker--visible");
+    overlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closePanel() {
+    overlay.classList.remove("fdl-destination-picker--visible");
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  document.querySelector("[data-fdl-destination-picker-open]").addEventListener("click", openPanel);
+  document.querySelectorAll("[data-fdl-destination-picker-close]").forEach(function (btn) {
+    btn.addEventListener("click", closePanel);
+  });
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) closePanel();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && overlay.classList.contains("fdl-destination-picker--visible")) closePanel();
+  });
+
+  tabsData.forEach(function (label, index) {
+    var li = document.createElement("li");
+    li.className = "fdl-destination-picker__tab" + (index === 0 ? " fdl-destination-picker__tab--active" : "");
+    li.innerHTML =
+      '<a href="#" class="fdl-destination-picker__tab-link">' +
+      '<span class="fdl-destination-picker__tab-text">' +
+      label +
+      "</span>" +
+      '<span class="fdl-destination-picker__tab-indicator" aria-hidden="true"></span>' +
+      "</a>";
+    tabsEl.appendChild(li);
+  });
+
+  tabsEl.querySelectorAll(".fdl-destination-picker__tab").forEach(function (item) {
+    item.querySelector("a").addEventListener("click", function (e) {
+      e.preventDefault();
+      tabsEl.querySelectorAll(".fdl-destination-picker__tab").forEach(function (t) {
+        t.classList.remove("fdl-destination-picker__tab--active");
+      });
+      item.classList.add("fdl-destination-picker__tab--active");
+    });
+  });
+
+  Object.keys(cityData).forEach(function (groupKey) {
+    var section = document.createElement("section");
+    section.className = "fdl-destination-picker__group";
+    section.id = groupId(groupKey);
+
+    var h3 = document.createElement("h3");
+    h3.className = "fdl-destination-picker__group-title";
+    h3.textContent = groupKey;
+
+    var grid = document.createElement("div");
+    grid.className = "fdl-destination-picker__grid";
+
+    cityData[groupKey].forEach(function (city) {
+      var a = document.createElement("a");
+      a.href = "#";
+      a.className = "fdl-destination-picker__cell";
+      a.textContent = city;
+      grid.appendChild(a);
+    });
+
+    section.appendChild(h3);
+    section.appendChild(grid);
+    listEl.appendChild(section);
+
+    var idx = document.createElement("a");
+    idx.href = "#";
+    idx.className = "fdl-destination-picker__index-link";
+    idx.textContent = indexLabel(groupKey);
+    idx.dataset.targetId = groupId(groupKey);
+    indexEl.appendChild(idx);
+  });
+
+  function scrollToGroup(targetId) {
+    var target = document.getElementById(targetId);
+    if (!target || !scrollEl) return;
+    var sticky = scrollEl.querySelector(".fdl-destination-picker__sticky");
+    var stickyH = sticky ? sticky.offsetHeight : 0;
+    var top =
+      target.getBoundingClientRect().top - scrollEl.getBoundingClientRect().top + scrollEl.scrollTop - stickyH;
+    scrollEl.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }
+
+  indexEl.addEventListener("click", function (e) {
+    var link = e.target.closest(".fdl-destination-picker__index-link");
+    if (!link) return;
+    e.preventDefault();
+    var id = link.getAttribute("data-target-id");
+    if (id) scrollToGroup(id);
+  });
+
+  listEl.addEventListener("click", function (e) {
+    if (e.target.classList.contains("fdl-destination-picker__cell")) {
+      e.preventDefault();
+    }
+  });
+})();
+  </script>
+</body>
+</html>

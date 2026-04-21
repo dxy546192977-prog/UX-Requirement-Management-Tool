@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>支付方式选择器组件</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-midgray: #5c5f66;
+            --color-lightgray: #919499;
+            --color-indigo-1: #6666ff;
+            --color-indigo-4: #EBEBFF;
+            --color-warning-1: #ff3333;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+            --color-bg: #f2f3f5;
+            --radius-xl: 36px;
+            --radius-l: 24px;
+            --radius-m: 12px;
+            --radius-s: 6px;
+        }
+
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            justify-content: center;
+            padding: 50px 18px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            margin: 0;
+        }
+
+        .card {
+            width: 714px;
+            background: var(--color-white);
+            border-radius: 12px;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .card-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--color-darkgray);
+            margin: 0 0 18px 0;
+        }
+
+        /* 支付方式 */
+        .payment-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            background: #F7F8FA;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .payment-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .payment-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .payment-left.inline {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .payment-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 28px;
+            color: var(--color-darkgray);
+        }
+
+        .payment-desc {
+            font-size: 24px;
+            color: var(--color-lightgray);
+        }
+
+        .payment-promo {
+            font-size: 24px;
+            color: var(--color-lightgray);
+        }
+
+        .price-highlight {
+            color: var(--color-pay-1);
+        }
+
+        .radio-btn {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+        }
+
+        .radio-btn svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        .info-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .arrow-icon {
+            width: 12px;
+            height: 22px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="card">
+        <h2 class="card-title">支付方式</h2>
+        <div class="payment-option">
+            <div class="payment-left">
+                <span class="payment-title">
+                    信用住，先住后付
+                    <img src="../../../assets/帮助.png" class="info-icon" alt="">
+                </span>
+                <span class="payment-desc">离店后从 招商银行信用卡（尾号2045）扣款 
+                    <img src="../../../assets/arrow.png" class="arrow-icon" alt="">
+                </span>
+            </div>
+            <div class="radio-btn">
+                <img src="../../../assets/勾选.png" alt="">
+            </div>
+        </div>
+        <div class="payment-option">
+            <div class="payment-left inline">
+                <span class="payment-title">在线付</span>
+                <span class="payment-promo">飞猪钱包本次最高抵扣 <span class="price-highlight">¥20</span></span>
+            </div>
+            <div class="radio-btn">
+                <img src="../../../assets/未勾选.png" alt="">
+            </div>
+        </div>
+        <div class="payment-option">
+            <div class="payment-left inline">
+                <span class="payment-title">分期支付</span>
+                <span class="payment-desc">花呗分期 <span class="price-highlight">6期免息，满300减30</span></span>
+            </div>
+            <div class="radio-btn">
+                <img src="../../../assets/未勾选.png" alt="">
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 首页双列 Feeds（home-feeds）</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-white: #ffffff;
+  --color-indigo-1: #6666ff;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-brand-1: #ffe033;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-m: 12px;
+  --fdl-home-feed-tag-warm: #feebd8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-home-feeds-demo {
+  width: 702px;
+  margin: 0 auto;
+}
+
+.fdl-home-feeds {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+}
+
+.fdl-home-feeds__col {
+  display: flex;
+  width: 342px;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fdl-home-feeds__carousel {
+  position: relative;
+  width: 342px;
+  height: 440px;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  background: var(--color-midgray) center / cover no-repeat;
+  background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01dfOivO1ceIs1i3c5W_!!6000000003625-2-tps-336-440.png");
+}
+
+.fdl-home-feeds__dots {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  display: flex;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.fdl-home-feeds__dot {
+  width: 24px;
+  height: 6px;
+  border-radius: 3px 0;
+  background: color-mix(in srgb, var(--color-white) 80%, transparent);
+}
+
+.fdl-home-feeds__dot--active {
+  background: var(--color-brand-1);
+}
+
+.fdl-home-feeds__card {
+  width: 342px;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  background: var(--color-white);
+}
+
+.fdl-home-feeds__img {
+  position: relative;
+  width: 342px;
+  height: 342px;
+  background: var(--color-label) center / cover no-repeat;
+  border-radius: var(--radius-m) var(--radius-m) 0 0;
+}
+
+.fdl-home-feeds__img--1 {
+  background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01DC0HgW1imu07p3GFZ_!!6000000004456-2-tps-336-336.png");
+}
+
+.fdl-home-feeds__img--2 {
+  background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN012YdNJr1Js44Ocuc3U_!!6000000001083-2-tps-336-336.png");
+}
+
+.fdl-home-feeds__img--3 {
+  background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN017qEK5e1mn8fW7C09n_!!6000000004998-2-tps-336-336.png");
+}
+
+.fdl-home-feeds__img--4 {
+  background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01CNtjGZ22Qj8kG2p5m_!!6000000007115-2-tps-336-336.png");
+}
+
+.fdl-home-feeds__tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  gap: 6px;
+  border-radius: var(--radius-m) 0;
+}
+
+.fdl-home-feeds__tag--warm {
+  background: var(--fdl-home-feed-tag-warm);
+}
+
+.fdl-home-feeds__tag--warm .fdl-home-feeds__tag-text {
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--color-safeguard-5);
+}
+
+.fdl-home-feeds__tag--dark {
+  background: color-mix(in srgb, var(--color-darkgray) 70%, transparent);
+}
+
+.fdl-home-feeds__tag--dark .fdl-home-feeds__tag-text {
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--color-white);
+}
+
+.fdl-home-feeds__loc {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  gap: 6px;
+  border-radius: 48px;
+  background: color-mix(in srgb, var(--color-darkgray) 70%, transparent);
+}
+
+.fdl-home-feeds__loc-text {
+  overflow: hidden;
+  flex: 1;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--color-white);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fdl-home-feeds__play {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-darkgray) 40%, transparent);
+}
+
+.fdl-home-feeds__play::after {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-color: transparent transparent transparent var(--color-white);
+  border-style: solid;
+  border-width: 6px 0 6px 10px;
+  content: "";
+}
+
+.fdl-home-feeds__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 12px 18px;
+}
+
+.fdl-home-feeds__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.fdl-home-feeds__title {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-home-feeds__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 6px;
+  border-radius: 4px;
+  background: var(--color-bg);
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--color-midgray);
+}
+
+.fdl-home-feeds__sub {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-home-feeds__meta {
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.fdl-home-feeds__meta strong {
+  font-weight: 500;
+  color: var(--color-indigo-1);
+}
+
+.fdl-home-feeds__meta span {
+  color: var(--color-midgray);
+}
+
+.fdl-home-feeds__price-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.fdl-home-feeds__price {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 4px;
+  color: var(--color-pay-1);
+}
+
+.fdl-home-feeds__yen {
+  font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fdl-home-feeds__num {
+  font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fdl-home-feeds__suffix {
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.fdl-home-feeds__sales {
+  font-size: 20px;
+  color: var(--color-midgray);
+}
+
+.fdl-home-feeds__rule {
+  height: 0;
+  margin: 0;
+  border: none;
+  border-top: 1px solid var(--color-bg);
+}
+
+.fdl-home-feeds__review {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: var(--color-safeguard-4);
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--color-safeguard-5);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-home-feeds-demo">
+    <section class="fdl-home-feeds" aria-label="推荐信息流">
+      <div class="fdl-home-feeds__col">
+        <article class="fdl-home-feeds__carousel" aria-label="运营轮播">
+          <div class="fdl-home-feeds__dots" aria-hidden="true">
+            <span class="fdl-home-feeds__dot fdl-home-feeds__dot--active"></span>
+            <span class="fdl-home-feeds__dot"></span>
+            <span class="fdl-home-feeds__dot"></span>
+          </div>
+        </article>
+
+        <article class="fdl-home-feeds__card">
+          <div class="fdl-home-feeds__img fdl-home-feeds__img--1">
+            <div class="fdl-home-feeds__tag fdl-home-feeds__tag--warm">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4" y="4" width="16" height="16" rx="2" fill="#ff8c1a" />
+                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="fdl-home-feeds__tag-text">无需换票</span>
+            </div>
+            <div class="fdl-home-feeds__loc">
+              <span class="fdl-home-feeds__loc-text">近湖州市中心...</span>
+            </div>
+          </div>
+          <div class="fdl-home-feeds__body">
+            <div>
+              <div class="fdl-home-feeds__title-row">
+                <span class="fdl-home-feeds__title">西湖游船体验</span>
+                <span class="fdl-home-feeds__pill">无需换票</span>
+              </div>
+              <div class="fdl-home-feeds__title-row">
+                <span class="fdl-home-feeds__sub">含三潭印月门票</span>
+              </div>
+            </div>
+            <p class="fdl-home-feeds__meta"><strong>评分 4.9</strong></p>
+            <div class="fdl-home-feeds__price-row">
+              <div class="fdl-home-feeds__price">
+                <span class="fdl-home-feeds__yen">¥</span>
+                <span class="fdl-home-feeds__num">694</span>
+                <span class="fdl-home-feeds__suffix">起</span>
+              </div>
+              <span class="fdl-home-feeds__sales">月销 23 笔</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="fdl-home-feeds__card">
+          <div class="fdl-home-feeds__img fdl-home-feeds__img--3">
+            <div class="fdl-home-feeds__tag fdl-home-feeds__tag--warm">
+              <span class="fdl-home-feeds__tag-text">无需换票</span>
+            </div>
+            <div class="fdl-home-feeds__loc">
+              <span class="fdl-home-feeds__loc-text">近湖州市中心...</span>
+            </div>
+            <div class="fdl-home-feeds__play" aria-label="播放视频"></div>
+          </div>
+          <div class="fdl-home-feeds__body">
+            <div class="fdl-home-feeds__title-row">
+              <span class="fdl-home-feeds__title">莫干山民宿体验</span>
+              <span class="fdl-home-feeds__pill">无需换票</span>
+            </div>
+            <div class="fdl-home-feeds__title-row">
+              <span class="fdl-home-feeds__sub">竹林深处的静谧</span>
+            </div>
+            <p class="fdl-home-feeds__meta"><strong>评分 4.8</strong></p>
+            <div class="fdl-home-feeds__price-row">
+              <div class="fdl-home-feeds__price">
+                <span class="fdl-home-feeds__yen">¥</span>
+                <span class="fdl-home-feeds__num">694</span>
+                <span class="fdl-home-feeds__suffix">起</span>
+              </div>
+              <span class="fdl-home-feeds__sales">月销 23 笔</span>
+            </div>
+            <hr class="fdl-home-feeds__rule" />
+            <div class="fdl-home-feeds__review">无需换票</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="fdl-home-feeds__col">
+        <article class="fdl-home-feeds__card">
+          <div class="fdl-home-feeds__img fdl-home-feeds__img--2">
+            <div class="fdl-home-feeds__tag fdl-home-feeds__tag--dark">
+              <span class="fdl-home-feeds__tag-text">景点</span>
+            </div>
+          </div>
+          <div class="fdl-home-feeds__body">
+            <div>
+              <div class="fdl-home-feeds__title-row">
+                <span class="fdl-home-feeds__title">灵隐寺祈福之旅</span>
+                <span class="fdl-home-feeds__pill">无需换票</span>
+              </div>
+              <div class="fdl-home-feeds__title-row">
+                <span class="fdl-home-feeds__sub">千年古刹寻禅意</span>
+              </div>
+            </div>
+            <div class="fdl-home-feeds__price-row">
+              <div class="fdl-home-feeds__price">
+                <span class="fdl-home-feeds__yen">¥</span>
+                <span class="fdl-home-feeds__num">694</span>
+                <span class="fdl-home-feeds__suffix">起</span>
+              </div>
+              <span class="fdl-home-feeds__sales">月销 23 笔</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="fdl-home-feeds__card">
+          <div class="fdl-home-feeds__img fdl-home-feeds__img--4">
+            <div class="fdl-home-feeds__tag fdl-home-feeds__tag--dark">
+              <span class="fdl-home-feeds__tag-text">景点</span>
+            </div>
+            <div class="fdl-home-feeds__loc">
+              <span class="fdl-home-feeds__loc-text">近湖州市中心...</span>
+            </div>
+            <div class="fdl-home-feeds__play" aria-label="播放视频"></div>
+          </div>
+          <div class="fdl-home-feeds__body">
+            <div class="fdl-home-feeds__title-row">
+              <span class="fdl-home-feeds__title">千岛湖环湖骑行</span>
+              <span class="fdl-home-feeds__pill">无需换票</span>
+            </div>
+            <p class="fdl-home-feeds__meta"><span>湖光山色尽收眼底，沿途打卡网红景点</span></p>
+            <div class="fdl-home-feeds__price-row">
+              <div class="fdl-home-feeds__price">
+                <span class="fdl-home-feeds__yen">¥</span>
+                <span class="fdl-home-feeds__num">694</span>
+                <span class="fdl-home-feeds__suffix">起</span>
+              </div>
+              <span class="fdl-home-feeds__sales">月销 23 笔</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

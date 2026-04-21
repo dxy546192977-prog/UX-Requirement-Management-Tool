@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>租车 LIST · 侧导航</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #F2F3F5; font-family: 'PingFang SC', sans-serif; padding: 16px; }
+    .side-nav {
+      display: flex;
+      flex-direction: column;
+      width: 148px;
+      height: 920px;
+    }
+    .side-item {
+      width: 148px;
+      height: 115px;
+      position: relative;
+      flex: none;
+    }
+    .side-item--on { background: #FFFFFF; }
+    .side-item--off { background: #F2F3F5; }
+    .side-item--on .side-grad {
+      position: absolute;
+      width: 148px;
+      height: 115px;
+      left: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+    .side-item--on .side-bar {
+      position: absolute;
+      width: 6px;
+      height: 79px;
+      left: 0;
+      top: 18px;
+    }
+    .side-title-on {
+      position: absolute;
+      left: 24px;
+      bottom: 55px;
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 140%;
+      color: #0F131A;
+    }
+    .side-price-on {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 140%;
+      color: #0F131A;
+    }
+    .side-title-off {
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: #0F131A;
+    }
+    .side-price-off {
+      position: absolute;
+      left: 24px;
+      top: 60px;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 140%;
+      color: #919499;
+    }
+  </style>
+</head>
+<body>
+  <div class="side-nav">
+    <div class="side-item side-item--on">
+      <img class="side-grad" src="https://img.alicdn.com/imgextra/i2/O1CN01RvqSdd1xovzlfSGSI_!!6000000006491-55-tps-148-115.svg" alt="">
+      <img class="side-bar" src="https://img.alicdn.com/imgextra/i4/O1CN014lD5ry25H3cpVHvQ0_!!6000000007500-55-tps-6-79.svg" alt="">
+      <div class="side-title-on">全部车型</div>
+      <div class="side-price-on">¥132起</div>
+    </div>
+    <div class="side-item side-item--off"><div class="side-title-off">经济型</div><div class="side-price-off">¥189起</div></div>
+    <div class="side-item side-item--off"><div class="side-title-off">舒适型</div><div class="side-price-off">¥235起</div></div>
+    <div class="side-item side-item--off"><div class="side-title-off">SUV</div><div class="side-price-off">¥453起</div></div>
+    <div class="side-item side-item--off"><div class="side-title-off">商务车</div><div class="side-price-off">¥543起</div></div>
+    <div class="side-item side-item--off"><div class="side-title-off">豪华型</div><div class="side-price-off">¥675起</div></div>
+    <div class="side-item side-item--off"><div class="side-title-off">跑车</div><div class="side-price-off">¥987起</div></div>
+    <div class="side-item side-item--off"><div class="side-title-off">房车</div><div class="side-price-off">¥1048起</div></div>
+  </div>
+</body>
+</html>

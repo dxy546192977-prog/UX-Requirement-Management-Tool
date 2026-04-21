@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 首页金刚区（home-kingkong）</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-white: #ffffff;
+  --color-indigo-1: #6666ff;
+  --color-brand-1: #ffe033;
+  --color-bg: #f2f3f5;
+  --radius-l: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-home-kingkong-demo {
+  width: 702px;
+  margin: 0 auto;
+}
+
+.fdl-home-kingkong {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 18px;
+  gap: 18px;
+  border: 3px solid color-mix(in srgb, var(--color-darkgray) 6%, transparent);
+  border-radius: var(--radius-l);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-white) 0%, transparent) 0%, var(--color-white) 35.78%);
+}
+
+.fdl-home-kingkong__row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.fdl-home-kingkong__row--lg {
+  height: 136px;
+}
+
+.fdl-home-kingkong__row--sm {
+  height: 95px;
+}
+
+.fdl-home-kingkong__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 132px;
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-home-kingkong__item:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-home-kingkong__item--lg {
+  position: relative;
+  height: 136px;
+}
+
+.fdl-home-kingkong__icon-lg {
+  position: absolute;
+  top: calc(50% - 42px - 10px);
+  left: 50%;
+  width: 84px;
+  height: 84px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: translateX(-50%);
+}
+
+.fdl-home-kingkong__label {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  text-align: center;
+}
+
+.fdl-home-kingkong__item--sm {
+  height: 95px;
+}
+
+.fdl-home-kingkong__icon-sm {
+  width: 132px;
+  height: 64px;
+  margin-bottom: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.fdl-home-kingkong__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.fdl-home-kingkong__dot {
+  width: 24px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 3px 0;
+  background: var(--color-bg);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-home-kingkong__dot[aria-current="true"] {
+  background: var(--color-brand-1);
+}
+
+.fdl-home-kingkong__icon-lg--hotel {
+  background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01frgevr1eTt5xFJ1nf_!!6000000003873-2-tps-96-84.png");
+}
+
+.fdl-home-kingkong__icon-lg--flight {
+  background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01sb0aSN26yOieD4eHL_!!6000000007730-2-tps-108-84.png");
+}
+
+.fdl-home-kingkong__icon-lg--train {
+  background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01Hwxfkz1qXLTTSiLgS_!!6000000005505-2-tps-92-85.png");
+}
+
+.fdl-home-kingkong__icon-lg--bus {
+  background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01MSH4S71J1qv5IpyOf_!!6000000000969-2-tps-105-84.png");
+}
+
+.fdl-home-kingkong__icon-lg--ticket {
+  background-image: url("https://gw.alicdn.com/imgextra/i3/O1CN01UUaMM41tiHmZFnbhu_!!6000000005935-2-tps-100-84.png");
+}
+
+.fdl-home-kingkong__icon-sm--r2-1 {
+  background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01xnJ7YA1GH1BfOGuoA_!!6000000000596-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r2-2 {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01FBr1b01mAD0FcmOFT_!!6000000004913-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r2-3 {
+  background-image: url("https://gw.alicdn.com/imgextra/i4/O1CN01acBg6R1GcXno6NnBF_!!6000000000643-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r2-4 {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01i1dnTM1pwFOPXLaQ5_!!6000000005424-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r2-5 {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01Rp59WT1XMpgQk1saH_!!6000000002910-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r3-1 {
+  background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01nGVEWd1VKslVbpLvR_!!6000000002635-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r3-2 {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01zARf3M1bvsS0Uug0g_!!6000000003528-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r3-3 {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01N92Clu1f1mP5VcNHY_!!6000000003947-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r3-4 {
+  background-image: url("https://gw.alicdn.com/imgextra/i2/O1CN01leXu8N1eiXljSdKAt_!!6000000003905-2-tps-132-64.png");
+}
+
+.fdl-home-kingkong__icon-sm--r3-5 {
+  background-image: url("https://gw.alicdn.com/imgextra/i1/O1CN01nDp7ki1CQOpwsW71E_!!6000000000075-2-tps-132-64.png");
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-home-kingkong-demo">
+    <section class="fdl-home-kingkong" aria-label="核心业务入口">
+      <div class="fdl-home-kingkong__row fdl-home-kingkong__row--lg">
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--lg" href="#" aria-label="酒店">
+          <span class="fdl-home-kingkong__icon-lg fdl-home-kingkong__icon-lg--hotel"></span>
+          <span class="fdl-home-kingkong__label">酒店</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--lg" href="#" aria-label="机票">
+          <span class="fdl-home-kingkong__icon-lg fdl-home-kingkong__icon-lg--flight"></span>
+          <span class="fdl-home-kingkong__label">机票</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--lg" href="#" aria-label="火车票">
+          <span class="fdl-home-kingkong__icon-lg fdl-home-kingkong__icon-lg--train"></span>
+          <span class="fdl-home-kingkong__label">火车票</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--lg" href="#" aria-label="汽车票">
+          <span class="fdl-home-kingkong__icon-lg fdl-home-kingkong__icon-lg--bus"></span>
+          <span class="fdl-home-kingkong__label">汽车票</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--lg" href="#" aria-label="门票">
+          <span class="fdl-home-kingkong__icon-lg fdl-home-kingkong__icon-lg--ticket"></span>
+          <span class="fdl-home-kingkong__label">门票</span>
+        </a>
+      </div>
+
+      <div class="fdl-home-kingkong__row fdl-home-kingkong__row--sm">
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="民宿">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r2-1"></span>
+          <span class="fdl-home-kingkong__label">民宿</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="接送顺风车">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r2-2"></span>
+          <span class="fdl-home-kingkong__label">接送/顺风车</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="周边游">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r2-3"></span>
+          <span class="fdl-home-kingkong__label">周边游</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="汽车票">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r2-4"></span>
+          <span class="fdl-home-kingkong__label">汽车票</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="门票">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r2-5"></span>
+          <span class="fdl-home-kingkong__label">门票</span>
+        </a>
+      </div>
+
+      <div class="fdl-home-kingkong__row fdl-home-kingkong__row--sm">
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="酒店套餐">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r3-1"></span>
+          <span class="fdl-home-kingkong__label">酒店套餐</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="旅行保险">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r3-2"></span>
+          <span class="fdl-home-kingkong__label">旅行保险</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="借钱分期">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r3-3"></span>
+          <span class="fdl-home-kingkong__label">借钱/分期</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="出境游签证">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r3-4"></span>
+          <span class="fdl-home-kingkong__label">出境游/签证</span>
+        </a>
+        <a class="fdl-home-kingkong__item fdl-home-kingkong__item--sm" href="#" aria-label="里程签到">
+          <span class="fdl-home-kingkong__icon-sm fdl-home-kingkong__icon-sm--r3-5"></span>
+          <span class="fdl-home-kingkong__label">里程签到</span>
+        </a>
+      </div>
+
+      <div class="fdl-home-kingkong__dots" role="tablist" aria-label="金刚区分页">
+        <button type="button" class="fdl-home-kingkong__dot" aria-label="第 1 页" aria-current="true"></button>
+        <button type="button" class="fdl-home-kingkong__dot" aria-label="第 2 页"></button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+document.querySelectorAll('.fdl-home-kingkong a[href="#"]').forEach(function (a) {
+  a.addEventListener("click", function (e) {
+    e.preventDefault();
+  });
+});
+  </script>
+</body>
+</html>

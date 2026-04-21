@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车票首页 — 金刚区</title>
+    <style>
+        /* 预览环境样式 */
+        body {
+            margin: 0;
+            padding: 50px 20px;
+            background-color: #F7F8FA;
+            display: flex;
+            justify-content: center;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+
+        /* 
+         ================================================
+         == 金刚区组件
+         ================================================
+         火车票首页功能入口区域，分上下两部分：
+         上半部分为3个核心功能入口（图标+标题+副标题），
+         下半部分为4个快捷操作入口（小图标+文字），
+         右下角有展开/收起按钮。
+        */
+
+        /* 金刚区外容器 */
+        .diamond-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            isolation: isolate;
+            position: relative;
+            width: 702px;
+            height: 163px;
+            background: #FFFFFF;
+            border-radius: 18px;
+        }
+
+        /* 上半部分：3个功能入口行 */
+        .diamond-top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            width: 702px;
+            height: 96px;
+            background: #FFFFFF;
+            border-radius: 18px;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 0;
+            z-index: 0;
+        }
+
+        /* 单个功能入口 */
+        .feature-entry {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 18px 30px 18px 24px;
+            gap: 6px;
+            height: 96px;
+            border-radius: 6px;
+            flex: none;
+            flex-grow: 0;
+            box-sizing: border-box;
+        }
+
+        .feature-entry:nth-child(1) { width: 240px; order: 0; }
+        .feature-entry:nth-child(2) { width: 220px; order: 1; }
+        .feature-entry:nth-child(3) { width: 242px; order: 2; }
+
+        /* 功能图标 */
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .feature-icon img {
+            width: 60px;
+            height: 60px;
+            display: block;
+        }
+
+        /* 功能文字区 */
+        .feature-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        /* 功能标题 */
+        .feature-title {
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        /* 功能副标题 */
+        .feature-subtitle {
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 140%;
+            color: #919499;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        /* 分割线 */
+        .diamond-divider {
+            width: 702px;
+            height: 0px;
+            border: 1px solid #F2F3F5;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            z-index: 1;
+        }
+
+        /* 下半部分：快捷入口行 */
+        .diamond-bottom {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            padding: 18px 24px;
+            gap: 36px;
+            width: 702px;
+            height: 67px;
+            flex: none;
+            order: 2;
+            align-self: stretch;
+            flex-grow: 0;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 单个快捷入口 */
+        .shortcut-entry {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 6px;
+            height: 31px;
+            border-radius: 6px;
+            flex: none;
+            flex-grow: 0;
+        }
+
+        /* 快捷图标 */
+        .shortcut-icon {
+            width: 30px;
+            height: 30px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .shortcut-icon img {
+            width: 30px;
+            height: 30px;
+            display: block;
+        }
+
+        /* 快捷文字 */
+        .shortcut-text {
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 22px;
+            line-height: 140%;
+            text-align: center;
+            color: #0F131A;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        /* 展开按钮组 (Group 167) */
+        .expand-group {
+            position: absolute;
+            width: 105.5px;
+            height: 36px;
+            left: 573px;
+            top: 111px;
+            z-index: 3;
+        }
+
+        /* 左侧模糊遮罩 */
+        .expand-blur {
+            position: absolute;
+            width: 13px;
+            height: 25px;
+            left: 0px;
+            top: 4px;
+            background: #F2F3F5;
+            filter: blur(3px);
+        }
+
+        /* 展开按钮容器 */
+        .expand-btn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 24px;
+            position: absolute;
+            width: 100px;
+            height: 36px;
+            left: 5.5px;
+            top: 0px;
+            background: #FFFFFF;
+        }
+
+        /* 左侧竖线 */
+        .expand-line {
+            width: 0px;
+            height: 36px;
+            border: 1px solid #F2F3F5;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        /* 展开文字+箭头 */
+        .expand-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            width: 76px;
+            height: 34px;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        .expand-text {
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            text-align: center;
+            color: #919499;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        .expand-arrow {
+            width: 28px;
+            height: 28px;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expand-arrow svg {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="diamond-section">
+        <!-- 上半部分：3个功能入口 -->
+        <div class="diamond-top">
+            <!-- 有票神器 -->
+            <div class="feature-entry">
+                <div class="feature-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i3/O1CN01CJl5Wz1pppqe4yLp4_!!6000000005410-2-tps-120-120.png" alt="有票神器">
+                </div>
+                <div class="feature-text">
+                    <span class="feature-title">有票神器</span>
+                    <span class="feature-subtitle">解决无票难题</span>
+                </div>
+            </div>
+            <!-- 在线换座 -->
+            <div class="feature-entry">
+                <div class="feature-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i1/O1CN01lbeoZ91r7z9wE2B5l_!!6000000005585-2-tps-120-120.png" alt="在线换座">
+                </div>
+                <div class="feature-text">
+                    <span class="feature-title">在线换座</span>
+                    <span class="feature-subtitle">座位在一起</span>
+                </div>
+            </div>
+            <!-- 火车超能力 -->
+            <div class="feature-entry">
+                <div class="feature-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01iVlr551pppqcTJn9i_!!6000000005410-2-tps-120-120.png" alt="火车超能力">
+                </div>
+                <div class="feature-text">
+                    <span class="feature-title">火车超能力</span>
+                    <span class="feature-subtitle">60种抢票方案</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分割线 -->
+        <div class="diamond-divider"></div>
+
+        <!-- 下半部分：快捷入口 -->
+        <div class="diamond-bottom">
+            <div class="shortcut-entry">
+                <div class="shortcut-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i1/O1CN01AfdCvW1ehcycW9Gpw_!!6000000003903-2-tps-60-60.png" alt="学生核验">
+                </div>
+                <span class="shortcut-text">学生核验</span>
+            </div>
+            <div class="shortcut-entry">
+                <div class="shortcut-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i1/O1CN01dXkOTr1YOUjih9Efz_!!6000000003049-2-tps-60-60.png" alt="企业认证">
+                </div>
+                <span class="shortcut-text">企业认证</span>
+            </div>
+            <div class="shortcut-entry">
+                <div class="shortcut-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i3/O1CN01cYWfWf1mNwswMtAuv_!!6000000004943-2-tps-60-60.png" alt="抢票攻略">
+                </div>
+                <span class="shortcut-text">抢票攻略</span>
+            </div>
+            <div class="shortcut-entry">
+                <div class="shortcut-icon">
+                    <img src="https://gw.alicdn.com/imgextra/i3/O1CN01768sWQ1jOusCVXsHQ_!!6000000004539-2-tps-60-60.png" alt="正晚点查询">
+                </div>
+                <span class="shortcut-text">正晚点查询</span>
+            </div>
+        </div>
+
+        <!-- 展开按钮 (Group 167) -->
+        <div class="expand-group">
+            <div class="expand-blur"></div>
+            <div class="expand-btn">
+                <div class="expand-line"></div>
+                <div class="expand-content">
+                    <span class="expand-text">展开</span>
+                    <div class="expand-arrow">
+                        <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L7 7L13 1" stroke="#919499" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 选项卡 Tab 样式三（胶囊）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-tabs-style-3-demo-page {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.fdl-tabs-style-3-demo__heading {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-tabs-style-3-demo__card {
+  margin-bottom: 24px;
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-darkgray) 8%, transparent);
+}
+
+.fdl-tabs-style-3-demo__card-title {
+  margin: 0;
+  padding: 12px 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-midgray);
+  background: var(--color-label);
+  border-bottom: 1px solid var(--color-auxiliary);
+}
+
+/* 小档示例：image-library 酒店池（与 spec 一致，勿换非 CDN） */
+.fdl-tabs-style-3-demo__hero {
+  padding: 24px 0;
+  background-color: #e0e0e0;
+  background-image: url("https://fli.alicdn.com/upload/creative-platform/e_nRwpYv7h4bd1d0434df0165a.png?x-oss-process=image/format,webp");
+  background-size: cover;
+  background-position: center;
+}
+
+.fdl-tabs-style-3-demo__panel {
+  padding: 24px 0;
+  background: var(--color-label);
+}
+
+/* ========== fdl-tabs-style-3 ========== */
+.fdl-tabs-style-3 {
+  width: 100%;
+  overflow: hidden;
+}
+
+.fdl-tabs-style-3__list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-x: auto;
+  gap: 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fdl-tabs-style-3__list::-webkit-scrollbar {
+  display: none;
+}
+
+.fdl-tabs-style-3__link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-tabs-style-3__link:hover {
+  opacity: 0.92;
+}
+
+.fdl-tabs-style-3__link:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.fdl-tabs-style-3--sm .fdl-tabs-style-3__list {
+  padding: 0 24px;
+}
+
+.fdl-tabs-style-3--sm .fdl-tabs-style-3__link {
+  height: 48px;
+  padding: 0 24px;
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--color-midgray);
+  background: color-mix(in srgb, var(--color-white) 72%, transparent);
+}
+
+.fdl-tabs-style-3--sm .fdl-tabs-style-3__item--active .fdl-tabs-style-3__link {
+  background: color-mix(in srgb, var(--color-indigo-1) 12%, transparent);
+  color: var(--color-indigo-1);
+  font-weight: 500;
+}
+
+.fdl-tabs-style-3--lg .fdl-tabs-style-3__list {
+  padding: 0 30px;
+}
+
+.fdl-tabs-style-3--lg .fdl-tabs-style-3__link {
+  height: 60px;
+  padding: 0 30px;
+  font-size: 28px;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--color-darkgray);
+  background: var(--color-white);
+}
+
+.fdl-tabs-style-3--lg .fdl-tabs-style-3__item--active .fdl-tabs-style-3__link {
+  background: var(--color-brand-1);
+  font-weight: 500;
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-tabs-style-3-demo-page">
+    <h1 class="fdl-tabs-style-3-demo__heading">胶囊分类导航栏（fdl-tabs-style-3）</h1>
+
+    <div class="fdl-tabs-style-3-demo__card">
+      <p class="fdl-tabs-style-3-demo__card-title">小尺寸（半透明，叠图）</p>
+      <div class="fdl-tabs-style-3-demo__hero">
+        <nav class="fdl-tabs-style-3 fdl-tabs-style-3--sm" id="fdl-tabs-style-3-sm" aria-label="筛选">
+          <ul class="fdl-tabs-style-3__list"></ul>
+        </nav>
+      </div>
+    </div>
+
+    <div class="fdl-tabs-style-3-demo__card">
+      <p class="fdl-tabs-style-3-demo__card-title">大尺寸（实体色，浅底）</p>
+      <div class="fdl-tabs-style-3-demo__panel">
+        <nav class="fdl-tabs-style-3 fdl-tabs-style-3--lg" id="fdl-tabs-style-3-lg" aria-label="筛选">
+          <ul class="fdl-tabs-style-3__list"></ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var smallData = [
+    { text: "精选" },
+    { text: "酒店" },
+    { text: "周边游" },
+    { text: "亲子" },
+    { text: "特价" },
+    { text: "攻略" },
+    { text: "问答" }
+  ];
+
+  var largeData = [
+    { text: "全部" },
+    { text: "好评" },
+    { text: "有图" },
+    { text: "追评" },
+    { text: "服务好" }
+  ];
+
+  function render(navId, data) {
+    var nav = document.getElementById(navId);
+    if (!nav) return;
+    var list = nav.querySelector(".fdl-tabs-style-3__list");
+    if (!list) return;
+
+    list.innerHTML = "";
+    data.forEach(function (item, index) {
+      var li = document.createElement("li");
+      li.className = "fdl-tabs-style-3__item";
+      if (index === 0) li.classList.add("fdl-tabs-style-3__item--active");
+
+      li.innerHTML =
+        '<a href="#" class="fdl-tabs-style-3__link">' + item.text + "</a>";
+
+      list.appendChild(li);
+    });
+
+    function setCurrent(activeLi) {
+      list.querySelectorAll(".fdl-tabs-style-3__item").forEach(function (item) {
+        item.classList.remove("fdl-tabs-style-3__item--active");
+        var a = item.querySelector(".fdl-tabs-style-3__link");
+        if (a) a.removeAttribute("aria-current");
+      });
+      activeLi.classList.add("fdl-tabs-style-3__item--active");
+      var link = activeLi.querySelector(".fdl-tabs-style-3__link");
+      if (link) link.setAttribute("aria-current", "true");
+    }
+
+    setCurrent(list.querySelector(".fdl-tabs-style-3__item--active"));
+
+    list.addEventListener("click", function (e) {
+      var link = e.target.closest(".fdl-tabs-style-3__link");
+      if (!link) return;
+      e.preventDefault();
+      var item = link.closest(".fdl-tabs-style-3__item");
+      if (item) setCurrent(item);
+    });
+  }
+
+  render("fdl-tabs-style-3-sm", smallData);
+  render("fdl-tabs-style-3-lg", largeData);
+})();
+  </script>
+</body>
+</html>

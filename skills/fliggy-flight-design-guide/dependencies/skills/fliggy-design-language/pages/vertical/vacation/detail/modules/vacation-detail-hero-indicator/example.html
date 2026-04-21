@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>头图指示器 · vacation-detail-hero-indicator</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'PingFang SC', sans-serif;
+    }
+    .wrap {
+      width: 750px;
+      display: flex;
+      justify-content: center;
+      padding: 12px 0;
+    }
+    .tab-indicator {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      max-width: 714px;
+      height: 48px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 24px;
+      padding: 4px;
+    }
+    .tab-indicator__list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .tab-indicator__button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      font-family: 'PingFang SC', sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 24px;
+      white-space: nowrap;
+      background-color: transparent;
+      color: #FFFFFF;
+      border-radius: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .tab-indicator__button.is-active {
+      background-color: #FFE033;
+      color: #0F131A;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="tab-indicator" id="tabIndicator" aria-label="头图媒体切换">
+      <div class="tab-indicator__list">
+        <button type="button" class="tab-indicator__button is-active">图片</button>
+        <button type="button" class="tab-indicator__button">VR全景</button>
+        <button type="button" class="tab-indicator__button">视频</button>
+        <button type="button" class="tab-indicator__button">UGC</button>
+      </div>
+    </nav>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var buttons = document.querySelectorAll('#tabIndicator .tab-indicator__button');
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          buttons.forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

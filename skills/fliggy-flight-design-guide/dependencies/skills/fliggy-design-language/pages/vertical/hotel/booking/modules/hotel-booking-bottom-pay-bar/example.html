@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>底部支付栏组件</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-lightgray: #919499;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+        }
+
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 500;
+            font-display: swap;
+        }
+
+        body {
+            background-color: var(--color-label);
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            margin: 0;
+            min-height: 300px;
+        }
+
+        /* 底部支付栏 */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 750px;
+            height: 140px;
+            background: var(--color-white);
+            border-top: 1px solid #EEEEEE;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 24px;
+            padding: 0 18px;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .price-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            align-items: flex-end;
+        }
+
+        .total-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0;
+        }
+
+        .price-currency {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-pay-1);
+            font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+        }
+
+        .price-amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--color-pay-1);
+            font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+        }
+
+        .price-decimal {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-pay-1);
+            font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
+        }
+
+        .price-desc {
+            font-size: 22px;
+            color: var(--color-lightgray);
+        }
+
+        .arrow-icon {
+            width: 10px;
+            height: 18px;
+            vertical-align: middle;
+        }
+
+        .pay-btn {
+            width: 260px;
+            height: 88px;
+            background: linear-gradient(135deg, #FF6B4A 0%, #FF5533 100%);
+            border: none;
+            border-radius: 44px;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--color-white);
+            cursor: pointer;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <footer class="bottom-bar">
+        <div class="price-section">
+            <div class="total-price">
+                <span class="price-currency">¥</span>
+                <span class="price-amount">0</span>
+                <span class="price-decimal">.00</span>
+            </div>
+            <span class="price-desc">离店后付¥890.82 
+                <img src="../../../assets/支付组件进入箭头.png" class="arrow-icon" alt="">
+            </span>
+        </div>
+        <button class="pay-btn">立即支付</button>
+    </footer>
+
+</body>
+</html>

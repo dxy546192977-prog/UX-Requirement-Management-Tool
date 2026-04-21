@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>度假小搜 — 固定头 + 列表独立滚动 · vertical.vacation.search</title>
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body { font-family: 'PingFang SC', 'Fliggy Sans 102', sans-serif; background: #F2F3F5; }
+    a { text-decoration: none; color: inherit; }
+
+    .vs-root {
+      position: relative;
+      width: 750px;
+      max-width: 100%;
+      height: 100%;
+      min-height: 568px;
+      margin: 0 auto;
+      background: #F2F3F5;
+    }
+
+    /* 吸顶区总高 438px */
+    .vs-fixed {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      width: 750px;
+      max-width: 100%;
+      background: #F2F3F5;
+    }
+
+    /* —— header 188 —— */
+    .vs-status { display: flex; justify-content: space-between; align-items: center; height: 88px; padding: 12px 24px; }
+    .vs-status__time { font-size: 28px; font-weight: 600; color: #0F131A; }
+    .vs-navrow { display: flex; align-items: center; padding: 0 24px 12px; gap: 12px; height: 100px; }
+    .vs-navbtn { flex-shrink: 0; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: #0F131A; }
+    .vs-search {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      height: 72px;
+      padding: 0 20px;
+      gap: 8px;
+      background: #FFF;
+      border: 3px solid #FFE033;
+      border-radius: 36px;
+      font-size: 24px;
+      color: #0F131A;
+    }
+
+    /* —— category 106 —— */
+    .vs-cat { position: relative; height: 106px; }
+    .vs-cat__bg {
+      position: absolute;
+      width: 100%;
+      height: 100px;
+      top: 6px;
+      left: 0;
+      background: linear-gradient(180deg, rgba(242, 243, 245, 0.9) 50%, #FFF 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 24px 24px 0 0;
+    }
+    .vs-cat ul { position: relative; display: flex; list-style: none; margin: 0; padding: 0; height: 100%; z-index: 1; }
+    .vs-cat li { width: 25%; height: 100px; position: relative; top: 6px; }
+    .vs-cat li.on { height: 106px; top: 0; }
+    .vs-cat a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 100%;
+      font-size: 30px;
+      font-weight: 700;
+      font-style: italic;
+      color: #5C5F66;
+    }
+    .vs-cat li.on a { background: #FFF; border-radius: 24px 24px 0 0; font-size: 36px; font-weight: 500; color: #0F131A; }
+
+    /* —— dropdown 72 —— */
+    .vs-drop { display: flex; height: 72px; background: #FFF; align-items: center; }
+    .vs-drop > div { flex: 1; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 26px; color: #0F131A; height: 100%; }
+    .vs-drop > div:first-child { flex: 0 0 187.5px; }
+
+    /* —— quick 72 —— */
+    .vs-quick { height: 72px; background: #FFF; padding: 6px 0 6px 18px; overflow-x: auto; }
+    .vs-quick::-webkit-scrollbar { display: none; }
+    .vs-quick ul { display: flex; gap: 12px; list-style: none; margin: 0; padding: 0; }
+    .vs-quick button {
+      height: 60px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 6px;
+      background: #F7F8FA;
+      font-size: 24px;
+      color: #0F131A;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .vs-quick button.on { background: #FFF2F0; color: #FF5533; }
+
+    /* 列表区 fixed top 438 */
+    .vs-list {
+      position: fixed;
+      top: 438px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      max-width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      background: #FFF;
+      z-index: 10;
+    }
+
+    /* 跟团游卡（与模块一致） */
+    .product-card-large {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      gap: 18px;
+      width: 750px;
+      max-width: 100%;
+      background: #FFF;
+    }
+    .card-image {
+      position: relative;
+      width: 226px;
+      height: 330px;
+      background: url('https://picsum.photos/id/1015/226/330') center/cover no-repeat;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .card-image__badge {
+      position: absolute;
+      left: 0; top: 0;
+      width: 176px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.7);
+      border-radius: 12px 0;
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+    .card-image__caption {
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.4);
+      border-radius: 0 0 12px 12px;
+      font-size: 24px;
+      color: rgba(255,255,255,0.8);
+    }
+    .card-info { display: flex; flex-direction: column; width: 470px; max-width: calc(100% - 244px); height: 330px; min-width: 0; }
+    .info-title { margin: 0; font-size: 30px; font-weight: 500; line-height: 42px; color: #0F131A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rating { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .rating__badge { padding: 2px 5px; background: #6666FF; border-radius: 8px; font-family: 'Fliggy Sans 102', sans-serif; font-size: 26px; color: #FFF; }
+    .rating__text { font-size: 24px; font-weight: 500; color: #6666FF; }
+    .rating__comment { font-size: 24px; color: #6666FF; }
+    .highlights { display: flex; flex-direction: column; gap: 12px; padding: 14px 0 4px; }
+    .highlight-item { display: flex; gap: 12px; align-items: center; }
+    .highlight-item__label { width: 44px; flex-shrink: 0; font-weight: 500; font-size: 26px; color: #0F131A; }
+    .highlight-item__text { font-size: 24px; color: #0F131A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+    .tag { height: 28px; padding: 0 6px; border: 1px solid rgba(92,95,102,0.5); border-radius: 4px; font-size: 20px; color: #5C5F66; display: flex; align-items: center; }
+    .store { margin-top: auto; padding-top: 10px; font-size: 24px; color: #919499; }
+    .pricing { display: flex; justify-content: space-between; align-items: flex-end; }
+    .pricing__sales { font-size: 24px; color: #919499; }
+    .price { display: flex; align-items: flex-end; color: #FF5533; }
+    .price .amount { font-family: 'Alibaba Sans 102', sans-serif; font-weight: 700; font-size: 42px; }
+    .discount-banner {
+      display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+      margin-top: 6px; padding: 2px 6px;
+      background: linear-gradient(90deg, transparent, #FFE6E0);
+      border-radius: 4px; font-size: 20px; color: #FF5533;
+    }
+
+    /* POI 卡 */
+    .poi-card {
+      display: flex;
+      gap: 18px;
+      width: 750px;
+      max-width: 100%;
+      padding: 9px 18px;
+      background: #FFF;
+    }
+    .poi-card__image {
+      width: 226px; height: 266px; flex-shrink: 0;
+      border-radius: 12px;
+      background: url('https://picsum.photos/id/1018/226/266') center/cover;
+    }
+    .poi-card__info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0; }
+    .poi-card__title { margin: 0; font-size: 30px; font-weight: 500; color: #0F131A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .poi-card__meta { display: flex; align-items: center; gap: 12px; font-size: 24px; color: #0F131A; margin-top: 8px; flex-wrap: wrap; }
+    .poi-card__subtitle { margin: 8px 0 0; font-size: 24px; color: #5C5F66; }
+    .highlight-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .highlight-tag { padding: 0 8px; height: 28px; background: #FEF5EC; border-radius: 4px; font-size: 20px; color: #805540; display: flex; align-items: center; }
+    .info-footer { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; margin-top: 8px; }
+    .poi-card .price .amount { font-size: 42px; font-weight: 700; font-family: 'Alibaba Sans 102', sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="vs-root">
+    <div class="vs-fixed" aria-hidden="false">
+      <div class="vs-status">
+        <span class="vs-status__time">9:41</span>
+        <span style="font-size:12px;color:#919499">信号 · WiFi · 电池</span>
+      </div>
+      <div class="vs-navrow">
+        <a href="#" class="vs-navbtn" aria-label="返回"><svg width="24" height="24" viewBox="0 0 48 48"><path fill="#0F131A" d="M28 38L14 24l14-14 2.8 2.8L19.7 24l11.1 11.2z"/></svg></a>
+        <div class="vs-search" role="search"><span>🔍</span> 云南</div>
+        <a href="#" class="vs-navbtn" aria-label="更多">⋯</a>
+      </div>
+      <nav class="vs-cat" aria-label="类目">
+        <div class="vs-cat__bg"></div>
+        <ul>
+          <li class="on"><a href="#">综合</a></li>
+          <li><a href="#">跟团游</a></li>
+          <li><a href="#">自由行</a></li>
+          <li><a href="#">出境必备</a></li>
+        </ul>
+      </nav>
+      <div class="vs-drop" role="toolbar">
+        <div>杭州出发 <small>▼</small></div>
+        <div>筛选 <small>▼</small></div>
+        <div>日期/天数 <small>▼</small></div>
+        <div>人数 <small>▼</small></div>
+        <div>排序 <small>▼</small></div>
+      </div>
+      <nav class="vs-quick" aria-label="快筛">
+        <ul>
+          <li><button type="button" class="on">只看目的地参团</button></li>
+          <li><button type="button">私家团</button></li>
+          <li><button type="button">精品小团</button></li>
+          <li><button type="button">一日游</button></li>
+          <li><button type="button">15人及以下</button></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="vs-list" id="vsList">
+      <article class="product-card-large">
+        <div class="card-image">
+          <div class="card-image__badge">多日游 · 独立成团</div>
+          <div class="card-image__caption">杭州出发</div>
+        </div>
+        <div class="card-info">
+          <h3 class="info-title">日本东京4天3晚私家团</h3>
+          <div class="rating">
+            <span class="rating__badge">4.8</span>
+            <strong class="rating__text">很好</strong>
+            <span class="rating__comment">“行程特别棒”</span>
+          </div>
+          <div class="highlights">
+            <div class="highlight-item"><span class="highlight-item__label">游玩</span><span class="highlight-item__text">富士山·箱根·镰仓</span></div>
+            <div class="highlight-item"><span class="highlight-item__label">住行</span><span class="highlight-item__text">24小时接机·陆地头等舱</span></div>
+          </div>
+          <div class="tags"><span class="tag">飞猪小团</span><span class="tag">纯玩</span></div>
+          <div class="store">重庆嗨游记旅游专营店</div>
+          <div class="pricing">
+            <span class="pricing__sales">已售1000+</span>
+            <div>
+              <div class="price"><span>¥</span><span class="amount">8888</span><span>起</span></div>
+              <div class="discount-banner">度假补贴 · 优惠¥5 ›</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="poi-card">
+        <div class="poi-card__image"></div>
+        <div class="poi-card__info">
+          <div>
+            <h3 class="poi-card__title">北京环球度假区</h3>
+            <div class="poi-card__meta">
+              <span class="rating__badge">4.8</span>
+              <span style="color:#6666FF;font-weight:600">很好</span>
+              <span>314条点评</span>
+              <span>|</span>
+              <span>距你3.7公里</span>
+            </div>
+            <p class="poi-card__subtitle">坐霸天虎过山车，体验魔法世界</p>
+            <div class="highlight-tags"><span class="highlight-tag">🏆 北京网红打卡榜·第1名</span></div>
+          </div>
+          <div class="info-footer">
+            <div class="price" style="color:#FF5533"><span>¥</span><span class="amount">200</span><span>起</span></div>
+            <div class="discount-banner">优惠¥50 ›</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card-large">
+        <div class="card-image" style="background-image:url('https://picsum.photos/id/164/226/330')">
+          <div class="card-image__badge">一日游</div>
+          <div class="card-image__caption">上海出发</div>
+        </div>
+        <div class="card-info">
+          <h3 class="info-title">西湖一日游 · 含船票</h3>
+          <div class="rating"><span class="rating__badge">4.9</span><strong class="rating__text">超棒</strong></div>
+          <div class="highlights">
+            <div class="highlight-item"><span class="highlight-item__label">游玩</span><span class="highlight-item__text">雷峰塔·苏堤·三潭印月</span></div>
+          </div>
+          <div class="tags"><span class="tag">无购物</span><span class="tag">可订明日</span></div>
+          <div class="store">杭州国旅专卖店</div>
+          <div class="pricing">
+            <span class="pricing__sales">已售500+</span>
+            <div><div class="price"><span>¥</span><span class="amount">268</span><span>起</span></div></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.vs-cat li').forEach(function (li) {
+      li.querySelector('a').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelectorAll('.vs-cat li').forEach(function (x) { x.classList.remove('on'); });
+        li.classList.add('on');
+      });
+    });
+    document.querySelectorAll('.vs-quick button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.vs-quick button').forEach(function (b) { b.classList.remove('on'); });
+        btn.classList.add('on');
+      });
+    });
+  </script>
+</body>
+</html>

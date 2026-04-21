@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>优惠权益卡组件</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-midgray: #5c5f66;
+            --color-lightgray: #919499;
+            --color-indigo-1: #6666ff;
+            --color-indigo-4: #EBEBFF;
+            --color-warning-1: #ff3333;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+            --color-bg: #f2f3f5;
+            --radius-xl: 36px;
+            --radius-l: 24px;
+            --radius-m: 12px;
+            --radius-s: 6px;
+        }
+
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            justify-content: center;
+            padding: 50px 18px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+            margin: 0;
+        }
+
+        /* F4本单可享 */
+        .savings-card {
+            width: 714px;
+            background: var(--color-white);
+            border-radius: 12px;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        .savings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .savings-title {
+            font-size: 30px;
+            font-weight: 600;
+            color: var(--color-darkgray);
+        }
+
+        .savings-amount {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-pay-1);
+        }
+
+        .savings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
+            padding: 0;
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .savings-row:last-child {
+            border-bottom: none;
+        }
+
+        .savings-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 26px;
+            color: var(--color-lightgray);
+        }
+
+        .savings-value {
+            font-size: 26px;
+            color: var(--color-darkgray);
+        }
+
+        .savings-value-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .price-highlight {
+            color: var(--color-pay-1);
+        }
+
+        .expand-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .savings-tag {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            height: 30px;
+            padding: 0 10px 0 8px;
+            background: var(--color-pay-1);
+            border-radius: 6px 0 0 6px;
+            font-size: 22px;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+
+        .savings-tag::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 15px 0 15px 10px;
+            border-color: transparent transparent transparent var(--color-pay-1);
+        }
+
+        .info-icon {
+            width: 28px;
+            height: 28px;
+            color: var(--color-lightgray);
+        }
+
+        .radio-btn {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+        }
+
+        .radio-btn img {
+            width: 44px;
+            height: 44px;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="savings-card">
+        <div class="savings-header">
+            <span class="savings-title">F4本单可享</span>
+            <span class="savings-amount">已节省约¥545</span>
+        </div>
+        <div class="savings-row">
+            <span class="savings-label">优惠</span>
+            <div class="savings-value-group">
+                <span class="savings-value">共减<span class="price-highlight">¥160</span></span>
+                <img src="../../../assets/下拉箭头.png" class="expand-icon" alt="">
+            </div>
+        </div>
+        <div class="savings-row">
+            <span class="savings-label">
+                里程抵现金
+                <img src="../../../assets/帮助.png" class="info-icon" alt="">
+            </span>
+            <div class="savings-value-group">
+                <span class="savings-value">可用1000里程</span>
+                <span class="savings-tag">减¥50</span>
+                <div class="radio-btn">
+                    <img src="../../../assets/未勾选.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="savings-row">
+            <span class="savings-label">入住权益</span>
+            <div class="savings-value-group">
+                <span style="font-size: 26px; color: var(--color-darkgray);">享官网同等权益，含免费早餐等5项</span>
+                <img src="../../../assets/下拉箭头.png" class="expand-icon" alt="">
+            </div>
+        </div>
+        <div class="savings-row">
+            <span class="savings-label">离店返赠</span>
+            <div class="savings-value-group">
+                <span style="font-size: 26px; color: var(--color-darkgray);">返现 <span class="price-highlight">¥60</span>，积分+里程双重奖励等3项</span>
+                <img src="../../../assets/下拉箭头.png" class="expand-icon" alt="">
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>度假订详 — 凭证区</title>
+  <style>
+    body { margin: 0; font-family: 'PingFang SC', sans-serif; }
+    .ticket-voucher { display: flex; flex-direction: column; align-items: center; padding: 0 0 24px; width: 750px; background: #FFFFFF; }
+    .voucher-content {
+      display: flex; flex-direction: column; align-items: flex-start; padding: 18px 0; gap: 18px; width: 702px;
+      background: #F7F8FA; border-radius: 12px;
+    }
+    .voucher-header { display: flex; flex-direction: column; align-items: flex-start; padding: 0 24px; gap: 18px; width: 702px; box-sizing: border-box; }
+    .header-title { margin: 0; font-weight: 500; font-size: 30px; line-height: 140%; color: #0F131A; }
+    .info-row { display: flex; flex-direction: row; align-items: flex-start; padding: 12px 0 0; gap: 18px; width: 654px; }
+    .info-row__label { flex-shrink: 0; width: 142px; font-weight: 400; font-size: 26px; line-height: 140%; color: #919499; }
+    .info-row__value { flex-grow: 1; font-weight: 400; font-size: 26px; line-height: 140%; color: #0F131A; }
+    .info-row__value--warning { font-weight: 500; color: #FF3333; }
+    .voucher-qr-section {
+      display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 24px; gap: 18px; width: 702px; box-sizing: border-box;
+    }
+    .qr-code-image {
+      width: 280px; height: 280px; display: block; border: 1px solid #D2D4D9; border-radius: 12px; box-sizing: border-box;
+    }
+    .qr-action-link { font-weight: 400; font-size: 26px; line-height: 140%; color: #6666FF; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="ticket-voucher">
+    <div class="voucher-content">
+      <div class="voucher-header">
+        <h3 class="header-title">凭证信息</h3>
+        <div class="info-row">
+          <span class="info-row__label">使用方式</span>
+          <span class="info-row__value info-row__value--warning">凭身份证件直接使用</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">出行人</span>
+          <span class="info-row__value">李雷 123456********7890</span>
+        </div>
+      </div>
+      <div class="voucher-qr-section">
+        <img class="qr-code-image" src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=https://example.com/voucher/demo" alt="门票凭证二维码">
+        <a href="#" class="qr-action-link">保存二维码</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>酒店房型卡组件预览</title>
+    <style>
+        :root {
+            --color-darkgray: #0f131a;
+            --color-midgray: #5c5f66;
+            --color-lightgray: #919499;
+            --color-indigo-1: #6666ff;
+            --color-indigo-4: #EBEBFF;
+            --color-warning-1: #ff3333;
+            --color-pay-1: #ff5533;
+            --color-white: #ffffff;
+            --color-label: #F7F8FA;
+            --color-bg: #f2f3f5;
+            --radius-xl: 36px;
+            --radius-l: 24px;
+            --radius-m: 12px;
+            --radius-s: 6px;
+        }
+
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 500;
+            font-display: swap;
+        }
+
+        body {
+            background-color: var(--color-label);
+            display: flex;
+            justify-content: center;
+            padding: 50px 20px;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+
+        /* 
+         ========================================
+         == 酒店房型卡 (Hotel Details Card) Skill
+         ========================================
+        */
+        
+        .hotel-details-card {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            width: 690px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* --- 1. 酒店头部 --- */
+        .hotel-header {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .header-title-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .hotel-title {
+            font-size: 30px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+            line-height: 1.4;
+            margin: 0;
+            flex-grow: 1;
+        }
+        
+        .hotel-category-tag {
+            background: rgba(34, 34, 34, 0.06);
+            border-radius: var(--radius-s);
+            padding: 0 8px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 22px;
+            color: #999999;
+            flex-shrink: 0;
+        }
+
+        .hotel-rating-line {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 24px;
+            line-height: 1.4;
+        }
+        .hotel-rating-line .score { color: var(--color-indigo-1); }
+        .hotel-rating-line .ranking { color: var(--color-midgray); }
+
+        .main-image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            border-radius: var(--radius-l);
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            align-items: flex-end;
+            padding: 12px;
+            box-sizing: border-box;
+        }
+        
+        .image-overlays {
+            display: flex;
+            gap: 12px;
+        }
+
+        .play-button, .image-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-s);
+            color: #FFFFFF;
+        }
+        
+        .play-button {
+            width: 40px;
+        }
+        
+        .image-counter {
+            padding: 0 12px;
+            font-size: 20px;
+            font-weight: 300;
+        }
+        
+        /* --- 2. 房型列表 --- */
+        .room-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .room-type-item {
+            display: flex;
+            gap: 24px;
+            padding: 9px 0;
+        }
+        
+        .room-image {
+            width: 150px;
+            height: 224px;
+            border-radius: var(--radius-l);
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .room-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            border-radius: 0 0 var(--radius-l) var(--radius-l);
+            background: linear-gradient(180deg, rgba(15, 19, 26, 0) 0%, rgba(15, 19, 26, 0.7) 100%);
+        }
+
+        .room-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .room-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .room-title {
+            font-size: 30px;
+            font-weight: 500;
+            color: var(--color-darkgray);
+            line-height: 1.4;
+            margin: 0;
+        }
+        
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            font-size: 24px;
+            line-height: 1.4;
+            color: var(--color-midgray);
+        }
+        
+        .room-booking {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .room-price-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+        
+        .room-price {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        
+        .room-price .currency {
+            font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-darkgray);
+        }
+
+        .room-price .amount {
+            font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+            font-size: 42px;
+            line-height: 0.64;
+            font-weight: 400;
+            color: var(--color-darkgray);
+        }
+        
+        .room-discount-tags {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 20px;
+            color: var(--color-pay-1);
+            min-height: 28px;
+        }
+        .room-discount-tags .divider {
+            width: 1px;
+            height: 14px;
+            border-left: 1px dashed #FFB2A3;
+        }
+
+        .room-action-button {
+            width: 96px;
+            height: 60px;
+            background: var(--color-indigo-4);
+            border-radius: var(--radius-l);
+            border: none;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-indigo-1);
+            cursor: pointer;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+        
+        /* --- 3. 分割线和页脚 --- */
+        .card-divider {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #EEEEEE;
+            margin: 0;
+        }
+        
+        .card-footer-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .card-footer-link span {
+            font-size: 24px;
+            color: var(--color-darkgray);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hotel-details-card">
+        <!-- 1. 酒店头部信息 -->
+        <header class="hotel-header">
+            <div class="header-info">
+                <div class="header-title-line">
+                    <h1 class="hotel-title">ClubMed Joyview 北大壶度假村</h1>
+                    <span class="hotel-category-tag">度假村</span>
+                </div>
+                <div class="hotel-rating-line">
+                    <span class="score">4.4分｜超棒</span>
+                    <span class="ranking">松花湖滑雪酒店榜·第1名</span>
+                </div>
+            </div>
+            <div class="main-image-container" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=690&h=300&fit=crop');">
+                <div class="image-overlays">
+                    <div class="play-button">
+                        <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.125 7.30289C14.4583 8.09841 14.4583 9.90159 13.125 10.6971L2.25 17.0622C0.916666 17.8577 -4.13333e-07 16.9561 -3.42592e-07 15.4641L-1.20111e-07 2.5359C-4.93701e-08 1.0439 0.916667 0.14231 2.25 0.93783L13.125 7.30289Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="image-counter">1/86</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. 房型列表 -->
+        <section class="room-list">
+            <!-- 房型 1 -->
+            <article class="room-type-item">
+                <div class="room-image" style="background-image: url('https://images.unsplash.com/photo-1630660664869-c9d3cc676880?w=150&h=224&fit=crop');"></div>
+                <div class="room-details">
+                    <div class="room-info">
+                        <h4 class="room-title">逍遥高级大床房</h4>
+                        <div class="room-features">
+                            <span>2份早餐</span>
+                            <span>1张2.0米特大床</span>
+                            <span>2人入住</span>
+                            <span>65㎡</span>
+                            <span>有窗</span>
+                        </div>
+                    </div>
+                    <div class="room-booking">
+                        <div class="room-price-area">
+                            <div class="room-price"><span class="currency">¥</span><span class="amount">888</span></div>
+                            <div class="room-discount-tags">
+                                <span>优惠券</span><div class="divider"></div><span>优惠¥80</span>
+                            </div>
+                        </div>
+                        <button class="room-action-button">预订</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 房型 2 -->
+            <article class="room-type-item">
+                <div class="room-image" style="background-image: url('https://images.unsplash.com/photo-1675409145919-277c0fc2aa7d?w=150&h=224&fit=crop');"></div>
+                <div class="room-details">
+                    <div class="room-info">
+                        <h4 class="room-title">豪华景观双床房</h4>
+                        <div class="room-features">
+                            <span>不含早餐</span>
+                            <span>2张1.5米双人床</span>
+                            <span>2人入住</span>
+                            <span>75㎡</span>
+                            <span>有窗</span>
+                        </div>
+                    </div>
+                    <div class="room-booking">
+                         <div class="room-price-area">
+                            <div class="room-price"><span class="currency">¥</span><span class="amount">1088</span></div>
+                            <div class="room-discount-tags"></div>
+                        </div>
+                        <button class="room-action-button">预订</button>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- 3. 分割线 -->
+        <hr class="card-divider" />
+
+        <!-- 4. 页脚链接 -->
+        <footer class="card-footer-link">
+            <span>查看全部20种房型</span>
+            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.5 1.5L10 10L1.5 18.5" stroke="#666666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </footer>
+    </div>
+
+</body>
+</html>

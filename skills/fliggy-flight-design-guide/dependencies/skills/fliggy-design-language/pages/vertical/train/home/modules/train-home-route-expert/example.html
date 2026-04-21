@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车票首页 — 火车路线专家</title>
+    <style>
+        @font-face {
+            font-family: "Fliggy Sans 102";
+            src:
+                local("Fliggy Sans 102"),
+                local("FliggySans102-Md"),
+                url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { display: flex; justify-content: center; padding: 20px; background: #F5F5F5; font-family: "PingFang SC", sans-serif; }
+
+        /* 外容器 */
+        .route-expert {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 0 24px;
+            position: relative;
+            width: 702px;
+            background: linear-gradient(180deg, #FFF5EB 0%, #FFFAF6 100%);
+            border: 2px solid #FFFFFF;
+            border-radius: 18px;
+        }
+
+        /* 标题栏 */
+        .header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            width: 100%;
+            height: 81px;
+        }
+        .header-title {
+            font-weight: 500;
+            font-size: 32px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+
+        /* Tab 切换区 */
+        .tab-section {
+            position: relative;
+            width: 654px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+        .tab-bg {
+            position: absolute;
+            left: 0; right: 0; top: 6px; bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, #FFFFFF 100%);
+            border-radius: 24px 24px 0 0;
+        }
+        .tab-img {
+            position: absolute;
+            left: 0; top: 0;
+            width: 654px;
+            height: 80px;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .tab-img img {
+            height: 100%;
+            object-fit: cover;
+            object-position: left center;
+        }
+        .tab-item {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 2px;
+            height: 32px;
+            top: 27px;
+            z-index: 2;
+        }
+        .tab-item-left { left: 0; width: 345px; }
+        .tab-item-right { left: 345px; width: 309px; }
+        .tab-text {
+            font-weight: 500;
+            font-size: 28px;
+            line-height: 32px;
+            text-align: center;
+            color: #000000;
+        }
+
+        /* 内容区 */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0 24px;
+            width: 654px;
+            background: #FFFFFF;
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* 筛选行 */
+        .filter-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            gap: 12px;
+            width: 654px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+        .filter-btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 18px;
+            gap: 6px;
+            width: 194px;
+            height: 60px;
+            background: #F7F8FA;
+            border-radius: 6px;
+        }
+        .filter-btn-text {
+            max-width: 192px;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            text-align: center;
+            color: #0F131A;
+        }
+        .filter-btn-arrow {
+            width: 20px;
+            height: 20px;
+        }
+        .filter-btn.active {
+            background: #FFF2F0;
+        }
+        .filter-btn.active .filter-btn-text {
+            font-weight: 500;
+            color: #FF5533;
+        }
+
+        /* 路线卡片列表 */
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 654px;
+            background: #FFFFFF;
+            border-radius: 12px;
+        }
+
+        /* 单张路线卡片 */
+        .route-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px;
+            width: 654px;
+            border-radius: 12px;
+        }
+        .route-card-inner {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 12px;
+            width: 606px;
+        }
+
+        /* 左侧城市图 */
+        .city-image {
+            width: 100px;
+            height: 120px;
+            background: #F0F0F0;
+            border-radius: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .city-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 右侧信息区 */
+        .route-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 494px;
+        }
+
+        /* OD 行 */
+        .od-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 18px;
+            height: 34px;
+        }
+        .od-city {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 34px;
+            color: #0F131A;
+        }
+        .od-dash {
+            width: 24px;
+            height: 4px;
+        }
+
+        /* 标签行（玩/吃） */
+        .tag-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            padding-top: 12px;
+        }
+        .tag-badge {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            background: #FFF2F0;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .tag-badge-text {
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 140%;
+            color: #FF5533;
+        }
+        .tag-desc {
+            font-weight: 400;
+            font-size: 22px;
+            line-height: 22px;
+            color: #5C5F66;
+        }
+
+        /* 价格条 */
+        .price-bar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 18px;
+            margin-top: 18px;
+            width: 494px;
+            height: 78px;
+            background: linear-gradient(90deg, #F7F8FA 0%, #FFEEEB 100%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 车次信息 */
+        .train-info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+        }
+        .train-number {
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 24px;
+            color: #0F131A;
+        }
+        .train-time {
+            font-weight: 400;
+            font-size: 26px;
+            line-height: 24px;
+            color: #0F131A;
+        }
+
+        /* 价格表达区 */
+        .price-expression {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            height: 78px;
+        }
+
+        /* 价格数字区 */
+        .price-value-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 5px 2px 7px 0;
+            width: 118px;
+            height: 76px;
+            background: linear-gradient(270deg, #FDF2EE 0%, rgba(253,242,238,0) 100%);
+        }
+        .price-value {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .price-yen {
+            font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 13px;
+            text-align: right;
+            color: #FF5533;
+        }
+        .price-num {
+            font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 36px;
+            line-height: 23px;
+            display: flex;
+            align-items: flex-end;
+            text-align: right;
+            color: #FF5533;
+        }
+
+        /* 闪电 icon */
+        .lightning-icon {
+            width: 36px;
+            height: 76px;
+            flex-shrink: 0;
+        }
+        .lightning-icon img {
+            width: 36px;
+            height: 76px;
+            object-fit: cover;
+        }
+
+        /* 省钱标签 */
+        .save-tag {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 8px 0 0;
+            gap: 6px;
+            width: 110px;
+            height: 78px;
+            background: linear-gradient(238.24deg, #FF7138 30.12%, #FF445C 76.72%);
+            border-radius: 0 12px 12px 0;
+            flex-shrink: 0;
+        }
+        .save-tag-label {
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 20px;
+            color: #FFFFFF;
+        }
+        .save-tag-amount {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+        }
+        .save-tag-text {
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 24px;
+            color: #FFFFFF;
+        }
+        .save-tag-num {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 24px;
+            color: #FFFFFF;
+        }
+
+        /* 展开更多按钮 */
+        .expand-btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 48px;
+            gap: 12px;
+            width: 276px;
+            height: 60px;
+            background: #F7F8FA;
+            border-radius: 30px;
+            margin-top: 24px;
+        }
+        .expand-btn-text {
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 140%;
+            text-align: center;
+            color: #6666FF;
+        }
+        .expand-btn-arrow {
+            width: 12px;
+            height: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .expand-btn-arrow svg {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="route-expert">
+        <!-- 标题栏 -->
+        <div class="header">
+            <span class="header-title">火车路线专家</span>
+        </div>
+
+        <!-- Tab 切换区 -->
+        <div class="tab-section">
+            <div class="tab-bg"></div>
+            <div class="tab-img">
+                <img src="https://gw.alicdn.com/imgextra/i4/O1CN01mwnZt81ipByuP9a9M_!!6000000004461-2-tps-371-80.png" alt="tab-bg">
+            </div>
+            <div class="tab-item tab-item-left">
+                <span class="tab-text">特价火车票</span>
+            </div>
+            <div class="tab-item tab-item-right">
+                <span class="tab-text">火车小时达</span>
+            </div>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="content-area">
+            <!-- 筛选行 -->
+            <div class="filter-row">
+                <div class="filter-btn">
+                    <span class="filter-btn-text">杭州出发</span>
+                    <img class="filter-btn-arrow" src="https://gw.alicdn.com/imgextra/i2/O1CN01vwRHRn25S38AMka2k_!!6000000007524-2-tps-40-40.png" alt="arrow">
+                </div>
+                <div class="filter-btn">
+                    <span class="filter-btn-text">6月16日</span>
+                    <img class="filter-btn-arrow" src="https://gw.alicdn.com/imgextra/i2/O1CN01vwRHRn25S38AMka2k_!!6000000007524-2-tps-40-40.png" alt="arrow">
+                </div>
+                <div class="filter-btn active">
+                    <span class="filter-btn-text">6折起</span>
+                    <img class="filter-btn-arrow" src="https://gw.alicdn.com/imgextra/i2/O1CN01vwRHRn25S38AMka2k_!!6000000007524-2-tps-40-40.png" alt="arrow">
+                </div>
+            </div>
+
+            <!-- 路线卡片列表 -->
+            <div class="card-list">
+                <!-- 卡片1：完整版（带玩/吃标签）- 第一张OD用短名 -->
+                <div class="route-card">
+                    <div class="route-card-inner">
+                        <div class="city-image">
+                            <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                        </div>
+                        <div class="route-info">
+                            <div class="od-row">
+                                <span class="od-city">杭州东</span>
+                                <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                                <span class="od-city">绍兴北</span>
+                            </div>
+                            <div class="tag-row">
+                                <div class="tag-badge"><span class="tag-badge-text">玩</span></div>
+                                <span class="tag-desc">盐官观潮景区-博物馆-志摩故里</span>
+                            </div>
+                            <div class="tag-row">
+                                <div class="tag-badge"><span class="tag-badge-text">吃</span></div>
+                                <span class="tag-desc">美食名称 美食名称 美食名称</span>
+                            </div>
+                            <div class="price-bar">
+                                <div class="train-info">
+                                    <span class="train-number">高铁</span>
+                                    <span class="train-time">18分</span>
+                                </div>
+                                <div class="price-expression">
+                                    <div class="price-value-area">
+                                        <div class="price-value">
+                                            <span class="price-yen">&yen;</span>
+                                            <span class="price-num">240</span>
+                                        </div>
+                                    </div>
+                                    <div class="lightning-icon">
+                                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                                    </div>
+                                    <div class="save-tag">
+                                        <span class="save-tag-label">5.5折</span>
+                                        <div class="save-tag-amount">
+                                            <span class="save-tag-text">立省</span>
+                                            <span class="save-tag-num">&yen;100</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片2：完整版 - 长名OD -->
+                <div class="route-card">
+                    <div class="route-card-inner">
+                        <div class="city-image">
+                            <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                        </div>
+                        <div class="route-info">
+                            <div class="od-row">
+                                <span class="od-city">杭州杭...</span>
+                                <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                                <span class="od-city">绍兴绍兴</span>
+                            </div>
+                            <div class="tag-row">
+                                <div class="tag-badge"><span class="tag-badge-text">玩</span></div>
+                                <span class="tag-desc">盐官观潮景区-博物馆-志摩故里</span>
+                            </div>
+                            <div class="tag-row">
+                                <div class="tag-badge"><span class="tag-badge-text">吃</span></div>
+                                <span class="tag-desc">美食名称 美食名称 美食名称</span>
+                            </div>
+                            <div class="price-bar">
+                                <div class="train-info">
+                                    <span class="train-number">高铁</span>
+                                    <span class="train-time">18分</span>
+                                </div>
+                                <div class="price-expression">
+                                    <div class="price-value-area">
+                                        <div class="price-value">
+                                            <span class="price-yen">&yen;</span>
+                                            <span class="price-num">240</span>
+                                        </div>
+                                    </div>
+                                    <div class="lightning-icon">
+                                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                                    </div>
+                                    <div class="save-tag">
+                                        <span class="save-tag-label">5.5折</span>
+                                        <div class="save-tag-amount">
+                                            <span class="save-tag-text">立省</span>
+                                            <span class="save-tag-num">&yen;100</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片3：完整版 - 长名OD -->
+                <div class="route-card">
+                    <div class="route-card-inner">
+                        <div class="city-image">
+                            <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                        </div>
+                        <div class="route-info">
+                            <div class="od-row">
+                                <span class="od-city">杭州杭...</span>
+                                <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                                <span class="od-city">绍兴绍兴</span>
+                            </div>
+                            <div class="tag-row">
+                                <div class="tag-badge"><span class="tag-badge-text">玩</span></div>
+                                <span class="tag-desc">盐官观潮景区-博物馆-志摩故里</span>
+                            </div>
+                            <div class="tag-row">
+                                <div class="tag-badge"><span class="tag-badge-text">吃</span></div>
+                                <span class="tag-desc">美食名称 美食名称 美食名称</span>
+                            </div>
+                            <div class="price-bar">
+                                <div class="train-info">
+                                    <span class="train-number">高铁</span>
+                                    <span class="train-time">18分</span>
+                                </div>
+                                <div class="price-expression">
+                                    <div class="price-value-area">
+                                        <div class="price-value">
+                                            <span class="price-yen">&yen;</span>
+                                            <span class="price-num">240</span>
+                                        </div>
+                                    </div>
+                                    <div class="lightning-icon">
+                                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                                    </div>
+                                    <div class="save-tag">
+                                        <span class="save-tag-label">5.5折</span>
+                                        <div class="save-tag-amount">
+                                            <span class="save-tag-text">立省</span>
+                                            <span class="save-tag-num">&yen;100</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片4：简版（无玩/吃标签）- 长名OD -->
+                <div class="route-card">
+                    <div class="route-card-inner">
+                        <div class="city-image">
+                            <img src="https://gw.alicdn.com/imgextra/i3/O1CN014Mxorn1hFdcNm9hYD_!!6000000004248-2-tps-200-240.png" alt="city">
+                        </div>
+                        <div class="route-info">
+                            <div class="od-row">
+                                <span class="od-city">杭州杭...</span>
+                                <img class="od-dash" src="https://gw.alicdn.com/imgextra/i2/O1CN015CflqL1lWMXnKWAKK_!!6000000004826-2-tps-48-8.png" alt="dash">
+                                <span class="od-city">绍兴绍兴</span>
+                            </div>
+                            <div class="price-bar">
+                                <div class="train-info">
+                                    <span class="train-number">高铁</span>
+                                    <span class="train-time">18分</span>
+                                </div>
+                                <div class="price-expression">
+                                    <div class="price-value-area">
+                                        <div class="price-value">
+                                            <span class="price-yen">&yen;</span>
+                                            <span class="price-num">240</span>
+                                        </div>
+                                    </div>
+                                    <div class="lightning-icon">
+                                        <img src="https://gw.alicdn.com/imgextra/i3/O1CN01WXfgza26FVuENR7br_!!6000000007632-2-tps-72-152.png" alt="lightning">
+                                    </div>
+                                    <div class="save-tag">
+                                        <span class="save-tag-label">5.5折</span>
+                                        <div class="save-tag-amount">
+                                            <span class="save-tag-text">立省</span>
+                                            <span class="save-tag-num">&yen;100</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 展开更多 -->
+            <div class="expand-btn">
+                <span class="expand-btn-text">查看更多内容</span>
+                <div class="expand-btn-arrow">
+                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+                        <path d="M1 1L6 6L1 11" stroke="#6666FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

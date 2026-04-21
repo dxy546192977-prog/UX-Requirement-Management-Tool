@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>酒店列表 — 顶栏与吸顶筛</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+        * { box-sizing: border-box; }
+        .skill-component {
+            position: relative;
+            width: 750px;
+            height: 320px;
+            background-color: #FFFFFF;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 0;
+        }
+        .status-bar {
+            position: absolute;
+            width: 750px;
+            height: 88px;
+            left: 0px;
+            top: 0px;
+            background: #FFFFFF;
+            color: #0F131A;
+        }
+        .status-icons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 8px;
+            position: absolute;
+            height: 28px;
+            right: 28px;
+            top: 32px;
+        }
+        .status-icons svg { display: block; }
+        .network-signal-icon { width: 40px; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .wifi-signal-icon { width: 32px; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .battery-icon { width: 50px; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .time-display {
+            position: absolute;
+            width: 108px;
+            height: 42px;
+            left: 42px;
+            top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 500;
+            font-size: 30px;
+            color: #0F131A;
+        }
+        .nav-bar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px 24px;
+            gap: 24px;
+            position: absolute;
+            width: 750px;
+            height: 88px;
+            left: 0px;
+            top: 88px;
+            background: #FFFFFF;
+        }
+        .nav-back-button {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .search-box {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px 20px;
+            gap: 18px;
+            height: 72px;
+            background: #FFFFFF;
+            border: 2px solid #FFE033;
+            border-radius: 36px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .search-params {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px 0px 0px 4px;
+            gap: 18px;
+        }
+        .hotel-location {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 140%;
+            color: #0F131A;
+            flex-shrink: 0;
+        }
+        .date-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .date-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 24px;
+            line-height: 116%;
+        }
+        .date-label { color: #5C5F66; font-weight: 400; }
+        .date-value { color: #0F131A; font-weight: 500; white-space: nowrap; }
+        .occupancy-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .occupancy-row {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-family: 'PingFang SC', sans-serif;
+            font-size: 22px;
+            line-height: 120%;
+        }
+        .occupancy-value, .occupancy-unit { color: #0F131A; font-weight: 500; }
+        .search-divider {
+            width: 1px;
+            height: 40px;
+            border-left: 1px solid #D2D4D9;
+            flex-shrink: 0;
+        }
+        .search-input-placeholder {
+            flex-grow: 1;
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 26px;
+            line-height: 140%;
+            color: #919499;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .nav-icons { display: flex; gap: 24px; }
+        .nav-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .filter-bar-top {
+            position: absolute;
+            width: 750px;
+            height: 72px;
+            left: 0px;
+            top: 176px;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            transition: justify-content 0.3s ease;
+        }
+        .filter-option {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+            cursor: pointer;
+        }
+        .filter-option .arrow-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .filter-bar-quick {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 6px 18px;
+            gap: 12px;
+            position: absolute;
+            width: 750px;
+            height: 72px;
+            left: 0px;
+            top: 248px;
+            background: #FFFFFF;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .filter-bar-quick::-webkit-scrollbar { display: none; }
+        .quick-filter-tag {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 18px;
+            gap: 6px;
+            height: 60px;
+            background: #F7F8FA;
+            border-radius: 6px;
+            white-space: nowrap;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .quick-filter-tag span {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #0F131A;
+        }
+        .quick-filter-tag .hot-deal-icon { width: 30px; height: 30px; }
+        .quick-filter-tag .arrow-icon { width: 24px; height: 24px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+<div class="skill-component">
+    <div class="status-bar">
+        <div class="time-display">9:41</div>
+        <div class="status-icons">
+            <div class="network-signal-icon">
+                <svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M24 8H26C27.1046 8 28 8.89543 28 10V22C28 23.1046 27.1046 24 26 24H24C22.8954 24 22 23.1046 22 22V10C22 8.89543 22.8954 8 24 8Z" fill="#0F131A"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15 12H17C18.1046 12 19 12.8954 19 14V22C19 23.1046 18.1046 24 17 24H15C13.8954 24 13 23.1046 13 22V14C13 12.8954 13.8954 12 15 12Z" fill="#0F131A"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 15H8C9.10457 15 10 15.8954 10 17V22C10 23.1046 9.10457 24 8 24H6C4.89543 24 4 23.1046 4 22V17C4 15.8954 4.89543 15 6 15Z" fill="#0F131A"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M33 4H35C36.1046 4 37 4.89543 37 6V22C37 23.1046 36.1046 24 35 24H33C31.8954 24 31 23.1046 31 22V6C31 4.89543 31.8954 4 33 4Z" fill="#0F131A"/>
+                </svg>
+            </div>
+            <div class="wifi-signal-icon">
+                <svg width="32" height="28" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.2654 17.8792C17.5444 17.8792 18.7872 18.2152 19.8822 18.8561L20.3259 19.1157C20.6623 19.3126 20.7214 19.7733 20.4456 20.0483L16.6575 23.826C16.4248 24.058 16.0475 24.058 15.8148 23.826L12.051 20.0726C11.7765 19.7988 11.8337 19.3404 12.1672 19.1421L12.6059 18.8813C13.711 18.2242 14.9695 17.8792 16.2654 17.8792Z" fill="#0F131A"/>
+                    <path d="M16.2653 10.9397C19.447 10.9397 22.5018 11.9952 24.9904 13.9498L25.3421 14.2261C25.6225 14.4463 25.6471 14.8613 25.3948 15.113L23.1332 17.3682C22.924 17.5768 22.5931 17.6008 22.3559 17.4245L22.0802 17.2196C20.3994 15.9705 18.3727 15.3004 16.2653 15.3004C14.145 15.3004 12.1065 15.9788 10.4201 17.2423L10.1441 17.4491C9.90692 17.6268 9.57473 17.6034 9.36493 17.3942L7.10421 15.1397C6.85236 14.8886 6.87627 14.4746 7.15537 14.254L7.50508 13.9775C9.99957 12.0055 13.0683 10.9397 16.2653 10.9397Z" fill="#0F131A"/>
+                    <path d="M16.2654 4C21.3148 4 26.1435 5.78114 29.9655 9.04589L30.2918 9.32455C30.5554 9.54976 30.571 9.95115 30.3255 10.1959L28.0713 12.4439C27.8529 12.6617 27.5038 12.6769 27.2671 12.479L26.988 12.2457C23.9788 9.72943 20.2071 8.36071 16.2654 8.36071C12.3103 8.36071 8.52654 9.73886 5.51282 12.2708L5.2336 12.5054C4.99699 12.7042 4.64717 12.6893 4.4284 12.4711L2.17451 10.2235C1.92939 9.97907 1.94447 9.57836 2.20729 9.35293L2.53228 9.07417C6.35905 5.79178 11.2011 4 16.2654 4Z" fill="#0F131A"/>
+                </svg>
+            </div>
+            <div class="battery-icon">
+                <svg width="50" height="28" viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M48 10C49.1046 10 50 10.8954 50 12V16C50 17.1046 49.1046 18 48 18V10Z" fill="#0F131A"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2H40C43.3137 2 46 4.68629 46 8V20C46 23.3137 43.3137 26 40 26H6C2.68629 26 0 23.3137 0 20V8C0 4.68629 2.68629 2 6 2ZM6 4C3.79086 4 2 5.79086 2 8V20C2 22.2091 3.79086 24 6 24H40C42.2091 24 44 22.2091 44 20V8C44 5.79086 42.2091 4 40 4H6Z" fill="#0F131A"/>
+                    <rect x="4" y="6" width="38" height="16" rx="2" fill="#0F131A"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="nav-bar">
+        <div class="nav-back-button">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M33.0597 38.9402C33.3246 39.2245 33.4689 39.6006 33.462 39.9892C33.4552 40.3778 33.2977 40.7486 33.0229 41.0234C32.7481 41.2981 32.3773 41.4555 31.9887 41.4623C31.6001 41.4692 31.224 41.325 30.9397 41.06L14.9397 25.06C14.6588 24.7789 14.501 24.3977 14.501 24.0002C14.501 23.6027 14.6588 23.2214 14.9397 22.94L30.9397 6.94018C31.224 6.67522 31.6001 6.53097 31.9887 6.53783C32.3773 6.54469 32.7481 6.70211 33.0229 6.97694C33.2977 7.25176 33.4552 7.62253 33.462 8.01114C33.4689 8.39974 33.3246 8.77583 33.0597 9.06018L18.1217 24.0002L33.0617 38.9402H33.0597Z" fill="#0F131A"/>
+            </svg>
+        </div>
+        <div class="search-box">
+            <div class="search-params">
+                <span class="hotel-location">杭州</span>
+                <div class="date-info">
+                    <div class="date-row"><span class="date-label">住</span><span class="date-value">01-12</span></div>
+                    <div class="date-row"><span class="date-label">离</span><span class="date-value">01-13</span></div>
+                </div>
+                <div class="occupancy-info">
+                    <div class="occupancy-row"><span class="occupancy-value">1</span><span class="occupancy-unit">间</span></div>
+                    <div class="occupancy-row"><span class="occupancy-value">2</span><span class="occupancy-unit">人</span></div>
+                </div>
+            </div>
+            <div class="search-divider"></div>
+            <div class="search-input-placeholder">试试“杭州西湖”</div>
+        </div>
+        <div class="nav-icons">
+             <div class="nav-icon" id="toggle-view-btn">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M41.0625 17.9999C42.408 17.9999 43.5 19.1399 43.5 20.5454V35.2304C43.5 36.5339 42.8175 37.7324 41.721 38.3579L34.596 42.4154C33.6026 42.985 32.4853 43.3036 31.3409 43.3436C30.1966 43.3836 29.0597 43.1438 28.029 42.6449L20.4765 39.0059C19.9032 38.7283 19.2745 38.5841 18.6375 38.5841C18.0005 38.5841 17.3718 38.7283 16.7985 39.0059L7.959 43.2659C7.64043 43.4198 7.29126 43.4998 6.9375 43.4999C5.592 43.4999 4.5 42.3599 4.5 40.9544V23.6549C4.5 22.1219 5.4405 20.7599 6.834 20.2754L8.424 19.7204C9.192 19.4549 10.02 19.8869 10.275 20.6864C10.53 21.4874 10.116 22.3514 9.3495 22.6184L7.7595 23.1734C7.66074 23.2092 7.57551 23.2747 7.51559 23.3609C7.45567 23.4472 7.42402 23.5499 7.425 23.6549V40.1609L15.573 36.2339C16.5284 35.7715 17.5761 35.5312 18.6375 35.5312C19.6989 35.5312 20.7466 35.7715 21.702 36.2339L29.2545 39.8744C30.5145 40.4819 31.9755 40.4294 33.195 39.7364L40.32 35.6774C40.3981 35.632 40.4628 35.5667 40.5076 35.4882C40.5524 35.4097 40.5756 35.3208 40.575 35.2304V21.2519L39.5745 21.5999C38.8095 21.8669 37.98 21.4349 37.725 20.6354C37.47 19.8344 37.884 18.9704 38.6505 18.7034L40.2915 18.1334C40.5405 18.0449 40.8015 18.0014 41.0625 18.0014V17.9999ZM32.4915 7.56295C37.17 12.3059 37.17 19.9874 32.4915 24.7304C31.8915 25.3394 31.362 25.8254 30.1965 26.8709L30.1725 26.8934C29.0265 27.9209 28.5375 28.3739 27.993 28.9244C27.573 29.3519 26.943 30.0524 26.1195 31.0199C25.8583 31.3271 25.5335 31.5737 25.1675 31.7429C24.8015 31.9121 24.4032 31.9997 24 31.9997C23.5968 31.9997 23.1985 31.9121 22.8325 31.7429C22.4665 31.5737 22.1417 31.3271 21.8805 31.0199C21.0645 30.0614 20.445 29.3684 20.028 28.9469C19.4805 28.3919 18.9885 27.9359 17.838 26.9039L17.736 26.8124C16.647 25.8344 16.098 25.3274 15.5085 24.7304C10.83 19.9874 10.83 12.3059 15.5085 7.56295C16.6161 6.43446 17.9375 5.53805 19.3955 4.92612C20.8535 4.3142 22.4188 3.99902 24 3.99902C25.5812 3.99902 27.1465 4.3142 28.6045 4.92612C30.0625 5.53805 31.3839 6.43446 32.4915 7.56295ZM17.7345 9.77245C14.262 13.2914 14.262 19.0019 17.7345 22.5209C18.264 23.0579 18.78 23.5364 19.8225 24.4709L19.9245 24.5624C21.1245 25.6394 21.645 26.1209 22.254 26.7374C22.6845 27.1739 23.265 27.8174 24 28.6754C24.7455 27.8084 25.332 27.1574 25.767 26.7149L26.067 26.4164C26.7252 25.7791 27.3984 25.1574 28.086 24.5519L28.1115 24.5294C29.2275 23.5274 29.7255 23.0684 30.2655 22.5194C33.738 19.0019 33.738 13.2914 30.2655 9.77245C29.4486 8.93929 28.4736 8.27744 27.3978 7.82562C26.322 7.37379 25.1669 7.14107 24 7.14107C22.8331 7.14107 21.678 7.37379 20.6022 7.82562C19.5264 8.27744 18.5514 8.93929 17.7345 9.77245ZM24 13.0004C24.7956 13.0004 25.5587 13.3165 26.1213 13.8791C26.6839 14.4417 27 15.2048 27 16.0004C27 16.7961 26.6839 17.5592 26.1213 18.1218C25.5587 18.6844 24.7956 19.0004 24 19.0004C23.2044 19.0004 22.4413 18.6844 21.8787 18.1218C21.3161 17.5592 21 16.7961 21 16.0004C21 15.2048 21.3161 14.4417 21.8787 13.8791C22.4413 13.3165 23.2044 13.0004 24 13.0004Z" fill="#0F131A"/>
+                </svg>
+            </div>
+            <div class="nav-icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25.9992 20.535C26.9182 21.0653 27.5889 21.939 27.8637 22.9638C28.1385 23.9886 27.995 25.0806 27.4647 25.9996C26.9344 26.9185 26.0608 27.5892 25.036 27.864C24.0112 28.1389 22.9192 27.9953 22.0002 27.465C21.0812 26.9347 20.4106 26.0611 20.1357 25.0363C19.8609 24.0115 20.0044 22.9195 20.5347 22.0005C21.065 21.0816 21.9387 20.4109 22.9634 20.1361C23.9882 19.8612 25.0802 20.0047 25.9992 20.535ZM37.9992 19.9996C39.0602 19.9996 40.0778 20.421 40.828 21.1713C41.5782 21.9215 41.9997 22.9391 41.9997 24C41.9997 25.061 41.5782 26.0786 40.828 26.8288C40.0778 27.5791 39.0602 28.0005 37.9992 28.0005C36.9382 28.0005 35.9207 27.5791 35.1704 26.8288C34.4202 26.0786 33.9987 25.061 33.9987 24C33.9987 22.9391 34.4202 21.9215 35.1704 21.1713C35.9207 20.421 36.9382 19.9996 37.9992 19.9996ZM11.9997 20.5365C12.4663 20.793 12.8771 21.1401 13.2079 21.5574C13.5386 21.9747 13.7827 22.4538 13.9259 22.9666C14.0691 23.4795 14.1085 24.0158 14.0417 24.5441C13.9749 25.0724 13.8034 25.582 13.5371 26.0431C13.2708 26.5042 12.9151 26.9075 12.4909 27.2294C12.0667 27.5512 11.5825 27.7851 11.0667 27.9174C10.5509 28.0497 10.0139 28.0777 9.4872 27.9998C8.96046 27.9219 8.45458 27.7395 7.99921 27.4636C7.1044 26.9212 6.45769 26.0499 6.19772 25.0363C5.93775 24.0228 6.08521 22.9478 6.6085 22.0417C7.13178 21.1356 7.98924 20.4706 8.99703 20.1892C10.0048 19.9079 11.0828 20.0326 11.9997 20.5365Z" fill="#0F131A"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="filter-bar-top" id="filter-bar-top-container">
+        <div class="filter-option" id="filter-recommend">
+            <span>推荐排序</span>
+            <div class="arrow-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg>
+            </div>
+        </div>
+        <div class="filter-option"><span>位置距离</span><div class="arrow-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg></div></div>
+        <div class="filter-option"><span>价格星级</span><div class="arrow-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg></div></div>
+        <div class="filter-option"><span>筛选</span><div class="arrow-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg></div></div>
+    </div>
+    <div class="filter-bar-quick">
+        <div class="quick-filter-tag">
+            <img class="hot-deal-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01hbLw2J292dcMBPU28_!!6000000008010-2-tps-90-90.png" alt="">
+            <span>热门优惠</span>
+            <div class="arrow-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.3029 8.25142C17.4554 8.24051 17.6077 8.2765 17.7392 8.35456C17.8707 8.43262 17.9752 8.54903 18.0387 8.68817C18.1022 8.8273 18.1216 8.98253 18.0944 9.13302C18.0672 9.28352 17.9946 9.4221 17.8864 9.53017L12.5839 14.8334C12.5142 14.9032 12.4315 14.9585 12.3404 14.9962C12.2494 15.034 12.1518 15.0534 12.0532 15.0534C11.9547 15.0534 11.8571 15.034 11.766 14.9962C11.675 14.9585 11.5923 14.9032 11.5226 14.8334L6.21936 9.53092C6.11425 9.42607 6.04262 9.29239 6.01355 9.14679C5.98447 9.0012 5.99926 8.85025 6.05605 8.71308C6.11283 8.5759 6.20905 8.45866 6.33252 8.37621C6.45599 8.29376 6.60115 8.24981 6.74961 8.24992H17.2496C17.2676 8.24992 17.2856 8.24992 17.3029 8.25142Z" fill="#0F131A"/></svg></div>
+        </div>
+        <div class="quick-filter-tag"><span>热门品牌</span><div class="arrow-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.3029 8.25142C17.4554 8.24051 17.6077 8.2765 17.7392 8.35456C17.8707 8.43262 17.9752 8.54903 18.0387 8.68817C18.1022 8.8273 18.1216 8.98253 18.0944 9.13302C18.0672 9.28352 17.9946 9.4221 17.8864 9.53017L12.5839 14.8334C12.5142 14.9032 12.4315 14.9585 12.3404 14.9962C12.2494 15.034 12.1518 15.0534 12.0532 15.0534C11.9547 15.0534 11.8571 15.034 11.766 14.9962C11.675 14.9585 11.5923 14.9032 11.5226 14.8334L6.21936 9.53092C6.11425 9.42607 6.04262 9.29239 6.01355 9.14679C5.98447 9.0012 5.99926 8.85025 6.05605 8.71308C6.11283 8.5759 6.20905 8.45866 6.33252 8.37621C6.45599 8.29376 6.60115 8.24981 6.74961 8.24992H17.2496C17.2676 8.24992 17.2856 8.24992 17.3029 8.25142Z" fill="#0F131A"/></svg></div></div>
+        <div class="quick-filter-tag"><span>里程抵房费</span></div>
+        <div class="quick-filter-tag"><span>钟点房</span></div>
+        <div class="quick-filter-tag"><span>湖畔美居</span></div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleViewBtn = document.getElementById('toggle-view-btn');
+    const filterRecommend = document.getElementById('filter-recommend');
+    const filterBar = document.getElementById('filter-bar-top-container');
+    const originalIconSVG = toggleViewBtn.innerHTML;
+    const newIconSVG = `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 8.5C11.3284 8.5 12 9.17157 12 10C12 10.8284 11.3284 11.5 10.5 11.5H6.5C5.67157 11.5 5 10.8284 5 10C5 9.17157 5.67157 8.5 6.5 8.5H10.5Z" fill="#0F131A"/><path d="M10.5 22.5C11.3284 22.5 12 23.1716 12 24C12 24.8284 11.3284 25.5 10.5 25.5H6.5C5.67157 25.5 5 24.8284 5 24C5 23.1716 5.67157 22.5 6.5 22.5H10.5Z" fill="#0F131A"/><path d="M10.5 36.5C11.3284 36.5 12 37.1716 12 38C12 38.8284 11.3284 39.5 10.5 39.5H6.5C5.67157 39.5 5 38.8284 5 38C5 37.1716 5.67157 36.5 6.5 36.5H10.5Z" fill="#0F131A"/><path d="M41.5 8.5C42.3284 8.5 43 9.17157 43 10C43 10.8284 42.3284 11.5 41.5 11.5H17.5C16.6716 11.5 16 10.8284 16 10C16 9.17157 16.6716 8.5 17.5 8.5H41.5Z" fill="#0F131A"/><path d="M41.5 22.5C42.3284 22.5 43 23.1716 43 24C43 24.8284 42.3284 25.5 41.5 25.5H17.5C16.6716 25.5 16 24.8284 16 24C16 23.1716 16.6716 22.5 17.5 22.5H41.5Z" fill="#0F131A"/><path d="M41.5 36.5C42.3284 36.5 43 37.1716 43 38C43 38.8284 42.3284 39.5 41.5 39.5H17.5C16.6716 39.5 16 38.8284 16 38C16 37.1716 16.6716 36.5 17.5 36.5H41.5Z" fill="#0F131A"/></svg>`;
+    let isListView = false;
+    toggleViewBtn.addEventListener('click', () => {
+        if (!isListView) {
+            toggleViewBtn.innerHTML = newIconSVG;
+            filterRecommend.classList.add('hidden');
+            filterBar.style.justifyContent = 'space-around';
+        } else {
+            toggleViewBtn.innerHTML = originalIconSVG;
+            filterRecommend.classList.remove('hidden');
+            filterBar.style.justifyContent = 'space-between';
+        }
+        isListView = !isListView;
+    });
+});
+</script>
+</body>
+</html>

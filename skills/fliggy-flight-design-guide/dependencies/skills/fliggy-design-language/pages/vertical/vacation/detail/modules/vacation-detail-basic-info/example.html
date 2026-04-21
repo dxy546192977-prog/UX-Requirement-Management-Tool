@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>商详基础信息 · vacation-detail-basic-info</title>
+  <style>
+    body { margin: 0; background: #F2F3F5; padding: 24px 18px; display: flex; justify-content: center; font-family: 'PingFang SC', 'Alibaba Sans 102', sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .info-card {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 18px;
+      width: 714px;
+      background: #FFF;
+      border-radius: 12px;
+    }
+    .price-section { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .price-section__main { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
+    .price-section__label { font-size: 24px; line-height: 30px; color: #FF5533; }
+    .price-section__main-price { display: flex; align-items: flex-end; gap: 2px; color: #FF5533; }
+    .price-section__currency { font-family: 'Alibaba Sans 102', sans-serif; font-weight: 700; font-size: 24px; }
+    .price-section__amount { font-family: 'Alibaba Sans 102', sans-serif; font-weight: 700; font-size: 42px; line-height: 42px; }
+    .price-section__suffix { font-size: 24px; color: #FF5533; }
+    .price-section__sub-info { display: flex; align-items: center; gap: 12px; }
+    .price-section__original-price { font-size: 24px; text-decoration: line-through; color: #919499; }
+    .price-section__separator { width: 1px; height: 28px; background: rgba(145,148,153,0.5); }
+    .price-section__sales { font-size: 24px; color: #919499; }
+    .coupon-section { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 32px; }
+    .coupon-section__tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .coupon-tag {
+      padding: 4px 6px;
+      height: 32px;
+      box-sizing: border-box;
+      border: 1px solid rgba(255,85,51,0.5);
+      border-radius: 4px;
+      font-size: 24px;
+      line-height: 22px;
+      color: #FF5533;
+      display: flex;
+      align-items: center;
+    }
+    .coupon-section__action { font-weight: 500; font-size: 24px; color: #0F131A; display: flex; align-items: center; gap: 4px; }
+    .brand-section { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .brand-section__info { display: flex; align-items: center; gap: 6px; }
+    .brand-logo {
+      width: 107px;
+      height: 36px;
+      background: #FFE033;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #212121;
+    }
+    .brand-section__slogan { font-size: 22px; color: #919499; }
+    .brand-section__share { display: flex; align-items: center; gap: 4px; font-weight: 500; font-size: 24px; color: #919499; }
+    .title-section h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 44px;
+      color: #0F131A;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .guarantee-section { display: flex; align-items: center; width: 100%; height: 32px; text-decoration: none; color: inherit; }
+    .guarantee-section__label {
+      flex-shrink: 0;
+      min-width: 134px;
+      height: 32px;
+      background: #FFE033;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #0F131A;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+    .guarantee-section__content {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 12px;
+      height: 32px;
+      background: linear-gradient(90deg, #FFF9D8 50%, rgba(255,249,216,0) 100%);
+    }
+    .guarantee-section__content-text { font-size: 24px; color: #0F131A; }
+    .rating-section { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .rating-section__content { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .rating-score__badge {
+      padding: 0 8px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #6666FF 0%, #9999FF 100%);
+      border-radius: 8px;
+      color: #FFF;
+      font-family: 'Alibaba Sans 102', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+    }
+    .rating-score__text { font-weight: 600; font-size: 24px; color: #0F131A; }
+    .rating-section__separator { width: 2px; height: 24px; background: rgba(15,19,26,0.1); }
+    .rating-section__tagline { font-size: 24px; color: #919499; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ranking-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      min-height: 60px;
+      padding: 18px;
+      box-sizing: border-box;
+      background: linear-gradient(90deg, #FEF5EC 22%, rgba(254,245,236,0) 100%);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .ranking-section__content { display: flex; align-items: center; gap: 12px; }
+    .ranking-section__text { font-size: 24px; color: #805540; }
+  </style>
+</head>
+<body>
+  <section class="info-card">
+    <div class="price-section">
+      <div class="price-section__main">
+        <span class="price-section__label">券后价</span>
+        <div class="price-section__main-price">
+          <span class="price-section__currency">¥</span>
+          <strong class="price-section__amount">190.28</strong>
+        </div>
+        <span class="price-section__suffix">起</span>
+      </div>
+      <div class="price-section__sub-info">
+        <span class="price-section__original-price">¥103</span>
+        <div class="price-section__separator"></div>
+        <span class="price-section__sales">已售2102</span>
+      </div>
+    </div>
+    <div class="coupon-section">
+      <div class="coupon-section__tags">
+        <span class="coupon-tag">店铺¥10优惠券</span>
+        <span class="coupon-tag">平台¥10新人券</span>
+      </div>
+      <a href="#" class="coupon-section__action">查看 ›</a>
+    </div>
+    <div class="brand-section">
+      <div class="brand-section__info">
+        <div class="brand-logo" aria-hidden="true">飞猪</div>
+        <span class="brand-section__slogan">玩得酷 靠得住</span>
+      </div>
+      <a href="#" class="brand-section__share">分享 ›</a>
+    </div>
+    <div class="title-section">
+      <h1>设计稿标题示意 最多两行文案设计稿标题示意 最多两行文案</h1>
+    </div>
+    <a href="#" class="guarantee-section">
+      <span class="guarantee-section__label">安心出游保障</span>
+      <div class="guarantee-section__content">
+        <span class="guarantee-section__content-text">10秒出票·出票即用·无需取票</span>
+        <span aria-hidden="true">›</span>
+      </div>
+    </a>
+    <div class="rating-section">
+      <div class="rating-section__content">
+        <span class="rating-score__badge">4.8</span>
+        <strong class="rating-score__text">超棒</strong>
+        <div class="rating-section__separator"></div>
+        <span class="rating-section__tagline">出票快价格实惠</span>
+      </div>
+      <a href="#" aria-label="评价详情">›</a>
+    </div>
+    <a href="#" class="ranking-section">
+      <div class="ranking-section__content">
+        <span aria-hidden="true">🏆</span>
+        <span class="ranking-section__text">入选北京大牌乐园热销榜·第1名</span>
+      </div>
+      <span aria-hidden="true">›</span>
+    </a>
+  </section>
+</body>
+</html>

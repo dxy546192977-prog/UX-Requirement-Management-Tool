@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 目的地推荐（home-destination-recommendation）</title>
+  <style>
+@font-face {
+  font-family: "Fliggy Sans 102";
+  src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-white: #ffffff;
+  --color-pay-1: #ff5533;
+  --color-bg: #f2f3f5;
+  --color-indigo-1: #6666ff;
+  --radius-m: 12px;
+  --radius-l: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px 0;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-home-dest-rec {
+  box-sizing: border-box;
+  width: 750px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.fdl-home-dest-rec__filters {
+  display: flex;
+  margin-bottom: 18px;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fdl-home-dest-rec__pill {
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0 18px;
+  border: 2px solid transparent;
+  border-radius: 30px;
+  background: color-mix(in srgb, var(--color-darkgray) 6%, transparent);
+  font-family: inherit;
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--color-midgray);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.fdl-home-dest-rec__pill--active {
+  border-color: var(--color-indigo-1);
+  background: var(--color-white);
+  color: var(--color-indigo-1);
+}
+
+.fdl-home-feeds {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+}
+
+.fdl-home-feeds__col {
+  display: flex;
+  width: 336px;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fdl-home-feeds__card {
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  background: var(--color-white);
+}
+
+.fdl-home-feeds__img {
+  width: 336px;
+  height: 336px;
+  background: var(--color-bg) center / cover no-repeat;
+  border-radius: var(--radius-m) var(--radius-m) 0 0;
+}
+
+.fdl-home-feeds__body {
+  padding: 12px 12px 18px;
+}
+
+.fdl-home-feeds__title {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-home-feeds__price-row {
+  display: flex;
+  margin-top: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.fdl-home-feeds__price {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  color: var(--color-pay-1);
+}
+
+.fdl-home-feeds__yen {
+  font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.fdl-home-feeds__num {
+  font-family: "Fliggy Sans 102", "PingFang SC", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fdl-home-feeds__suffix {
+  font-size: 20px;
+}
+
+.fdl-home-feeds__sales {
+  font-size: 20px;
+  color: var(--color-midgray);
+}
+  </style>
+</head>
+<body>
+  <section class="fdl-home-dest-rec" aria-label="猜你喜欢">
+    <div class="fdl-home-dest-rec__filters" role="tablist" aria-label="推荐筛选">
+      <button type="button" class="fdl-home-dest-rec__pill fdl-home-dest-rec__pill--active" role="tab" aria-selected="true">猜你喜欢</button>
+      <button type="button" class="fdl-home-dest-rec__pill" role="tab" aria-selected="false">一口特价</button>
+      <button type="button" class="fdl-home-dest-rec__pill" role="tab" aria-selected="false">好口碑</button>
+      <button type="button" class="fdl-home-dest-rec__pill" role="tab" aria-selected="false">近期热点</button>
+      <button type="button" class="fdl-home-dest-rec__pill" role="tab" aria-selected="false">观景列车</button>
+      <button type="button" class="fdl-home-dest-rec__pill" role="tab" aria-selected="false">景点</button>
+    </div>
+
+    <div class="fdl-home-feeds">
+      <div class="fdl-home-feeds__col">
+        <article class="fdl-home-feeds__card">
+          <div
+            class="fdl-home-feeds__img"
+            style="background-image: url('https://fli.alicdn.com/upload/creative-platform/baiCQNYw5L4bd1d0434df0165a.jpeg?x-oss-process=image/format,webp')"
+          ></div>
+          <div class="fdl-home-feeds__body">
+            <h3 class="fdl-home-feeds__title">目的地推荐示例商品 A</h3>
+            <div class="fdl-home-feeds__price-row">
+              <div class="fdl-home-feeds__price">
+                <span class="fdl-home-feeds__yen">¥</span><span class="fdl-home-feeds__num">299</span><span class="fdl-home-feeds__suffix">起</span>
+              </div>
+              <span class="fdl-home-feeds__sales">月销 100+</span>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="fdl-home-feeds__col">
+        <article class="fdl-home-feeds__card">
+          <div
+            class="fdl-home-feeds__img"
+            style="background-image: url('https://fli.alicdn.com/upload/creative-platform/TUcdJI9fYS4bd1d0434df0165a.jpeg?x-oss-process=image/format,webp')"
+          ></div>
+          <div class="fdl-home-feeds__body">
+            <h3 class="fdl-home-feeds__title">目的地推荐示例商品 B</h3>
+            <div class="fdl-home-feeds__price-row">
+              <div class="fdl-home-feeds__price">
+                <span class="fdl-home-feeds__yen">¥</span><span class="fdl-home-feeds__num">459</span><span class="fdl-home-feeds__suffix">起</span>
+              </div>
+              <span class="fdl-home-feeds__sales">月销 56 笔</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <script>
+(function () {
+  var pills = document.querySelectorAll(".fdl-home-dest-rec__pill");
+  pills.forEach(function (p) {
+    p.addEventListener("click", function () {
+      pills.forEach(function (x) {
+        x.classList.remove("fdl-home-dest-rec__pill--active");
+        x.setAttribute("aria-selected", "false");
+      });
+      p.classList.add("fdl-home-dest-rec__pill--active");
+      p.setAttribute("aria-selected", "true");
+    });
+  });
+})();
+  </script>
+</body>
+</html>

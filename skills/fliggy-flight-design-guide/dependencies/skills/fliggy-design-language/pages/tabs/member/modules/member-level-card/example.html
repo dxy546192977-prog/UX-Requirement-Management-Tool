@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>会员等级概览卡 — member-level-card</title>
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-weight: 500;
+      font-display: swap;
+    }
+    :root {
+      --color-darkgray: #0f131a;
+      --color-lightgray: #919499;
+      --color-bg: #f2f3f5;
+      --color-white: #ffffff;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --color-text-primary: var(--color-darkgray);
+      --color-text-secondary: var(--color-lightgray);
+      --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--color-bg);
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+    .fdl-member-level-card {
+      width: 690px;
+      max-width: 100%;
+      background: var(--color-white);
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+    .fdl-member-level-card__top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0 12px;
+      gap: 12px;
+    }
+    .fdl-member-level-card__user-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0 0 0 24px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .fdl-member-level-card__avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .fdl-member-level-card__avatar-wrap {
+      position: relative;
+      width: 68px;
+      height: 68px;
+    }
+    .fdl-member-level-card__avatar {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      object-fit: cover;
+    }
+    .fdl-member-level-card__level-badge {
+      position: absolute;
+      left: 10px;
+      top: 40px;
+      min-width: 48px;
+      height: 28px;
+      padding: 0 8px;
+      background: linear-gradient(180deg, #929292 0%, #4c4b53 100%);
+      border: 2px solid rgba(255, 255, 255, 0.32);
+      border-radius: 12px;
+      color: #fff;
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fdl-member-level-card__progress-block {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .fdl-member-level-card__progress-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .fdl-member-level-card__track {
+      position: relative;
+      width: 88px;
+      height: 12px;
+      background: rgba(15, 19, 26, 0.1);
+      border-radius: 12px;
+    }
+    .fdl-member-level-card__fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 12px;
+      width: 64.9%;
+      background: #9195a5;
+      border-radius: 12px;
+    }
+    .fdl-member-level-card__progress-num {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-size: 22px;
+      line-height: 26px;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-level-card__expiry {
+      font-size: 22px;
+      line-height: 26px;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-level-card__stats {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    .fdl-member-level-card__stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 22px;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__stat-val {
+      font-family: "Fliggy Sans 102", "PingFang SC", "SimHei", sans-serif;
+      font-size: 30px;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__stat-val--sm {
+      font-size: 24px;
+    }
+    .fdl-member-level-card__level-art {
+      position: relative;
+      width: 162px;
+      height: 127px;
+    }
+    .fdl-member-level-card__level-art-bg {
+      position: absolute;
+      width: 160px;
+      height: 170px;
+      left: -6px;
+      top: -20px;
+      opacity: 0.2;
+      filter: blur(1.5px);
+      background: rgba(96, 96, 96, 0.2);
+      border: 2.8px solid #606060;
+      border-radius: 20px;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__level-art-img {
+      position: absolute;
+      width: 156px;
+      height: 109px;
+      left: -12px;
+      top: 6px;
+      object-fit: contain;
+    }
+    .fdl-member-level-card__benefits {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__benefit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 135px;
+      text-align: center;
+    }
+    .fdl-member-level-card__benefit-icon {
+      position: relative;
+      width: 71px;
+      height: 64px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .fdl-member-level-card__benefit-icon-inner {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #efd0a4 0%, #e8c48f 100%);
+    }
+    .fdl-member-level-card__benefit-label {
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__lock {
+      position: absolute;
+      right: -6px;
+      top: -4px;
+      width: 38px;
+      height: 38px;
+    }
+    .fdl-member-level-card__lock-bg {
+      position: absolute;
+      inset: 0;
+      background: #eeeff1;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__lock-body {
+      position: absolute;
+      left: 10px;
+      top: 16px;
+      width: 17px;
+      height: 13px;
+      background: #919499;
+      border-radius: 2px;
+    }
+    .fdl-member-level-card__lock-shackle {
+      position: absolute;
+      left: 13px;
+      top: 8px;
+      width: 10px;
+      height: 8px;
+      border: 3px solid #919499;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__more {
+      position: relative;
+      width: 78px;
+      min-height: 103px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      line-height: 1.2;
+      color: var(--color-text-secondary);
+      opacity: 0.65;
+      cursor: pointer;
+    }
+    .fdl-member-level-card__tasks {
+      position: relative;
+      padding: 0 0 18px;
+      border-radius: 0 0 var(--radius-l) var(--radius-l);
+      overflow: hidden;
+    }
+    .fdl-member-level-card__tasks-scroll {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      padding: 0 18px;
+      gap: 18px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .fdl-member-level-card__tasks-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .fdl-member-level-card__tasks-fade {
+      position: absolute;
+      width: 36px;
+      height: 100%;
+      right: 0;
+      top: 0;
+      background: linear-gradient(to left, var(--color-white), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+    .fdl-member-level-card__task {
+      flex: 0 0 413px;
+      max-width: calc(100vw - 80px);
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      gap: 18px;
+      background: #fff5eb;
+      border-radius: var(--radius-m);
+      box-sizing: border-box;
+    }
+    .fdl-member-level-card__task-title {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__task-sub {
+      font-size: 22px;
+      color: var(--color-text-secondary);
+      font-weight: 400;
+    }
+    .fdl-member-level-card__task-body {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      width: 100%;
+    }
+    .fdl-member-level-card__task-reward {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .fdl-member-level-card__task-icon {
+      flex-shrink: 0;
+      width: 109px;
+      height: 109px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffd5ac 0%, #ebc287 100%);
+    }
+    .fdl-member-level-card__task-text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-level-card__task-text p {
+      margin: 0;
+    }
+    .fdl-member-level-card__task-btn {
+      flex-shrink: 0;
+      width: 120px;
+      height: 48px;
+      border: none;
+      border-radius: 42px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      background: linear-gradient(91deg, #f0c990 4.43%, #ffe2b8 99.39%);
+    }
+  </style>
+</head>
+<body>
+  <article class="fdl-member-level-card" aria-label="会员等级与权益">
+    <div class="fdl-member-level-card__top">
+      <div class="fdl-member-level-card__user-row">
+        <div class="fdl-member-level-card__details">
+          <div class="fdl-member-level-card__avatar-row">
+            <div class="fdl-member-level-card__avatar-wrap">
+              <img class="fdl-member-level-card__avatar" src="https://gw.alicdn.com/imgextra/i2/O1CN014DNuYv1vK87nB30K5_!!6000000006153-2-tps-68-68.png" alt="用户头像" width="68" height="68" />
+              <span class="fdl-member-level-card__level-badge">F1</span>
+            </div>
+            <div class="fdl-member-level-card__progress-block">
+              <div class="fdl-member-level-card__progress-line">
+                <div class="fdl-member-level-card__track" aria-hidden="true">
+                  <div class="fdl-member-level-card__fill"></div>
+                </div>
+                <div class="fdl-member-level-card__progress-num">
+                  <span>12980/20000</span>
+                </div>
+              </div>
+              <div class="fdl-member-level-card__expiry">2025/04/30到期</div>
+            </div>
+          </div>
+          <div class="fdl-member-level-card__stats">
+            <div class="fdl-member-level-card__stat">
+              <span>里程</span>
+              <span class="fdl-member-level-card__stat-val">2200</span>
+            </div>
+            <div class="fdl-member-level-card__stat">
+              <span>购物金</span>
+              <span class="fdl-member-level-card__stat-val fdl-member-level-card__stat-val--sm">¥600</span>
+            </div>
+          </div>
+        </div>
+        <div class="fdl-member-level-card__level-art" aria-hidden="true">
+          <div class="fdl-member-level-card__level-art-bg"></div>
+          <img class="fdl-member-level-card__level-art-img" src="https://gw.alicdn.com/imgextra/i2/O1CN01Q9o1Ts1gtCDD90f39_!!6000000004199-2-tps-324-254.png" alt="" width="156" height="109" />
+        </div>
+      </div>
+      <div class="fdl-member-level-card__benefits">
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">里程抵现</span>
+        </div>
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <div class="fdl-member-level-card__lock" aria-label="未解锁">
+              <div class="fdl-member-level-card__lock-bg"></div>
+              <div class="fdl-member-level-card__lock-body"></div>
+              <div class="fdl-member-level-card__lock-shackle"></div>
+            </div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">贵宾厅4次</span>
+        </div>
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <div class="fdl-member-level-card__lock" aria-label="未解锁">
+              <div class="fdl-member-level-card__lock-bg"></div>
+              <div class="fdl-member-level-card__lock-body"></div>
+              <div class="fdl-member-level-card__lock-shackle"></div>
+            </div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">火车票无忧退</span>
+        </div>
+        <div class="fdl-member-level-card__benefit">
+          <div class="fdl-member-level-card__benefit-icon">
+            <div class="fdl-member-level-card__benefit-icon-inner" aria-hidden="true"></div>
+            <div class="fdl-member-level-card__lock" aria-label="未解锁">
+              <div class="fdl-member-level-card__lock-bg"></div>
+              <div class="fdl-member-level-card__lock-body"></div>
+              <div class="fdl-member-level-card__lock-shackle"></div>
+            </div>
+          </div>
+          <span class="fdl-member-level-card__benefit-label">酒店买贵赔</span>
+        </div>
+        <button type="button" class="fdl-member-level-card__more">更<br />多</button>
+      </div>
+    </div>
+    <div class="fdl-member-level-card__tasks">
+      <div class="fdl-member-level-card__tasks-scroll">
+        <div class="fdl-member-level-card__task">
+          <div class="fdl-member-level-card__task-title">预订机票，加速升级</div>
+          <div class="fdl-member-level-card__task-body">
+            <div class="fdl-member-level-card__task-reward">
+              <div class="fdl-member-level-card__task-icon" aria-hidden="true"></div>
+              <div class="fdl-member-level-card__task-text">
+                <p>得升级加速卡</p>
+                <p>30天可加速5倍</p>
+              </div>
+            </div>
+            <button type="button" class="fdl-member-level-card__task-btn">去完成</button>
+          </div>
+        </div>
+        <div class="fdl-member-level-card__task">
+          <div class="fdl-member-level-card__task-title">
+            预订机票，加速升级
+            <span class="fdl-member-level-card__task-sub">金额需达2000</span>
+          </div>
+          <div class="fdl-member-level-card__task-body">
+            <div class="fdl-member-level-card__task-reward">
+              <div class="fdl-member-level-card__task-icon" aria-hidden="true"></div>
+              <div class="fdl-member-level-card__task-text">
+                <p>完成任务得里程</p>
+                <p>+200里程</p>
+              </div>
+            </div>
+            <button type="button" class="fdl-member-level-card__task-btn">去完成</button>
+          </div>
+        </div>
+      </div>
+      <div class="fdl-member-level-card__tasks-fade" aria-hidden="true"></div>
+    </div>
+  </article>
+</body>
+</html>
