@@ -1010,6 +1010,31 @@
     }
     @keyframes ai-spin { to { transform: rotate(360deg); } }
 
+    /* 进度条 + 时间预估 */
+    .ai-progress-wrap {
+      margin-bottom: 14px;
+    }
+    .ai-progress-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .ai-progress-meta .ai-progress-pct {
+      font-weight: 600; color: var(--accent-cyan);
+    }
+    .ai-progress-meta .ai-progress-eta {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .ai-progress-track {
+      height: 4px; background: rgba(255,255,255,0.06);
+      border-radius: 99px; overflow: hidden;
+    }
+    .ai-progress-bar {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent-cyan), #4f8cff);
+      transition: width 1s ease;
+      box-shadow: 0 0 6px rgba(34,211,238,0.4);
+    }
+
     /* 摘要 */
     .ai-summary {
       padding: 12px 14px; background: rgba(167,139,250,0.06);
@@ -2119,10 +2144,16 @@ function parseYuquePastedText(rawText) {
  * Try to fetch doc info from Yuque API via proxy (optional enhancement).
  */
 const DEFAULT_API_BASE = "http://121.41.229.77:3001";
-// API_BASE points to shared backend; can be overridden by window.API_BASE
+const LOCAL_API_BASE = "http://localhost:3001";
+// API_BASE 自动检测：本地访问时优先用 localhost:3001（内网语雀可用），否则用 ECS 公网地址
 const API_BASE = (function() {
   try {
-    return window.API_BASE || DEFAULT_API_BASE;
+    if (window.API_BASE) return window.API_BASE;
+    var host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return LOCAL_API_BASE;
+    }
+    return DEFAULT_API_BASE;
   } catch (e) {
     return DEFAULT_API_BASE;
   }
@@ -2774,6 +2805,25 @@ function renderAiDesignSection(req) {
     + (ai.updated_at ? '<span style="margin-left:auto;font-size:11px;opacity:0.6">' + ai.updated_at.slice(0, 16).replace('T', ' ') + '</span>' : '')
     + '</div>';
 
+  // 进度条 + 时间预估（仅在运行中时展示）
+  if (isRunning) {
+    var progressInfo = _calcAiProgress(ai);
+    html += '<div class="ai-progress-wrap" id="ai-progress-wrap-' + req.id + '">'
+      + '<div class="ai-progress-meta">'
+      + '<span class="ai-progress-pct" id="ai-progress-pct-' + req.id + '">' + progressInfo.pct + '%</span>'
+      + '<span class="ai-progress-eta">'
+      + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+      + '<span id="ai-progress-eta-' + req.id + '">' + progressInfo.eta + '</span>'
+      + '</span>'
+      + '</div>'
+      + '<div class="ai-progress-track">'
+      + '<div class="ai-progress-bar" id="ai-progress-bar-' + req.id + '" style="width:' + progressInfo.pct + '%"></div>'
+      + '</div>'
+      + '</div>';
+    // 启动进度条自动推进
+    _startProgressTick(req.id, ai);
+  }
+
   // 失败原因
   if (ai.status === 'failed' && ai.last_error) {
     html += '<div style="font-size:12px;color:var(--accent-red);padding:8px 12px;'
@@ -2838,6 +2888,108 @@ function _stageLabel(stage) {
     planning:     '正在生成设计方案…'
   };
   return map[stage] || 'AI 处理中…';
+}
+
+/**
+ * 根据当前阶段计算进度百分比和预估剩余时间
+ * 各阶段预估耗时（秒）：fetching_prd=15, decomposing=30, planning=60，总计约 105s
+ */
+function _calcAiProgress(ai) {
+  // 各阶段在整体进度中的区间 [start%, end%]
+  var stageRanges = {
+    fetching_prd: [2,  25],
+    decomposing:  [25, 60],
+    planning:     [60, 92]
+  };
+  // 各阶段预估持续秒数
+  var stageDurations = {
+    fetching_prd: 15,
+    decomposing:  30,
+    planning:     60
+  };
+  // 总预估秒数
+  var totalEstSec = 105;
+
+  var stage = ai.stage || (ai.status === 'queued' ? 'queued' : 'fetching_prd');
+
+  // queued 状态：固定 2%，显示"等待中"
+  if (ai.status === 'queued' || !stageRanges[stage]) {
+    return { pct: 2, eta: '预计约 2 分钟' };
+  }
+
+  var range = stageRanges[stage];
+  var stageSec = stageDurations[stage] || 30;
+
+  // 用 updated_at 估算当前阶段已过去的时间
+  var elapsedInStage = 0;
+  if (ai.updated_at) {
+    var updatedMs = new Date(ai.updated_at).getTime();
+    elapsedInStage = Math.max(0, (Date.now() - updatedMs) / 1000);
+  }
+
+  var stageProgress = Math.min(elapsedInStage / stageSec, 0.95);
+  var pct = Math.round(range[0] + stageProgress * (range[1] - range[0]));
+  pct = Math.min(pct, 92); // 未完成时最多到 92%
+
+  // 预估剩余时间
+  var remainSec = Math.max(0, totalEstSec - (pct / 100) * totalEstSec);
+  var etaText;
+  if (remainSec < 10) {
+    etaText = '即将完成…';
+  } else if (remainSec < 60) {
+    etaText = '预计还需约 ' + Math.ceil(remainSec) + ' 秒';
+  } else {
+    etaText = '预计还需约 ' + Math.ceil(remainSec / 60) + ' 分钟';
+  }
+
+  return { pct: pct, eta: etaText };
+}
+
+// 存储进度 tick 定时器，key 为 reqId
+var _progressTickTimers = {};
+
+/**
+ * 启动进度条自动推进（每秒更新一次 DOM，直到进度条元素消失）
+ */
+function _startProgressTick(reqId, ai) {
+  // 清除旧 timer
+  if (_progressTickTimers[reqId]) {
+    clearInterval(_progressTickTimers[reqId]);
+  }
+
+  _progressTickTimers[reqId] = setInterval(function() {
+    var barEl = document.getElementById('ai-progress-bar-' + reqId);
+    var pctEl = document.getElementById('ai-progress-pct-' + reqId);
+    var etaEl = document.getElementById('ai-progress-eta-' + reqId);
+
+    // 元素不存在说明 Modal 已关闭或状态已更新，停止 tick
+    if (!barEl || !pctEl || !etaEl) {
+      clearInterval(_progressTickTimers[reqId]);
+      delete _progressTickTimers[reqId];
+      return;
+    }
+
+    // 从最新的 req 数据重新计算
+    var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+    if (!req || !req.ai_design) {
+      clearInterval(_progressTickTimers[reqId]);
+      delete _progressTickTimers[reqId];
+      return;
+    }
+
+    var latestAi = req.ai_design;
+    var isStillRunning = latestAi.status === 'queued' || latestAi.status === 'processing';
+    if (!isStillRunning) {
+      clearInterval(_progressTickTimers[reqId]);
+      delete _progressTickTimers[reqId];
+      return;
+    }
+
+    var info = _calcAiProgress(latestAi);
+    barEl.style.width = info.pct + '%';
+    pctEl.textContent = info.pct + '%';
+    etaEl.textContent = info.eta;
+  }, 1000);
 }
 
 /**

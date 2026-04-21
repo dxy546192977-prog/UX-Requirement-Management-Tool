@@ -6,875 +6,310 @@
   <title>出票成功 - 飞猪</title>
   <style>
     @font-face {
-      font-family: 'Fliggy Sans 102';
-      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
-      font-weight: 500;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'Fliggy Fonts';
-      src: url('https://g.alicdn.com/trip/common-assets/1.1.31/fonts/FliggyFonts-MediumItalicVer0711.ttf') format('truetype');
-      font-weight: 500;
-      font-style: italic;
-      font-display: swap;
+      font-family: Fliggy-Sans;
+      src: url(https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf) format(truetype);
+      font-weight: 500; font-display: swap;
     }
     :root {
-      --color-darkgray: #0f131a;
-      --color-midgray: #5c5f66;
-      --color-lightgray: #919499;
-      --color-auxiliary: #d2d4d9;
-      --color-bg: #f2f3f5;
-      --color-label: #f7f8fa;
-      --color-white: #ffffff;
-      --color-brand-1: #ffe033;
-      --color-brand-2: #fffceb;
-      --color-brand-4: #fff7cc;
-      --color-indigo-1: #6666ff;
-      --color-indigo-4: #ebebff;
-      --color-warning-1: #ff3333;
-      --color-pay-1: #ff5533;
-      --color-pay-2: #ff8c1a;
-      --color-notice-tint: #fff6ee;
-      --color-green-0: #149aa8;
-      --color-safeguard-4: #fef5ec;
-      --color-safeguard-5: #5d3521;
-      --radius-l: 24px;
-      --radius-m: 12px;
-      --radius-s: 6px;
+      --c-dark: #0f131a; --c-mid: #5c5f66; --c-light: #919499;
+      --c-aux: #d2d4d9; --c-bg: #f2f3f5; --c-label: #f7f8fa;
+      --c-white: #ffffff; --c-brand: #ffe033;
+      --c-indigo: #6666ff; --c-pay1: #ff5533; --c-pay2: #ff8c1a;
+      --c-green: #149aa8; --r-l: 24px; --r-m: 12px; --r-s: 6px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body {
-      width: 750px;
-      background: var(--color-bg);
-      font-family: 'PingFang SC', 'SimHei', sans-serif;
-      color: var(--color-darkgray);
-      overflow-x: hidden;
-    }
-
-    /* ===== 状态栏 ===== */
-    .status-bar {
-      width: 750px;
-      height: 88px;
-      background: var(--color-brand-1);
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding: 0 25px 16px;
-    }
-    .status-time {
-      font-weight: 600;
-      font-size: 28px;
-      line-height: 34px;
-      color: var(--color-darkgray);
-      letter-spacing: -0.56px;
-    }
-    .status-icons { display: flex; align-items: center; gap: 10px; }
-
-    /* ===== 导航栏 ===== */
-    .nav-bar {
-      width: 750px;
-      height: 88px;
-      background: var(--color-brand-1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 36px;
-    }
-    .nav-back { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
-    .nav-actions { display: flex; align-items: center; gap: 0; }
-    .nav-action-item { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 48px; }
-    .nav-action-item .nav-icon { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
-    .nav-action-item .nav-label { font-size: 18px; font-weight: 400; color: var(--color-darkgray); line-height: 18px; }
-
-    /* ===== 页面主体 ===== */
-    .page-body { display: flex; flex-direction: column; gap: 18px; padding-bottom: 220px; }
-
-    /* ===== 头部 ===== */
-    .header-block {
-      width: 750px;
-      background: linear-gradient(180deg, #FFE033 0.84%, rgba(255,224,51,0.0001) 100%);
-      padding: 18px 36px 28px;
-    }
-    .header-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .header-title { font-size: 42px; font-weight: 500; line-height: 46px; color: var(--color-darkgray); }
-    .header-subtitle { font-size: 26px; font-weight: 400; color: var(--color-darkgray); line-height: 30px; }
-
-    /* ===== 航变卡 ===== */
-    .flight-change-card { width: 714px; margin: 0 18px; border-radius: var(--radius-m); overflow: hidden; }
-    .fc-top {
-      background: linear-gradient(0deg, rgba(255,242,240,0.6), rgba(255,242,240,0.6));
-      padding: 18px 24px;
-      border-radius: var(--radius-m) var(--radius-m) 0 0;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .fc-top-left { display: flex; align-items: center; gap: 8px; }
-    .delay-tag {
-      background: var(--color-pay-1); border-radius: var(--radius-s);
-      padding: 4px 8px; font-size: 22px; font-weight: 500; color: var(--color-white); white-space: nowrap;
-    }
-    .fc-title { font-size: 28px; font-weight: 500; color: var(--color-pay-1); line-height: 30px; }
-    .fc-btn {
-      border: 2px solid var(--color-auxiliary); border-radius: 36px;
-      padding: 10px 21px; font-size: 24px; font-weight: 500; color: var(--color-darkgray); white-space: nowrap;
-    }
-    .fc-bottom {
-      background: var(--color-white); padding: 18px 24px;
-      border-radius: 0 0 var(--radius-m) var(--radius-m);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .fc-info { font-size: 24px; font-weight: 400; color: var(--color-lightgray); line-height: 28px; }
-    .fc-link { display: flex; align-items: center; gap: 4px; font-size: 24px; font-weight: 400; color: var(--color-darkgray); }
-
-    /* ===== 出行前必读 ===== */
-    .notice-card {
-      width: 714px; margin: 0 18px;
-      background: var(--color-white); border-radius: var(--radius-m); padding: 18px 24px;
-    }
-    .notice-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .notice-left { display: flex; align-items: center; gap: 10px; }
-    .notice-title { font-size: 28px; font-weight: 500; color: var(--color-darkgray); line-height: 34px; }
-    .notice-count { font-size: 28px; font-weight: 500; color: var(--color-indigo-1); line-height: 34px; }
-    .notice-detail-btn {
-      border: 2px solid var(--color-auxiliary); border-radius: 36px;
-      padding: 10px 21px; font-size: 24px; font-weight: 500; color: var(--color-darkgray);
-    }
-    .notice-tags { display: flex; align-items: center; gap: 9px; }
-    .notice-tag { font-size: 24px; font-weight: 400; color: var(--color-midgray); line-height: 24px; }
-    .notice-sep { width: 1px; height: 20px; border-left: 2px solid var(--color-auxiliary); }
-
-    /* ===== 总额 / 退改签 / 权益 / 订单号 ===== */
-    .order-meta-block { width: 750px; background: var(--color-white); padding: 18px 0; display: flex; flex-direction: column; gap: 14px; }
-    .meta-row { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
-    .meta-label { font-size: 24px; font-weight: 400; color: var(--color-midgray); line-height: 28px; }
-    .meta-price {
-      font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
-      font-size: 24px; font-weight: 500; color: var(--color-darkgray);
-      display: flex; align-items: center; gap: 4px;
-    }
-    .meta-rules-link { font-size: 24px; font-weight: 500; color: var(--color-indigo-1); line-height: 26px; padding: 0 24px; }
-    .meta-cashback { display: flex; align-items: center; gap: 6px; padding: 0 24px; }
-    .cashback-tag {
-      background: var(--color-pay-1); border-radius: 4px;
-      padding: 2px 5px; font-size: 18px; font-weight: 500; color: var(--color-white);
-    }
-    .cashback-text { font-size: 20px; font-weight: 400; color: var(--color-pay-1); line-height: 20px; }
-    .order-no-row { display: flex; align-items: center; gap: 9px; padding: 0 23px; }
-    .order-no-text { font-size: 24px; font-weight: 400; color: var(--color-darkgray); line-height: 28px; }
-    .copy-btn { display: flex; align-items: center; gap: 4px; font-size: 24px; font-weight: 500; color: var(--color-darkgray); }
-
-    /* ===== 行程模块 ===== */
-    .itinerary-block { width: 750px; background: var(--color-white); display: flex; flex-direction: column; }
-    .itin-date-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 9px 24px 7px; background: var(--color-white);
-    }
-    .itin-date-left { display: flex; align-items: center; gap: 11px; }
-    .segment-tag {
-      background: var(--color-brand-1); border-radius: 4px;
-      padding: 2px 6px; font-size: 20px; font-weight: 500; color: var(--color-darkgray); white-space: nowrap;
-    }
-    .itin-date-text { font-size: 26px; font-weight: 500; color: var(--color-darkgray); line-height: 32px; }
-    .itin-route-text {
-      font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
-      font-size: 26px; font-weight: 500; color: var(--color-darkgray); line-height: 32px;
-    }
-    .collapse-btn { display: flex; align-items: center; gap: 6px; font-size: 24px; font-weight: 500; color: var(--color-darkgray); }
-    .itin-hint { padding: 6px 47px 0; font-size: 20px; font-weight: 400; color: var(--color-lightgray); line-height: 24px; }
-
-    /* OD 航段 */
-    .od-block { padding: 18px 24px; display: flex; flex-direction: column; gap: 0; position: relative; }
-    .od-row { display: flex; align-items: center; gap: 0; height: 30px; }
-    .od-time {
-      font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif;
-      font-size: 32px; font-weight: 700; color: var(--color-darkgray);
-      width: 100px; text-align: right; flex-shrink: 0;
-    }
-    .od-dot { width: 16px; height: 16px; background: var(--color-auxiliary); border-radius: 50%; margin: 0 16px; flex-shrink: 0; }
-    .od-airport { display: flex; align-items: center; gap: 8px; }
-    .od-airport-name { font-size: 28px; font-weight: 500; color: var(--color-darkgray); line-height: 30px; }
-    .od-change-tag {
-      border: 1px solid rgba(102,102,255,0.5); border-radius: 4px;
-      padding: 2px 6px; font-size: 20px; font-weight: 400; color: var(--color-indigo-1);
-      display: flex; align-items: center; gap: 4px;
-    }
-    .od-line-wrap { display: flex; align-items: stretch; margin: 4px 0; }
-    .od-line-spacer { width: 100px; flex-shrink: 0; }
-    .od-line-dot-col { width: 16px; margin: 0 16px; display: flex; justify-content: center; flex-shrink: 0; }
-    .od-line-bar { width: 4px; background: var(--color-auxiliary); border-radius: 3px; }
-    .od-flight-info { display: flex; align-items: center; gap: 10px; flex: 1; }
-    .airline-logo { width: 24px; height: 24px; background: var(--color-auxiliary); border-radius: 4px; flex-shrink: 0; }
-    .flight-no-text { font-size: 24px; font-weight: 400; color: var(--color-lightgray); line-height: 28px; }
-    .flight-sep { width: 1px; height: 20px; border-left: 1px solid #DEDEDE; }
-    .flight-meta { font-size: 24px; font-weight: 400; color: var(--color-lightgray); line-height: 28px; }
-    .flight-duration { font-size: 20px; font-weight: 400; color: var(--color-lightgray); line-height: 24px; margin-left: auto; }
-
-    /* ===== 广告图 ===== */
-    .ad-banner { width: 750px; height: 250px; object-fit: cover; display: block; }
-
-    /* ===== 通用 section header ===== */
-    .section-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 24px; height: 82px;
-    }
-    .section-title { font-size: 30px; font-weight: 500; color: var(--color-darkgray); line-height: 34px; }
-    .section-more { display: flex; align-items: center; gap: 6px; font-size: 24px; font-weight: 500; color: var(--color-darkgray); }
-
-    /* ===== 已购服务 ===== */
-    .purchased-block { width: 750px; background: var(--color-white); display: flex; flex-direction: column; }
-    .purchased-cards { display: flex; gap: 12px; padding: 0 24px 30px; }
-    .purchased-card {
-      flex: 1; background: var(--color-label); border-radius: var(--radius-m);
-      padding: 20px 24px; display: flex; flex-direction: column; gap: 10px;
-    }
-    .pc-title { font-size: 24px; font-weight: 500; color: var(--color-darkgray); line-height: 28px; }
-    .pc-price { font-size: 20px; font-weight: 400; color: var(--color-midgray); line-height: 28px; }
-    .pc-status { display: flex; align-items: center; gap: 4px; font-size: 20px; font-weight: 400; color: var(--color-lightgray); line-height: 24px; }
-
-    /* ===== 行李额推荐 ===== */
-    .luggage-block { width: 750px; background: var(--color-white); display: flex; flex-direction: column; overflow: hidden; }
-    .luggage-header-wrap { position: relative; height: 82px; }
-    .luggage-bg-strip {
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, #FFF5BE 0%, #FFFFFF 100%); opacity: 0.56;
-    }
-    .luggage-header-inner {
-      position: relative; z-index: 1;
-      display: flex; align-items: center; padding: 0 24px; height: 82px;
-    }
-    .luggage-title { font-size: 30px; font-weight: 500; color: var(--color-darkgray); line-height: 34px; }
-    .luggage-content { display: flex; align-items: flex-start; gap: 12px; padding: 22px 25px 24px; }
-    .luggage-illus { width: 120px; height: 75px; position: relative; flex-shrink: 0; }
-    .luggage-illus img { width: 100%; height: 100%; object-fit: contain; }
-    .luggage-bubble {
-      position: absolute; top: 0; left: 0;
-      background: linear-gradient(92.76deg, #FF5533 -14.41%, #FF8C1A 107.23%);
-      border-radius: 11px; padding: 4px 10px;
-      font-size: 18px; font-weight: 500; color: var(--color-white); white-space: nowrap;
-    }
-    .luggage-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .luggage-name { font-size: 28px; font-weight: 500; color: var(--color-darkgray); line-height: 34px; }
-    .luggage-desc { font-size: 24px; font-weight: 400; color: var(--color-lightgray); line-height: 34px; }
-    .luggage-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
-    .luggage-price-row { display: flex; align-items: flex-end; gap: 2px; }
-    .price-unit { font-family: 'Fliggy Sans 102','PingFang SC',sans-serif; font-size: 24px; font-weight: 700; color: var(--color-darkgray); }
-    .price-num { font-family: 'Fliggy Sans 102','PingFang SC',sans-serif; font-size: 36px; font-weight: 700; color: var(--color-darkgray); line-height: 36px; }
-    .price-old { font-size: 24px; font-weight: 400; color: var(--color-lightgray); }
-    .buy-btn {
-      background: var(--color-brand-1); border-radius: 36px;
-      padding: 10px 22px; font-size: 24px; font-weight: 500; color: var(--color-darkgray); white-space: nowrap;
-    }
-    .section-divider { width: 714px; height: 1px; background: var(--color-auxiliary); margin: 0 18px; }
-
-    /* ===== 更多出行服务（权益卡片） ===== */
-    .equity-block { width: 750px; background: var(--color-white); padding-bottom: 30px; }
-    .equity-cards-row {
-      display: flex; gap: 18px; padding: 0 24px;
-      overflow-x: auto; scrollbar-width: none;
-    }
-    .equity-cards-row::-webkit-scrollbar { display: none; }
-    .equity-card {
-      flex-shrink: 0; width: 280px; height: 280px;
-      background: linear-gradient(183.14deg, #FFF2D7 2.51%, #FFFFFF 110.07%);
-      border-radius: 24px; padding: 20px 24px 24px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
-    }
-    .ec-top { display: flex; flex-direction: column; gap: 5px; }
-    .ec-title-row { display: flex; align-items: center; gap: 8px; }
-    .ec-icon { width: 30px; height: 30px; background: var(--color-auxiliary); border-radius: 6px; flex-shrink: 0; }
-    .ec-name { font-size: 26px; font-weight: 500; color: #A76332; line-height: 36px; }
-    .ec-price { font-size: 20px; font-weight: 500; color: #A76332; line-height: 28px; }
-    .ec-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.1); margin: 8px 0; }
-    .ec-benefits { display: flex; flex-direction: column; gap: 7px; }
-    .ec-benefit { display: flex; align-items: center; gap: 11px; font-size: 24px; font-weight: 400; color: var(--color-lightgray); line-height: 41px; }
-    .ec-check { width: 26px; height: 26px; flex-shrink: 0; }
-    .ec-btn {
-      background: var(--color-brand-1); border-radius: 36px;
-      padding: 10px 24px; font-size: 22px; font-weight: 500; color: var(--color-darkgray);
-      align-self: flex-start; white-space: nowrap;
-    }
-    .equity-fade {
-      position: absolute; right: 0; top: 0; bottom: 0; width: 72px;
-      background: linear-gradient(270deg, #FFFFFF 20%, rgba(255,255,255,0) 100%);
-      pointer-events: none;
-    }
-
-    /* ===== 已购/赠送服务（第二个） ===== */
-    .gifted-block { width: 750px; background: var(--color-white); display: flex; flex-direction: column; }
-    .gifted-cards { display: flex; gap: 12px; padding: 0 24px 30px; }
-    .gifted-card {
-      flex: 1; background: var(--color-label); border-radius: var(--radius-m);
-      padding: 20px 24px; display: flex; flex-direction: column; gap: 10px;
-    }
-    .gc-title-row { display: flex; align-items: center; gap: 6px; }
-    .gc-title { font-size: 24px; font-weight: 500; color: var(--color-darkgray); line-height: 28px; }
-    .gc-warn {
-      width: 24px; height: 24px; background: var(--color-auxiliary); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 700; color: var(--color-white);
-    }
-    .gc-price { font-size: 20px; font-weight: 400; color: var(--color-midgray); line-height: 28px; }
-    .gc-status { display: flex; align-items: center; gap: 4px; font-size: 20px; font-weight: 400; color: var(--color-lightgray); line-height: 24px; }
-
-    /* ===== 订单信息 ===== */
-    .order-info-block { width: 750px; background: var(--color-white); padding: 24px 0 0; }
-    .oi-title { font-size: 30px; font-weight: 500; color: var(--color-darkgray); line-height: 34px; padding: 0 24px; margin-bottom: 16px; }
-    .oi-row { display: flex; align-items: flex-start; padding: 0 24px; margin-bottom: 16px; }
-    .oi-label { font-size: 24px; font-weight: 400; color: var(--color-midgray); line-height: 28px; width: 144px; flex-shrink: 0; }
-    .oi-value { font-size: 24px; font-weight: 400; color: var(--color-darkgray); line-height: 28px; }
-    .oi-divider { width: 714px; height: 1px; background: #EBEDF0; margin: 0 18px 16px; }
-
-    /* ===== NPS ===== */
-    .nps-block { width: 750px; background: var(--color-white); padding-bottom: 38px; }
-    .nps-question { padding: 32px 24px 20px; font-size: 30px; font-weight: 500; color: var(--color-darkgray); line-height: 34px; }
-    .nps-extremes { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; margin-bottom: 12px; }
-    .nps-extreme { font-size: 26px; font-weight: 400; color: var(--color-lightgray); line-height: 26px; }
-    .nps-scale {
-      margin: 0 24px; background: #FFF8CC;
-      border-radius: 36px 2px 36px 36px; height: 72px;
-      display: flex; align-items: center; justify-content: space-between; padding: 0 10px;
-    }
-    .nps-item {
-      width: 52px; height: 52px; background: var(--color-white);
-      border: 1px solid var(--color-brand-1); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; font-weight: 700; color: #B29A00;
-      font-family: 'DIN Alternate', 'Fliggy Sans 102', 'PingFang SC', sans-serif;
-    }
-
-    /* ===== 猜你喜欢 ===== */
-    .recommend-block { width: 750px; background: var(--color-white); padding: 24px 0 0; }
-    .recommend-header { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 20px; }
-    .recommend-title { font-size: 36px; font-weight: 400; color: var(--color-midgray); line-height: 36px; text-align: center; }
-    .recommend-subtitle { font-size: 20px; font-weight: 400; color: var(--color-lightgray); line-height: 20px; text-align: center; }
-    .recommend-grid { display: flex; flex-wrap: wrap; gap: 18px; padding: 0 18px 24px; }
-    .rec-card { width: 339px; background: var(--color-white); border-radius: var(--radius-m); overflow: hidden; }
-    .rec-card-img-wrap { position: relative; width: 339px; height: 339px; }
-    .rec-card-img { width: 339px; height: 339px; object-fit: cover; display: block; }
-    .rec-card-tag {
-      position: absolute; top: 0; left: 0;
-      background: rgba(92,95,102,0.8); border-radius: 0 0 var(--radius-s) 0;
-      padding: 4px 10px; font-size: 22px; font-weight: 400; color: var(--color-white);
-    }
-    .rec-card-body { padding: 12px 16px 16px; }
-    .rec-card-title {
-      font-size: 28px; font-weight: 600; color: var(--color-darkgray); line-height: 34px;
-      margin-bottom: 8px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .rec-card-highlight {
-      display: inline-flex; align-items: center;
-      background: rgba(255,140,26,0.08); border-radius: var(--radius-s);
-      padding: 4px 8px; font-size: 24px; font-weight: 500; color: var(--color-pay-2);
-      margin-bottom: 8px;
-    }
-    .rec-card-price-row { display: flex; align-items: baseline; gap: 4px; }
-    .rec-price-unit { font-size: 24px; font-weight: 500; color: var(--color-pay-1); }
-    .rec-price-num { font-family: 'Fliggy Sans 102','PingFang SC',sans-serif; font-size: 36px; font-weight: 500; color: var(--color-pay-1); }
-    .rec-sold { font-size: 24px; font-weight: 400; color: #ABAEB3; margin-left: 8px; }
-
-    /* ===== 吸底操作栏 ===== */
-    .bottom-bar {
-      position: fixed; bottom: 0; left: 0; width: 750px;
-      background: var(--color-white); box-shadow: 0 -5px 10px rgba(0,0,0,0.05); z-index: 100;
-    }
-    .bottom-actions { display: flex; gap: 12px; padding: 18px 24px; }
-    .bottom-btn {
-      flex: 1; height: 84px; background: var(--color-brand-1); border-radius: 42px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 30px; font-weight: 500; color: var(--color-darkgray); line-height: 34px;
-    }
-    .home-indicator {
-      width: 750px; height: 68px; background: var(--color-white);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .home-bar { width: 268px; height: 10px; background: var(--color-darkgray); border-radius: 5px; }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{width:750px;background:var(--c-bg);font-family:PingFang SC,SimHei,sans-serif;color:var(--c-dark);overflow-x:hidden}
+    /* 状态栏 */
+    .sbar{width:750px;height:88px;background:var(--c-brand);display:flex;align-items:flex-end;justify-content:space-between;padding:0 25px 16px}
+    .sbar-t{font-weight:600;font-size:28px;color:var(--c-dark);letter-spacing:-.56px}
+    .sbar-i{display:flex;align-items:center;gap:10px}
+    /* 导航栏 */
+    .nav{width:750px;height:88px;background:var(--c-brand);display:flex;align-items:center;justify-content:space-between;padding:0 36px}
+    .nav-back{width:48px;height:48px;display:flex;align-items:center;justify-content:center}
+    .nav-acts{display:flex;align-items:center}
+    .nav-act{display:flex;flex-direction:column;align-items:center;gap:4px;width:56px}
+    .nav-act .ico{width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+    .nav-act .lbl{font-size:18px;color:var(--c-dark)}
+    /* 主体 */
+    .body{display:flex;flex-direction:column;gap:18px;padding-bottom:220px}
+    /* 头部 */
+    .hdr{width:750px;background:linear-gradient(180deg,#FFE033 0%,rgba(255,224,51,0) 100%);padding:18px 36px 28px}
+    .hdr-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .hdr-t{font-size:42px;font-weight:500;line-height:46px}
+    .hdr-sub{font-size:26px;color:var(--c-dark);line-height:30px}
+    /* 航变卡 */
+    .fc-card{width:714px;margin:0 18px;border-radius:var(--r-m);overflow:hidden}
+    .fc-top{background:rgba(255,242,240,.6);padding:18px 24px;border-radius:var(--r-m) var(--r-m) 0 0;display:flex;align-items:center;justify-content:space-between}
+    .fc-tl{display:flex;align-items:center;gap:8px}
+    .delay-tag{background:var(--c-pay1);border-radius:var(--r-s);padding:4px 8px;font-size:22px;font-weight:500;color:#fff;white-space:nowrap}
+    .fc-title{font-size:28px;font-weight:500;color:var(--c-pay1)}
+    .fc-btn{border:2px solid var(--c-aux);border-radius:36px;padding:10px 21px;font-size:24px;font-weight:500;color:var(--c-dark);white-space:nowrap}
+    .fc-bot{background:#fff;padding:18px 24px;border-radius:0 0 var(--r-m) var(--r-m);display:flex;align-items:center;justify-content:space-between}
+    .fc-info{font-size:24px;color:var(--c-light)}
+    .fc-lnk{display:flex;align-items:center;gap:4px;font-size:24px;color:var(--c-dark)}
+    /* 必读卡 */
+    .notice{width:714px;margin:0 18px;background:#fff;border-radius:var(--r-m);padding:18px 24px}
+    .notice-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .notice-l{display:flex;align-items:center;gap:10px}
+    .notice-ttl{font-size:28px;font-weight:500}
+    .notice-cnt{font-size:28px;font-weight:500;color:var(--c-indigo)}
+    .notice-btn{border:2px solid var(--c-aux);border-radius:36px;padding:10px 21px;font-size:24px;font-weight:500;color:var(--c-dark)}
+    .notice-tags{display:flex;align-items:center;gap:9px}
+    .ntag{font-size:24px;color:var(--c-mid)}
+    .nsep{width:1px;height:20px;border-left:2px solid var(--c-aux)}
+    /* 总额区 */
+    .meta{width:750px;background:#fff;padding:18px 0;display:flex;flex-direction:column;gap:14px}
+    .meta-row{display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+    .meta-lbl{font-size:24px;color:var(--c-mid)}
+    .meta-val{font-size:24px;font-weight:500;display:flex;align-items:center;gap:4px}
+    .meta-link{font-size:24px;font-weight:500;color:var(--c-indigo);padding:0 24px}
+    .meta-cash{display:flex;align-items:center;gap:6px;padding:0 24px}
+    .ctag{background:var(--c-pay1);border-radius:4px;padding:2px 5px;font-size:18px;font-weight:500;color:#fff}
+    .ctxt{font-size:20px;color:var(--c-pay1)}
+    .ono-row{display:flex;align-items:center;gap:9px;padding:0 23px}
+    .ono{font-size:24px}
+    .copy{display:flex;align-items:center;gap:4px;font-size:24px;font-weight:500}
+    /* 行程 */
+    .itin{width:750px;background:#fff;display:flex;flex-direction:column}
+    .itin-dr{display:flex;align-items:center;justify-content:space-between;padding:9px 24px 7px}
+    .itin-dl{display:flex;align-items:center;gap:11px}
+    .seg-tag{background:var(--c-brand);border-radius:4px;padding:2px 6px;font-size:20px;font-weight:500;white-space:nowrap}
+    .itin-dt{font-size:26px;font-weight:500}
+    .itin-rt{font-size:26px;font-weight:500}
+    .collapse{display:flex;align-items:center;gap:6px;font-size:24px;font-weight:500}
+    .itin-hint{padding:6px 47px 0;font-size:20px;color:var(--c-light)}
+    .od{padding:18px 24px;display:flex;flex-direction:column}
+    .od-row{display:flex;align-items:center;height:30px}
+    .od-t{font-size:32px;font-weight:700;width:100px;text-align:right;flex-shrink:0}
+    .od-dot{width:16px;height:16px;background:var(--c-aux);border-radius:50%;margin:0 16px;flex-shrink:0}
+    .od-ap{display:flex;align-items:center;gap:8px}
+    .od-apn{font-size:28px;font-weight:500}
+    .od-ctag{border:1px solid rgba(102,102,255,.5);border-radius:4px;padding:2px 6px;font-size:20px;color:var(--c-indigo);display:flex;align-items:center;gap:4px}
+    .od-mid{display:flex;align-items:stretch;height:56px;margin:4px 0}
+    .od-sp{width:100px;flex-shrink:0}
+    .od-lc{width:16px;margin:0 16px;display:flex;justify-content:center;flex-shrink:0}
+    .od-lb{width:4px;background:var(--c-aux);border-radius:3px;height:100%}
+    .od-fi{display:flex;align-items:center;gap:10px;flex:1}
+    .al-logo{width:24px;height:24px;background:var(--c-aux);border-radius:4px;flex-shrink:0}
+    .fn{font-size:24px;color:var(--c-light)}
+    .fsep{width:1px;height:20px;border-left:1px solid #DEDEDE}
+    .fm{font-size:24px;color:var(--c-light)}
+    .fdur{font-size:20px;color:var(--c-light);margin-left:auto}
+    /* 广告图 */
+    .ad-img{width:750px;height:250px;object-fit:cover;display:block}
+    /* section header */
+    .sh{display:flex;align-items:center;justify-content:space-between;padding:24px;height:82px}
+    .sh-t{font-size:30px;font-weight:500}
+    .sh-m{display:flex;align-items:center;gap:6px;font-size:24px;font-weight:500}
+    /* 已购服务 */
+    .purch{width:750px;background:#fff;display:flex;flex-direction:column}
+    .purch-cards{display:flex;gap:12px;padding:0 24px 30px}
+    .pcard{flex:1;background:var(--c-label);border-radius:var(--r-m);padding:20px 24px;display:flex;flex-direction:column;gap:10px}
+    .pc-t{font-size:24px;font-weight:500}
+    .pc-p{font-size:20px;color:var(--c-mid)}
+    .pc-s{display:flex;align-items:center;gap:4px;font-size:20px;color:var(--c-light)}
+    /* 行李推荐 */
+    .lug{width:750px;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+    .lug-hw{position:relative;height:82px}
+    .lug-bg{position:absolute;inset:0;background:linear-gradient(180deg,#FFF5BE 0%,#fff 100%);opacity:.56}
+    .lug-hi{position:relative;z-index:1;display:flex;align-items:center;padding:0 24px;height:82px}
+    .lug-ht{font-size:30px;font-weight:500}
+    .lug-c{display:flex;align-items:flex-start;gap:12px;padding:22px 25px 24px}
+    .lug-il{width:120px;height:75px;position:relative;flex-shrink:0}
+    .lug-il img{width:100%;height:100%;object-fit:contain}
+    .lug-bub{position:absolute;top:0;left:0;background:linear-gradient(92.76deg,#FF5533 -14.41%,#FF8C1A 107.23%);border-radius:11px;padding:4px 10px;font-size:18px;font-weight:500;color:#fff;white-space:nowrap}
+    .lug-inf{flex:1;display:flex;flex-direction:column;gap:8px}
+    .lug-n{font-size:28px;font-weight:500}
+    .lug-d{font-size:24px;color:var(--c-light)}
+    .lug-r{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+    .lug-pr{display:flex;align-items:flex-end;gap:2px}
+    .pu{font-size:24px;font-weight:700}
+    .pn{font-size:36px;font-weight:700;line-height:36px}
+    .po{font-size:24px;color:var(--c-light)}
+    .buy-btn{background:var(--c-brand);border-radius:36px;padding:10px 22px;font-size:24px;font-weight:500;white-space:nowrap}
+    .sdiv{width:714px;height:1px;background:var(--c-aux);margin:0 18px}
+    /* 权益卡 */
+    .eq{width:750px;background:#fff;padding-bottom:30px}
+    .eq-row{display:flex;gap:18px;padding:0 24px;overflow-x:auto;scrollbar-width:none}
+    .eq-row::-webkit-scrollbar{display:none}
+    .eq-card{flex-shrink:0;width:280px;height:280px;background:linear-gradient(183.14deg,#FFF2D7 2.51%,#fff 110.07%);border-radius:24px;padding:20px 24px 24px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .ec-top{display:flex;flex-direction:column;gap:5px}
+    .ec-tr{display:flex;align-items:center;gap:8px}
+    .ec-ico{width:30px;height:30px;background:var(--c-aux);border-radius:6px;flex-shrink:0}
+    .ec-n{font-size:26px;font-weight:500;color:#A76332}
+    .ec-p{font-size:20px;font-weight:500;color:#A76332}
+    .ec-div{width:100%;height:1px;background:rgba(0,0,0,.1);margin:8px 0}
+    .ec-bens{display:flex;flex-direction:column;gap:7px}
+    .ec-ben{display:flex;align-items:center;gap:11px;font-size:24px;color:var(--c-light);line-height:41px}
+    .ec-ck{width:26px;height:26px;flex-shrink:0}
+    .ec-btn{background:var(--c-brand);border-radius:36px;padding:10px 24px;font-size:22px;font-weight:500;align-self:flex-start;white-space:nowrap}
+    .eq-fade{position:absolute;right:0;top:0;bottom:0;width:72px;background:linear-gradient(270deg,#fff 20%,rgba(255,255,255,0) 100%);pointer-events:none}
+    /* 订单信息 */
+    .oi{width:750px;background:#fff;padding:24px 0 0}
+    .oi-t{font-size:30px;font-weight:500;padding:0 24px;margin-bottom:16px}
+    .oi-row{display:flex;align-items:flex-start;padding:0 24px;margin-bottom:16px}
+    .oi-l{font-size:24px;color:var(--c-mid);width:144px;flex-shrink:0}
+    .oi-v{font-size:24px}
+    .oi-div{width:714px;height:1px;background:#EBEDF0;margin:0 18px 16px}
+    /* NPS */
+    .nps{width:750px;background:#fff;padding-bottom:38px}
+    .nps-q{padding:32px 24px 20px;font-size:30px;font-weight:500}
+    .nps-ex{display:flex;align-items:center;justify-content:space-between;padding:0 24px;margin-bottom:12px}
+    .nps-e{font-size:26px;color:var(--c-light)}
+    .nps-sc{margin:0 24px;background:#FFF8CC;border-radius:36px 2px 36px 36px;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+    .nps-i{width:52px;height:52px;background:#fff;border:1px solid var(--c-brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#B29A00}
+    /* 猜你喜欢 */
+    .rec{width:750px;background:#fff;padding:24px 0 0}
+    .rec-hdr{display:flex;flex-direction:column;align-items:center;gap:8px;padding-bottom:20px}
+    .rec-t{font-size:36px;color:var(--c-mid);text-align:center}
+    .rec-s{font-size:20px;color:var(--c-light);text-align:center}
+    .rec-grid{display:flex;flex-wrap:wrap;gap:18px;padding:0 18px 24px}
+    .rcard{width:339px;background:#fff;border-radius:var(--r-m);overflow:hidden}
+    .rcard-iw{position:relative;width:339px;height:339px}
+    .rcard-img{width:339px;height:339px;object-fit:cover;display:block}
+    .rcard-tag{position:absolute;top:0;left:0;background:rgba(92,95,102,.8);border-radius:0 0 var(--r-s) 0;padding:4px 10px;font-size:22px;color:#fff}
+    .rcard-b{padding:12px 16px 16px}
+    .rcard-t{font-size:28px;font-weight:600;line-height:34px;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .rcard-hl{display:inline-flex;align-items:center;background:rgba(255,140,26,.08);border-radius:var(--r-s);padding:4px 8px;font-size:24px;font-weight:500;color:var(--c-pay2);margin-bottom:8px}
+    .rcard-pr{display:flex;align-items:baseline;gap:4px}
+    .rpu{font-size:24px;font-weight:500;color:var(--c-pay1)}
+    .rpn{font-size:36px;font-weight:500;color:var(--c-pay1)}
+    .rsold{font-size:24px;color:#ABAEB3;margin-left:8px}
+    /* 底栏 */
+    .bbar{position:fixed;bottom:0;left:0;width:750px;background:#fff;box-shadow:0 -5px 10px rgba(0,0,0,.05);z-index:100}
+    .bbar-acts{display:flex;gap:12px;padding:18px 24px}
+    .bbar-btn{flex:1;height:84px;background:var(--c-brand);border-radius:42px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:500}
+    .home-ind{width:750px;height:68px;background:#fff;display:flex;align-items:center;justify-content:center}
+    .home-bar{width:268px;height:10px;background:var(--c-dark);border-radius:5px}
   </style>
 </head>
 <body>
-
   <!-- 状态栏 -->
-  <div class="status-bar">
-    <span class="status-time">9:41</span>
-    <div class="status-icons">
-      <!-- 信号 -->
-      <svg width="34" height="22" viewBox="0 0 34 22" fill="none">
-        <rect x="0" y="10" width="6" height="12" rx="1" fill="#0F131A"/>
-        <rect x="9" y="7" width="6" height="15" rx="1" fill="#0F131A"/>
-        <rect x="18" y="4" width="6" height="18" rx="1" fill="#0F131A"/>
-        <rect x="27" y="0" width="6" height="22" rx="1" fill="#0F131A"/>
-      </svg>
-      <!-- WiFi -->
-      <svg width="31" height="22" viewBox="0 0 31 22" fill="none">
-        <circle cx="15.5" cy="20" r="2" fill="#0F131A"/>
-        <path d="M8 13.5C10.1 11.4 12.7 10 15.5 10s5.4 1.4 7.5 3.5" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <path d="M2 7.5C5.8 3.7 10.4 1.5 15.5 1.5S25.2 3.7 29 7.5" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-      </svg>
-      <!-- 电池 -->
-      <svg width="49" height="23" viewBox="0 0 49 23" fill="none">
-        <rect x="0.5" y="0.5" width="43" height="22" rx="5" stroke="#0F131A" stroke-opacity="0.35" stroke-width="2"/>
-        <rect x="4" y="4" width="36" height="15" rx="2.5" fill="#0F131A"/>
-        <path d="M45 8v7a3 3 0 0 0 0-7z" fill="#0F131A" fill-opacity="0.4"/>
-      </svg>
+  <div class="sbar">
+    <span class="sbar-t">9:41</span>
+    <div class="sbar-i">
+      <svg width="34" height="22" viewBox="0 0 34 22" fill="none"><rect x="0" y="10" width="6" height="12" rx="1" fill="#0F131A"/><rect x="9" y="7" width="6" height="15" rx="1" fill="#0F131A"/><rect x="18" y="4" width="6" height="18" rx="1" fill="#0F131A"/><rect x="27" y="0" width="6" height="22" rx="1" fill="#0F131A"/></svg>
+      <svg width="31" height="22" viewBox="0 0 31 22" fill="none"><circle cx="15.5" cy="20" r="2" fill="#0F131A"/><path d="M8 13.5C10.1 11.4 12.7 10 15.5 10s5.4 1.4 7.5 3.5" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M2 7.5C5.8 3.7 10.4 1.5 15.5 1.5S25.2 3.7 29 7.5" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+      <svg width="49" height="23" viewBox="0 0 49 23" fill="none"><rect x=".5" y=".5" width="43" height="22" rx="5" stroke="#0F131A" stroke-opacity=".35" stroke-width="2"/><rect x="4" y="4" width="36" height="15" rx="2.5" fill="#0F131A"/><path d="M45 8v7a3 3 0 0 0 0-7z" fill="#0F131A" fill-opacity=".4"/></svg>
     </div>
   </div>
-
   <!-- 导航栏 -->
-  <div class="nav-bar">
-    <div class="nav-back">
-      <svg width="19" height="35" viewBox="0 0 19 35" fill="none">
-        <path d="M17 2L2 17.5L17 33" stroke="#0F131A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="nav-actions">
-      <div class="nav-action-item">
-        <div class="nav-icon">
-          <svg width="30" height="26" viewBox="0 0 30 26" fill="none">
-            <path d="M20 4l8 8-8 8M28 12H10C6 12 2 15 2 19v4" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          </svg>
-        </div>
-        <span class="nav-label">分享</span>
-      </div>
-      <div class="nav-action-item">
-        <div class="nav-icon">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-            <path d="M15 2C8 2 2 7.4 2 14c0 3.2 1.3 6.1 3.4 8.3L4 26l4.2-1.3C10 25.5 12.4 26 15 26c7 0 13-5.4 13-12S22 2 15 2z" stroke="#0F131A" stroke-width="2.2" fill="none"/>
-            <circle cx="10" cy="14" r="1.5" fill="#0F131A"/>
-            <circle cx="15" cy="14" r="1.5" fill="#0F131A"/>
-            <circle cx="20" cy="14" r="1.5" fill="#0F131A"/>
-          </svg>
-        </div>
-        <span class="nav-label">客服</span>
-      </div>
-      <div class="nav-action-item">
-        <div class="nav-icon">
-          <svg width="30" height="6" viewBox="0 0 30 6" fill="none">
-            <circle cx="3" cy="3" r="3" fill="#0F131A"/>
-            <circle cx="15" cy="3" r="3" fill="#0F131A"/>
-            <circle cx="27" cy="3" r="3" fill="#0F131A"/>
-          </svg>
-        </div>
-        <span class="nav-label">更多</span>
-      </div>
+  <div class="nav">
+    <div class="nav-back"><svg width="19" height="35" viewBox="0 0 19 35" fill="none"><path d="M17 2L2 17.5L17 33" stroke="#0F131A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="nav-acts">
+      <div class="nav-act"><div class="ico"><svg width="30" height="26" viewBox="0 0 30 26" fill="none"><path d="M20 4l8 8-8 8M28 12H10C6 12 2 15 2 19v4" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="lbl">分享</span></div>
+      <div class="nav-act"><div class="ico"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M15 2C8 2 2 7.4 2 14c0 3.2 1.3 6.1 3.4 8.3L4 26l4.2-1.3C10 25.5 12.4 26 15 26c7 0 13-5.4 13-12S22 2 15 2z" stroke="#0F131A" stroke-width="2.2" fill="none"/><circle cx="10" cy="14" r="1.5" fill="#0F131A"/><circle cx="15" cy="14" r="1.5" fill="#0F131A"/><circle cx="20" cy="14" r="1.5" fill="#0F131A"/></svg></div><span class="lbl">客服</span></div>
+      <div class="nav-act"><div class="ico"><svg width="30" height="6" viewBox="0 0 30 6" fill="none"><circle cx="3" cy="3" r="3" fill="#0F131A"/><circle cx="15" cy="3" r="3" fill="#0F131A"/><circle cx="27" cy="3" r="3" fill="#0F131A"/></svg></div><span class="lbl">更多</span></div>
     </div>
   </div>
-
-  <!-- 页面主体 -->
-  <div class="page-body">
-
+  <!-- 主体 -->
+  <div class="body">
     <!-- 头部 -->
-    <div class="header-block">
-      <div class="header-title-row">
-        <span class="header-title">出票成功</span>
-        <svg width="12" height="20" viewBox="0 0 12 20" fill="none">
-          <path d="M2 2l8 8-8 8" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="header-subtitle">请至少提前3小时到达机场，以免误机</div>
+    <div class="hdr">
+      <div class="hdr-row"><span class="hdr-t">出票成功</span><svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M2 2l8 8-8 8" stroke="#0F131A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="hdr-sub">请至少提前3小时到达机场，以免误机</div>
     </div>
-
-    <!-- 航变提醒卡 -->
-    <div class="flight-change-card">
+    <!-- 航变卡 -->
+    <div class="fc-card">
       <div class="fc-top">
-        <div class="fc-top-left">
-          <span class="delay-tag">航班延误</span>
-          <span class="fc-title">延误40分钟 预计07:50起飞</span>
-        </div>
+        <div class="fc-tl"><span class="delay-tag">航班延误</span><span class="fc-title">延误40分钟 预计07:50起飞</span></div>
         <div class="fc-btn">航变助手</div>
       </div>
-      <div class="fc-bottom">
+      <div class="fc-bot">
         <span class="fc-info">北京-三亚 国航CA1377 张明</span>
-        <div class="fc-link">
-          <span>查看航班动态</span>
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-            <path d="M1 1l5 5-5 5" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="fc-lnk"><span>查看航班动态</span><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
     </div>
-
     <!-- 出行前必读 -->
-    <div class="notice-card">
+    <div class="notice">
       <div class="notice-top">
-        <div class="notice-left">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <rect width="36" height="36" rx="4" fill="#6666FF" fill-opacity="0.12"/>
-            <path d="M9 11h18M9 18h14M9 25h10" stroke="#6666FF" stroke-width="2.2" stroke-linecap="round"/>
-          </svg>
-          <span class="notice-title">出行前必读</span>
-          <span class="notice-count">3条</span>
+        <div class="notice-l">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="4" fill="#6666FF" fill-opacity=".12"/><path d="M9 11h18M9 18h14M9 25h10" stroke="#6666FF" stroke-width="2.2" stroke-linecap="round"/></svg>
+          <span class="notice-ttl">出行前必读</span><span class="notice-cnt">3条</span>
         </div>
-        <div class="notice-detail-btn">详情</div>
+        <div class="notice-btn">详情</div>
       </div>
-      <div class="notice-tags">
-        <span class="notice-tag">防诈骗提醒</span>
-        <div class="notice-sep"></div>
-        <span class="notice-tag">出入境提醒</span>
-        <div class="notice-sep"></div>
-        <span class="notice-tag">其他提醒</span>
-      </div>
+      <div class="notice-tags"><span class="ntag">防诈骗提醒</span><div class="nsep"></div><span class="ntag">出入境提醒</span><div class="nsep"></div><span class="ntag">其他提醒</span></div>
     </div>
-
-    <!-- 总额 / 退改签 / 权益 / 订单号 -->
-    <div class="order-meta-block">
-      <div class="meta-row">
-        <span class="meta-label">总额</span>
-        <div class="meta-price">
-          <span>¥1680</span>
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-            <path d="M1 1l5 5-5 5" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-      <div class="meta-rules-link">退改签、行李额、产品说明 ›</div>
-      <div class="meta-cashback">
-        <span class="cashback-tag">返现金</span>
-        <span class="cashback-text">出行后7天内完成领取，共返现金¥100</span>
-      </div>
-      <div class="order-no-row">
-        <span class="order-no-text">订单号 2026033019365820</span>
-        <div class="copy-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="8" y="8" width="13" height="13" rx="2" stroke="#0F131A" stroke-width="1.5"/>
-            <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" stroke="#0F131A" stroke-width="1.5"/>
-          </svg>
-          <span>复制</span>
-        </div>
-      </div>
+    <!-- 总额区 -->
+    <div class="meta">
+      <div class="meta-row"><span class="meta-lbl">总额</span><div class="meta-val"><span>¥1680</span><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="meta-link">退改签、行李额、产品说明 ›</div>
+      <div class="meta-cash"><span class="ctag">返现金</span><span class="ctxt">出行后7天内完成领取，共返现金¥100</span></div>
+      <div class="ono-row"><span class="ono">订单号 2026033019365820</span><div class="copy"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="13" height="13" rx="2" stroke="#0F131A" stroke-width="1.5"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" stroke="#0F131A" stroke-width="1.5"/></svg><span>复制</span></div></div>
     </div>
-
-    <!-- 行程模块 -->
-    <div class="itinerary-block">
-      <div class="itin-date-row">
-        <div class="itin-date-left">
-          <span class="segment-tag">单程</span>
-          <span class="itin-date-text">2026年3月30日 周一</span>
-          <span class="itin-route-text">北京-三亚</span>
-        </div>
-        <div class="collapse-btn">
-          <span>收起</span>
-          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-            <path d="M1 6l5-5 5 5" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+    <!-- 行程 -->
+    <div class="itin">
+      <div class="itin-dr">
+        <div class="itin-dl"><span class="seg-tag">单程</span><span class="itin-dt">2026年3月30日 周一</span><span class="itin-rt">北京-三亚</span></div>
+        <div class="collapse"><span>收起</span><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 6l5-5 5 5" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
       <div class="itin-hint">航班起降时间均为当地时间</div>
-
-      <!-- OD 航段 -->
-      <div class="od-block">
-        <!-- 出发行 -->
-        <div class="od-row">
-          <span class="od-time">07:30</span>
-          <div class="od-dot"></div>
-          <div class="od-airport">
-            <span class="od-airport-name">PEK 北京首都国际机场T3</span>
-            <div class="od-change-tag">
-              <span>选座开放</span>
-              <svg width="5" height="8" viewBox="0 0 5 8" fill="none">
-                <path d="M1 1l3 3-3 3" stroke="#6666FF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- 中间航班信息 -->
-        <div class="od-line-wrap" style="height:56px;">
-          <div class="od-line-spacer"></div>
-          <div class="od-line-dot-col">
-            <div class="od-line-bar" style="height:100%;"></div>
-          </div>
-          <div class="od-flight-info">
-            <div class="airline-logo"></div>
-            <span class="flight-no-text">国航CA1377</span>
-            <div class="flight-sep"></div>
-            <span class="flight-meta">空客A330(大)</span>
-            <div class="flight-sep"></div>
-            <span class="flight-meta">正餐</span>
-            <div class="flight-sep"></div>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M2 15l5-10 5 4 5-6 5 3" stroke="#149AA8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            </svg>
-            <span class="flight-duration">4h15m</span>
-          </div>
-        </div>
-
-        <!-- 到达行 -->
-        <div class="od-row">
-          <span class="od-time">12:18</span>
-          <div class="od-dot"></div>
-          <div class="od-airport">
-            <span class="od-airport-name">SYX 三亚凤凰国际机场T1</span>
-          </div>
-        </div>
+      <div class="od">
+        <div class="od-row"><span class="od-t">07:30</span><div class="od-dot"></div><div class="od-ap"><span class="od-apn">PEK 北京首都国际机场T3</span><div class="od-ctag"><span>选座开放</span><svg width="5" height="8" viewBox="0 0 5 8" fill="none"><path d="M1 1l3 3-3 3" stroke="#6666FF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+        <div class="od-mid"><div class="od-sp"></div><div class="od-lc"><div class="od-lb"></div></div><div class="od-fi"><div class="al-logo"></div><span class="fn">国航CA1377</span><div class="fsep"></div><span class="fm">空客A330(大)</span><div class="fsep"></div><span class="fm">正餐</span><div class="fsep"></div><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 15l5-10 5 4 5-6 5 3" stroke="#149AA8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fdur">4h15m</span></div></div>
+        <div class="od-row"><span class="od-t">12:18</span><div class="od-dot"></div><div class="od-ap"><span class="od-apn">SYX 三亚凤凰国际机场T1</span></div></div>
       </div>
     </div>
-
     <!-- 广告图 -->
-    <img class="ad-banner" src="https://fli.alicdn.com/upload/creative-platform/NOirpu7G6y4bd1d0434df0165a.jpeg?x-oss-process=image/format,webp" alt="推广" />
-
+    <img class="ad-img" src="https://fli.alicdn.com/upload/creative-platform/NOirpu7G6y4bd1d0434df0165a.jpeg?x-oss-process=image/format,webp" alt="推广" />
     <!-- 已购服务 -->
-    <div class="purchased-block">
-      <div class="section-header">
-        <span class="section-title">已购/赠送服务</span>
-        <div class="section-more">
-          <span>更多</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M4 2l4 4-4 4" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-      <div class="purchased-cards">
-        <div class="purchased-card">
-          <span class="pc-title">托运行李额</span>
-          <span class="pc-price">¥40x2份</span>
-          <div class="pc-status"><span>部分乘客人未加购 ›</span></div>
-        </div>
-        <div class="purchased-card">
-          <span class="pc-title">机上餐食</span>
-          <span class="pc-price">¥40x2份</span>
-          <div class="pc-status">
-            <span>已退款</span>
-            <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-              <path d="M1 1l5 5-5 5" stroke="#919499" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
+    <div class="purch">
+      <div class="sh"><span class="sh-t">已购/赠送服务</span><div class="sh-m"><span>更多</span><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="purch-cards">
+        <div class="pcard"><span class="pc-t">托运行李额</span><span class="pc-p">¥40x2份</span><div class="pc-s"><span>部分乘客未加购 ›</span></div></div>
+        <div class="pcard"><span class="pc-t">机上餐食</span><span class="pc-p">¥40x2份</span><div class="pc-s"><span>已退款</span><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="#919499" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
       </div>
     </div>
-
-    <!-- 行李额推荐 -->
-    <div class="luggage-block">
-      <div class="luggage-header-wrap">
-        <div class="luggage-bg-strip"></div>
-        <div class="luggage-header-inner">
-          <span class="luggage-title">航班无免费托运行李额</span>
-        </div>
+    <!-- 行李推荐 -->
+    <div class="lug">
+      <div class="lug-hw"><div class="lug-bg"></div><div class="lug-hi"><span class="lug-ht">航班无免费托运行李额</span></div></div>
+      <div class="lug-c">
+        <div class="lug-il"><img src="https://fli.alicdn.com/upload/creative-platform/J-1XYahvVf4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="行李" /><div class="lug-bub">70%用户购买</div></div>
+        <div class="lug-inf"><span class="lug-n">托运行李额</span><span class="lug-d">延误最高补¥800</span></div>
+        <div class="lug-r"><div class="lug-pr"><span class="pu">¥</span><span class="pn">115</span></div><span class="po">/15kg起</span><div class="buy-btn">加购</div></div>
       </div>
-      <div class="luggage-content">
-        <div class="luggage-illus">
-          <img src="https://fli.alicdn.com/upload/creative-platform/J-1XYahvVf4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="行李" />
-          <div class="luggage-bubble">70%用户购买</div>
-        </div>
-        <div class="luggage-info">
-          <span class="luggage-name">托运行李额</span>
-          <span class="luggage-desc">延误最高补¥800</span>
-        </div>
-        <div class="luggage-right">
-          <div class="luggage-price-row">
-            <span class="price-unit">¥</span>
-            <span class="price-num">115</span>
-          </div>
-          <span class="price-old">/15kg起</span>
-          <div class="buy-btn">加购</div>
-        </div>
-      </div>
-      <div class="section-divider"></div>
+      <div class="sdiv"></div>
     </div>
-
     <!-- 更多出行服务 -->
-    <div class="equity-block">
-      <div class="section-header">
-        <span class="section-title">更多出行服务</span>
-      </div>
-      <div class="equity-cards-row">
-        <!-- 贵宾休息室 -->
-        <div class="equity-card">
-          <div class="ec-top">
-            <div class="ec-title-row">
-              <div class="ec-icon"></div>
-              <div>
-                <div class="ec-name">贵宾休息室</div>
-                <div class="ec-price">¥119起</div>
-              </div>
-            </div>
-            <div class="ec-divider"></div>
-            <div class="ec-benefits">
-              <div class="ec-benefit">
-                <svg class="ec-check" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="12" fill="#EFD0A4"/>
-                  <path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>餐厅有热食提供</span>
-              </div>
-              <div class="ec-benefit">
-                <svg class="ec-check" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="12" fill="#EFD0A4"/>
-                  <path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>享受更宽敞座椅</span>
-              </div>
-            </div>
-          </div>
-          <div class="ec-btn">加购</div>
-        </div>
-        <!-- 值机选座 -->
-        <div class="equity-card">
-          <div class="ec-top">
-            <div class="ec-title-row">
-              <div class="ec-icon"></div>
-              <div>
-                <div class="ec-name">值机选座</div>
-                <div class="ec-price">¥66起</div>
-              </div>
-            </div>
-            <div class="ec-divider"></div>
-            <div class="ec-benefits">
-              <div class="ec-benefit">
-                <svg class="ec-check" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="12" fill="#EFD0A4"/>
-                  <path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>选1-6排靠窗位</span>
-              </div>
-              <div class="ec-benefit">
-                <svg class="ec-check" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="12" fill="#EFD0A4"/>
-                  <path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>落地更快下机</span>
-              </div>
-            </div>
-          </div>
-          <div class="ec-btn">加购</div>
-        </div>
-        <!-- 杭州接送机 -->
-        <div class="equity-card">
-          <div class="ec-top">
-            <div class="ec-title-row">
-              <div class="ec-icon"></div>
-              <div>
-                <div class="ec-name">杭州接送机</div>
-                <div class="ec-price">¥50起</div>
-              </div>
-            </div>
-            <div class="ec-divider"></div>
-            <div class="ec-benefits">
-              <div class="ec-benefit">
-                <svg class="ec-check" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="12" fill="#EFD0A4"/>
-                  <path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>司机不用等</span>
-              </div>
-              <div class="ec-benefit">
-                <svg class="ec-check" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="12" fill="#EFD0A4"/>
-                  <path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>不用担心堵车</span>
-              </div>
-            </div>
-          </div>
-          <div class="ec-btn">加购</div>
-        </div>
-        <div class="equity-fade"></div>
+    <div class="eq">
+      <div class="sh"><span class="sh-t">更多出行服务</span></div>
+      <div class="eq-row">
+        <div class="eq-card"><div class="ec-top"><div class="ec-tr"><div class="ec-ico"></div><div><div class="ec-n">贵宾休息室</div><div class="ec-p">¥119起</div></div></div><div class="ec-div"></div><div class="ec-bens"><div class="ec-ben"><svg class="ec-ck" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EFD0A4"/><path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>餐厅有热食提供</span></div><div class="ec-ben"><svg class="ec-ck" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EFD0A4"/><path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>享受更宽敞座椅</span></div></div></div><div class="ec-btn">加购</div></div>
+        <div class="eq-card"><div class="ec-top"><div class="ec-tr"><div class="ec-ico"></div><div><div class="ec-n">值机选座</div><div class="ec-p">¥66起</div></div></div><div class="ec-div"></div><div class="ec-bens"><div class="ec-ben"><svg class="ec-ck" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EFD0A4"/><path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>选1-6排靠窗位</span></div><div class="ec-ben"><svg class="ec-ck" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EFD0A4"/><path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>落地更快下机</span></div></div></div><div class="ec-btn">加购</div></div>
+        <div class="eq-card"><div class="ec-top"><div class="ec-tr"><div class="ec-ico"></div><div><div class="ec-n">三亚接送机</div><div class="ec-p">¥50起</div></div></div><div class="ec-div"></div><div class="ec-bens"><div class="ec-ben"><svg class="ec-ck" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EFD0A4"/><path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>司机不用等</span></div><div class="ec-ben"><svg class="ec-ck" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EFD0A4"/><path d="M7 13l4 4 8-8" stroke="#A76332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>不用担心堵车</span></div></div></div><div class="ec-btn">加购</div></div>
+        <div class="eq-fade"></div>
       </div>
     </div>
-
-    <!-- 已购/赠送服务（第二个） -->
-    <div class="gifted-block">
-      <div class="section-header">
-        <span class="section-title">已购/赠送服务</span>
-        <div class="section-more">
-          <span>展开</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M4 2l4 4-4 4" stroke="#0F131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-      <div class="gifted-cards">
-        <div class="gifted-card">
-          <div class="gc-title-row">
-            <span class="gc-title">托运行李额</span>
-          </div>
-          <span class="gc-price">¥40x2份</span>
-          <div class="gc-status"><span>部分乘客人未加购 ›</span></div>
-        </div>
-        <div class="gifted-card">
-          <div class="gc-title-row">
-            <span class="gc-title">机上餐食</span>
-            <div class="gc-warn">!</div>
-          </div>
-          <span class="gc-price">¥40x2份</span>
-          <div class="gc-status">
-            <span>已退款</span>
-            <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-              <path d="M1 1l5 5-5 5" stroke="#919499" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- 订单信息 -->
-    <div class="order-info-block">
-      <div class="oi-title">订单信息</div>
-      <div class="oi-row">
-        <span class="oi-label">创建时间</span>
-        <span class="oi-value">2024-03-26 20:16:20</span>
-      </div>
-      <div class="oi-divider"></div>
-      <div class="oi-row">
-        <span class="oi-label">乘机人</span>
-        <span class="oi-value">HAN/MEIMEI 成人 女</span>
-      </div>
-      <div class="oi-row" style="margin-bottom:24px;">
-        <span class="oi-label">飞猪里程</span>
-        <span class="oi-value">本次交易可累计飞猪里程585，交易成功后15天发放</span>
-      </div>
+    <div class="oi">
+      <div class="oi-t">订单信息</div>
+      <div class="oi-row"><span class="oi-l">创建时间</span><span class="oi-v">2024-03-26 20:16:20</span></div>
+      <div class="oi-div"></div>
+      <div class="oi-row"><span class="oi-l">乘机人</span><span class="oi-v">HAN/MEIMEI 成人 女</span></div>
+      <div class="oi-row" style="margin-bottom:24px"><span class="oi-l">飞猪里程</span><span class="oi-v">本次交易可累计飞猪里程585，交易成功后15天发放</span></div>
     </div>
-
-    <!-- NPS 评分 -->
-    <div class="nps-block">
-      <div class="nps-question">您是否会推荐亲朋好友来飞猪预订国际机票？</div>
-      <div class="nps-extremes">
-        <span class="nps-extreme">肯定不推荐</span>
-        <span class="nps-extreme">肯定会推荐</span>
-      </div>
-      <div class="nps-scale">
-        <div class="nps-item">0</div>
-        <div class="nps-item">1</div>
-        <div class="nps-item">2</div>
-        <div class="nps-item">3</div>
-        <div class="nps-item">4</div>
-        <div class="nps-item">5</div>
-        <div class="nps-item">6</div>
-        <div class="nps-item">7</div>
-        <div class="nps-item">8</div>
-        <div class="nps-item">9</div>
-        <div class="nps-item">10</div>
-      </div>
+    <!-- NPS -->
+    <div class="nps">
+      <div class="nps-q">您是否会推荐亲朋好友来飞猪预订国际机票？</div>
+      <div class="nps-ex"><span class="nps-e">肯定不推荐</span><span class="nps-e">肯定会推荐</span></div>
+      <div class="nps-sc"><div class="nps-i">0</div><div class="nps-i">1</div><div class="nps-i">2</div><div class="nps-i">3</div><div class="nps-i">4</div><div class="nps-i">5</div><div class="nps-i">6</div><div class="nps-i">7</div><div class="nps-i">8</div><div class="nps-i">9</div><div class="nps-i">10</div></div>
     </div>
-
     <!-- 猜你喜欢 -->
-    <div class="recommend-block">
-      <div class="recommend-header">
-        <div class="recommend-title">✦ 猜你喜欢 ✦</div>
-        <div class="recommend-subtitle">玩转东京必备</div>
+    <div class="rec">
+      <div class="rec-hdr"><div class="rec-t">✦ 猜你喜欢 ✦</div><div class="rec-s">玩转三亚必备</div></div>
+      <div class="rec-grid">
+        <div class="rcard"><div class="rcard-iw"><img class="rcard-img" src="https://fli.alicdn.com/upload/creative-platform/8nzmEcX0yD4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="三亚旅游" /><div class="rcard-tag">旅游·三亚</div></div><div class="rcard-b"><div class="rcard-t">三亚旅游四日游 4天3晚纯玩亚龙湾天涯海角</div><div class="rcard-hl">专属行程管家全程服务</div><div class="rcard-pr"><span class="rpu">¥</span><span class="rpn">688</span><span class="rsold">119人已购</span></div></div></div>
+        <div class="rcard"><div class="rcard-iw"><img class="rcard-img" src="https://fli.alicdn.com/upload/creative-platform/MXzrOt8y8C4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="三亚酒店" /><div class="rcard-tag">酒店·三亚</div></div><div class="rcard-b"><div class="rcard-t">三亚亚特兰蒂斯酒店 海景房1晚含早餐</div><div class="rcard-hl">海景无边泳池免费畅游</div><div class="rcard-pr"><span class="rpu">¥</span><span class="rpn">1299</span><span class="rsold">88人已购</span></div></div></div>
+        <div class="rcard"><div class="rcard-iw"><img class="rcard-img" src="https://fli.alicdn.com/upload/creative-platform/gjWiY0Nujd4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="三亚景点" /><div class="rcard-tag">景点·三亚</div></div><div class="rcard-b"><div class="rcard-t">蜈支洲岛一日游 含往返船票+浮潜装备</div><div class="rcard-hl">热带海岛浮潜体验</div><div class="rcard-pr"><span class="rpu">¥</span><span class="rpn">298</span><span class="rsold">256人已购</span></div></div></div>
+        <div class="rcard"><div class="rcard-iw"><img class="rcard-img" src="https://fli.alicdn.com/upload/creative-platform/mm-8Z5nl9K4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="三亚民宿" /><div class="rcard-tag">民宿·三亚</div></div><div class="rcard-b"><div class="rcard-t">三亚海边精品民宿 独栋海景别墅含早</div><div class="rcard-hl">私家沙滩独享海景</div><div class="rcard-pr"><span class="rpu">¥</span><span class="rpn">899</span><span class="rsold">45人已购</span></div></div></div>
       </div>
-      <div class="recommend-grid">
-        <!-- 卡片1 -->
-        <div class="rec-card">
-          <div class="rec-card-img-wrap">
-            <img class="rec-card-img" src="https://fli.alicdn.com/upload/creative-platform/8nzmEcX0yD4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="桂林旅游" />
-            <div class="rec-card-tag">旅游·桂林</div>
-          </div>
-          <div class="rec-card-body">
-            <div class="rec-card-title">桂林旅游四日游 4天3晚纯玩桂林阳朔漓江</div>
-            <div class="rec-card-highlight">专属行程管家全程服务</div>
-            <div class="rec-card-price-row">
-              <span class="rec-price-unit">¥</span>
-              <span class="rec-price-num">688</span>
-              <span class="rec-sold">119人已购</span>
-            </div>
-          </div>
-        </div>
-        <!-- 卡片2 -->
-        <div class="rec-card">
-          <div class="rec-card-img-wrap">
-            <img class="rec-card-img" src="https://fli.alicdn.com/upload/creative-platform/MXzrOt8y8C4bd1d0434df0165a.png?x-oss-process=image/format,webp" alt="厦门酒店" />
-            <div class="rec-card-tag">酒店·杭州</div>
-          </div>
-          <div class="rec-card-body">
-            <div class="rec-card-title">厦门艾美酒店 隐逸美墅1晚住2大1小早餐</div>
-            <div class="rec-card-highlight">半山别墅纵享隐逸奢华空间; __aone_exit=$?; pwd -P > '/var/folders/35/fq353sfj3l55d9r271myxl780000gp/T/aone-copilot-cwd-1776773207962-oe065hkirtg.txt' 2>/dev/null; exit $__aone_exit
+    </div>
+  </div>
+  <!-- 底栏 -->
+  <div class="bbar">
+    <div class="bbar-acts"><div class="bbar-btn">查看行程</div><div class="bbar-btn">申请退款</div></div>
+    <div class="home-ind"><div class="home-bar"></div></div>
+  </div>
+</body>
+</html>
