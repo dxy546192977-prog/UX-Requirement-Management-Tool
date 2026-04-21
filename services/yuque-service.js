@@ -136,11 +136,11 @@ async function fetchPrdFull(config, prdUrl) {
   } catch (err) {
     // 当 OpenAPI 返回 404 时，尝试用 ali-mcpcli 降级读取
     if (err.message && err.message.includes('404')) {
-      console.warn(`[Yuque] OpenAPI 404，尝试 ali-mcpcli 降级读取: ${prdUrl}`);
+      console.warn(`[Yuque] OpenAPI 404，尝试 yuque-fetch.mjs 降级读取: ${prdUrl}`);
       try {
-        docData = await fetchPrdViaCliMcp(prdUrl);
-      } catch (cliErr) {
-        console.warn(`[Yuque] ali-mcpcli 降级也失败: ${cliErr.message}`);
+        docData = await fetchPrdViaYuqueFetch(prdUrl);
+      } catch (fetchErr) {
+        console.warn(`[Yuque] yuque-fetch.mjs 降级也失败: ${fetchErr.message}`);
         throw err; // 抛出原始错误
       }
     } else {
