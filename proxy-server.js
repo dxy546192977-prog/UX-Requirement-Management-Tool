@@ -119,7 +119,7 @@ function fetchYuqueDoc(config, group_login, book_slug, doc_slug) {
       reject(new Error('Yuque API request failed: ' + err.message));
     });
 
-    req.setTimeout(10000, () => {
+    req.setTimeout(30000, () => {
       req.destroy();
       reject(new Error('Yuque API request timed out'));
     });
