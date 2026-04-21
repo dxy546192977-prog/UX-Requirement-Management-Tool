@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>商品卡_精选权益_左右</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f2f3f5;
+      color: #0e131b;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+    img { display: block; }
+    .card {
+      width: 714px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .head {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      height: 66px;
+      padding: 20px 17px 12px;
+    }
+    .head img { width: 105px; height: 34px; flex: none; }
+    .head-copy {
+      padding-bottom: 2px;
+      color: #5b5f67;
+      font-size: 20px;
+      line-height: 28px;
+    }
+    .tabs {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 679px;
+      height: 72px;
+      margin: 0 18px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .tab {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 226.33px;
+      height: 72px;
+      padding: 6px;
+      background: #f2f3f5;
+      flex: 1;
+    }
+    .tab-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 214.33px;
+      height: 60px;
+      border-radius: 9px;
+    }
+    .tab.active .tab-panel { background: #ffffff; }
+    .tab-title {
+      margin: -4px 0 0;
+      font-size: 22px;
+      line-height: 31px;
+      text-align: center;
+      color: #0e131b;
+      font-weight: 400;
+    }
+    .tab.active .tab-title { font-weight: 500; }
+    .tab-sub {
+      font-size: 20px;
+      line-height: 28px;
+      text-align: center;
+      color: #0e131b;
+      font-weight: 400;
+    }
+    .tab.active .tab-sub { font-weight: 500; }
+    .body {
+      position: relative;
+      display: flex;
+      gap: 36px;
+      padding: 30px 24px;
+    }
+    .buy {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 84px;
+      height: 84px;
+      border: 0;
+      border-radius: 12px;
+      background: #ff8400;
+      color: #ffffff;
+      font-size: 36px;
+      line-height: 36px;
+      font-weight: 500;
+    }
+    .price-col {
+      width: 204px;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .price-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      width: 204px;
+      height: 40px;
+    }
+    .price-main {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      width: 140px;
+      height: 45px;
+    }
+    .currency {
+      color: #ff4119;
+      font-size: 36px;
+      line-height: 31px;
+      font-weight: 700;
+      font-family: "Alibaba Sans 102", "Fliggy Sans 102", "PingFang SC", sans-serif;
+    }
+    .amount {
+      color: #ff4119;
+      font-size: 54px;
+      line-height: 45px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-family: "Alibaba Sans 102", "Fliggy Sans 102", "PingFang SC", sans-serif;
+    }
+    .cashback {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: 140.04px;
+      height: 28px;
+      padding: 0 6px;
+      border: 1px solid rgba(255, 65, 25, 0.5);
+      border-radius: 4px;
+    }
+    .cashback-logo {
+      width: 55.04px;
+      height: 19px;
+      flex: none;
+    }
+    .cashback-divider {
+      width: 1px;
+      height: 18px;
+      border-left: 1px dashed #ffae9f;
+      flex: none;
+    }
+    .cashback-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      width: 60px;
+      height: 22px;
+      flex: none;
+    }
+    .cashback-amount {
+      display: inline-block;
+      width: 49px;
+      height: 22px;
+      font-size: 22px;
+      line-height: 22px;
+      font-weight: 400;
+      color: #ff4119;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .cashback-arrow {
+      position: relative;
+      width: 7px;
+      height: 12px;
+      flex: none;
+    }
+    .cashback-arrow::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      border-top: 2px solid #ff775d;
+      border-right: 2px solid #ff775d;
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 96px;
+      font-size: 22px;
+      line-height: 31px;
+    }
+    .limit-inline {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 6px;
+      width: 427px;
+      max-width: 666px;
+      height: 24px;
+      flex: none;
+    }
+    .limit-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(255, 65, 25, 0.5);
+      border-radius: 4px;
+      color: #ff4119;
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 500;
+      flex: none;
+    }
+    .limit-inline-copy {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 6px;
+      width: 397px;
+      height: 24px;
+      flex: none;
+    }
+    .limit-inline-line {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 9px;
+      width: 379px;
+      height: 24px;
+      flex: none;
+    }
+    .limit-inline-text {
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 400;
+      color: #90949a;
+      flex: none;
+    }
+    .limit-inline-text.short { width: 144px; }
+    .limit-inline-text.long { width: 216px; }
+    .limit-inline-divider {
+      width: 1px;
+      height: 19px;
+      background: #e0e0e0;
+      flex: none;
+    }
+    .rights-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      color: #90949a;
+      font-size: 24px;
+      line-height: 24px;
+    }
+    .rights-row img { width: 24px; height: 24px; flex: none; }
+  </style>
+</head>
+<body>
+  <article class="card">
+    <div class="head">
+      <img src="https://gw.alicdn.com/imgextra/i4/O1CN016QHX501Kgu2CX3b2h_!!6000000001194-2-tps-105-34.png" alt="精选权益">
+      <div class="head-copy">另赠超值权益</div>
+    </div>
+    <div class="tabs">
+      <div class="tab active">
+        <div class="tab-panel">
+          <div class="tab-title">返100元现金</div>
+          <div class="tab-sub">¥940</div>
+        </div>
+      </div>
+      <div class="tab">
+        <div class="tab-panel">
+          <div class="tab-title">赠500里程</div>
+          <div class="tab-sub">¥1620</div>
+        </div>
+      </div>
+      <div class="tab">
+        <div class="tab-panel">
+          <div class="tab-title">赠600里程</div>
+          <div class="tab-sub">¥1690</div>
+        </div>
+      </div>
+    </div>
+    <div class="body">
+      <button class="buy" aria-label="预订">订</button>
+      <div class="price-col">
+        <div class="price-row">
+          <div class="price-main">
+            <span class="currency">¥</span>
+            <span class="amount">1045</span>
+          </div>
+        </div>
+        <div class="cashback">
+          <img class="cashback-logo" src="https://gw.alicdn.com/imgextra/i3/O1CN017gisda1bnAvVisw4P_!!6000000003509-2-tps-56-19.png" alt="返现金">
+          <span class="cashback-divider" aria-hidden="true"></span>
+          <span class="cashback-action">
+            <span class="cashback-amount">¥100</span>
+            <span class="cashback-arrow" aria-hidden="true"></span>
+          </span>
+        </div>
+      </div>
+      <div class="info">
+        <div>托运行李共20公斤</div>
+        <div>退改¥41起</div>
+        <div>经济舱2.6折</div>
+        <div class="limit-inline">
+          <div class="limit-badge">限</div>
+          <div class="limit-inline-copy">
+            <div class="limit-inline-line">
+              <span class="limit-inline-text short">赠机场咖啡</span>
+              <span class="limit-inline-divider" aria-hidden="true"></span>
+              <span class="limit-inline-text long">仅限信用卡支付购买</span>
+            </div>
+          </div>
+        </div>
+        <div class="rights-row">
+          <img src="https://gw.alicdn.com/imgextra/i4/O1CN01IINuL62A20gw5YBi0_!!6000000008144-2-tps-24-24.png" alt="礼">
+          <span>赠520安心礼包</span>
+        </div>
+      </div>
+    </div>
+  </article>
+</body>
+</html>

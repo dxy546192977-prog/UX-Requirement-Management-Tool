@@ -1,0 +1,94 @@
+{
+  "updatedAt": "2026-04-20 16:10",
+  "monitor": {
+    "taskName": "机票订详页海免商品推荐链路监测",
+    "requirementName": "机票订详页新增海南离岛免税商品推荐模块（REQ-FLT-2026-0419-HM01）"
+  },
+  "skills": [
+    {
+      "id": "fliggy-flight-prd-to-h5",
+      "name": "fliggy-flight-prd-to-h5",
+      "description": "机票 PRD → H5 统一入口；路由到设计/审查 skill"
+    },
+    {
+      "id": "fliggy-flight-design-guide",
+      "name": "fliggy-flight-design-guide",
+      "description": "飞猪机票设计规范执行；产出单文件 H5"
+    },
+    {
+      "id": "fliggy-flight-h5-to-review",
+      "name": "fliggy-flight-h5-to-review",
+      "description": "H5 质量审查；Phase 3 关键问题清零"
+    },
+    {
+      "id": "fliggy-flight-h5-to-figma",
+      "name": "fliggy-flight-h5-to-figma",
+      "description": "H5 → Figma 交付包；token 映射 + handoff JSON"
+    }
+  ],
+  "runs": [
+    {
+      "id": "run-2026-04-20-004",
+      "skillId": "fliggy-flight-h5-to-review",
+      "taskTitle": "机票订详-海免商品推荐 · H5 评审",
+      "requirementId": "REQ-FLT-2026-0419-HM01",
+      "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+      "startedAt": "2026-04-20 14:28",
+      "finishedAt": null,
+      "status": "running",
+      "phases": [
+        { "name": "Phase 0 · 载入 H5", "model": "composer-2", "promptTokens": 6800, "completionTokens": 420, "durationMs": 2100, "status": "pass" },
+        { "name": "Phase 1 · 结构解析", "model": "claude-4.6-sonnet", "promptTokens": 12400, "completionTokens": 3100, "durationMs": 9800, "status": "pass" },
+        { "name": "Phase 2 · 基准对标", "model": "claude-4.6-sonnet", "promptTokens": 18900, "completionTokens": 4600, "durationMs": 15600, "status": "running" },
+        { "name": "Phase 3 · 评分与报告", "model": "", "promptTokens": 0, "completionTokens": 0, "durationMs": 0, "status": "idle" }
+      ]
+    },
+    {
+      "id": "run-2026-04-20-003",
+      "skillId": "fliggy-flight-design-guide",
+      "taskTitle": "机票订详-海免商品推荐 · 设计产出",
+      "requirementId": "REQ-FLT-2026-0419-HM01",
+      "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+      "startedAt": "2026-04-20 14:10",
+      "finishedAt": "2026-04-20 14:22",
+      "status": "pass",
+      "phases": [
+        { "name": "Phase 0 · 读规范", "model": "composer-2", "promptTokens": 5400, "completionTokens": 380, "durationMs": 1800, "status": "pass" },
+        { "name": "Phase 1 · 路由匹配", "model": "composer-1.5", "promptTokens": 3200, "completionTokens": 260, "durationMs": 900, "status": "pass" },
+        { "name": "Phase 2 · H5 生成", "model": "claude-4.6-sonnet", "promptTokens": 22600, "completionTokens": 8900, "durationMs": 48000, "status": "pass" },
+        { "name": "Phase 3 · 自检", "model": "gpt-5.4-medium", "promptTokens": 11200, "completionTokens": 1600, "durationMs": 12400, "status": "pass" }
+      ]
+    },
+    {
+      "id": "run-2026-04-20-002",
+      "skillId": "fliggy-flight-prd-to-h5",
+      "taskTitle": "海免离岛免税推荐 · PRD 路由",
+      "requirementId": "REQ-FLT-2026-0419-HM01",
+      "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+      "startedAt": "2026-04-20 13:52",
+      "finishedAt": "2026-04-20 14:09",
+      "status": "pass",
+      "phases": [
+        { "name": "Phase 0 · 抓取语雀", "model": "composer-2", "promptTokens": 2100, "completionTokens": 180, "durationMs": 4100, "status": "pass" },
+        { "name": "Phase 1 · 页面路由", "model": "composer-1.5", "promptTokens": 4800, "completionTokens": 620, "durationMs": 1600, "status": "pass" },
+        { "name": "Phase 2 · 下发设计 skill", "model": "claude-4.6-sonnet", "promptTokens": 9400, "completionTokens": 2200, "durationMs": 8900, "status": "pass" },
+        { "name": "Phase 3 · 产出 handoff", "model": "composer-2", "promptTokens": 3600, "completionTokens": 940, "durationMs": 2600, "status": "pass" }
+      ]
+    },
+    {
+      "id": "run-2026-04-19-004",
+      "skillId": "fliggy-flight-h5-to-figma",
+      "taskTitle": "机票订详-海免商品推荐 · Figma 交付包导出",
+      "requirementId": "REQ-FLT-2026-0419-HM01",
+      "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+      "startedAt": "2026-04-19 21:05",
+      "finishedAt": "2026-04-19 21:14",
+      "status": "pass",
+      "phases": [
+        { "name": "Phase 0 · 解析 H5", "model": "composer-2", "promptTokens": 7200, "completionTokens": 480, "durationMs": 2800, "status": "pass" },
+        { "name": "Phase 1 · Token 映射", "model": "claude-4.6-sonnet", "promptTokens": 10800, "completionTokens": 2400, "durationMs": 9600, "status": "pass" },
+        { "name": "Phase 2 · handoff JSON", "model": "gpt-5.4-medium", "promptTokens": 4600, "completionTokens": 1800, "durationMs": 5100, "status": "pass" }
+      ]
+    }
+  ]
+}

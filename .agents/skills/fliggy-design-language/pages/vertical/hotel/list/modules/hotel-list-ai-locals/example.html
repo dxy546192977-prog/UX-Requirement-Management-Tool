@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>酒店列表 — AI 本地人认证</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+        }
+        * { box-sizing: border-box; }
+        .mobile-preview { width: 750px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .skill-list-page {
+            position: relative;
+            width: 750px;
+            background: linear-gradient(180deg, #D9DAF7 0%, #E9EAF6 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+        .header-section { width: 100%; }
+        .status-bar {
+            width: 750px;
+            height: 88px;
+            position: relative;
+            color: #0F131A;
+            box-sizing: border-box;
+            padding: 32px 28px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-bar .time { font-size: 28px; font-weight: 500; margin-left: 40px; }
+        .status-bar .status-icons { display: flex; align-items: center; gap: 12px; }
+        .nav-bar {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 24px;
+            gap: 24px;
+            width: 750px;
+            height: 90px;
+        }
+        .nav-bar .back-arrow { width: 48px; height: 48px; }
+        .nav-bar .search-box {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 20px;
+            gap: 18px;
+            flex-grow: 1;
+            height: 72px;
+            background: #FFFFFF;
+            border-radius: 36px;
+        }
+        .search-box .hotel-params {
+            display: flex;
+            align-items: center;
+            padding-left: 4px;
+            gap: 18px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #0F131A;
+        }
+        .hotel-params .date-group, .hotel-params .guest-group { font-size: 22px; line-height: 1.2; }
+        .date-group span, .guest-group span { display: block; }
+        .search-box .divider { width: 1px; height: 40px; background-color: #D2D4D9; }
+        .search-box .search-placeholder { font-size: 26px; color: #919499; flex-grow: 1; }
+        .nav-bar .nav-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2px;
+            width: 42px;
+            text-align: center;
+            font-size: 20px;
+            color: #0F131A;
+        }
+        .guide-arrow-pointer {
+            position: absolute;
+            width: 48px;
+            height: 16px;
+            left: 615px;
+            top: 182px;
+            z-index: 3;
+        }
+        .content-section {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 24px;
+            width: 702px;
+            background: linear-gradient(180deg, #EBECFA 0%, #FFFFFF 100%);
+            border: 2px solid #FFFFFF;
+            border-radius: 24px;
+            margin: 0 24px;
+            z-index: 1;
+        }
+        .content-section .title-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 30px;
+            font-weight: 500;
+            color: #0F131A;
+        }
+        .title-row img { width: 36px; height: 36px; }
+        .title-row .highlight { color: #6666FF; }
+        .inner-content { display: flex; flex-direction: column; gap: 24px; }
+        .quick-filters {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .quick-filters::-webkit-scrollbar { display: none; }
+        .filter-card {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 18px;
+            height: 106px;
+            min-width: 162px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            flex-shrink: 0;
+            gap: 5px;
+        }
+        .filter-card.active { background: rgba(102, 102, 255, 0.14); }
+        .filter-card .main-text { font-size: 24px; font-weight: 500; color: #0F131A; line-height: 1.4; }
+        .filter-card .sub-text { font-size: 22px; color: #919499; line-height: 1.4; }
+        .filter-card.wide { min-width: 172px; }
+        .filter-card.wider { min-width: 180px; }
+        .main-content-card { display: flex; gap: 24px; }
+        .main-content-card .image-container { width: 192px; height: 265px; flex-shrink: 0; }
+        .main-content-card .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .main-content-card .text-content { display: flex; flex-direction: column; flex-grow: 1; }
+        .text-content .card-title {
+            font-size: 26px;
+            font-weight: 500;
+            color: #0F131A;
+            line-height: 1.4;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 12px;
+        }
+        .descriptions-wrapper { display: flex; flex-direction: column; gap: 8px; }
+        .text-content .card-description { font-size: 24px; color: #5C5F66; line-height: 1.7; margin: 0; }
+        .highlight-bold { font-weight: 500; color: #0F131A; }
+        .bottom-filter-section {
+            width: 750px;
+            background: #FFFFFF;
+            border-radius: 24px 24px 0px 0px;
+            z-index: 2;
+        }
+        .main-filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 19px 48px;
+            height: 72px;
+            box-sizing: border-box;
+        }
+        .filter-item { display: flex; align-items: center; gap: 6px; font-size: 24px; color: #0F131A; }
+        .secondary-filter-row {
+            display: flex;
+            align-items: center;
+            padding: 6px 0px 6px 24px;
+            gap: 12px;
+            height: 72px;
+            box-sizing: border-box;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .secondary-filter-row::-webkit-scrollbar { display: none; }
+        .secondary-filter-item {
+            display: flex;
+            align-items: center;
+            padding: 13px 18px;
+            gap: 6px;
+            height: 60px;
+            background: #F7F8FA;
+            border-radius: 6px;
+            font-size: 24px;
+            color: #0F131A;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .secondary-filter-item img { width: 30px; height: 30px; }
+    </style>
+</head>
+<body>
+    <div class="mobile-preview">
+        <div class="skill-list-page">
+            <header class="header-section">
+                <div class="status-bar">
+                    <span class="time">9:41</span>
+                    <div class="status-icons">
+                        <svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M24 8H26C27.1046 8 28 8.89543 28 10V22C28 23.1046 27.1046 24 26 24H24C22.8954 24 22 23.1046 22 22V10C22 8.89543 22.8954 8 24 8Z" fill="#0F131A"/><path fill-rule="evenodd" clip-rule="evenodd" d="M15 12H17C18.1046 12 19 12.8954 19 14V22C19 23.1046 18.1046 24 17 24H15C13.8954 24 13 23.1046 13 22V14C13 12.8954 13.8954 12 15 12Z" fill="#0F131A"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6 15H8C9.10457 15 10 15.8954 10 17V22C10 23.1046 9.10457 24 8 24H6C4.89543 24 4 23.1046 4 22V17C4 15.8954 4.89543 15 6 15Z" fill="#0F131A"/><path fill-rule="evenodd" clip-rule="evenodd" d="M33 4H35C36.1046 4 37 4.89543 37 6V22C37 23.1046 36.1046 24 35 24H33C31.8954 24 31 23.1046 31 22V6C31 4.89543 31.8954 4 33 4Z" fill="#0F131A"/></svg>
+                        <svg width="32" height="28" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.2654 17.8792C17.5444 17.8792 18.7872 18.2152 19.8822 18.8561L20.3259 19.1157C20.6623 19.3126 20.7214 19.7733 20.4456 20.0483L16.6575 23.826C16.4248 24.058 16.0475 24.058 15.8148 23.826L12.051 20.0726C11.7765 19.7988 11.8337 19.3404 12.1672 19.1421L12.6059 18.8813C13.711 18.2242 14.9695 17.8792 16.2654 17.8792Z" fill="#0F131A"/><path d="M16.2653 10.9397C19.447 10.9397 22.5018 11.9952 24.9904 13.9498L25.3421 14.2261C25.6225 14.4463 25.6471 14.8613 25.3948 15.113L23.1332 17.3682C22.924 17.5768 22.5931 17.6008 22.3559 17.4245L22.0802 17.2196C20.3994 15.9705 18.3727 15.3004 16.2653 15.3004C14.145 15.3004 12.1065 15.9788 10.4201 17.2423L10.1441 17.4491C9.90692 17.6268 9.57473 17.6034 9.36493 17.3942L7.10421 15.1397C6.85236 14.8886 6.87627 14.4746 7.15537 14.254L7.50508 13.9775C9.99957 12.0055 13.0683 10.9397 16.2653 10.9397Z" fill="#0F131A"/><path d="M16.2654 4C21.3148 4 26.1435 5.78114 29.9655 9.04589L30.2918 9.32455C30.5554 9.54976 30.571 9.95115 30.3255 10.1959L28.0713 12.4439C27.8529 12.6617 27.5038 12.6769 27.2671 12.479L26.988 12.2457C23.9788 9.72943 20.2071 8.36071 16.2654 8.36071C12.3103 8.36071 8.52654 9.73886 5.51282 12.2708L5.2336 12.5054C4.99699 12.7042 4.64717 12.6893 4.4284 12.4711L2.17451 10.2235C1.92939 9.97907 1.94447 9.57836 2.20729 9.35293L2.53228 9.07417C6.35905 5.79178 11.2011 4 16.2654 4Z" fill="#0F131A"/></svg>
+                        <svg width="50" height="28" viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M48 10C49.1046 10 50 10.8954 50 12V16C50 17.1046 49.1046 18 48 18V10Z" fill="#0F131A"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6 2H40C43.3137 2 46 4.68629 46 8V20C46 23.3137 43.3137 26 40 26H6C2.68629 26 0 23.3137 0 20V8C0 4.68629 2.68629 2 6 2ZM6 4C3.79086 4 2 5.79086 2 8V20C2 22.2091 3.79086 24 6 24H40C42.2091 24 44 22.2091 44 20V8C44 5.79086 42.2091 4 40 4H6Z" fill="#0F131A"/><rect x="4" y="6" width="38" height="16" rx="2" fill="#0F131A"/></svg>
+                    </div>
+                </div>
+                <nav class="nav-bar">
+                    <div class="back-arrow">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M33.0601 38.94C33.3251 39.2243 33.4694 39.6004 33.4625 39.989C33.4556 40.3776 33.2982 40.7484 33.0234 41.0232C32.7486 41.2981 32.3778 41.4555 31.9892 41.4623C31.6006 41.4692 31.2245 41.325 30.9401 41.06L14.9401 25.06C14.6592 24.7787 14.5015 24.3975 14.5015 24C14.5015 23.6025 14.6592 23.2212 14.9401 22.94L30.9401 6.94C31.2245 6.67504 31.6006 6.53079 31.9892 6.53765C32.3778 6.5445 32.7486 6.70193 33.0234 6.97675C33.2982 7.25158 33.4556 7.62235 33.4625 8.01095C33.4694 8.39956 33.3251 8.77565 33.0601 9.06L18.1221 24L33.0621 38.94H33.0601Z" fill="#0F131A"/></svg>
+                    </div>
+                    <div class="search-box">
+                        <div class="hotel-params">
+                            <span>杭州</span>
+                            <div class="date-group"><span>03-04</span><span>03-05</span></div>
+                            <div class="guest-group"><span>1间</span><span>2人</span></div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="search-placeholder">试试“杭州西湖”</div>
+                    </div>
+                    <div class="nav-actions">
+                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M33.4688 4.79062C34.1302 4.79062 34.7645 5.05335 35.2322 5.52102C35.6999 5.98869 35.9626 6.62299 35.9626 7.28437V34.7156C35.9628 35.3448 35.7252 35.9507 35.2974 36.4121C34.8696 36.8734 34.2833 37.156 33.6559 37.2031L33.4688 37.2094H11.0251C9.70233 37.2094 8.43374 36.6839 7.4984 35.7486C6.56306 34.8132 6.0376 33.5446 6.0376 32.2219V9.77812C6.0376 8.45535 6.56306 7.18676 7.4984 6.25142C8.43374 5.31609 9.70233 4.79062 11.0251 4.79062H33.4688ZM33.4688 29.7281H11.0251C10.3637 29.7281 9.72942 29.9909 9.26175 30.4585C8.79408 30.9262 8.53135 31.5605 8.53135 32.2219C8.53135 32.8833 8.79408 33.5176 9.26175 33.9852C9.72942 34.4529 10.3637 34.7156 11.0251 34.7156H33.4688V29.7281ZM33.4688 7.28437H22.247V18.5062C22.247 18.7038 22.2001 18.8986 22.1101 19.0745C22.0201 19.2503 21.8897 19.4023 21.7294 19.5179C21.5692 19.6334 21.3837 19.7093 21.1884 19.7391C20.9931 19.769 20.7935 19.752 20.6061 19.6895L17.2595 18.5736L13.9129 19.6895C13.7254 19.752 13.5258 19.769 13.3305 19.7391C13.1352 19.7093 12.9498 19.6334 12.7895 19.5179C12.6293 19.4023 12.4988 19.2503 12.4088 19.0745C12.3188 18.8986 12.2719 18.7038 12.272 18.5062V7.28437H11.0251C10.3637 7.28437 9.72942 7.5471 9.26175 8.01477C8.79408 8.48244 8.53135 9.11674 8.53135 9.77812V27.9014C9.28924 27.4631 10.1496 27.233 11.0251 27.2344H33.4688V7.28437ZM19.7532 7.28437H14.7657V16.7768L16.8655 16.0761C17.1212 15.9909 17.3977 15.9909 17.6535 16.0761L19.7532 16.7768V7.28437Z" fill="#0F131A"/></svg>
+                        <span>攻略</span>
+                    </div>
+                    <div class="nav-actions">
+                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M35.1831 16.0016C36.3016 16.0016 37.2093 16.9492 37.2093 18.1176V30.3245C37.2093 31.408 36.642 32.4043 35.7305 32.9242L29.8078 36.297C28.9821 36.7705 28.0533 37.0353 27.1021 37.0686C26.1508 37.1018 25.2058 36.9024 24.349 36.4878L18.071 33.4628C17.5944 33.2321 17.0718 33.1122 16.5423 33.1122C16.0128 33.1122 15.4902 33.2321 15.0137 33.4628L7.66582 37.004C7.40101 37.1318 7.11077 37.1983 6.8167 37.1985C5.69825 37.1985 4.79053 36.2509 4.79053 35.0825V20.7023C4.79053 19.428 5.57232 18.2959 6.73067 17.8931L8.05235 17.4318C8.69075 17.2111 9.37903 17.5702 9.591 18.2348C9.80297 18.9006 9.45883 19.6188 8.82167 19.8407L7.49999 20.3021C7.41789 20.3318 7.34705 20.3862 7.29724 20.4579C7.24743 20.5296 7.22112 20.615 7.22193 20.7023V34.4229L13.995 31.1586C14.7891 30.7742 15.66 30.5745 16.5423 30.5745C17.4246 30.5745 18.2955 30.7742 19.0897 31.1586L25.3677 34.1848C26.4151 34.6898 27.6295 34.6461 28.6432 34.0701L34.5659 30.696C34.6308 30.6583 34.6846 30.604 34.7219 30.5388C34.7591 30.4735 34.7784 30.3996 34.7779 30.3245V18.7048L33.9462 18.9941C33.3103 19.2161 32.6208 18.857 32.4088 18.1924C32.1968 17.5265 32.541 16.8083 33.1781 16.5864L34.5422 16.1126C34.7492 16.039 34.9662 16.0029 35.1831 16.0029V16.0016ZM28.0585 7.32585C31.9475 11.2685 31.9475 17.6537 28.0585 21.5963C27.5597 22.1026 27.1196 22.5066 26.1507 23.3756L26.1308 23.3943C25.1782 24.2484 24.7717 24.625 24.3191 25.0826C23.97 25.438 23.4463 26.0203 22.7617 26.8245C22.5446 27.0798 22.2746 27.2848 21.9704 27.4254C21.6662 27.566 21.335 27.6389 20.9999 27.6389C20.6648 27.6389 20.3336 27.566 20.0294 27.4254C19.7252 27.2848 19.4552 27.0798 19.2381 26.8245C18.5598 26.0277 18.0448 25.4517 17.6982 25.1013C17.2431 24.64 16.8341 24.2609 15.8777 23.4031L15.793 23.327C14.8877 22.514 14.4314 22.0926 13.9413 21.5963C10.0523 17.6537 10.0523 11.2685 13.9413 7.32585C14.862 6.3878 15.9604 5.64266 17.1724 5.134C18.3843 4.62533 19.6855 4.36334 20.9999 4.36334C22.3143 4.36334 23.6155 4.62533 24.8274 5.134C26.0394 5.64266 27.1378 6.3878 28.0585 7.32585ZM15.7917 9.1625C12.9052 12.0877 12.9052 16.8345 15.7917 19.7597C16.2319 20.2061 16.6608 20.6038 17.5274 21.3806L17.6121 21.4567C18.6096 22.3519 19.0423 22.7522 19.5485 23.2647C19.9064 23.6275 20.3889 24.1624 20.9999 24.8756C21.6196 24.1549 22.1071 23.6138 22.4687 23.246L22.7181 22.9978C23.2652 22.468 23.8248 21.9512 24.3964 21.448L24.4176 21.4293C25.3453 20.5963 25.7592 20.2148 26.2081 19.7584C29.0946 16.8345 29.0946 12.0877 26.2081 9.1625C25.529 8.46994 24.7186 7.91978 23.8243 7.5442C22.9301 7.16862 21.9699 6.97517 20.9999 6.97517C20.03 6.97517 19.0698 7.16862 18.1755 7.5442C17.2812 7.91978 16.4708 8.46994 15.7917 9.1625ZM20.9999 11.8458C21.6613 11.8458 22.2956 12.1085 22.7633 12.5762C23.2309 13.0438 23.4937 13.6781 23.4937 14.3395C23.4937 15.0009 23.2309 15.6352 22.7633 16.1029C22.2956 16.5705 21.6613 16.8333 20.9999 16.8333C20.3385 16.8333 19.7042 16.5705 19.2366 16.1029C18.7689 15.6352 18.5062 15.0009 18.5062 14.3395C18.5062 13.6781 18.7689 13.0438 19.2366 12.5762C19.7042 12.1085 20.3385 11.8458 20.9999 11.8458Z" fill="#0F131A"/></svg>
+                        <span>地图</span>
+                    </div>
+                </nav>
+            </header>
+
+            <img src="https://gw.alicdn.com/imgextra/i2/O1CN01dCSSU726rzAxpOLlF_!!6000000007716-2-tps-96-32.png" alt="" class="guide-arrow-pointer">
+
+            <main class="content-section">
+                <div class="title-row">
+                    <img src="https://gw.alicdn.com/imgextra/i4/O1CN01retUY51fF3tEkLdFs_!!6000000003976-2-tps-108-108.png" alt="">
+                    <span>本地人认证！来</span>
+                    <span class="highlight">杭州</span>
+                    <span>住这里</span>
+                </div>
+                <div class="inner-content">
+                    <div class="quick-filters">
+                        <div class="filter-card active wide">
+                            <span class="main-text">杭州西湖</span>
+                            <span class="sub-text">热度上涨28%</span>
+                        </div>
+                        <div class="filter-card">
+                            <span class="main-text">杭州东站</span>
+                            <span class="sub-text">24%人选择</span>
+                        </div>
+                        <div class="filter-card wider">
+                            <span class="main-text">萧山国际机场</span>
+                            <span class="sub-text">18%人选择</span>
+                        </div>
+                        <div class="filter-card">
+                            <span class="main-text">千岛湖</span>
+                            <span class="sub-text">13%人选择</span>
+                        </div>
+                    </div>
+                    <div class="main-content-card">
+                        <div class="image-container">
+                            <img src="https://gw.alicdn.com/imgextra/i3/O1CN01pl3nuu1ghkJKm0QlW_!!6000000004174-2-tps-384-530.png" alt="西湖">
+                        </div>
+                        <div class="text-content">
+                            <h3 class="card-title">柳浪闻莺，断桥残雪</h3>
+                            <div class="descriptions-wrapper">
+                                <p class="card-description">带娃出行救星！<span class="highlight-bold">西湖仅15分钟</span>，落地直奔酒店躺平。出门看<span class="highlight-bold">苏堤春晓平湖月</span>，高性价比大排档，感受杭州烟火气！</p>
+                                <p class="card-description">性价比酒店：住宿<span class="highlight-bold">性价比天花板！</span>花经济型预算住一线湖景房。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="bottom-filter-section">
+                <div class="main-filter-row">
+                    <div class="filter-item">
+                        <span>推荐排序</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg>
+                    </div>
+                    <div class="filter-item">
+                        <span>位置距离</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg>
+                    </div>
+                    <div class="filter-item">
+                        <span>价格星级</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg>
+                    </div>
+                    <div class="filter-item">
+                        <span>筛选</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.78576 7.22893C3.18376 6.44584 3.74203 5.3125 4.72978 5.3125L15.2702 5.3125C16.258 5.3125 16.8163 6.44584 16.2143 7.22893L10.944 14.0845C10.4674 14.7045 9.53263 14.7045 9.056 14.0845L3.78576 7.22893Z" fill="#0F131A"/></svg>
+                    </div>
+                </div>
+                <div class="secondary-filter-row">
+                    <div class="secondary-filter-item">
+                        <img src="https://gw.alicdn.com/imgextra/i2/O1CN01hbLw2J292dcMBPU28_!!6000000008010-2-tps-90-90.png" alt="">
+                        <span>热门优惠</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.3029 8.25142C17.4554 8.24051 17.6077 8.2765 17.7392 8.35456C17.8707 8.43262 17.9752 8.54903 18.0387 8.68817C18.1022 8.8273 18.1216 8.98253 18.0944 9.13302C18.0672 9.28352 17.9946 9.4221 17.8864 9.53017L12.5839 14.8334C12.5142 14.9032 12.4315 14.9585 12.3404 14.9962C12.2494 15.034 12.1518 15.0534 12.0532 15.0534C11.9547 15.0534 11.8571 15.034 11.766 14.9962C11.675 14.9585 11.5923 14.9032 11.5226 14.8334L6.21936 9.53092C6.11425 9.42607 6.04262 9.29239 6.01355 9.14679C5.98447 9.0012 5.99926 8.85025 6.05605 8.71308C6.11283 8.5759 6.20905 8.45866 6.33252 8.37621C6.45599 8.29376 6.60115 8.24981 6.74961 8.24992H17.2496C17.2676 8.24992 17.2856 8.24992 17.3029 8.25142Z" fill="#0F131A"/></svg>
+                    </div>
+                    <div class="secondary-filter-item">
+                        <span>热门品牌</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.3029 8.25142C17.4554 8.24051 17.6077 8.2765 17.7392 8.35456C17.8707 8.43262 17.9752 8.54903 18.0387 8.68817C18.1022 8.8273 18.1216 8.98253 18.0944 9.13302C18.0672 9.28352 17.9946 9.4221 17.8864 9.53017L12.5839 14.8334C12.5142 14.9032 12.4315 14.9585 12.3404 14.9962C12.2494 15.034 12.1518 15.0534 12.0532 15.0534C11.9547 15.0534 11.8571 15.034 11.766 14.9962C11.675 14.9585 11.5923 14.9032 11.5226 14.8334L6.21936 9.53092C6.11425 9.42607 6.04262 9.29239 6.01355 9.14679C5.98447 9.0012 5.99926 8.85025 6.05605 8.71308C6.11283 8.5759 6.20905 8.45866 6.33252 8.37621C6.45599 8.29376 6.60115 8.24981 6.74961 8.24992H17.2496C17.2676 8.24992 17.2856 8.24992 17.3029 8.25142Z" fill="#0F131A"/></svg>
+                    </div>
+                    <div class="secondary-filter-item"><span>里程抵房费</span></div>
+                    <div class="secondary-filter-item"><span>钟点房</span></div>
+                    <div class="secondary-filter-item"><span>湖畔美居</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

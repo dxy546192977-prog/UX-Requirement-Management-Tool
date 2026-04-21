@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — switch（滑动开关）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 18px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-preview-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px 36px;
+  background: var(--color-white);
+  padding: 36px 48px;
+  border-radius: var(--radius-m);
+  box-shadow: 0 8px 24px rgba(15, 19, 26, 0.08);
+  border: 1px solid var(--color-auxiliary);
+}
+
+.fdl-switch-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.fdl-switch-demo__label {
+  font-weight: 500;
+  color: var(--color-darkgray);
+  font-size: 26px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.fdl-switch-demo__label-state {
+  font-weight: 400;
+  color: var(--color-midgray);
+  font-size: 22px;
+}
+
+/* ========== fdl-switch 组件 ========== */
+.fdl-switch {
+  position: relative;
+  width: 80px;
+  height: 50px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  flex-shrink: 0;
+  background-color: var(--color-auxiliary);
+}
+
+.fdl-switch__handle {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  top: 3px;
+  left: 3px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  box-shadow: none;
+}
+
+.fdl-switch--on {
+  background-color: var(--color-brand-1);
+}
+
+.fdl-switch--on .fdl-switch__handle {
+  left: auto;
+  right: 3px;
+  box-shadow: -2px 3px 5px #e5c600;
+}
+
+.fdl-switch--disabled {
+  cursor: not-allowed;
+}
+
+.fdl-switch:not(.fdl-switch--on).fdl-switch--disabled {
+  opacity: 0.3;
+}
+
+.fdl-switch--on.fdl-switch--disabled .fdl-switch__handle {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+  </style>
+</head>
+<body>
+
+  <div class="fdl-preview-container">
+    <div class="fdl-switch-demo">
+      <div class="fdl-switch-demo__label">关闭 <span class="fdl-switch-demo__label-state">(启用)</span></div>
+      <div class="fdl-switch" role="switch" aria-checked="false" aria-disabled="false">
+        <div class="fdl-switch__handle" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="fdl-switch-demo">
+      <div class="fdl-switch-demo__label">开启 <span class="fdl-switch-demo__label-state">(启用)</span></div>
+      <div class="fdl-switch fdl-switch--on" role="switch" aria-checked="true" aria-disabled="false">
+        <div class="fdl-switch__handle" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="fdl-switch-demo">
+      <div class="fdl-switch-demo__label">关闭 <span class="fdl-switch-demo__label-state">(禁用)</span></div>
+      <div class="fdl-switch fdl-switch--disabled" role="switch" aria-checked="false" aria-disabled="true">
+        <div class="fdl-switch__handle" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="fdl-switch-demo">
+      <div class="fdl-switch-demo__label">开启 <span class="fdl-switch-demo__label-state">(禁用)</span></div>
+      <div class="fdl-switch fdl-switch--on fdl-switch--disabled" role="switch" aria-checked="true" aria-disabled="true">
+        <div class="fdl-switch__handle" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

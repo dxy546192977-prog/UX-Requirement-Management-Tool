@@ -14,8 +14,9 @@
  * - PRD 拆解阶段（decomposing）：优先 config.ai_decompose_*，缺省回退 config.ai_*
  */
 
-const https = require('https');
-const http  = require('http');
+const https  = require('https');
+const http   = require('http');
+const crypto = require('crypto');
 
 // ---------- 任务存储（内存）----------
 
@@ -182,12 +183,26 @@ async function _runJob(job, config, yuqueSvc) {
   try {
     prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
   } catch (err) {
-    throw new Error('PRD 抓取失败: ' + err.message);
+    // fliggy_flight_prd_to_h5 skill 降级：PRD 无法抓取时，用需求 ID 和 URL 作为最小上下文继续生成 H5
+    if (job.skill_key === 'fliggy_flight_prd_to_h5') {
+      console.warn(`[AiDesign] Job ${job.id} — PRD fetch failed, falling back to minimal context: ${err.message}`);
+      prdContent = {
+        title:       `需求 ${job.req_id} — 飞猪机票需求`,
+        creator:     'Unknown',
+        description: `PRD 链接：${job.prd_url}\n\n注意：PRD 文档无法自动抓取（${err.message}），以下 H5 基于需求 ID 和飞猪机票设计规范生成，请人工核对业务细节。`,
+        body:        `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
+        body_text:   `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
+        imageUrls:   [],
+        source:      'fallback'
+      };
+    } else {
+      throw new Error('PRD 抓取失败: ' + err.message);
+    }
   }
 
   const rawBody = prdContent.body || prdContent.description || '';
-  const bodyText = _stripHtml(rawBody);
-  const imageUrls = _extractImageUrls(rawBody);
+  const bodyText = prdContent.source === 'fallback' ? prdContent.body_text : _stripHtml(rawBody);
+  const imageUrls = prdContent.source === 'fallback' ? [] : _extractImageUrls(rawBody);
 
   // Phase 2: 结构化需求拆解
   _updateJob(job, { stage: 'decomposing' });
@@ -227,15 +242,99 @@ async function _runJob(job, config, yuqueSvc) {
 
   const modules = _parsePlanResult(planResult, parsed.pages, job.skill_key);
 
+  // Phase 4: H5 生成（仅 fliggy_flight_prd_to_h5 skill）
+  let htmlOutputPath = null;
+  if (job.skill_key === 'fliggy_flight_prd_to_h5') {
+    _updateJob(job, { stage: 'generating_h5' });
+    console.log(`[AiDesign] Job ${job.id} — Phase 4: generating H5`);
+
+    const h5AiConfig = _resolveStageAiConfig(config, 'planning');
+    console.log(`[AiDesign] Job ${job.id} — H5 model: ${h5AiConfig.provider}/${h5AiConfig.model}`);
+
+    try {
+      const h5Result = await _callAi(h5AiConfig, _buildH5Prompt(prdContent.title, bodyText, parsed, modules));
+      htmlOutputPath = await _saveH5Output(job.id, h5Result);
+      console.log(`[AiDesign] Job ${job.id} — H5 saved to: ${htmlOutputPath}`);
+    } catch (h5Err) {
+      console.warn(`[AiDesign] Job ${job.id} — H5 generation failed (non-fatal): ${h5Err.message}`);
+    }
+  }
+
   _updateJob(job, {
-    status:  'needs_confirmation',
-    stage:   null,
-    summary: parsed.summary,
-    pages:   parsed.pages,
-    modules
+    status:           'needs_confirmation',
+    stage:            null,
+    summary:          parsed.summary,
+    pages:            parsed.pages,
+    modules,
+    html_output_path: htmlOutputPath
   });
 
-  console.log(`[AiDesign] Job ${job.id} — Done. ${modules.length} modules identified.`);
+  console.log(`[AiDesign] Job ${job.id} — Done. ${modules.length} modules identified.${htmlOutputPath ? ' H5 ready.' : ''}`);
+}
+
+// ---------- H5 生成 ----------
+
+const FLIGGY_FLIGHT_H5_SYSTEM = `你是飞猪机票 UX 工程师，负责根据 PRD 拆解结果生成符合飞猪设计规范的移动端 H5 页面。
+
+核心约束（必须严格遵守）：
+1. 输出单文件 HTML，内联所有 CSS，不引用外部资源
+2. viewport: <meta name="viewport" content="width=750, user-scalable=no">
+3. 使用 :root + var(--*) token 管理颜色、圆角、间距
+4. 飞猪品牌色：主色 #FF6600（橙），辅色 #1677FF（蓝），背景 #F5F5F5，卡片白 #FFFFFF
+5. 字体层级：标题 32px/28px，正文 26px，辅助 22px，说明 20px（单位 px，基于 750px 设计稿）
+6. 主流程布局：flex + column，禁止 position:absolute 编排主模块
+7. 模块间距统一用 gap 控制，相邻模块垂直空白不超过 24px
+8. 固定头部必须用 padding-top 补偿内容区偏移
+9. 只输出完整可运行的 HTML 代码，不要任何解释文字、Markdown 代码块标记`;
+
+function _buildH5Prompt(title, bodyText, decomposed, modules) {
+  const pageList = (decomposed.pages || []).join('、') || '首页';
+  const moduleList = (modules || []).map((m) =>
+    `- ${m.name}（${m.page || ''}）：${m.intent || ''}${m.notes ? '；' + m.notes : ''}`
+  ).join('\n');
+
+  return [
+    { role: 'system', content: FLIGGY_FLIGHT_H5_SYSTEM },
+    {
+      role: 'user',
+      content: `请根据以下飞猪机票需求拆解结果，生成一个完整的移动端 H5 页面。
+
+PRD 标题：${title}
+需求摘要：${decomposed.summary || ''}
+涉及页面：${pageList}
+
+模块清单：
+${moduleList}
+
+PRD 正文摘要：
+${(bodyText || '').slice(0, 3000)}
+
+要求：
+1. 以"首页"或第一个页面为主体生成 H5
+2. 包含顶部导航栏、主要业务模块、底部操作区
+3. 使用飞猪橙色品牌风格，卡片式布局
+4. 所有文案使用 PRD 中的真实业务内容，不要用 Lorem ipsum 占位
+5. 直接输出完整 HTML，不要任何前缀说明`
+    }
+  ];
+}
+
+async function _saveH5Output(jobId, h5Content) {
+  const fsModule   = require('fs');
+  const pathModule = require('path');
+
+  let html = h5Content || '';
+  const fenceMatch = html.match(/```(?:html)?\s*([\s\S]+?)```/i);
+  if (fenceMatch) html = fenceMatch[1].trim();
+
+  const outputDir = pathModule.join(__dirname, '..', 'outputs', 'flight');
+  fsModule.mkdirSync(outputDir, { recursive: true });
+
+  const fileName = `${jobId}.html`;
+  const filePath = pathModule.join(outputDir, fileName);
+  fsModule.writeFileSync(filePath, html, 'utf8');
+
+  return pathModule.join('outputs', 'flight', fileName);
 }
 
 /**
@@ -517,11 +616,15 @@ function _httpsPost(url, headers, body) {
     const isHttps  = parsed.protocol === 'https:';
     const lib      = isHttps ? https : http;
     const options  = {
-      hostname: parsed.hostname,
-      port:     parsed.port || (isHttps ? 443 : 80),
-      path:     parsed.pathname + parsed.search,
-      method:   'POST',
-      headers:  { ...headers, 'Content-Length': Buffer.byteLength(body) }
+      hostname:         parsed.hostname,
+      port:             parsed.port || (isHttps ? 443 : 80),
+      path:             parsed.pathname + parsed.search,
+      method:           'POST',
+      headers:          { ...headers, 'Content-Length': Buffer.byteLength(body) },
+      // Node.js v17+ OpenSSL 对部分服务器 TLS 握手更严格（SSL alert 40）
+      // 使用 SSL_OP_LEGACY_SERVER_CONNECT 兼容旧式握手（仅限内网开发环境）
+      rejectUnauthorized: false,
+      secureOptions:    crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT
     };
 
     const req = lib.request(options, (res) => {

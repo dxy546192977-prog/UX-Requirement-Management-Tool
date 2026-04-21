@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 浮层（半屏 Bottom Sheet）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-sheet-demo__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 750px;
+  margin: 0 auto 32px;
+}
+
+.fdl-sheet-demo__open {
+  padding: 12px 24px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+  background: var(--color-white);
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-sheet-demo__open:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-sheet-demo__open:hover {
+  background: var(--color-label);
+}
+
+.fdl-sheet-demo__body-text h4 {
+  margin: 24px 0 12px;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-sheet-demo__body-text h4:first-child {
+  margin-top: 0;
+}
+
+.fdl-sheet-demo__body-text p {
+  margin: 0 0 18px;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--color-darkgray);
+}
+
+.fdl-sheet-demo__body-text p:last-child {
+  margin-bottom: 0;
+}
+
+.fdl-sheet-demo__short {
+  margin: 0;
+  padding: 40px 0;
+  font-size: 28px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--color-midgray);
+}
+
+/* ========== fdl-sheet ========== */
+.fdl-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0;
+  background: color-mix(in srgb, var(--color-darkgray) 70%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fdl-sheet--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fdl-sheet__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 750px;
+  height: auto;
+  min-height: 20vh;
+  max-height: 85vh;
+  background: var(--color-white);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+}
+
+.fdl-sheet--visible .fdl-sheet__panel {
+  transform: translateY(0);
+}
+
+.fdl-sheet__header {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  height: 88px;
+}
+
+.fdl-sheet__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-sheet__close {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  color: var(--color-darkgray);
+  background: none;
+  cursor: pointer;
+  transform: translateY(-50%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-sheet__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fdl-sheet__close:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+.fdl-sheet__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 30px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fdl-sheet__footer {
+  flex-shrink: 0;
+  background: var(--color-white);
+  box-shadow: 0 -10px 20px -10px color-mix(in srgb, var(--color-darkgray) 5%, transparent);
+}
+
+.fdl-sheet__actions {
+  display: flex;
+  gap: 18px;
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+.fdl-sheet__btn {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84px;
+  border: none;
+  border-radius: 9999px;
+  font-family: inherit;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-sheet__btn:hover {
+  opacity: 0.92;
+}
+
+.fdl-sheet__btn:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.fdl-sheet__btn--secondary {
+  background: var(--color-label);
+  color: var(--color-midgray);
+}
+
+.fdl-sheet__btn--primary {
+  background: var(--color-brand-1);
+  color: var(--color-darkgray);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-sheet-demo__toolbar">
+    <button type="button" class="fdl-sheet-demo__open" data-fdl-sheet-open="fdl-sheet-ex-long">长内容（滚动）</button>
+    <button type="button" class="fdl-sheet-demo__open" data-fdl-sheet-open="fdl-sheet-ex-short">短内容（min-height）</button>
+  </div>
+
+  <div class="fdl-sheet" id="fdl-sheet-ex-long" aria-hidden="true">
+    <div
+      class="fdl-sheet__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fdl-sheet-ex-long-title"
+    >
+      <header class="fdl-sheet__header">
+        <h2 class="fdl-sheet__title" id="fdl-sheet-ex-long-title">服务说明</h2>
+        <button type="button" class="fdl-sheet__close" aria-label="关闭" data-fdl-sheet-close>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              d="M24 3C35.598 3 45 12.402 45 24C45 35.598 35.598 45 24 45C12.402 45 3 35.598 3 24C3 12.402 12.402 3 24 3ZM24 6C14.0595 6 6 14.0595 6 24C6 33.9405 14.0595 42 24 42C33.9405 42 42 33.9405 42 24C42 14.0595 33.9405 6 24 6ZM18.696 16.575L24 21.879L29.304 16.575C29.5869 16.3018 29.9658 16.1506 30.3591 16.154C30.7524 16.1574 31.1286 16.3152 31.4067 16.5933C31.6848 16.8714 31.8426 17.2476 31.846 17.6409C31.8494 18.0342 31.6982 18.4131 31.425 18.696L26.121 24L31.425 29.304C31.6982 29.5869 31.8494 29.9658 31.846 30.3591C31.8426 30.7524 31.6848 31.1286 31.4067 31.4067C31.1286 31.6848 30.7524 31.8426 30.3591 31.846C29.9658 31.8494 29.5869 31.6982 29.304 31.425L24 26.121L18.696 31.425C18.4131 31.6982 18.0342 31.8494 17.6409 31.846C17.2476 31.8426 16.8714 31.6848 16.5933 31.4067C16.3152 31.1286 16.1574 30.7524 16.154 30.3591C16.1506 29.9658 16.3018 29.5869 16.575 29.304L21.879 24L16.575 18.696C16.3018 18.4131 16.1506 18.0342 16.154 17.6409C16.1574 17.2476 16.3152 16.8714 16.5933 16.5933C16.8714 16.3152 17.2476 16.1574 17.6409 16.154C18.0342 16.1506 18.4131 16.3018 18.696 16.575Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+      </header>
+      <div class="fdl-sheet__body">
+        <div class="fdl-sheet-demo__body-text">
+          <h4>1. 关于预订</h4>
+          <p>请您在预订时务必提供准确、完整的信息（姓名、性别、证件号码、国籍、联系方式、是否成人或儿童等），以免产生预订错误，影响出行。</p>
+          <h4>2. 关于价格</h4>
+          <p>本产品价格为实时动态价格，可能因节假日、特殊活动等因素调整。最终价格以您提交订单时所示为准。</p>
+          <p>Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim.</p>
+          <h4>3. 退改规则</h4>
+          <p>不同的产品有不同的退改规则，请在预订前仔细阅读产品的退改政策。一经预订，即视为您已同意相关规则。</p>
+        </div>
+      </div>
+      <footer class="fdl-sheet__footer">
+        <div class="fdl-sheet__actions">
+          <button type="button" class="fdl-sheet__btn fdl-sheet__btn--secondary" data-fdl-sheet-close>再看看</button>
+          <button type="button" class="fdl-sheet__btn fdl-sheet__btn--primary" data-fdl-sheet-close>我明白了</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="fdl-sheet" id="fdl-sheet-ex-short" aria-hidden="true">
+    <div
+      class="fdl-sheet__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fdl-sheet-ex-short-title"
+    >
+      <header class="fdl-sheet__header">
+        <h2 class="fdl-sheet__title" id="fdl-sheet-ex-short-title">选择操作</h2>
+        <button type="button" class="fdl-sheet__close" aria-label="关闭" data-fdl-sheet-close>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              d="M24 3C35.598 3 45 12.402 45 24C45 35.598 35.598 45 24 45C12.402 45 3 35.598 3 24C3 12.402 12.402 3 24 3ZM24 6C14.0595 6 6 14.0595 6 24C6 33.9405 14.0595 42 24 42C33.9405 42 42 33.9405 42 24C42 14.0595 33.9405 6 24 6ZM18.696 16.575L24 21.879L29.304 16.575C29.5869 16.3018 29.9658 16.1506 30.3591 16.154C30.7524 16.1574 31.1286 16.3152 31.4067 16.5933C31.6848 16.8714 31.8426 17.2476 31.846 17.6409C31.8494 18.0342 31.6982 18.4131 31.425 18.696L26.121 24L31.425 29.304C31.6982 29.5869 31.8494 29.9658 31.846 30.3591C31.8426 30.7524 31.6848 31.1286 31.4067 31.4067C31.1286 31.6848 30.7524 31.8426 30.3591 31.846C29.9658 31.8494 29.5869 31.6982 29.304 31.425L24 26.121L18.696 31.425C18.4131 31.6982 18.0342 31.8494 17.6409 31.846C17.2476 31.8426 16.8714 31.6848 16.5933 31.4067C16.3152 31.1286 16.1574 30.7524 16.154 30.3591C16.1506 29.9658 16.3018 29.5869 16.575 29.304L21.879 24L16.575 18.696C16.3018 18.4131 16.1506 18.0342 16.154 17.6409C16.1574 17.2476 16.3152 16.8714 16.5933 16.5933C16.8714 16.3152 17.2476 16.1574 17.6409 16.154C18.0342 16.1506 18.4131 16.3018 18.696 16.575Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+      </header>
+      <div class="fdl-sheet__body">
+        <p class="fdl-sheet-demo__short">这里是少量内容。</p>
+      </div>
+      <footer class="fdl-sheet__footer">
+        <div class="fdl-sheet__actions">
+          <button type="button" class="fdl-sheet__btn fdl-sheet__btn--primary" data-fdl-sheet-close>确认</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  function open(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add("fdl-sheet--visible");
+    el.setAttribute("aria-hidden", "false");
+  }
+
+  function close(el) {
+    if (!el || !el.classList.contains("fdl-sheet")) return;
+    el.classList.remove("fdl-sheet--visible");
+    el.setAttribute("aria-hidden", "true");
+  }
+
+  document.querySelectorAll("[data-fdl-sheet-open]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      open(btn.getAttribute("data-fdl-sheet-open"));
+    });
+  });
+
+  document.querySelectorAll(".fdl-sheet").forEach(function (overlay) {
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close(overlay);
+    });
+  });
+
+  document.querySelectorAll("[data-fdl-sheet-close]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      close(btn.closest(".fdl-sheet"));
+    });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll(".fdl-sheet--visible").forEach(function (overlay) {
+      close(overlay);
+    });
+  });
+})();
+  </script>
+</body>
+</html>

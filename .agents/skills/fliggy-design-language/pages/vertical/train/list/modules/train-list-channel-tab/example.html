@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375, initial-scale=1.0">
+  <title>火车票列表 — 频道 Tab</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f2f3f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+      min-height: 100vh;
+    }
+    .preview-label {
+      font-size: 12px;
+      color: #919499;
+      margin-bottom: 8px;
+      width: 375px;
+    }
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-display: swap;
+    }
+  </style>
+</head>
+<body>
+<p class="preview-label">listing-tab · 火车票 / 智能中转 / 机票</p>
+<!-- ==================== ListingTab ==================== -->
+<script>
+class ListingTab extends HTMLElement {
+  constructor() { super(); this.attachShadow({ mode: 'open' }); this._selectedIndex = 0; this._lowestPrice = this.getAttribute('lowest-price') || '0元起'; }
+  static get observedAttributes() { return ['lowest-price']; }
+  attributeChangedCallback(n, o, v) { if (n === 'lowest-price' && o !== v) { this._lowestPrice = v; this.render(); this.bindEvents(); } }
+  connectedCallback() { this.render(); this.bindEvents(); }
+  getTabs() { return [{ title: '火车票', subtitle: this._lowestPrice }, { title: '智能中转', subtitle: '余票充足' }, { title: '机票', subtitle: '专项低价' }]; }
+  setLowestPrice(p) { this._lowestPrice = p; this.render(); this.bindEvents(); }
+  render() {
+    const tabs = this.getTabs();
+    const html = tabs.map((t, i) => {
+      const sel = i === this._selectedIndex;
+      return `<div class="tab${sel ? ' selected' : ''}" data-i="${i}"><div class="title">${t.title}</div><div class="subtitle">${t.subtitle}</div>${sel ? '<div class="indicator"></div>' : ''}</div>`;
+    }).join('');
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display: block; width: 375px; background: #fff; }
+        .bar { display: flex; height: 52px; align-items: stretch; }
+        .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; gap: 1px; }
+        .title { font-family: 'PingFang SC', sans-serif; font-size: 15px; line-height: 21px; color: #0f131a; font-weight: 400; }
+        .tab.selected .title { font-weight: 600; }
+        .subtitle { font-family: 'PingFang SC', sans-serif; font-size: 11px; line-height: 15px; color: #5c5f66; font-weight: 400; }
+        .tab.selected .subtitle { color: #0f131a; }
+        .indicator { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; background: #0f131a; border-radius: 1.5px; }
+      </style>
+      <div class="bar">${html}</div>`;
+  }
+  bindEvents() {
+    this.shadowRoot.querySelectorAll('.tab').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.i, 10);
+        if (idx !== this._selectedIndex) { this._selectedIndex = idx; this.dispatchEvent(new CustomEvent('tab-change', { detail: { index: idx, title: this.getTabs()[idx].title }, bubbles: true })); this.render(); this.bindEvents(); }
+      });
+    });
+  }
+}
+customElements.define('listing-tab', ListingTab);
+</script>
+<listing-tab id="t" lowest-price="¥179起"></listing-tab>
+</body>
+</html>

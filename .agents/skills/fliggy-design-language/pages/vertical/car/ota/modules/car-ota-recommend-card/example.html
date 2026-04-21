@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>租车 OTA · 推荐车型卡</title>
+  <link rel="stylesheet" href="recommend-card-styles.css">
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Alibaba Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-display: swap;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #F2F3F5;
+      padding: 20px;
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="vehicle-card">
+    <div class="eco-tag">
+      <img class="eco-tag-icon" src="https://img.alicdn.com/imgextra/i4/O1CN015MdGMN1kLXZRx7DZM_!!6000000004667-55-tps-24-24.svg" alt="">
+      <span class="eco-tag-text">低碳车型</span>
+    </div>
+    <div class="vehicle-info-wrapper">
+      <div class="vehicle-info">
+        <div class="vehicle-image">
+          <img class="car-img" src="https://img.alicdn.com/imgextra/i1/O1CN01EPWWzl1LyawxWX0yd_!!6000000001368-55-tps-190-127.svg" alt="">
+          <img class="vr-icon" src="https://img.alicdn.com/imgextra/i3/O1CN01204x9a2A0B6ijuEeU_!!6000000008140-55-tps-80-30.svg" alt="">
+        </div>
+        <div class="vehicle-details">
+          <div class="vehicle-name">特斯拉Model3</div>
+          <div class="vehicle-tags-wrapper">
+            <div class="vehicle-tags">
+              <span class="vehicle-tag">舒适型</span>
+              <div class="tag-divider"></div>
+              <span class="vehicle-tag">5座</span>
+              <div class="tag-divider"></div>
+              <span class="vehicle-tag">纯电动</span>
+              <div class="tag-divider"></div>
+              <span class="vehicle-tag">1.5L增城市</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="quote-section">
+      <div class="quote-row">
+        <div class="license-info">
+          <div class="license-tag">
+            <div class="license-highlight"></div>
+            <span class="license-text">浙A</span>
+          </div>
+          <span class="year-tag">2024款</span>
+        </div>
+        <div class="vc-price-section">
+          <div class="vc-price-container">
+            <span class="vc-price-symbol">¥</span>
+            <span class="vc-price-value">90</span>
+            <span class="vc-price-unit">/天</span>
+          </div>
+        </div>
+      </div>
+      <div class="discount-row">
+        <div class="discount-tag">
+          <span class="discount-text">已优惠¥10</span>
+        </div>
+        <span class="total-price">总价¥440起</span>
+        <img class="help-icon" src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" alt="">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skills 执行监测面板</title>
+  <style>
+    :root {
+      --bg-primary: #0f1117;
+      --bg-card: #222533;
+      --bg-soft: #1a1d27;
+      --text-primary: #e8eaed;
+      --text-secondary: #9aa0a6;
+      --text-muted: #6b7280;
+      --border: #2e3347;
+      --ok: #34d399;
+      --warn: #f59e0b;
+      --risk: #ef4444;
+      --accent: #4f8cff;
+      --radius: 12px;
+      --radius-sm: 8px;
+
+      /* 模型调色盘（mock 演示） */
+      --m-claude: #c084fc;
+      --m-gpt: #34d399;
+      --m-composer: #4f8cff;
+      --m-grok: #f59e0b;
+      --m-opus: #f472b6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px clamp(16px, 3vw, 40px) 28px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
+    }
+    .title { font-size: 22px; font-weight: 700; }
+    .sub { margin-top: 6px; color: var(--text-secondary); font-size: 13px; }
+    .meta { color: var(--text-muted); font-size: 12px; }
+    .label {
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(79, 140, 255, 0.1);
+    }
+
+    /* KPI 区块 */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .kpi {
+      padding: 14px 16px;
+    }
+    .kpi .v {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .kpi .unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-left: 4px;
+    }
+    .kpi .hint {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* 模型占比条 */
+    .model-section { margin-bottom: 12px; }
+    .model-bar {
+      display: flex;
+      height: 20px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--bg-soft);
+      margin-top: 4px;
+    }
+    .model-seg {
+      height: 100%;
+      transition: filter .15s;
+      cursor: help;
+    }
+    .model-seg:hover { filter: brightness(1.2); }
+    .model-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 10px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+    .legend-item .num { color: var(--text-primary); font-weight: 600; }
+
+    /* 主视图容器 */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Skill 泳道 */
+    .skill-lane {
+      margin-bottom: 10px;
+      padding: 0;
+      overflow: hidden;
+    }
+    .skill-head {
+      display: grid;
+      grid-template-columns: 24px 1.8fr repeat(3, minmax(0, 1fr)) 18px;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .skill-head:hover { background: rgba(255,255,255,0.02); }
+    .skill-status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      justify-self: center;
+    }
+    .skill-status-dot.idle { background: var(--text-muted); }
+    .skill-status-dot.pass { background: var(--ok); }
+    .skill-status-dot.running {
+      background: var(--accent);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .skill-status-dot.failed { background: var(--risk); }
+    .skill-name { font-size: 15px; font-weight: 600; }
+    .skill-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .skill-metric .k { font-size: 11px; color: var(--text-muted); }
+    .skill-metric .v { font-size: 14px; font-weight: 600; margin-top: 2px; }
+    .skill-chevron {
+      color: var(--text-muted);
+      font-size: 12px;
+      transition: transform .2s;
+    }
+    .skill-lane.open .skill-chevron { transform: rotate(90deg); }
+    .skill-body {
+      display: none;
+      padding: 4px 16px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-soft);
+    }
+    .skill-lane.open .skill-body { display: block; }
+    .skill-body-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 10px 0 8px;
+    }
+
+    /* Run 卡片（时间线视图 + skill 展开内都复用） */
+    .run-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+    .run-head {
+      display: grid;
+      grid-template-columns: 1.6fr repeat(3, minmax(0, 1fr)) auto;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+    }
+    .run-title { font-size: 14px; font-weight: 600; }
+    .run-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .run-metric .k { font-size: 11px; color: var(--text-muted); }
+    .run-metric .v { font-size: 13px; font-weight: 600; margin-top: 2px; }
+    .status-pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-pill.pass { background: rgba(52, 211, 153, 0.18); color: #86efac; }
+    .status-pill.failed { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .status-pill.running {
+      background: rgba(79, 140, 255, 0.2);
+      color: #93c5fd;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .status-pill.idle { background: rgba(107, 114, 128, 0.2); color: #cbd5e1; }
+
+    .run-body {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+    .run-card.open .run-body { display: block; }
+
+    /* Phase 横向柱状图 */
+    .phase-list { display: grid; gap: 8px; }
+    .phase-row {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .phase-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .phase-bar-track {
+      height: 24px;
+      border-radius: 6px;
+      background: var(--bg-soft);
+      position: relative;
+      overflow: hidden;
+    }
+    .phase-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #fff;
+      white-space: nowrap;
+      min-width: 36px;
+    }
+    .phase-bar-fill.pass { background: linear-gradient(90deg, #10b981, #34d399); }
+    .phase-bar-fill.failed { background: linear-gradient(90deg, #b91c1c, #ef4444); }
+    .phase-bar-fill.running {
+      background: linear-gradient(90deg, #2563eb, #4f8cff);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .phase-bar-fill.idle { background: linear-gradient(90deg, #4b5563, #6b7280); }
+    .phase-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .phase-meta .tok { color: var(--text-secondary); font-weight: 600; }
+    .model-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-right: 6px;
+      vertical-align: middle;
+      color: #0f1117;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+
+    /* 空态 */
+    .empty {
+      padding: 30px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* 响应式 */
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .skill-head {
+        grid-template-columns: 20px 1.4fr repeat(3, minmax(0, 1fr)) 16px;
+        gap: 8px;
+      }
+      .run-head { grid-template-columns: 1.4fr 1fr 1fr auto; }
+      .run-head .run-metric.hide-sm { display: none; }
+      .phase-row { grid-template-columns: 110px 1fr; }
+      .phase-meta { grid-column: 1 / -1; text-align: left; padding-left: 0; }
+    }
+    @media (max-width: 640px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .skill-head {
+        grid-template-columns: 16px 1fr auto 14px;
+        gap: 8px;
+      }
+      .skill-head .skill-metric.hide-xs { display: none; }
+      .run-head { grid-template-columns: 1fr auto; }
+      .run-head .run-metric { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="card header">
+      <div>
+        <h1 class="title">Skills 执行监测面板</h1>
+        <p class="sub">仅监测 4 个指定 skill 的执行过程：使用了哪个大模型、消耗了多少 token、耗时多久。</p>
+        <div id="updatedAt" class="meta" style="margin-top:8px;">-</div>
+      </div>
+      <div class="toolbar">
+        <button id="bySkillBtn" class="btn active" type="button">按 Skill 聚合</button>
+        <button id="byRunBtn" class="btn" type="button">按 Run 时间线</button>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom:12px;">
+      <div class="label">检测范围说明</div>
+      <div class="meta" style="margin-bottom:6px;">检测任务：<span id="monitorTask">-</span></div>
+      <div class="meta" style="margin-bottom:6px;">对应需求：<span id="monitorRequirement">-</span></div>
+      <div class="meta">监测 Skill：<span id="monitorSkills">-</span></div>
+    </section>
+
+    <!-- KPI -->
+    <section class="kpi-grid">
+      <article class="card kpi">
+        <div class="label">总调用次数</div>
+        <div><span id="kpiRuns" class="v">-</span><span class="unit">runs</span></div>
+        <div id="kpiActive" class="hint">-</div>
+      </article>
+      <article class="card kpi">
+        <div class="label">累计 Token</div>
+        <div><span id="kpiTokens" class="v">-</span></div>
+        <div id="kpiAvgTokens" class="hint">-</div>
+      </article>
+      <article class="card kpi">
+        <div class="label">累计耗时</div>
+        <div><span id="kpiDuration" class="v">-</span></div>
+        <div id="kpiAvgDuration" class="hint">-</div>
+      </article>
+      <article class="card kpi">
+        <div class="label">使用率最高模型</div>
+        <div><span id="kpiTopModel" class="v" style="font-size:18px;">-</span></div>
+        <div id="kpiTopModelHint" class="hint">-</div>
+      </article>
+    </section>
+
+    <!-- 模型占比 -->
+    <section class="card model-section">
+      <div class="label">模型 Token 占比</div>
+      <div id="modelBar" class="model-bar"></div>
+      <div id="modelLegend" class="model-legend"></div>
+    </section>
+
+    <!-- 主视图 A：按 Skill 聚合 -->
+    <section id="viewBySkill" class="view active">
+      <div id="skillLanes"></div>
+    </section>
+
+    <!-- 主视图 B：按 Run 时间线 -->
+    <section id="viewByRun" class="view">
+      <div id="runTimeline"></div>
+    </section>
+  </div>
+
+  <script>
+    /* ======================================================================
+     * Mock 数据
+     * 后续切换真实数据：改写 loadData() 返回值即可，上层不需改动。
+     * ====================================================================== */
+    const MODEL_COLORS = {
+      "claude-4.6-sonnet": "var(--m-claude)",
+      "claude-opus-4-7-thinking-high": "var(--m-opus)",
+      "gpt-5.4-medium": "var(--m-gpt)",
+      "composer-1.5": "var(--m-composer)",
+      "composer-2": "var(--m-composer)",
+      "grok-4-20-thinking": "var(--m-grok)"
+    };
+
+    const SKILLS = [
+      {
+        id: "fliggy-flight-prd-to-h5",
+        name: "fliggy-flight-prd-to-h5",
+        description: "机票 PRD → H5 统一入口；路由到设计/审查 skill"
+      },
+      {
+        id: "fliggy-flight-design-guide",
+        name: "fliggy-flight-design-guide",
+        description: "飞猪机票设计规范执行；产出单文件 H5"
+      },
+      {
+        id: "fliggy-flight-h5-to-review",
+        name: "fliggy-flight-h5-to-review",
+        description: "H5 质量审查；Phase 3 关键问题清零"
+      },
+      {
+        id: "fliggy-flight-h5-to-figma",
+        name: "fliggy-flight-h5-to-figma",
+        description: "H5 → Figma 交付包；token 映射 + handoff JSON"
+      }
+    ];
+
+    async function loadData() {
+      return (
+      {
+              "updatedAt": "2026-04-20 16:10",
+              "monitor": {
+                      "taskName": "机票订详页海免商品推荐链路监测",
+                      "requirementName": "机票订详页新增海南离岛免税商品推荐模块（REQ-FLT-2026-0419-HM01）",
+                      "skillIds": [
+                              "fliggy-flight-prd-to-h5",
+                              "fliggy-flight-design-guide",
+                              "fliggy-flight-h5-to-review",
+                              "fliggy-flight-h5-to-figma"
+                      ]
+              },
+              "skills": [
+                      {
+                              "id": "fliggy-flight-prd-to-h5",
+                              "name": "fliggy-flight-prd-to-h5",
+                              "description": "机票 PRD → H5 统一入口；路由到设计/审查 skill"
+                      },
+                      {
+                              "id": "fliggy-flight-design-guide",
+                              "name": "fliggy-flight-design-guide",
+                              "description": "飞猪机票设计规范执行；产出单文件 H5"
+                      },
+                      {
+                              "id": "fliggy-flight-h5-to-review",
+                              "name": "fliggy-flight-h5-to-review",
+                              "description": "H5 质量审查；Phase 3 关键问题清零"
+                      },
+                      {
+                              "id": "fliggy-flight-h5-to-figma",
+                              "name": "fliggy-flight-h5-to-figma",
+                              "description": "H5 → Figma 交付包；token 映射 + handoff JSON"
+                      }
+              ],
+              "runs": [
+                      {
+                              "id": "run-2026-04-20-004",
+                              "skillId": "fliggy-flight-h5-to-review",
+                              "taskTitle": "机票订详-海免商品推荐 · H5 评审",
+                              "requirementId": "REQ-FLT-2026-0419-HM01",
+                              "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+                              "startedAt": "2026-04-20 14:28",
+                              "finishedAt": null,
+                              "status": "running",
+                              "phases": [
+                                      {
+                                              "name": "Phase 0 · 载入 H5",
+                                              "model": "composer-2",
+                                              "promptTokens": 6800,
+                                              "completionTokens": 420,
+                                              "durationMs": 2100,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 1 · 结构解析",
+                                              "model": "claude-4.6-sonnet",
+                                              "promptTokens": 12400,
+                                              "completionTokens": 3100,
+                                              "durationMs": 9800,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 2 · 基准对标",
+                                              "model": "claude-4.6-sonnet",
+                                              "promptTokens": 18900,
+                                              "completionTokens": 4600,
+                                              "durationMs": 15600,
+                                              "status": "running"
+                                      },
+                                      {
+                                              "name": "Phase 3 · 评分与报告",
+                                              "model": "",
+                                              "promptTokens": 0,
+                                              "completionTokens": 0,
+                                              "durationMs": 0,
+                                              "status": "idle"
+                                      }
+                              ]
+                      },
+                      {
+                              "id": "run-2026-04-20-003",
+                              "skillId": "fliggy-flight-design-guide",
+                              "taskTitle": "机票订详-海免商品推荐 · 设计产出",
+                              "requirementId": "REQ-FLT-2026-0419-HM01",
+                              "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+                              "startedAt": "2026-04-20 14:10",
+                              "finishedAt": "2026-04-20 14:22",
+                              "status": "pass",
+                              "phases": [
+                                      {
+                                              "name": "Phase 0 · 读规范",
+                                              "model": "composer-2",
+                                              "promptTokens": 5400,
+                                              "completionTokens": 380,
+                                              "durationMs": 1800,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 1 · 路由匹配",
+                                              "model": "composer-1.5",
+                                              "promptTokens": 3200,
+                                              "completionTokens": 260,
+                                              "durationMs": 900,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 2 · H5 生成",
+                                              "model": "claude-4.6-sonnet",
+                                              "promptTokens": 22600,
+                                              "completionTokens": 8900,
+                                              "durationMs": 48000,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 3 · 自检",
+                                              "model": "gpt-5.4-medium",
+                                              "promptTokens": 11200,
+                                              "completionTokens": 1600,
+                                              "durationMs": 12400,
+                                              "status": "pass"
+                                      }
+                              ]
+                      },
+                      {
+                              "id": "run-2026-04-20-002",
+                              "skillId": "fliggy-flight-prd-to-h5",
+                              "taskTitle": "海免离岛免税推荐 · PRD 路由",
+                              "requirementId": "REQ-FLT-2026-0419-HM01",
+                              "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+                              "startedAt": "2026-04-20 13:52",
+                              "finishedAt": "2026-04-20 14:09",
+                              "status": "pass",
+                              "phases": [
+                                      {
+                                              "name": "Phase 0 · 抓取语雀",
+                                              "model": "composer-2",
+                                              "promptTokens": 2100,
+                                              "completionTokens": 180,
+                                              "durationMs": 4100,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 1 · 页面路由",
+                                              "model": "composer-1.5",
+                                              "promptTokens": 4800,
+                                              "completionTokens": 620,
+                                              "durationMs": 1600,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 2 · 下发设计 skill",
+                                              "model": "claude-4.6-sonnet",
+                                              "promptTokens": 9400,
+                                              "completionTokens": 2200,
+                                              "durationMs": 8900,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 3 · 产出 handoff",
+                                              "model": "composer-2",
+                                              "promptTokens": 3600,
+                                              "completionTokens": 940,
+                                              "durationMs": 2600,
+                                              "status": "pass"
+                                      }
+                              ]
+                      },
+                      {
+                              "id": "run-2026-04-19-004",
+                              "skillId": "fliggy-flight-h5-to-figma",
+                              "taskTitle": "机票订详-海免商品推荐 · Figma 交付包导出",
+                              "requirementId": "REQ-FLT-2026-0419-HM01",
+                              "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",
+                              "startedAt": "2026-04-19 21:05",
+                              "finishedAt": "2026-04-19 21:14",
+                              "status": "pass",
+                              "phases": [
+                                      {
+                                              "name": "Phase 0 · 解析 H5",
+                                              "model": "composer-2",
+                                              "promptTokens": 7200,
+                                              "completionTokens": 480,
+                                              "durationMs": 2800,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 1 · Token 映射",
+                                              "model": "claude-4.6-sonnet",
+                                              "promptTokens": 10800,
+                                              "completionTokens": 2400,
+                                              "durationMs": 9600,
+                                              "status": "pass"
+                                      },
+                                      {
+                                              "name": "Phase 2 · handoff JSON",
+                                              "model": "gpt-5.4-medium",
+                                              "promptTokens": 4600,
+                                              "completionTokens": 1800,
+                                              "durationMs": 5100,
+                                              "status": "pass"
+                                      }
+                              ]
+                      }
+              ]
+      }
+      );
+    }
+
+    /* ======================================================================
+     * 衍生字段 + 聚合
+     * ====================================================================== */
+    function enrichRuns(state) {
+      state.runs.forEach(run => {
+        run.phases.forEach(p => {
+          p.totalTokens = (p.promptTokens || 0) + (p.completionTokens || 0);
+        });
+        run.totalTokens = run.phases.reduce((s, p) => s + p.totalTokens, 0);
+        run.totalDurationMs = run.phases.reduce((s, p) => s + (p.durationMs || 0), 0);
+      });
+      return state;
+    }
+
+    function aggregateSummary(state) {
+      const runs = state.runs;
+      const totalRuns = runs.length;
+      const totalTokens = runs.reduce((s, r) => s + r.totalTokens, 0);
+      const totalDurationMs = runs.reduce((s, r) => s + r.totalDurationMs, 0);
+      const activeRuns = runs.filter(r => r.status === "running").length;
+
+      const modelTokens = {};
+      runs.forEach(r => r.phases.forEach(p => {
+        if (!p.model) return;
+        modelTokens[p.model] = (modelTokens[p.model] || 0) + p.totalTokens;
+      }));
+      const topModel = Object.entries(modelTokens).sort((a, b) => b[1] - a[1])[0];
+
+      return {
+        totalRuns,
+        totalTokens,
+        totalDurationMs,
+        activeRuns,
+        topModel: topModel ? { name: topModel[0], tokens: topModel[1] } : null,
+        avgTokens: totalRuns ? Math.round(totalTokens / totalRuns) : 0,
+        avgDurationMs: totalRuns ? Math.round(totalDurationMs / totalRuns) : 0
+      };
+    }
+
+    function aggregateBySkill(state) {
+      const bySkill = new Map(state.skills.map(s => [s.id, {
+        ...s,
+        totalRuns: 0,
+        totalTokens: 0,
+        totalDurationMs: 0,
+        lastRunAt: null,
+        lastStatus: "idle",
+        runs: []
+      }]));
+
+      state.runs.forEach(r => {
+        const s = bySkill.get(r.skillId);
+        if (!s) return;
+        s.totalRuns += 1;
+        s.totalTokens += r.totalTokens;
+        s.totalDurationMs += r.totalDurationMs;
+        s.runs.push(r);
+        if (!s.lastRunAt || r.startedAt > s.lastRunAt) {
+          s.lastRunAt = r.startedAt;
+          s.lastStatus = r.status;
+        }
+      });
+
+      bySkill.forEach(s => {
+        s.avgDurationMs = s.totalRuns ? Math.round(s.totalDurationMs / s.totalRuns) : 0;
+        s.runs.sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+      });
+
+      return Array.from(bySkill.values());
+    }
+
+    function aggregateByModel(state) {
+      const byModel = {};
+      state.runs.forEach(r => r.phases.forEach(p => {
+        if (!p.model) return;
+        const m = byModel[p.model] || { name: p.model, tokens: 0, calls: 0, totalLatencyMs: 0 };
+        m.tokens += p.totalTokens;
+        m.calls += 1;
+        m.totalLatencyMs += (p.durationMs || 0);
+        byModel[p.model] = m;
+      }));
+      return Object.values(byModel)
+        .map(m => ({ ...m, avgLatencyMs: m.calls ? Math.round(m.totalLatencyMs / m.calls) : 0 }))
+        .sort((a, b) => b.tokens - a.tokens);
+    }
+
+    /* ======================================================================
+     * 格式化
+     * ====================================================================== */
+    function fmtTokens(n) {
+      if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+      if (n >= 1e3) return (n / 1e3).toFixed(1) + "k";
+      return String(n || 0);
+    }
+    function fmtDuration(ms) {
+      if (!ms) return "0s";
+      if (ms < 1000) return ms + "ms";
+      const s = ms / 1000;
+      if (s < 60) return s.toFixed(1) + "s";
+      const m = Math.floor(s / 60);
+      const rs = Math.round(s % 60);
+      return `${m}m${rs ? ` ${rs}s` : ""}`;
+    }
+    function modelColor(name) {
+      return MODEL_COLORS[name] || "var(--text-muted)";
+    }
+    function shortModel(name) {
+      if (!name) return "-";
+      return name
+        .replace("claude-opus-4-7-thinking-high", "opus-4.7")
+        .replace("claude-4.6-sonnet", "sonnet-4.6")
+        .replace("gpt-5.4-medium", "gpt-5.4")
+        .replace("grok-4-20-thinking", "grok-4")
+        .replace("composer-", "comp-");
+    }
+
+    /* ======================================================================
+     * 渲染
+     * ====================================================================== */
+    function renderKPI(summary) {
+      document.getElementById("kpiRuns").textContent = summary.totalRuns;
+      document.getElementById("kpiActive").textContent =
+        summary.activeRuns > 0
+          ? `其中 ${summary.activeRuns} 个进行中`
+          : "无进行中任务";
+
+      document.getElementById("kpiTokens").textContent = fmtTokens(summary.totalTokens);
+      document.getElementById("kpiAvgTokens").textContent = `平均 ${fmtTokens(summary.avgTokens)}/run`;
+
+      document.getElementById("kpiDuration").textContent = fmtDuration(summary.totalDurationMs);
+      document.getElementById("kpiAvgDuration").textContent = `平均 ${fmtDuration(summary.avgDurationMs)}/run`;
+
+      if (summary.topModel) {
+        document.getElementById("kpiTopModel").textContent = shortModel(summary.topModel.name);
+        document.getElementById("kpiTopModelHint").textContent = `${fmtTokens(summary.topModel.tokens)} tokens`;
+      }
+    }
+
+    function renderModelBar(models, totalTokens) {
+      const bar = document.getElementById("modelBar");
+      const legend = document.getElementById("modelLegend");
+
+      bar.innerHTML = models.map(m => {
+        const pct = totalTokens ? (m.tokens / totalTokens * 100) : 0;
+        const color = modelColor(m.name);
+        const title = `${m.name}\n${fmtTokens(m.tokens)} tokens · ${m.calls} 次调用 · 平均 ${fmtDuration(m.avgLatencyMs)}`;
+        return `<div class="model-seg" style="width:${pct.toFixed(2)}%; background:${color};" title="${title}"></div>`;
+      }).join("");
+
+      legend.innerHTML = models.map(m => {
+        const pct = totalTokens ? (m.tokens / totalTokens * 100).toFixed(1) : 0;
+        return `
+          <span class="legend-item">
+            <span class="legend-dot" style="background:${modelColor(m.name)};"></span>
+            <span>${m.name}</span>
+            <span class="num">${fmtTokens(m.tokens)}</span>
+            <span class="meta">(${pct}% · ${m.calls} 次 · 平均 ${fmtDuration(m.avgLatencyMs)})</span>
+          </span>
+        `;
+      }).join("");
+    }
+
+    function renderSkillLanes(skills) {
+      const host = document.getElementById("skillLanes");
+      if (!skills.length) {
+        host.innerHTML = `<div class="card empty">暂无 skill 数据</div>`;
+        return;
+      }
+      host.innerHTML = skills.map((s, idx) => `
+        <article class="card skill-lane" data-idx="${idx}">
+          <div class="skill-head">
+            <span class="skill-status-dot ${s.lastStatus}"></span>
+            <div>
+              <div class="skill-name">${s.name}</div>
+              <div class="skill-desc">${s.description}</div>
+            </div>
+            <div class="skill-metric">
+              <div class="k">运行次数</div>
+              <div class="v">${s.totalRuns}</div>
+            </div>
+            <div class="skill-metric hide-xs">
+              <div class="k">累计 Token</div>
+              <div class="v">${fmtTokens(s.totalTokens)}</div>
+            </div>
+            <div class="skill-metric hide-xs">
+              <div class="k">平均耗时</div>
+              <div class="v">${fmtDuration(s.avgDurationMs)}</div>
+            </div>
+            <span class="skill-chevron">▶</span>
+          </div>
+          <div class="skill-body">
+            ${s.runs.length
+              ? `<div class="skill-body-title">最近 ${Math.min(5, s.runs.length)} 次执行</div>${s.runs.slice(0, 5).map(r => renderRunCard(r, false)).join("")}`
+              : `<div class="empty">暂无运行记录</div>`
+            }
+          </div>
+        </article>
+      `).join("");
+
+      host.querySelectorAll(".skill-lane").forEach(lane => {
+        lane.querySelector(".skill-head").addEventListener("click", () => {
+          lane.classList.toggle("open");
+        });
+        attachRunHandlers(lane);
+      });
+    }
+
+    function renderRunCard(run, showSkillName) {
+      const maxDuration = Math.max(1, ...run.phases.map(p => p.durationMs || 0));
+      return `
+        <div class="run-card" data-run-id="${run.id}">
+          <div class="run-head">
+            <div>
+              <div class="run-title">${run.taskTitle}</div>
+              <div class="run-sub">${showSkillName ? `<span style="color:var(--accent);">${run.skillId}</span> · ` : ""}${run.startedAt}${run.finishedAt ? ` → ${run.finishedAt}` : " · 进行中"} · 需求：${run.requirementTitle || "未标注"}${run.requirementId ? `（${run.requirementId}）` : ""}</div>
+            </div>
+            <div class="run-metric hide-sm">
+              <div class="k">Token</div>
+              <div class="v">${fmtTokens(run.totalTokens)}</div>
+            </div>
+            <div class="run-metric">
+              <div class="k">耗时</div>
+              <div class="v">${fmtDuration(run.totalDurationMs)}</div>
+            </div>
+            <div class="run-metric hide-sm">
+              <div class="k">Phase</div>
+              <div class="v">${run.phases.length}</div>
+            </div>
+            <span class="status-pill ${run.status}">${statusLabel(run.status)}</span>
+          </div>
+          <div class="run-body">
+            <div class="phase-list">
+              ${run.phases.map(p => renderPhaseRow(p, maxDuration)).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPhaseRow(phase, maxDuration) {
+      const widthPct = Math.max(4, (phase.durationMs || 0) / maxDuration * 100);
+      const model = phase.model
+        ? `<span class="model-tag" style="background:${modelColor(phase.model)};">${shortModel(phase.model)}</span>`
+        : "";
+      return `
+        <div class="phase-row">
+          <div class="phase-label" title="${phase.name}">${phase.name}</div>
+          <div class="phase-bar-track">
+            <div class="phase-bar-fill ${phase.status}" style="width:${widthPct.toFixed(2)}%;">
+              ${phase.durationMs ? fmtDuration(phase.durationMs) : statusLabel(phase.status)}
+            </div>
+          </div>
+          <div class="phase-meta">
+            ${model}
+            <span class="tok">${fmtTokens(phase.totalTokens)}</span>
+            <span> · ${fmtTokens(phase.promptTokens)} in / ${fmtTokens(phase.completionTokens)} out</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRunTimeline(runs) {
+      const host = document.getElementById("runTimeline");
+      if (!runs.length) {
+        host.innerHTML = `<div class="card empty">暂无运行记录</div>`;
+        return;
+      }
+      const sorted = runs.slice().sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+      host.innerHTML = sorted.map(r => renderRunCard(r, true)).join("");
+      attachRunHandlers(host);
+    }
+
+    function attachRunHandlers(scope) {
+      scope.querySelectorAll(".run-card").forEach(card => {
+        const head = card.querySelector(".run-head");
+        head.addEventListener("click", () => card.classList.toggle("open"));
+      });
+    }
+
+    function statusLabel(s) {
+      return ({
+        pass: "已完成",
+        failed: "失败",
+        running: "进行中",
+        idle: "待开始"
+      })[s] || s;
+    }
+
+    /* ======================================================================
+     * 视图切换
+     * ====================================================================== */
+    function setViewMode(mode) {
+      const bySkill = mode === "bySkill";
+      document.getElementById("bySkillBtn").classList.toggle("active", bySkill);
+      document.getElementById("byRunBtn").classList.toggle("active", !bySkill);
+      document.getElementById("viewBySkill").classList.toggle("active", bySkill);
+      document.getElementById("viewByRun").classList.toggle("active", !bySkill);
+    }
+
+    /* ======================================================================
+     * 启动
+     * ====================================================================== */
+    (async function init() {
+      const raw = await loadData();
+      const state = enrichRuns(raw);
+
+      document.getElementById("updatedAt").textContent = `更新时间：${state.updatedAt}`;
+
+      const summary = aggregateSummary(state);
+      const skillAgg = aggregateBySkill(state);
+      const modelAgg = aggregateByModel(state);
+
+      document.getElementById("monitorTask").textContent = state.monitor?.taskName || "-";
+      document.getElementById("monitorRequirement").textContent = state.monitor?.requirementName || "-";
+      document.getElementById("monitorSkills").textContent = (state.monitor?.skillIds || []).join(" / ");
+
+      renderKPI(summary);
+      renderModelBar(modelAgg, summary.totalTokens);
+      renderSkillLanes(skillAgg);
+      renderRunTimeline(state.runs);
+
+      setViewMode("bySkill");
+      document.getElementById("bySkillBtn").addEventListener("click", () => setViewMode("bySkill"));
+      document.getElementById("byRunBtn").addEventListener("click", () => setViewMode("byRun"));
+    })();
+  </script>
+</body>
+</html>

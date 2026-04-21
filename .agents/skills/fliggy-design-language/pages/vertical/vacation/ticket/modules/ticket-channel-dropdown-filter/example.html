@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>门票频道 — 下拉筛选</title>
+  <style>
+    body { margin: 0; background: #F2F3F5; padding: 24px 0; font-family: 'PingFang SC', sans-serif; display: flex; justify-content: center; }
+    .filter-nav {
+      display: flex; width: 750px; height: 60px; background: #FFFFFF;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .filter-nav__button {
+      flex: 1; display: flex; justify-content: center; align-items: center; gap: 11px;
+      padding: 9px 0; border: none; background: none; cursor: pointer;
+      font-size: 26px; font-weight: 400; line-height: 42px; color: #0F131A;
+    }
+    .filter-nav__arrow { font-size: 16px; color: #0F131A; transition: transform 0.2s; }
+    .filter-nav__button.is-active .filter-nav__arrow { transform: rotate(180deg); }
+  </style>
+</head>
+<body>
+  <nav class="filter-nav" aria-label="排序与筛选">
+    <button type="button" class="filter-nav__button">
+      <span class="filter-nav__text">智能排序</span>
+      <span class="filter-nav__arrow" aria-hidden="true">▼</span>
+    </button>
+    <button type="button" class="filter-nav__button is-active">
+      <span class="filter-nav__text">景点类型</span>
+      <span class="filter-nav__arrow" aria-hidden="true">▼</span>
+    </button>
+    <button type="button" class="filter-nav__button">
+      <span class="filter-nav__text">筛选</span>
+      <span class="filter-nav__arrow" aria-hidden="true">▼</span>
+    </button>
+  </nav>
+</body>
+</html>

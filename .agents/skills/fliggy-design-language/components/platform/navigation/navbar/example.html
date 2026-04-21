@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — navbar（导航栏）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Fonts';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.31/fonts/FliggyFonts-MediumItalicVer0711.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 36px 0 64px;
+  background: var(--color-bg);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+.fdl-navbar-demo {
+  max-width: 750px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+}
+
+.fdl-navbar-demo__label {
+  margin: 0 0 16px;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-navbar-demo__chrome {
+  background: var(--color-white);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+
+.fdl-navbar-demo__status {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+.fdl-navbar-demo__below {
+  height: 160px;
+  background: var(--color-label);
+  border-radius: 0 0 var(--radius-m) var(--radius-m);
+}
+
+.fdl-navbar-demo__immersive {
+  position: relative;
+  min-height: 320px;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+
+.fdl-navbar-demo__hero {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.fdl-navbar-demo__stack {
+  position: relative;
+  z-index: 2;
+}
+
+/* ========== fdl-navbar ========== */
+.fdl-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 88px;
+  width: 100%;
+  padding: 0 24px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.fdl-navbar__left,
+.fdl-navbar__right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 48px;
+}
+
+.fdl-navbar__title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  margin: 0;
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 1.3;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fdl-navbar--brand .fdl-navbar__title {
+  font-family: 'Fliggy Fonts', 'PingFang SC', 'SimHei', sans-serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 40px;
+}
+
+.fdl-navbar__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+}
+
+.fdl-navbar__back,
+.fdl-navbar__action {
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-navbar__back:focus-visible,
+.fdl-navbar__action:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-navbar--transparent-dark .fdl-navbar__back:focus-visible,
+.fdl-navbar--transparent-dark .fdl-navbar__action:focus-visible {
+  outline-color: var(--color-white);
+}
+
+.fdl-navbar__back img,
+.fdl-navbar__action img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fdl-navbar--light {
+  background-color: var(--color-white);
+  color: var(--color-darkgray);
+}
+
+.fdl-navbar--transparent-light {
+  background-color: transparent;
+  color: var(--color-darkgray);
+}
+
+.fdl-navbar--transparent-dark {
+  background-color: transparent;
+  color: var(--color-white);
+}
+  </style>
+</head>
+<body>
+
+  <section class="fdl-navbar-demo" aria-labelledby="nav-demo-1">
+    <p id="nav-demo-1" class="fdl-navbar-demo__label">通用 · 白色背景</p>
+    <div class="fdl-navbar-demo__chrome">
+      <img class="fdl-navbar-demo__status" src="https://gw.alicdn.com/imgextra/i2/O1CN01WRISmk1PWtSRbOLd0_!!6000000001849-2-tps-1500-176.png" alt="" width="1500" height="176" decoding="async" />
+      <nav class="fdl-navbar fdl-navbar--light" aria-label="主导航">
+        <div class="fdl-navbar__left">
+          <a class="fdl-navbar__back" href="#" aria-label="返回"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01iCXQQc22LgmdtOzRx_!!6000000007104-2-tps-96-96.png" alt="" /></a>
+        </div>
+        <h1 class="fdl-navbar__title">页面标题</h1>
+        <div class="fdl-navbar__right">
+          <div class="fdl-navbar__actions">
+            <a class="fdl-navbar__action" href="#" aria-label="收藏"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01zx64hk25hACZJRJua_!!6000000007557-2-tps-96-96.png" alt="" /></a>
+            <a class="fdl-navbar__action" href="#" aria-label="分享"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01zfpELj26TFmr86Z50_!!6000000007662-2-tps-96-96.png" alt="" /></a>
+          </div>
+        </div>
+      </nav>
+      <div class="fdl-navbar-demo__below"></div>
+    </div>
+  </section>
+
+  <section class="fdl-navbar-demo" aria-labelledby="nav-demo-2">
+    <p id="nav-demo-2" class="fdl-navbar-demo__label">通用 · 透明（深底 / 浅图标）</p>
+    <div class="fdl-navbar-demo__immersive">
+      <div class="fdl-navbar-demo__hero" style="background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=750');" aria-hidden="true"></div>
+      <div class="fdl-navbar-demo__stack">
+        <img class="fdl-navbar-demo__status" src="https://gw.alicdn.com/imgextra/i4/O1CN01z8vuV31nMrYvKDigP_!!6000000005076-2-tps-1500-176.png" alt="" width="1500" height="176" decoding="async" />
+        <nav class="fdl-navbar fdl-navbar--transparent-dark" aria-label="主导航">
+          <div class="fdl-navbar__left">
+            <a class="fdl-navbar__back" href="#" aria-label="返回"><img src="https://gw.alicdn.com/imgextra/i3/O1CN01qEmTpb1tK0n7KKdvE_!!6000000005882-2-tps-96-96.png" alt="" /></a>
+          </div>
+          <h1 class="fdl-navbar__title">页面标题</h1>
+          <div class="fdl-navbar__right">
+            <div class="fdl-navbar__actions">
+              <a class="fdl-navbar__action" href="#" aria-label="收藏"><img src="https://gw.alicdn.com/imgextra/i4/O1CN01Ps286y1YWjrkrMvLz_!!6000000003067-2-tps-96-96.png" alt="" /></a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="fdl-navbar-demo" aria-labelledby="nav-demo-3">
+    <p id="nav-demo-3" class="fdl-navbar-demo__label">通用 · 透明（浅底 / 深图标），右侧无操作</p>
+    <div class="fdl-navbar-demo__immersive">
+      <div class="fdl-navbar-demo__hero" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=750');" aria-hidden="true"></div>
+      <div class="fdl-navbar-demo__stack">
+        <img class="fdl-navbar-demo__status" src="https://gw.alicdn.com/imgextra/i2/O1CN01WRISmk1PWtSRbOLd0_!!6000000001849-2-tps-1500-176.png" alt="" width="1500" height="176" decoding="async" />
+        <nav class="fdl-navbar fdl-navbar--transparent-light" aria-label="主导航">
+          <div class="fdl-navbar__left">
+            <a class="fdl-navbar__back" href="#" aria-label="返回"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01iCXQQc22LgmdtOzRx_!!6000000007104-2-tps-96-96.png" alt="" /></a>
+          </div>
+          <h1 class="fdl-navbar__title">长长长长长长的页面标题</h1>
+          <div class="fdl-navbar__right"></div>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="fdl-navbar-demo" aria-labelledby="nav-demo-4">
+    <p id="nav-demo-4" class="fdl-navbar-demo__label">品牌 · 白色背景</p>
+    <div class="fdl-navbar-demo__chrome">
+      <img class="fdl-navbar-demo__status" src="https://gw.alicdn.com/imgextra/i2/O1CN01WRISmk1PWtSRbOLd0_!!6000000001849-2-tps-1500-176.png" alt="" width="1500" height="176" decoding="async" />
+      <nav class="fdl-navbar fdl-navbar--light fdl-navbar--brand" aria-label="主导航">
+        <div class="fdl-navbar__left">
+          <a class="fdl-navbar__back" href="#" aria-label="返回"><img src="https://gw.alicdn.com/imgextra/i2/O1CN01iCXQQc22LgmdtOzRx_!!6000000007104-2-tps-96-96.png" alt="" /></a>
+        </div>
+        <h1 class="fdl-navbar__title">Brand Title</h1>
+        <div class="fdl-navbar__right">
+          <div class="fdl-navbar__actions">
+            <a class="fdl-navbar__action" href="#" aria-label="更多"><img src="https://gw.alicdn.com/imgextra/i1/O1CN01fhYGKR1kLzy2dEB3R_!!6000000004668-2-tps-96-96.png" alt="" /></a>
+          </div>
+        </div>
+      </nav>
+      <div class="fdl-navbar-demo__below"></div>
+    </div>
+  </section>
+
+  <section class="fdl-navbar-demo" aria-labelledby="nav-demo-5">
+    <p id="nav-demo-5" class="fdl-navbar-demo__label">品牌 · 透明（深底）</p>
+    <div class="fdl-navbar-demo__immersive">
+      <div class="fdl-navbar-demo__hero" style="background-image: url('https://images.unsplash.com/photo-1534430480872-7407396834b6?w=750');" aria-hidden="true"></div>
+      <div class="fdl-navbar-demo__stack">
+        <img class="fdl-navbar-demo__status" src="https://gw.alicdn.com/imgextra/i4/O1CN01z8vuV31nMrYvKDigP_!!6000000005076-2-tps-1500-176.png" alt="" width="1500" height="176" decoding="async" />
+        <nav class="fdl-navbar fdl-navbar--transparent-dark fdl-navbar--brand" aria-label="主导航">
+          <div class="fdl-navbar__left">
+            <a class="fdl-navbar__back" href="#" aria-label="返回"><img src="https://gw.alicdn.com/imgextra/i3/O1CN01qEmTpb1tK0n7KKdvE_!!6000000005882-2-tps-96-96.png" alt="" /></a>
+          </div>
+          <h1 class="fdl-navbar__title">Brand Title</h1>
+          <div class="fdl-navbar__right">
+            <div class="fdl-navbar__actions">
+              <a class="fdl-navbar__action" href="#" aria-label="分享"><img src="https://gw.alicdn.com/imgextra/i2/O1CN019USs2O1VvyqZ9EMYN_!!6000000002716-2-tps-96-96.png" alt="" /></a>
+              <a class="fdl-navbar__action" href="#" aria-label="更多"><img src="https://gw.alicdn.com/imgextra/i3/O1CN011xMYmh245mFsWAdMA_!!6000000007340-2-tps-96-96.png" alt="" /></a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

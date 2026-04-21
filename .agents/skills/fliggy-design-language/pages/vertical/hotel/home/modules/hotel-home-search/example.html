@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>酒店首页 — 酒店搜索</title>
+    <style>
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #EFEFEF;
+            padding: 50px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-module {
+            position: relative;
+            width: 750px;
+            background-color: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .search-tabs {
+            display: flex;
+            height: 106px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, #FFFFFF 100%),
+                url('https://gw.alicdn.com/imgextra/i4/O1CN01FSz93q1FyEwrjl4rJ_!!6000000000555-2-tps-1500-200.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(10px);
+            border-radius: 24px 24px 0 0;
+            position: relative;
+            align-items: flex-end;
+        }
+
+        .search-tabs__item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .tab__image {
+            width: 110px;
+            height: 56px;
+            object-fit: contain;
+            margin-top: -8px;
+        }
+
+        .search-tabs__item--active {
+            height: 106px;
+            background-color: #FFFFFF;
+            border-radius: 24px 24px 0 0;
+            z-index: 2;
+        }
+
+        .search-tabs__item--active .tab__image {
+            margin-top: -2px;
+        }
+
+        .search-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 0 30px 24px 30px;
+            background-color: #FFFFFF;
+            border-radius: 0 0 24px 24px;
+            position: relative;
+            top: -6px;
+            z-index: 1;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-form__row {
+            display: flex;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .search-form__divider {
+            border: none;
+            height: 1px;
+            background-color: #F2F3F5;
+            margin: 0;
+        }
+
+        .form-field--city {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 36px;
+            font-weight: 500;
+            color: #0F131A;
+            cursor: pointer;
+        }
+        .form-field--search {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 20px 0 42px;
+            color: #919499;
+            font-size: 36px;
+        }
+        .spaced-char {
+            letter-spacing: 5px;
+        }
+        .form-field--location {
+            cursor: pointer;
+        }
+
+        .date-row-container {
+            justify-content: flex-start;
+        }
+
+        .date-selection-group {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 470px;
+        }
+
+        .form-field--date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .date-value {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            font-weight: 400;
+            color: #0F131A;
+        }
+        .date-value__number {
+            font-family: 'Fliggy Sans 102', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        .date-value__unit {
+            font-size: 28px;
+            position: relative;
+            bottom: 3px;
+        }
+
+        .date-label {
+            font-size: 28px;
+            color: #919499;
+            position: relative;
+            top: 4px;
+        }
+
+        .form-field--nights {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .nights-chip {
+            border: 1px solid #0F131A;
+            border-radius: 40px;
+            padding: 1px 12px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #0F131A;
+            margin: 0 -1px;
+            white-space: nowrap;
+        }
+        .nights-line {
+            width: 8px;
+            height: 1px;
+            background-color: #000000;
+        }
+
+        .occupancy-price-row {
+            justify-content: flex-start;
+        }
+
+        .form-field--occupancy {
+            width: 356px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            cursor: pointer;
+        }
+        .occupancy-item {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+        .occupancy-item__number {
+            font-family: 'Fliggy Sans 102', sans-serif;
+            font-weight: 500;
+            font-size: 36px;
+            line-height: 1.4;
+            color: #0F131A;
+        }
+        .occupancy-item__label {
+            font-size: 30px;
+            font-weight: 500;
+            color: #0F131A;
+        }
+
+        .form-field--price {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            cursor: pointer;
+            width: 310px;
+        }
+        .price-divider {
+             width: 1px;
+             height: 40px;
+             background-color: rgba(210, 212, 217, 0.5);
+        }
+        .price-label {
+            font-size: 30px;
+            color: #919499;
+        }
+
+        .hot-searches {
+            position: relative;
+        }
+        .hot-searches__scroll-container {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hot-searches__scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .hot-searches__tag {
+            flex-shrink: 0;
+            padding: 9px 14px;
+            background: #F7F8FA;
+            border-radius: 12px;
+            font-size: 24px;
+            color: #5C5F66;
+            text-decoration: none;
+        }
+        .hot-searches__fade {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55px;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 47.5%);
+            pointer-events: none;
+        }
+
+        .search-button {
+            width: 100%;
+            height: 84px;
+            background: #FFE033;
+            border-radius: 132px;
+            border: none;
+            font-size: 30px;
+            font-weight: 500;
+            color: #0F131A;
+            cursor: pointer;
+        }
+
+        .guarantee {
+            text-align: center;
+        }
+        .guarantee__image {
+            width: 100%;
+            height: 29px;
+            display: block;
+        }
+
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .icon-arrow-down { width: 32px; height: 32px; }
+        .icon-search { width: 42px; height: 42px; }
+        .icon-location { width: 36px; height: 36px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="search-module">
+
+        <nav class="search-tabs">
+            <a href="#" class="search-tabs__item search-tabs__item--active">
+                <img class="tab__image" src="https://gw.alicdn.com/imgextra/i3/O1CN01bbfHlb1aynMMDjuUq_!!6000000003399-2-tps-220-112.png" alt="国内">
+            </a>
+            <a href="#" class="search-tabs__item">
+                <img class="tab__image" src="https://gw.alicdn.com/imgextra/i2/O1CN015tHSJf1O9FORgbn5y_!!6000000001662-2-tps-220-100.png" alt="国际">
+            </a>
+            <a href="#" class="search-tabs__item">
+                <img class="tab__image" src="https://gw.alicdn.com/imgextra/i1/O1CN01om44tl1aYEO6Yzkij_!!6000000003341-2-tps-220-100.png" alt="民宿">
+            </a>
+            <a href="#" class="search-tabs__item">
+                <img class="tab__image" src="https://gw.alicdn.com/imgextra/i1/O1CN01NwGqJJ26YI91y7veu_!!6000000007673-2-tps-220-100.png" alt="钟点房">
+            </a>
+        </nav>
+
+        <div class="search-panel">
+            <form class="search-form" action="#">
+                <div class="search-form__row">
+                    <div class="form-field--city">
+                        <span>杭州</span>
+                        <span class="icon icon-arrow-down">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M23.0711 11.6688C23.2745 11.6543 23.4774 11.7022 23.6528 11.8063C23.8282 11.9104 23.9675 12.0656 24.0522 12.2511C24.1368 12.4366 24.1627 12.6436 24.1264 12.8443C24.0901 13.0449 23.9933 13.2297 23.8491 13.3738L16.7791 20.4448C16.6862 20.5378 16.5759 20.6115 16.4545 20.6619C16.3331 20.7122 16.203 20.7381 16.0716 20.7381C15.9401 20.7381 15.81 20.7122 15.6886 20.6619C15.5672 20.6115 15.4569 20.5378 15.3641 20.4448L8.29306 13.3748C8.1529 13.235 8.05739 13.0568 8.01863 12.8626C7.97986 12.6685 7.99959 12.4673 8.0753 12.2843C8.15101 12.1014 8.2793 11.9451 8.44393 11.8352C8.60855 11.7253 8.8021 11.6667 9.00006 11.6668H23.0001C23.0241 11.6668 23.0481 11.6668 23.0711 11.6688Z" fill="#0F131A"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-field--search">
+                        <span class="icon icon-search">
+                            <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30.1481 28.5994C32.1562 26.2329 33.2558 23.2286 33.25 20.125C33.25 12.8765 27.3735 7 20.125 7C12.8765 7 7 12.8765 7 20.125C7 27.3735 12.8765 33.25 20.125 33.25C23.275 33.25 26.2456 32.1405 28.5994 30.1481L29.4376 29.4376L30.1481 28.5994ZM36.9364 35.0805C37.0617 35.2016 37.1617 35.3464 37.2305 35.5065C37.2993 35.6667 37.3355 35.8389 37.337 36.0132C37.3385 36.1874 37.3053 36.3603 37.2393 36.5216C37.1733 36.6829 37.0759 36.8294 36.9526 36.9526C36.8294 37.0759 36.6829 37.1733 36.5216 37.2393C36.3603 37.3053 36.1874 37.3385 36.0132 37.337C35.8389 37.3355 35.6667 37.2993 35.5065 37.2305C35.3464 37.1617 35.2016 37.0617 35.0805 36.9364L30.2951 32.1519C27.4546 34.5609 23.8495 35.8806 20.125 35.875C11.4266 35.875 4.375 28.8234 4.375 20.125C4.375 11.4266 11.4266 4.375 20.125 4.375C28.8234 4.375 35.875 11.4266 35.875 20.125C35.875 24.0012 34.475 27.5511 32.1519 30.2951L36.9364 35.0805Z" fill="#919499"/>
+                            </svg>
+                        </span>
+                        <span>位<span class="spaced-char">置/</span>品<span class="spaced-char">牌/</span>酒店</span>
+                    </div>
+                    <div class="form-field--location">
+                        <span class="icon icon-location">
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 11.4545C14.3836 11.4545 11.4545 14.3836 11.4545 18C11.4545 21.6164 14.3836 24.5455 18 24.5455C21.6164 24.5455 24.5455 21.6164 24.5455 18C24.5455 14.3836 21.6164 11.4545 18 11.4545ZM19.6364 3.37091V1.125C19.6364 0.50368 19.1327 0 18.5114 0H17.4886C16.8673 0 16.3636 0.50368 16.3636 1.125V3.37091C9.54 4.12364 4.12364 9.54 3.37091 16.3636H1.125C0.50368 16.3636 0 16.8673 0 17.4886V18.5114C0 19.1327 0.50368 19.6364 1.125 19.6364H3.37091C4.12364 26.46 9.54 31.8764 16.3636 32.6291V34.875C16.3636 35.4963 16.8673 36 17.4886 36H18.5114C19.1327 36 19.6364 35.4963 19.6364 34.875V32.6291C26.46 31.8764 31.8764 26.46 32.6291 19.6364H34.875C35.4963 19.6364 36 19.1327 36 18.5114V17.4886C36 16.8673 35.4963 16.3636 34.875 16.3636H32.6291C31.8764 9.54 26.46 4.12364 19.6364 3.37091ZM18 29.4545C11.6673 29.4545 6.54545 24.3327 6.54545 18C6.54545 11.6673 11.6673 6.54545 18 6.54545C24.3327 6.54545 29.4545 11.6673 29.4545 18C29.4545 24.3327 24.3327 29.4545 18 29.4545Z" fill="#6666FF"/>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="search-form__divider">
+
+                <div class="search-form__row date-row-container">
+                    <div class="date-selection-group">
+                        <div class="form-field--date">
+                            <div class="date-value">
+                                <span class="date-value__number">4</span><span class="date-value__unit">月</span>
+                                <span class="date-value__number">2</span><span class="date-value__unit">日</span>
+                            </div>
+                            <span class="date-label">今天</span>
+                        </div>
+                        <div class="form-field--nights">
+                            <div class="nights-line"></div>
+                            <span class="nights-chip">1晚</span>
+                            <div class="nights-line"></div>
+                        </div>
+                        <div class="form-field--date form-field--date-end">
+                            <div class="date-value">
+                                <span class="date-value__number">4</span><span class="date-value__unit">月</span>
+                                <span class="date-value__number">3</span><span class="date-value__unit">日</span>
+                            </div>
+                            <span class="date-label">明天</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="search-form__divider">
+
+                <div class="search-form__row occupancy-price-row">
+                    <div class="form-field--occupancy">
+                        <div class="occupancy-item">
+                            <span class="occupancy-item__number">1</span>
+                            <span class="occupancy-item__label">间房</span>
+                        </div>
+                        <div class="occupancy-item">
+                            <span class="occupancy-item__number">1</span>
+                            <span class="occupancy-item__label">成人</span>
+                        </div>
+                        <div class="occupancy-item">
+                            <span class="occupancy-item__number">0</span>
+                            <span class="occupancy-item__label">儿童</span>
+                        </div>
+                        <span class="icon icon-arrow-down">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M23.0711 11.6688C23.2745 11.6543 23.4774 11.7022 23.6528 11.8063C23.8282 11.9104 23.9675 12.0656 24.0522 12.2511C24.1368 12.4366 24.1627 12.6436 24.1264 12.8443C24.0901 13.0449 23.9933 13.2297 23.8491 13.3738L16.7791 20.4448C16.6862 20.5378 16.5759 20.6115 16.4545 20.6619C16.3331 20.7122 16.203 20.7381 16.0716 20.7381C15.9401 20.7381 15.81 20.7122 15.6886 20.6619C15.5672 20.6115 15.4569 20.5378 15.3641 20.4448L8.29306 13.3748C8.1529 13.235 8.05739 13.0568 8.01863 12.8626C7.97986 12.6685 7.99959 12.4673 8.0753 12.2843C8.15101 12.1014 8.2793 11.9451 8.44393 11.8352C8.60855 11.7253 8.8021 11.6667 9.00006 11.6668H23.0001C23.0241 11.6668 23.0481 11.6668 23.0711 11.6688Z" fill="#0F131A"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-field--price">
+                        <div class="price-divider"></div>
+                        <span class="price-label">价<span class="spaced-char">格/</span>星级</span>
+                    </div>
+                </div>
+
+                <hr class="search-form__divider">
+
+            </form>
+
+            <div class="hot-searches">
+                <div class="hot-searches__scroll-container">
+                    <a href="#" class="hot-searches__tag">西湖风景区</a>
+                    <a href="#" class="hot-searches__tag">杭州东站</a>
+                    <a href="#" class="hot-searches__tag">雷峰塔</a>
+                    <a href="#" class="hot-searches__tag">萧山国际机场</a>
+                    <a href="#" class="hot-searches__tag">西溪湿地</a>
+                    <a href="#" class="hot-searches__tag">灵隐寺</a>
+                </div>
+                <div class="hot-searches__fade"></div>
+            </div>
+
+            <button class="search-button" type="submit">搜索酒店</button>
+
+            <div class="guarantee">
+                <img class="guarantee__image" src="https://gw.alicdn.com/imgextra/i4/O1CN014dqp1O1k6QV6OrKMF_!!6000000004634-2-tps-1380-58.png" alt="7x24小时服务・品牌直营 双重积分・信用住 先住后付">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

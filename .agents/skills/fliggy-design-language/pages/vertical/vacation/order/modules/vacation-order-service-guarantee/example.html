@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>度假订详 — 服务保障</title>
+  <style>
+    body { margin: 0; font-family: 'PingFang SC', sans-serif; }
+    .service-wrapper {
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 0 24px 24px; width: 750px; background: #FFFFFF; box-sizing: border-box;
+    }
+    .service-guarantee {
+      display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+      padding: 0; gap: 24px; width: 702px; min-height: 36px;
+    }
+    .guarantee__row {
+      display: flex; flex-direction: row; align-items: center; padding: 0; isolation: isolate;
+      width: 702px; min-height: 36px;
+    }
+    .guarantee__label {
+      display: flex; flex-direction: row; align-items: center; padding: 0; isolation: isolate;
+      height: 36px; margin: 0 -6px; z-index: 1; flex-shrink: 0;
+    }
+    .guarantee__label-inner {
+      display: flex; align-items: center; justify-content: center; min-width: 100px; height: 36px;
+      padding: 0 10px; background: #FFE033; border-radius: 5px; font-weight: 600; font-size: 22px; color: #0F131A;
+    }
+    .guarantee__text-bar {
+      box-sizing: border-box; display: flex; flex-direction: row; align-items: center;
+      padding: 0 0 0 12px; min-height: 36px; flex-grow: 1;
+      background: linear-gradient(90deg, #FFF9D8 50%, rgba(255, 249, 216, 0.0001) 100%); border-radius: 4px; z-index: 0;
+    }
+    .guarantee__text { font-weight: 400; font-size: 24px; line-height: 1.2; color: #0F131A; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="service-wrapper">
+    <section class="service-guarantee" aria-label="服务保障">
+      <div class="guarantee__row">
+        <div class="guarantee__label">
+          <span class="guarantee__label-inner">极速入园</span>
+        </div>
+        <div class="guarantee__text-bar">
+          <span class="guarantee__text">10秒出票·出票即用·无需取票</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

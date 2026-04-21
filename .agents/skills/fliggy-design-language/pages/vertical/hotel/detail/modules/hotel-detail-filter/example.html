@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="icon" href="data:," />
+    <script defer src="../../embed-autosize.js"></script>
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get("mode") || "both";
+        const root = document.documentElement;
+
+        root.dataset.mode = mode;
+
+        if (mode === "regular") {
+          root.style.setProperty("--design-height", "222");
+        } else if (mode === "sticky") {
+          root.style.setProperty("--design-height", "210");
+        }
+      })();
+    </script>
+    <style>
+      :root {
+        --design-width: 750;
+        --design-height: 482;
+        --scale: 1;
+        --color-white: #ffffff;
+        --color-dark: #0f131a;
+        --color-light: #919499;
+        --color-filter-bg: #f7f8fa;
+        --color-low-price-text: #805540;
+        --color-low-price-top: #fef5ec;
+        --color-low-price-bottom: #feebd8;
+        --color-line: #e9edf2;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      button {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        font: inherit;
+        color: inherit;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: #f2f3f5;
+      }
+
+      body {
+        overflow-x: hidden;
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          sans-serif;
+      }
+
+      .viewport {
+        position: relative;
+        width: 100vw;
+        height: calc(var(--design-height) * 1px * var(--scale));
+      }
+
+      .canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(var(--design-width) * 1px);
+        height: calc(var(--design-height) * 1px);
+        transform: scale(var(--scale));
+        transform-origin: top left;
+      }
+
+      .panel {
+        position: absolute;
+        left: 0;
+        width: 750px;
+        overflow: hidden;
+      }
+
+      .panel-regular {
+        top: 0;
+        height: 222px;
+        padding: 18px 18px 42px;
+        border-radius: 24px 24px 0 0;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #ffffff 73%,
+          rgba(255, 255, 255, 0.96) 87%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+
+      .panel-sticky {
+        top: 272px;
+        height: 210px;
+        padding: 18px 18px 30px;
+        background: #ffffff;
+      }
+
+      .panel-sticky::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 1px;
+        background: rgba(15, 19, 26, 0.12);
+      }
+
+      html[data-mode="regular"] .panel-sticky {
+        display: none;
+      }
+
+      html[data-mode="sticky"] .panel-regular {
+        display: none;
+      }
+
+      html[data-mode="sticky"] .panel-sticky {
+        top: 0;
+      }
+
+      .panel-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 714px;
+      }
+
+      .header {
+        display: flex;
+        flex-direction: column;
+        width: 714px;
+      }
+
+      .day-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 266px;
+        color: var(--color-light);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 34px;
+      }
+
+      .summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 714px;
+      }
+
+      .booking-meta {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 446px;
+      }
+
+      .calendar-pair {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .date {
+        display: flex;
+        align-items: flex-start;
+        gap: 3px;
+        margin-top: 16px;
+        color: var(--color-dark);
+      }
+
+      .date-number,
+      .count-number {
+        font-family: "Fliggy Sans 102", "Helvetica Neue", Arial, sans-serif;
+        font-weight: 500;
+      }
+
+      .date-number {
+        font-size: 40px;
+        line-height: 56px;
+      }
+
+      .date-unit {
+        padding-top: 11px;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 34px;
+      }
+
+      .stay-pill {
+        position: relative;
+        width: 65px;
+        height: 32px;
+        margin-top: 12px;
+      }
+
+      .stay-pill::before,
+      .stay-pill::after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        width: 6px;
+        height: 1px;
+        background: var(--color-dark);
+      }
+
+      .stay-pill::before {
+        left: 0;
+      }
+
+      .stay-pill::after {
+        right: 0;
+      }
+
+      .stay-pill-label {
+        position: absolute;
+        top: 0;
+        left: 5px;
+        width: 55px;
+        height: 32px;
+        border: 1px solid var(--color-dark);
+        border-radius: 24px;
+        color: var(--color-dark);
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 30px;
+        text-align: center;
+      }
+
+      .low-price {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        height: 32px;
+        width: 84px;
+        margin-top: 12px;
+      }
+
+      .low-price-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .low-price-bg path {
+        fill: var(--color-low-price-top);
+      }
+
+      .low-price-text {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding-left: 12px;
+        color: var(--color-low-price-text);
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 31px;
+        white-space: nowrap;
+      }
+
+      .guest-stats {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 14px;
+        width: 188px;
+      }
+
+      .guest-stat {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--color-dark);
+      }
+
+      .guest-stat:nth-child(1) {
+        width: 50px;
+      }
+
+      .guest-stat:nth-child(n + 2) {
+        width: 55px;
+      }
+
+      .count-number {
+        min-width: 12px;
+        font-size: 32px;
+        line-height: 32px;
+        text-align: right;
+      }
+
+      .guest-stat img {
+        display: block;
+        width: 32px;
+        height: 32px;
+        object-fit: cover;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      .filters {
+        position: relative;
+        width: 714px;
+        height: 60px;
+      }
+
+      .filters-track {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 708px;
+        height: 60px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .filters-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-chip {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 108px;
+        height: 60px;
+        border-radius: 6px;
+        background: var(--color-filter-bg);
+        color: var(--color-dark);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 34px;
+        cursor: default;
+      }
+
+      .filter-chip::selection,
+      .filter-action-text::selection,
+      .day-row span::selection,
+      .date span::selection,
+      .low-price::selection,
+      .count-number::selection {
+        background: transparent;
+      }
+
+      .filter-action {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        width: 120px;
+        height: 60px;
+        padding-left: 45px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          #ffffff 20%,
+          #ffffff 100%
+        );
+      }
+
+      .filter-action-text {
+        color: var(--color-dark);
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 34px;
+      }
+
+      .filter-action-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        color: var(--color-dark);
+        flex: 0 0 auto;
+      }
+
+      .filter-action-icon svg {
+        display: block;
+        width: 12.1073px;
+        height: 6.80388px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="canvas">
+        <section class="panel panel-regular" data-node-id="8577:42438">
+          <div class="panel-inner">
+            <div class="header">
+              <div class="day-row">
+                <span>今天</span>
+                <span>明天</span>
+              </div>
+              <div class="summary">
+                <div class="booking-meta">
+                  <div class="calendar-pair">
+                    <div class="date">
+                      <span class="date-number">12</span>
+                      <span class="date-unit">月</span>
+                      <span class="date-number">23</span>
+                      <span class="date-unit">日</span>
+                    </div>
+                    <div class="stay-pill">
+                      <span class="stay-pill-label">1晚</span>
+                    </div>
+                  <div class="date">
+                      <span class="date-number">12</span>
+                      <span class="date-unit">月</span>
+                      <span class="date-number">30</span>
+                      <span class="date-unit">日</span>
+                    </div>
+                  </div>
+                  <span class="low-price">
+                    <svg
+                      class="low-price-bg"
+                      viewBox="0 0 83.5279 32"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path d="M6.42229 2.21114C7.09986 0.856008 8.48491 0 10 0H79.5279C81.737 0 83.5279 1.79086 83.5279 4V28C83.5279 30.2091 81.737 32 79.5279 32H10C8.48491 32 7.09986 31.144 6.42229 29.7889L0.422291 17.7889C-0.140764 16.6627 -0.140764 15.3373 0.422291 14.2111L6.42229 2.21114Z" />
+                    </svg>
+                    <span class="low-price-text">看低价</span>
+                  </span>
+                </div>
+                <div class="guest-stats">
+                  <div class="guest-stat">
+                    <span class="count-number">1</span>
+                    <img
+                      src="https://gw.alicdn.com/imgextra/i1/O1CN01XpjTYh1HlXBzRcegC_!!6000000000798-2-tps-64-64.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="guest-stat">
+                    <span class="count-number">2</span>
+                    <img
+                      src="https://gw.alicdn.com/imgextra/i4/O1CN01akEGK8244P4BENxEM_!!6000000007337-2-tps-64-64.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="guest-stat">
+                    <span class="count-number">0</span>
+                    <img
+                      src="https://gw.alicdn.com/imgextra/i4/O1CN01IL6Uw81rz76RLsBvF_!!6000000005701-2-tps-64-64.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="filters">
+              <div class="filters-track" aria-hidden="true">
+                <button class="filter-chip" type="button">海景房</button>
+                <button class="filter-chip" type="button">含早餐</button>
+                <button class="filter-chip" type="button">大床房</button>
+                <button class="filter-chip" type="button">双床房</button>
+                <button class="filter-chip" type="button">信用住</button>
+                <button class="filter-chip" type="button">信用住</button>
+              </div>
+              <div class="filter-action">
+                <span class="filter-action-text">筛选</span>
+                <span class="filter-action-icon" aria-hidden="true">
+                  <svg viewBox="0 0 12.1073 6.80388" fill="none">
+                    <path
+                      d="M11.3038 0.0019111C11.4564 -0.0089987 11.6086 0.0269897 11.7401 0.105051C11.8717 0.183112 11.9762 0.299515 12.0397 0.438653C12.1032 0.577792 12.1226 0.733015 12.0954 0.883512C12.0681 1.03401 11.9956 1.17258 11.8873 1.28066L6.58484 6.58391C6.51519 6.65364 6.43247 6.70896 6.34142 6.74671C6.25037 6.78445 6.15278 6.80388 6.05422 6.80388C5.95566 6.80388 5.85806 6.78445 5.76701 6.74671C5.67596 6.70896 5.59325 6.65364 5.52359 6.58391L0.220341 1.28141C0.115227 1.17656 0.0435955 1.04287 0.0145216 0.897281C-0.0145523 0.751689 0.000238885 0.600743 0.0570221 0.463564C0.113805 0.326384 0.210026 0.209145 0.333494 0.126695C0.456963 0.0442447 0.602124 0.000294238 0.750591 0.000411212H11.2506C11.2686 0.000411212 11.2866 0.000411103 11.3038 0.0019111Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel-sticky" data-node-id="8577:42439">
+          <div class="panel-inner">
+            <div class="header">
+              <div class="day-row">
+                <span>今天</span>
+                <span>明天</span>
+              </div>
+              <div class="summary">
+                <div class="booking-meta">
+                  <div class="calendar-pair">
+                    <div class="date">
+                      <span class="date-number">12</span>
+                      <span class="date-unit">月</span>
+                      <span class="date-number">23</span>
+                      <span class="date-unit">日</span>
+                    </div>
+                    <div class="stay-pill">
+                      <span class="stay-pill-label">1晚</span>
+                    </div>
+                  <div class="date">
+                      <span class="date-number">12</span>
+                      <span class="date-unit">月</span>
+                      <span class="date-number">30</span>
+                      <span class="date-unit">日</span>
+                    </div>
+                  </div>
+                  <span class="low-price">
+                    <svg
+                      class="low-price-bg"
+                      viewBox="0 0 83.5279 32"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path d="M6.42229 2.21114C7.09986 0.856008 8.48491 0 10 0H79.5279C81.737 0 83.5279 1.79086 83.5279 4V28C83.5279 30.2091 81.737 32 79.5279 32H10C8.48491 32 7.09986 31.144 6.42229 29.7889L0.422291 17.7889C-0.140764 16.6627 -0.140764 15.3373 0.422291 14.2111L6.42229 2.21114Z" />
+                    </svg>
+                    <span class="low-price-text">看低价</span>
+                  </span>
+                </div>
+                <div class="guest-stats">
+                  <div class="guest-stat">
+                    <span class="count-number">1</span>
+                    <img
+                      src="https://gw.alicdn.com/imgextra/i1/O1CN01XpjTYh1HlXBzRcegC_!!6000000000798-2-tps-64-64.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="guest-stat">
+                    <span class="count-number">2</span>
+                    <img
+                      src="https://gw.alicdn.com/imgextra/i4/O1CN01akEGK8244P4BENxEM_!!6000000007337-2-tps-64-64.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="guest-stat">
+                    <span class="count-number">0</span>
+                    <img
+                      src="https://gw.alicdn.com/imgextra/i4/O1CN01IL6Uw81rz76RLsBvF_!!6000000005701-2-tps-64-64.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="filters">
+              <div class="filters-track" aria-hidden="true">
+                <button class="filter-chip" type="button">海景房</button>
+                <button class="filter-chip" type="button">含早餐</button>
+                <button class="filter-chip" type="button">大床房</button>
+                <button class="filter-chip" type="button">双床房</button>
+                <button class="filter-chip" type="button">信用住</button>
+                <button class="filter-chip" type="button">信用住</button>
+              </div>
+              <div class="filter-action">
+                <span class="filter-action-text">筛选</span>
+                <span class="filter-action-icon" aria-hidden="true">
+                  <svg viewBox="0 0 12.1073 6.80388" fill="none">
+                    <path
+                      d="M11.3038 0.0019111C11.4564 -0.0089987 11.6086 0.0269897 11.7401 0.105051C11.8717 0.183112 11.9762 0.299515 12.0397 0.438653C12.1032 0.577792 12.1226 0.733015 12.0954 0.883512C12.0681 1.03401 11.9956 1.17258 11.8873 1.28066L6.58484 6.58391C6.51519 6.65364 6.43247 6.70896 6.34142 6.74671C6.25037 6.78445 6.15278 6.80388 6.05422 6.80388C5.95566 6.80388 5.85806 6.78445 5.76701 6.74671C5.67596 6.70896 5.59325 6.65364 5.52359 6.58391L0.220341 1.28141C0.115227 1.17656 0.0435955 1.04287 0.0145216 0.897281C-0.0145523 0.751689 0.000238885 0.600743 0.0570221 0.463564C0.113805 0.326384 0.210026 0.209145 0.333494 0.126695C0.456963 0.0442447 0.602124 0.000294238 0.750591 0.000411212H11.2506C11.2686 0.000411212 11.2866 0.000411103 11.3038 0.0019111Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const designWidth = 750;
+
+        function updateScale() {
+          const availableWidth = Math.max(320, window.innerWidth);
+          const scale = availableWidth / designWidth;
+          document.documentElement.style.setProperty("--scale", scale.toFixed(4));
+        }
+
+        updateScale();
+        window.addEventListener("resize", updateScale);
+      })();
+    </script>
+  </body>
+</html>

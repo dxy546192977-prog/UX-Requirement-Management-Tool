@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车 OTA — 行程卡</title>
+    <style>
+        @font-face {
+            font-family: "Alibaba Sans 102";
+            src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+            font-weight: 700;
+            font-display: swap;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #F5F5F5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+        }
+        .trip-card-container {
+            width: 750px;
+            height: 171px;
+            background-color: #FFFFFF;
+            padding: 30px 59px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .trip-card-frame {
+            width: 632px;
+            height: 141px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .od-row {
+            width: 632px;
+            height: 93px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .station-left {
+            width: 181px;
+            height: 93px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        .time-left {
+            font-family: "Alibaba Sans 102", sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 48px;
+            color: #0F131A;
+            text-align: left;
+        }
+        .city-left {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 30px;
+            line-height: 34px;
+            color: #0F131A;
+        }
+        .info-middle {
+            width: 245px;
+            height: 74px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+        }
+        .duration {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 22px;
+            color: #5C5F66;
+            text-align: center;
+        }
+        .arrow-icon {
+            width: 245px;
+            height: 9.3px;
+            position: absolute;
+            top: 28px;
+            left: 0;
+        }
+        .train-info {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 26px;
+            line-height: 26px;
+            color: #5C5F66;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+        }
+        .station-right {
+            width: 182px;
+            height: 93px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        .time-right {
+            font-family: "Alibaba Sans 102", sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 48px;
+            color: #0F131A;
+            text-align: right;
+        }
+        .city-right {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 30px;
+            line-height: 34px;
+            color: #0F131A;
+            text-align: right;
+        }
+        .tags-row {
+            width: 453px;
+            height: 24px;
+            display: flex;
+            flex-direction: row;
+            padding: 0 12px;
+            gap: 12px;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .tag-item {
+            font-family: "PingFang SC", sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            color: #5C5F66;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tag-arrow {
+            width: 7px;
+            height: 12px;
+        }
+        .divider {
+            width: 1px;
+            height: 18px;
+            border-left: 1px solid #D2D4D9;
+        }
+    </style>
+</head>
+<body>
+    <div class="trip-card-container">
+        <div class="trip-card-frame">
+            <div class="od-row">
+                <div class="station-left">
+                    <div class="time-left">11:39</div>
+                    <div class="city-left">杭州东</div>
+                </div>
+                <div class="info-middle">
+                    <div class="duration">6时33分</div>
+                    <img class="arrow-icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01ncg4Hq1SAOqxZXacR_!!6000000002206-2-tps-490-19.png" alt="">
+                    <div class="train-info">
+                        G1234·时刻表
+                        <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                    </div>
+                </div>
+                <div class="station-right">
+                    <div class="time-right">18:12</div>
+                    <div class="city-right">北京南</div>
+                </div>
+            </div>
+            <div class="tags-row">
+                <div class="tag-item">
+                    退改说明
+                    <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                </div>
+                <div class="divider"></div>
+                <div class="tag-item">
+                    积分兑换
+                    <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                </div>
+                <div class="divider"></div>
+                <div class="tag-item">
+                    复兴号·静音
+                    <img class="tag-arrow" src="https://gw.alicdn.com/imgextra/i4/O1CN01ybm0aD1zOwkkgsx7i_!!6000000006705-2-tps-14-24.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+
+    :root {
+      --color-primary: #0E131B;
+      --color-secondary: #90949A;
+      --color-price: #FF4119;
+      --color-accent: #009DAA;
+      --color-white: #FFFFFF;
+      --color-bg: #F2F3F5;
+      --color-bg-light: #F7F8FA;
+      --color-bg-card: #FAFAFA;
+      --color-border: #E6E7EB;
+      --color-divider: #E0E0E0;
+      --color-selected: #FFE747;
+      --color-selected-bg: #FFFCE9;
+      --color-selected-border: #FFDF00;
+      --color-heart: #212121;
+      --color-heart-icon: #FFD600;
+      --radius-xl: 24px;
+      --radius-l: 12px;
+      --radius-m: 6px;
+      --radius-s: 4px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      background-color: var(--color-bg-light);
+    }
+
+    .marketing-bar {
+      width: 750px;
+      height: 96px;
+      background-color: var(--color-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .marketing-content {
+      width: 726px;
+      height: 72px;
+      background-color: var(--color-white);
+      border-radius: var(--radius-l);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo-icon {
+      width: 154px;
+      height: 30px;
+      background-image: url('https://gw.alicdn.com/imgextra/i2/O1CN01LNtweJ1ywYCGM029m_!!6000000006643-2-tps-154-30.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .text-area {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      flex: 1;
+    }
+
+    .text-normal {
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-primary);
+    }
+
+    .text-highlight-number {
+      font-family: 'Alibaba Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-price);
+    }
+
+    .text-highlight {
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 140%;
+      color: var(--color-price);
+    }
+
+    .arrow-right {
+      width: 12px;
+      height: 12px;
+      background-image: url('https://gw.alicdn.com/imgextra/i3/O1CN01r65nUg1Eh0QgL9Edx_!!6000000000382-2-tps-12-12.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="marketing-bar">
+    <div class="marketing-content">
+      <div class="logo-area">
+        <div class="logo-icon"></div>
+      </div>
+      <div class="text-area">
+        <span class="text-normal">购买国内机票立减</span><span class="text-highlight-number">20-30元</span>
+      </div>
+      <div class="arrow-right"></div>
+    </div>
+  </div>
+</body>
+</html>

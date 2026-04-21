@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>营销小黄条示例</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f2f3f5;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    img {
+      display: block;
+    }
+
+    .module {
+      width: 750px;
+      margin: 0 auto;
+      padding: 6px 18px 18px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      width: 714px;
+      height: 72px;
+      padding: 0 18px;
+      border: 1px solid #ffffff;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      width: 622px;
+      height: 60px;
+      flex: none;
+    }
+
+    .promo-image {
+      width: 65px;
+      height: 33px;
+      flex: none;
+    }
+
+    .copy {
+      font-size: 24px;
+      line-height: 34px;
+      font-weight: 400;
+      color: #ff0020;
+      white-space: nowrap;
+    }
+
+    .arrow {
+      width: 12px;
+      height: 12px;
+      flex: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="module">
+    <div class="card">
+      <div class="content">
+        <img class="promo-image" src="https://gw.alicdn.com/imgextra/i3/O1CN0121KqdT1Hyog7f4ABg_!!6000000000827-2-tps-65-33.png" alt="享免单">
+        <div class="copy">组队满10800个全额免单</div>
+      </div>
+      <img class="arrow" src="https://gw.alicdn.com/imgextra/i3/O1CN01r65nUg1Eh0QgL9Edx_!!6000000000382-2-tps-12-12.png" alt="箭头">
+    </div>
+  </div>
+</body>
+</html>

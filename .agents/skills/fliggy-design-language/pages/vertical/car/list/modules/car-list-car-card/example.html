@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>租车 LIST · 车型卡片</title>
+  <link rel="stylesheet" href="list-car-card-styles.css">
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Alibaba Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/AlibabaSans102-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-display: swap;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #F2F3F5;
+      font-family: 'PingFang SC', sans-serif;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="car-card">
+    <div class="corner-badge recent"><span class="corner-badge-text recent">最近浏览</span></div>
+    <div class="vr-badge"><img src="https://img.alicdn.com/imgextra/i3/O1CN01204x9a2A0B6ijuEeU_!!6000000008140-55-tps-80-30.svg" alt=""></div>
+    <div class="car-info-wrapper">
+      <div class="car-info">
+        <div class="car-image">
+          <img src="https://img.alicdn.com/imgextra/i4/O1CN01gvRotW225CWbFGoy4_!!6000000007068-55-tps-190-127.svg" alt="大众朗逸">
+        </div>
+        <div class="car-details">
+          <div class="car-name">大众朗逸</div>
+          <div class="car-tags">
+            <span class="car-tag">经济型</span><span class="tag-divider"></span>
+            <span class="car-tag">5座</span><span class="tag-divider"></span>
+            <span class="car-tag">1.0T</span><span class="tag-divider"></span>
+            <span class="car-tag">1.5L</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="divider-line"></div>
+    <div class="quote-section">
+      <div class="quote-top">
+        <div class="license-info">
+          <div class="local-license"><div class="license-bg"></div><span class="license-text">浙A</span></div>
+          <span class="year-text">2024款</span>
+        </div>
+        <div class="price-wrapper">
+          <span class="price-symbol">¥</span><span class="price-number">110</span><span class="price-unit">/天</span>
+        </div>
+      </div>
+      <div class="quote-bottom">
+        <div class="discount-tag"><span class="discount-text">已优惠¥10</span></div>
+        <span class="total-price">总价¥440起</span>
+        <div class="help-icon"><img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" alt=""></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="car-card">
+    <div class="corner-badge eco">
+      <img class="corner-badge-icon" src="https://img.alicdn.com/imgextra/i4/O1CN015MdGMN1kLXZRx7DZM_!!6000000004667-55-tps-24-24.svg" alt="">
+      <span class="corner-badge-text eco">低碳车型</span>
+    </div>
+    <div class="vr-badge"><img src="https://img.alicdn.com/imgextra/i3/O1CN01204x9a2A0B6ijuEeU_!!6000000008140-55-tps-80-30.svg" alt=""></div>
+    <div class="car-info-wrapper">
+      <div class="car-info">
+        <div class="car-image">
+          <img src="https://img.alicdn.com/imgextra/i1/O1CN01EPWWzl1LyawxWX0yd_!!6000000001368-55-tps-190-127.svg" alt="特斯拉Model3">
+        </div>
+        <div class="car-details">
+          <div class="car-name">特斯拉Model3</div>
+          <div class="car-tags">
+            <span class="car-tag">舒适型</span><span class="tag-divider"></span>
+            <span class="car-tag">5座</span><span class="tag-divider"></span>
+            <span class="car-tag">纯电动</span><span class="tag-divider"></span>
+            <span class="car-tag">1.5L</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="divider-line"></div>
+    <div class="quote-section">
+      <div class="quote-top">
+        <div class="license-info">
+          <div class="local-license"><div class="license-bg"></div><span class="license-text">浙A</span></div>
+          <span class="year-text">2024款</span>
+        </div>
+        <div class="price-wrapper">
+          <span class="price-symbol">¥</span><span class="price-number">90</span><span class="price-unit">/天</span>
+        </div>
+      </div>
+      <div class="quote-bottom">
+        <div class="discount-tag"><span class="discount-text">已优惠¥10</span></div>
+        <span class="total-price">总价¥440起</span>
+        <div class="help-icon"><img src="https://img.alicdn.com/imgextra/i1/O1CN01DruHOp23aAvUNpLMy_!!6000000007271-55-tps-24-24.svg" alt=""></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

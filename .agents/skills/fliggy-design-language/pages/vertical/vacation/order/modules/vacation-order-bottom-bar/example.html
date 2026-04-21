@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>度假订详 — 底部操作栏</title>
+  <style>
+    body { margin: 0; padding-bottom: 200px; font-family: 'PingFang SC', sans-serif; background: #F2F3F5; }
+    a { text-decoration: none; color: inherit; }
+    .bottom-action-bar {
+      box-sizing: border-box; position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; width: 750px; max-width: 100%;
+      background: #FFFFFF; border-top: 1px solid #F2F3F5; display: flex; justify-content: space-around; align-items: center; height: 175px;
+      padding-bottom: constant(safe-area-inset-bottom); padding-bottom: env(safe-area-inset-bottom);
+    }
+    .action-item { display: flex; align-items: center; gap: 13px; }
+    .action-item__icon { width: 58px; height: 58px; display: flex; justify-content: center; align-items: center; }
+    .action-item__text-block { display: flex; flex-direction: column; }
+    .action-item__title { font-size: 28px; line-height: 1.4; color: #0F131A; }
+    .action-item__subtitle { font-size: 22px; line-height: 1.4; color: #919499; }
+    .divider { height: 65px; border-left: 1px solid #F2F3F5; }
+  </style>
+</head>
+<body>
+  <p style="padding:24px;">底栏 fixed 预览；整页见 example-full.html。</p>
+  <nav class="bottom-action-bar" aria-label="订单联系">
+    <a href="#" class="action-item">
+      <div class="action-item__icon">
+        <svg width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30.1225 10.0024H51.0004L50.5238 12.3355C49.9828 14.9863 49.0033 17.2281 48.1293 18.6431H50.9369L50.4906 20.5347C50.4456 20.8177 48.9904 27.1131 43.4154 30.3501C43.1734 35.299 41.367 39.7022 38.2641 42.8462C34.9701 46.1852 30.4694 47.9985 25.2494 47.9985C19.9717 47.9985 15.242 46.0939 11.9301 42.7251C8.64312 39.3821 6.97043 34.7421 7.0004 29.3071C7.0544 19.6982 13.8666 9.82151 30.1225 10.0024Z" fill="#0F131A"/></svg>
+      </div>
+      <div class="action-item__text-block">
+        <span class="action-item__title">联系飞猪</span>
+        <span class="action-item__subtitle">24小时在线</span>
+      </div>
+    </a>
+    <div class="divider" role="presentation"></div>
+    <a href="#" class="action-item">
+      <div class="action-item__icon">
+        <svg width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.4951 10C35.5 10 41.5 16 42 24C45 25 47 28 47 31V34C47 37 45 40 42 41C41.5 48 35.5 54 28.5 54C21.5 54 15.5 48 15 41C12 40 10 37 10 34V31C10 28 12 25 15 24C15.5 16 21.5 10 28.4951 10Z" fill="#0F131A"/></svg>
+      </div>
+      <div class="action-item__text-block">
+        <span class="action-item__title">联系商家</span>
+        <span class="action-item__subtitle">咨询时间 09:00-23:00</span>
+      </div>
+    </a>
+  </nav>
+</body>
+</html>

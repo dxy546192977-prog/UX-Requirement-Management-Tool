@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>频道底栏 · 预览</title>
+  <link rel="stylesheet" href="az-tabbar.css">
+  <style>
+    body { margin: 0; background: #f2f3f5; min-height: 320px; position: relative; }
+    .wrap { position: relative; width: 750px; margin: 0 auto; min-height: 280px; padding-bottom: 150px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p style="padding:24px;color:#5C5F66;font-size:24px;">底栏 absolute 贴底时请放在整页 <code>.az-bottom-slot</code> 内预览 <a href="../../example-full.html">example-full</a></p>
+    <div class="az-tabbar" style="position:absolute;left:0;bottom:0;">
+      <nav class="az-tabbar__nav" aria-label="底部导航">
+        <div class="az-tabbar__item is-active"><div class="az-tabbar__icon"></div><span>首页</span></div>
+        <div class="az-tabbar__item"><div class="az-tabbar__icon"></div><span>订单</span></div>
+        <div class="az-tabbar__item"><div class="az-tabbar__icon"></div><span>消息</span></div>
+        <div class="az-tabbar__item"><div class="az-tabbar__icon"></div><span>行程</span></div>
+        <div class="az-tabbar__item"><div class="az-tabbar__icon"></div><span>我的</span></div>
+      </nav>
+      <div class="az-tabbar__safe"></div>
+    </div>
+  </div>
+</body>
+</html>

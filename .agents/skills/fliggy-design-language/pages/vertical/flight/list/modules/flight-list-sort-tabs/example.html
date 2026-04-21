@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <style>
+    @font-face {
+      font-family: 'Fliggy Sans 102';
+      src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+      font-weight: 500;
+      font-display: swap;
+    }
+
+    :root {
+      --color-primary: #0E131B;
+      --color-secondary: #90949A;
+      --color-price: #FF4119;
+      --color-accent: #009DAA;
+      --color-white: #FFFFFF;
+      --color-bg: #F2F3F5;
+      --color-bg-light: #F7F8FA;
+      --color-bg-card: #FAFAFA;
+      --color-border: #E6E7EB;
+      --color-divider: #E0E0E0;
+      --color-selected: #FFE747;
+      --color-selected-bg: #FFFCE9;
+      --color-selected-border: #FFDF00;
+      --color-heart: #212121;
+      --color-heart-icon: #FFD600;
+      --radius-xl: 24px;
+      --radius-l: 12px;
+      --radius-m: 6px;
+      --radius-s: 4px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      background-color: var(--color-bg-light);
+    }
+
+    .filter-bar {
+      width: 750px;
+      height: 84px;
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-bg);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      isolation: isolate;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .filter-item {
+      height: 60px;
+      background-color: var(--color-bg-light);
+      border-radius: var(--radius-m);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 18px;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .filter-item.active {
+      background-color: var(--color-selected-bg);
+      border: 1px solid var(--color-selected-border);
+    }
+
+    .filter-text {
+      font-family: 'PingFang SC', 'SimHei', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 140%;
+      color: var(--color-primary);
+      white-space: nowrap;
+      flex: none;
+    }
+
+    .filter-item.active .filter-text {
+      font-weight: 500;
+    }
+
+    .filter-icon {
+      width: 26px;
+      height: 26px;
+      background-image: url('https://gw.alicdn.com/imgextra/i3/O1CN01g6ILzY1Gs7GhECdHN_!!6000000000677-2-tps-26-26.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex: none;
+    }
+
+    .dropdown-arrow {
+      width: 20px;
+      height: 20px;
+      background-image: url('https://gw.alicdn.com/imgextra/i4/O1CN010GUEsm1pGZLnYT9L2_!!6000000005333-2-tps-14-10.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="filter-bar">
+    <div class="filter-item">
+      <span class="filter-text">筛选</span>
+      <div class="filter-icon"></div>
+    </div>
+    <div class="filter-item">
+      <span class="filter-text">只看直飞</span>
+    </div>
+    <div class="filter-item">
+      <span class="filter-text">家庭出行</span>
+    </div>
+    <div class="filter-item">
+      <span class="filter-text">下午出发</span>
+    </div>
+    <div class="filter-item">
+      <span class="filter-text">大型机</span>
+    </div>
+    <div class="filter-item">
+      <span class="filter-text">舱位</span>
+      <div class="dropdown-arrow"></div>
+    </div>
+    <div class="filter-item">
+      <span class="filter-text">出发时间</span>
+      <div class="dropdown-arrow"></div>
+    </div>
+  </div>
+</body>
+</html>

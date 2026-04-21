@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>心智模块示例</title>
+    <style>
+        @font-face {
+            font-family: 'Fliggy Sans 102';
+            src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+            font-weight: 500;
+            font-display: swap;
+        }
+
+        :root {
+            --color-primary: #0E131B;
+            --color-secondary: #90949A;
+            --color-price: #FF4119;
+            --color-accent: #009DAA;
+            --color-white: #FFFFFF;
+            --color-bg: #F2F3F5;
+            --color-bg-light: #F7F8FA;
+            --color-bg-card: #FAFAFA;
+            --color-border: #E6E7EB;
+            --color-divider: #E0E0E0;
+            --color-selected: #FFE747;
+            --color-selected-bg: #FFFCE9;
+            --color-selected-border: #FFDF00;
+            --color-heart: #212121;
+            --color-heart-icon: #FFD600;
+            --radius-xl: 24px;
+            --radius-l: 12px;
+            --radius-m: 6px;
+            --radius-s: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Fliggy Sans 102', sans-serif;
+            background-color: var(--color-bg-light);
+        }
+
+        .mind-module {
+            width: 750px;
+            height: 186px;
+            padding: 42px 0 60px;
+            background-color: var(--color-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mind-module .logo {
+            width: 282px;
+            height: 41px;
+        }
+
+        .mind-module .slogan {
+            font-family: 'PingFang SC';
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--color-heart);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mind-module .slogan .dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--color-heart);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="mind-module">
+        <img class="logo" src="https://gw.alicdn.com/imgextra/i2/O1CN01WkEORs1xqlZt4YvON_!!6000000006495-2-tps-282-41.png" alt="飞猪安心票">
+        <div class="slogan">
+            <span>出票安心</span>
+            <span class="dot"></span>
+            <span>出行安心</span>
+            <span class="dot"></span>
+            <span>服务安心</span>
+        </div>
+    </div>
+</body>
+</html>

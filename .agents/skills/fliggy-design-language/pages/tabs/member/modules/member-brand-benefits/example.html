@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>直通品牌权益 — member-brand-benefits</title>
+  <style>
+    @font-face {
+      font-family: "Fliggy Sans 102";
+      src: url("https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf") format("truetype");
+      font-weight: 500;
+      font-display: swap;
+    }
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-bg: #f2f3f5;
+      --color-white: #ffffff;
+      --radius-m: 12px;
+      --color-text-primary: var(--color-darkgray);
+      --color-text-secondary: var(--color-lightgray);
+      --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--color-bg);
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .fdl-member-brand-benefits__wrap {
+      background: var(--color-white);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+    }
+    .fdl-member-brand-benefits {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 714px;
+      max-width: 100%;
+    }
+    .fdl-member-brand-benefits__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      min-height: 42px;
+    }
+    .fdl-member-brand-benefits__title {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-brand-benefits__view-all {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-text-secondary);
+      transition: color 0.2s;
+    }
+    .fdl-member-brand-benefits__view-all:hover {
+      color: #5c5f66;
+    }
+    .fdl-member-brand-benefits__view-all:hover .fdl-member-brand-benefits__view-all-icon path {
+      fill: #5c5f66;
+    }
+    .fdl-member-brand-benefits__view-all-icon {
+      width: 12px;
+      height: 12px;
+    }
+    .fdl-member-brand-benefits__view-all-icon path {
+      transition: fill 0.2s;
+    }
+    .fdl-member-brand-benefits__list {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .fdl-member-brand-benefits__card {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      width: 230px;
+      height: 162px;
+      border-radius: var(--radius-m);
+      color: #fff;
+      overflow: hidden;
+      text-align: center;
+    }
+    .fdl-member-brand-benefits__card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .fdl-member-brand-benefits__logo-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 89px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.1);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
+      border-radius: 4px;
+      opacity: 0.85;
+    }
+    .fdl-member-brand-benefits__logo {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+    .fdl-member-brand-benefits__card-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .fdl-member-brand-benefits__btn {
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 120px;
+      height: 48px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 24px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 500;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .fdl-member-brand-benefits__btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.85);
+    }
+    .fdl-member-brand-benefits__card--accor {
+      background: linear-gradient(360deg, #5a6084 0%, #7d829c 100%);
+    }
+    .fdl-member-brand-benefits__card--hilton {
+      background: linear-gradient(180deg, #b1826b 0%, #814d34 100%);
+    }
+    .fdl-member-brand-benefits__card--hyatt {
+      background: linear-gradient(180deg, #9d8181 0%, #8c7474 50.12%, #7c6767 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="fdl-member-brand-benefits__wrap">
+    <section class="fdl-member-brand-benefits" aria-label="专享品牌权益">
+      <header class="fdl-member-brand-benefits__header">
+        <h2 class="fdl-member-brand-benefits__title">专享品牌权益</h2>
+        <a href="#" class="fdl-member-brand-benefits__view-all">
+          <span>查看全部</span>
+          <svg class="fdl-member-brand-benefits__view-all-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9.2322 5.36267C9.56373 5.68951 9.58747 6.20493 9.30327 6.55872L9.2322 6.63733L4.06066 11.736C3.70364 12.088 3.12479 12.088 2.76777 11.736C2.43625 11.4091 2.41257 10.8937 2.69673 10.5399L2.76777 10.4613L7.29289 6L2.76777 1.53866C2.43625 1.21181 2.41257 0.696393 2.69673 0.342607L2.76777 0.263993C3.09929 -0.0628554 3.62208 -0.0862014 3.98092 0.193953L4.06066 0.263993L9.2322 5.36267Z" fill="currentColor" />
+          </svg>
+        </a>
+      </header>
+      <div class="fdl-member-brand-benefits__list">
+        <article class="fdl-member-brand-benefits__card fdl-member-brand-benefits__card--accor">
+          <div class="fdl-member-brand-benefits__card-inner">
+            <div class="fdl-member-brand-benefits__logo-wrap">
+              <img class="fdl-member-brand-benefits__logo" src="https://gw.alicdn.com/imgextra/i4/O1CN01vR5UuV1Iz6Xk0kNcP_!!6000000000963-2-tps-179-96.png" alt="雅高" />
+            </div>
+            <p class="fdl-member-brand-benefits__card-title">直通雅高白金卡</p>
+          </div>
+          <a href="#" class="fdl-member-brand-benefits__btn">开通</a>
+        </article>
+        <article class="fdl-member-brand-benefits__card fdl-member-brand-benefits__card--hilton">
+          <div class="fdl-member-brand-benefits__card-inner">
+            <div class="fdl-member-brand-benefits__logo-wrap">
+              <img class="fdl-member-brand-benefits__logo" src="https://gw.alicdn.com/imgextra/i2/O1CN01SkCYyY1lmOPKlPBFf_!!6000000004861-2-tps-179-96.png" alt="希尔顿" />
+            </div>
+            <p class="fdl-member-brand-benefits__card-title">直通希尔顿金卡</p>
+          </div>
+          <a href="#" class="fdl-member-brand-benefits__btn">开通</a>
+        </article>
+        <article class="fdl-member-brand-benefits__card fdl-member-brand-benefits__card--hyatt">
+          <div class="fdl-member-brand-benefits__card-inner">
+            <div class="fdl-member-brand-benefits__logo-wrap">
+              <img class="fdl-member-brand-benefits__logo" src="https://gw.alicdn.com/imgextra/i3/O1CN01gTB35k1FMgTGAOzYY_!!6000000000473-2-tps-179-96.png" alt="凯悦" />
+            </div>
+            <p class="fdl-member-brand-benefits__card-title">直通凯悦会员</p>
+          </div>
+          <a href="#" class="fdl-member-brand-benefits__btn">开通</a>
+        </article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

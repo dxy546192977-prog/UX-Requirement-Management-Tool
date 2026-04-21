@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>航司会员挑战横幅 — member-airline-challenge-banner</title>
+  <style>
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-bg: #f2f3f5;
+      --color-white: #ffffff;
+      --radius-l: 24px;
+      --color-text-primary: var(--color-darkgray);
+      --color-text-secondary: var(--color-lightgray);
+      --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --member-banner-bg: linear-gradient(135deg, #e8f0ff 0%, #f5f8ff 50%, #fff 100%);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--color-bg);
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+    .fdl-member-airline-banner {
+      box-sizing: border-box;
+      width: 702px;
+      max-width: calc(100vw - 48px);
+      min-height: 120px;
+      padding: 24px 28px;
+      border-radius: var(--radius-l);
+      background: var(--member-banner-bg);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .fdl-member-airline-banner__text {
+      flex: 1;
+      min-width: 0;
+    }
+    .fdl-member-airline-banner__title {
+      margin: 0 0 8px;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--color-text-primary);
+    }
+    .fdl-member-airline-banner__desc {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.4;
+      color: var(--color-text-secondary);
+    }
+    .fdl-member-airline-banner__media {
+      flex-shrink: 0;
+      width: 160px;
+      height: 100px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <section class="fdl-member-airline-banner" aria-label="航司会员挑战">
+    <div class="fdl-member-airline-banner__text">
+      <h2 class="fdl-member-airline-banner__title">航司会员挑战</h2>
+      <p class="fdl-member-airline-banner__desc">报名可领兑 · 30元券包</p>
+    </div>
+    <img
+      class="fdl-member-airline-banner__media"
+      src="https://gw.alicdn.com/imgextra/i2/O1CN01Q9o1Ts1gtCDD90f39_!!6000000004199-2-tps-324-254.png"
+      alt=""
+      width="160"
+      height="100"
+    />
+  </section>
+</body>
+</html>

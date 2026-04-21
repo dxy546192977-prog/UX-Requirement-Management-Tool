@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>机票订单详情页 · 海南免税商品推荐</title>
+  <!--
+    requirement_id:        req-hainan-duty-free-banner-001
+    page_id:               vertical.flight.booking
+    module_slug:           hainan-duty-free-banner
+    h5_path_type:          generate_from_prd
+    skill_version:         fliggy-flight-prd-to-h5 v0.2.0
+    delivery_target:       h5-complete
+    constraint_source:     skills/fliggy-flight-design-guide
+    benchmark_source:      gztchan/awesome-design
+    benchmark_dimensions:  styleguide_branding, color_typography, usability_review
+    benchmark_notes: >
+      [styleguide_branding] Banner 容器沿用飞猪橙色品牌色系，不引入淘宝红色系；
+      token 统一命名，hex 仅出现在 :root；品牌表达通过 --color-brand-primary 统一控制。
+      [color_typography] 字号层级：40px 时间大字 / 30px 模块标题 / 24px 正文 / 20px 辅助信息；
+      Banner 内文字与背景对比度满足 WCAG AA（白字叠加半透明深色蒙层）。
+      [usability_review] 跨 App 跳转场景有明确平台提示角标；触控目标 min-height 160px 满足
+      44pt 最小尺寸；透出条件严格（三亚/海口 + 已支付 + 未退款），不符合条件时 Banner 不渲染。
+      冲突点：Banner 位于价格明细后、操作区前，不遮挡退改签等核心操作，保留飞猪页面骨架。
+  -->
+  <style>
+    /* ============================================================
+       Design Tokens — :root
+       [design-guide 硬约束] hex 仅出现在此处，组件内仅用 var(--*)
+    ============================================================ */
+    :root {
+      /* 品牌色 */
+      --color-brand-primary:       #FF6600;
+      --color-brand-primary-light: #FFF3EB;
+      --color-brand-primary-dark:  #E55A00;
+      --color-indigo-1:            #1677FF;
+
+      /* 中性色 */
+      --color-text-primary:   #1A1A1A;
+      --color-text-secondary: #666666;
+      --color-text-tertiary:  #999999;
+      --color-text-inverse:   #FFFFFF;
+      --color-bg-page:        #F7F8FA;
+      --color-bg-card:        #FFFFFF;
+      --color-border:         #EBEBEB;
+      --color-divider:        #F2F2F2;
+
+      /* 状态色 */
+      --color-success:  #00B578;
+      --color-tag-bg:   #FFF3EB;
+      --color-tag-text: #FF6600;
+
+      /* Banner 专用 */
+      --color-banner-gold:           #FFD700;
+      --color-banner-fallback-start: #0D2B5E;
+      --color-banner-fallback-mid:   #1A5276;
+      --color-banner-fallback-end:   #0A3D62;
+      --color-img-placeholder:       #E8E8E8;
+
+      /* 渐变 */
+      --gradient-header: linear-gradient(135deg, #FF6600 0%, #FF8533 100%);
+
+      /* 圆角 */
+      --radius-card:   16px;
+      --radius-banner: 14px;
+      --radius-tag:    6px;
+      --radius-full:   999px;
+      --radius-icon:   12px;
+
+      /* 间距（6 的倍数体系） */
+      --space-xs:  6px;
+      --space-sm:  12px;
+      --space-md:  18px;
+      --space-lg:  24px;
+      --space-xl:  30px;
+      --space-2xl: 36px;
+      --space-3xl: 48px;
+
+      /* 字号 */
+      --font-xs:   20px;
+      --font-sm:   22px;
+      --font-base: 24px;
+      --font-md:   26px;
+      --font-lg:   28px;
+      --font-xl:   30px;
+      --font-2xl:  34px;
+      --font-3xl:  40px;
+
+      /* 阴影 */
+      --shadow-card:   0 2px 16px rgba(0,0,0,0.06);
+      --shadow-banner: 0 6px 24px rgba(255,102,0,0.15);
+    }
+
+    /* ============================================================
+       Reset & Base
+       [design-guide 硬约束] 单文件 HTML + 内联 CSS，无外链样式
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 750px;
+      background-color: var(--color-bg-page);
+      font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+      font-size: var(--font-base);
+      color: var(--color-text-primary);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       状态栏
+    ============================================================ */
+    .fdl-status-bar {
+      width: 750px;
+      height: 88px;
+      background-color: var(--color-bg-card);
+      display: flex;
+      align-items: flex-end;
+      padding: 0 var(--space-xl) 14px;
+      justify-content: space-between;
+    }
+
+    .fdl-status-bar__time {
+      font-size: var(--font-sm);
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .fdl-status-bar__icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ============================================================
+       导航栏
+    ============================================================ */
+    .fdl-nav-bar {
+      width: 750px;
+      height: 88px;
+      background-color: var(--color-bg-card);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-xl);
+      border-bottom: 1px solid var(--color-divider);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .fdl-nav-bar__back {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .fdl-nav-bar__title {
+      flex: 1;
+      text-align: center;
+      font-size: var(--font-xl);
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .fdl-nav-bar__more {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       页面主体
+       [design-guide 硬约束] 纵向 flex，禁止 position:absolute 排版
+    ============================================================ */
+    .fdl-page {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: var(--space-3xl);
+    }
+
+    /* ============================================================
+       订单状态头部
+    ============================================================ */
+    .fdl-order-header {
+      background: var(--gradient-header);
+      padding: var(--space-xl) var(--space-xl) var(--space-2xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .fdl-order-header__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: rgba(255,255,255,0.2);
+      border-radius: var(--radius-full);
+      padding: 6px 16px;
+      width: fit-content;
+      margin-bottom: var(--space-xs);
+    }
+
+    .fdl-order-header__badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-text-inverse);
+      opacity: 0.9;
+    }
+
+    .fdl-order-header__badge-text {
+      font-size: var(--font-xs);
+      color: var(--color-text-inverse);
+      font-weight: 500;
+    }
+
+    .fdl-order-header__status {
+      font-size: var(--font-3xl);
+      font-weight: 700;
+      color: var(--color-text-inverse);
+      line-height: 1.2;
+    }
+
+    .fdl-order-header__tip {
+      font-size: var(--font-sm);
+      color: rgba(255,255,255,0.85);
+      margin-top: 4px;
+    }
+
+    /* ============================================================
+       通用卡片
+    ============================================================ */
+    .fdl-card {
+      background-color: var(--color-bg-card);
+      border-radius: var(--radius-card);
+      margin: var(--space-sm) var(--space-xl) 0;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .fdl-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-xl);
+      border-bottom: 1px solid var(--color-divider);
+    }
+
+    .fdl-card__title {
+      font-size: var(--font-lg);
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .fdl-card__body {
+      padding: var(--space-md) var(--space-xl);
+    }
+
+    /* ============================================================
+       航班信息卡
+    ============================================================ */
+    .fdl-flight-card {
+      background-color: var(--color-bg-card);
+      border-radius: var(--radius-card);
+      margin: var(--space-sm) var(--space-xl) 0;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .fdl-flight-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-xl);
+      border-bottom: 1px solid var(--color-divider);
+    }
+
+    .fdl-flight-card__label {
+      font-size: var(--font-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .fdl-flight-card__status-tag {
+      background-color: var(--color-tag-bg);
+      color: var(--color-tag-text);
+      font-size: var(--font-xs);
+      padding: 4px 12px;
+      border-radius: var(--radius-tag);
+      font-weight: 500;
+    }
+
+    .fdl-flight-card__body {
+      padding: var(--space-lg) var(--space-xl);
+    }
+
+    .fdl-flight-route {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fdl-flight-route__city {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fdl-flight-route__city--right {
+      text-align: right;
+    }
+
+    .fdl-flight-route__time {
+      font-size: var(--font-3xl);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      line-height: 1;
+    }
+
+    .fdl-flight-route__city-name {
+      font-size: var(--font-base);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    .fdl-flight-route__airport {
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    .fdl-flight-route__mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      padding: 0 var(--space-md);
+    }
+
+    .fdl-flight-route__duration {
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    .fdl-flight-route__arrow-line {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fdl-flight-route__line {
+      flex: 1;
+      height: 1px;
+      background-color: var(--color-border);
+    }
+
+    .fdl-flight-route__direct-tag {
+      font-size: var(--font-xs);
+      color: var(--color-success);
+      background-color: rgba(0,181,120,0.08);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .fdl-flight-card__airline {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--color-divider);
+    }
+
+    .fdl-flight-card__airline-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: var(--color-img-placeholder);
+      flex-shrink: 0;
+    }
+
+    .fdl-flight-card__airline-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .fdl-flight-card__airline-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fdl-flight-card__airline-name {
+      font-size: var(--font-sm);
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+
+    .fdl-flight-card__flight-no {
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    /* ============================================================
+       乘客信息
+    ============================================================ */
+    .fdl-passenger-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm) 0;
+    }
+
+    .fdl-passenger-row + .fdl-passenger-row {
+      border-top: 1px solid var(--color-divider);
+    }
+
+    .fdl-passenger-row__left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fdl-passenger-row__name {
+      font-size: var(--font-base);
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+
+    .fdl-passenger-row__id {
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    .fdl-passenger-row__seat {
+      font-size: var(--font-sm);
+      color: var(--color-text-secondary);
+    }
+
+    /* ============================================================
+       价格明细
+    ============================================================ */
+    .fdl-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-xs) 0;
+    }
+
+    .fdl-price-row__label {
+      font-size: var(--font-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .fdl-price-row__value {
+      font-size: var(--font-sm);
+      color: var(--color-text-primary);
+    }
+
+    .fdl-price-row--total {
+      border-top: 1px solid var(--color-divider);
+      margin-top: var(--space-sm);
+      padding-top: var(--space-md);
+    }
+
+    .fdl-price-row--total .fdl-price-row__label {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .fdl-price-row--total .fdl-price-row__value {
+      font-size: var(--font-2xl);
+      font-weight: 700;
+      color: var(--color-brand-primary);
+    }
+
+    /* ============================================================
+       ★ 海南免税商品推荐 Banner 模块（核心新增）
+       module_slug:    hainan-duty-free-banner
+       透出条件:       出发/到达为三亚/海口 + 已支付 + 未退款
+       埋点:           181.7437879.Product recommendation
+       跳转:           分端配置，运营后台下发图片链接和跳转链接
+       [design-guide]  触控目标 min-height 160px ≥ 44pt
+    ============================================================ */
+    .fdl-duty-free-wrap {
+      margin: var(--space-md) var(--space-xl) 0;
+    }
+
+    .fdl-duty-free-section-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .fdl-duty-free-section-label__line {
+      flex: 1;
+      height: 1px;
+      background-color: var(--color-border);
+    }
+
+    .fdl-duty-free-section-label__text {
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    .fdl-duty-free-banner {
+      display: block;
+      border-radius: var(--radius-banner);
+      overflow: hidden;
+      box-shadow: var(--shadow-banner);
+      cursor: pointer;
+      position: relative;
+      min-height: 200px;
+      text-decoration: none;
+      background-color: var(--color-img-placeholder);
+    }
+
+    .fdl-duty-free-banner__img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* 图片加载失败降级 */
+    .fdl-duty-free-banner__img-fallback {
+      display: none;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(
+        135deg,
+        var(--color-banner-fallback-start) 0%,
+        var(--color-banner-fallback-mid) 50%,
+        var(--color-banner-fallback-end) 100%
+      );
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: var(--space-xl);
+    }
+
+    .fdl-duty-free-banner__img-fallback-emoji {
+      font-size: 72px;
+      opacity: 0.2;
+    }
+
+    /* 内容蒙层 */
+    .fdl-duty-free-banner__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        100deg,
+        rgba(0,0,0,0.62) 0%,
+        rgba(0,0,0,0.28) 55%,
+        rgba(0,0,0,0.00) 100%
+      );
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-xl);
+      gap: var(--space-sm);
+    }
+
+    /* 资质标签 */
+    .fdl-duty-free-banner__qualify-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: var(--radius-full);
+      padding: 5px 14px;
+      width: fit-content;
+    }
+
+    .fdl-duty-free-banner__qualify-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-banner-gold);
+      flex-shrink: 0;
+    }
+
+    .fdl-duty-free-banner__qualify-text {
+      font-size: var(--font-xs);
+      color: var(--color-text-inverse);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    /* 主标题 */
+    .fdl-duty-free-banner__title {
+      font-size: var(--font-2xl);
+      font-weight: 800;
+      color: var(--color-text-inverse);
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    /* 副标题 */
+    .fdl-duty-free-banner__subtitle {
+      font-size: var(--font-sm);
+      color: rgba(255,255,255,0.88);
+      line-height: 1.5;
+    }
+
+    /* CTA 按钮 */
+    .fdl-duty-free-banner__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--color-brand-primary);
+      color: var(--color-text-inverse);
+      font-size: var(--font-sm);
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      width: fit-content;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(255,102,0,0.35);
+    }
+
+    /* 跨端跳转提示 */
+    .fdl-duty-free-banner__platform-badge {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      background-color: rgba(0,0,0,0.42);
+      border-radius: var(--radius-full);
+      padding: 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .fdl-duty-free-banner__platform-badge-text {
+      font-size: var(--font-xs);
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* 底部说明文字 */
+    .fdl-duty-free-tip {
+      margin-top: var(--space-sm);
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       操作按钮区
+    ============================================================ */
+    .fdl-action-list {
+      background-color: var(--color-bg-card);
+      border-radius: var(--radius-card);
+      margin: var(--space-sm) var(--space-xl) 0;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .fdl-action-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-xl);
+      cursor: pointer;
+      min-height: 88px;
+    }
+
+    .fdl-action-item + .fdl-action-item {
+      border-top: 1px solid var(--color-divider);
+    }
+
+    .fdl-action-item__left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .fdl-action-item__icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-icon);
+      background-color: var(--color-brand-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .fdl-action-item__info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fdl-action-item__title {
+      font-size: var(--font-base);
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    .fdl-action-item__desc {
+      font-size: var(--font-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    /* ============================================================
+       订单元信息
+    ============================================================ */
+    .fdl-order-meta {
+      background-color: var(--color-bg-card);
+      border-radius: var(--radius-card);
+      margin: var(--space-sm) var(--space-xl) 0;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .fdl-order-meta__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-xl);
+      min-height: 72px;
+    }
+
+    .fdl-order-meta__row + .fdl-order-meta__row {
+      border-top: 1px solid var(--color-divider);
+    }
+
+    .fdl-order-meta__label {
+      font-size: var(--font-sm);
+      color: var(--color-text-tertiary);
+    }
+
+    .fdl-order-meta__value {
+      font-size: var(--font-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .fdl-order-meta__copy {
+      font-size: var(--font-sm);
+      color: var(--color-indigo-1);
+      cursor: pointer;
+    }
+
+    /* ============================================================
+       底部安全区
+    ============================================================ */
+    .fdl-safe-area {
+      height: 68px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== 状态栏 ===== -->
+  <div class="fdl-status-bar">
+    <span class="fdl-status-bar__time">9:41</span>
+    <div class="fdl-status-bar__icons">
+      <svg width="28" height="18" viewBox="0 0 28 18" fill="none">
+        <rect x="0" y="10" width="5" height="8" rx="1" fill="#1A1A1A"/>
+        <rect x="7.5" y="6" width="5" height="12" rx="1" fill="#1A1A1A"/>
+        <rect x="15" y="2" width="5" height="16" rx="1" fill="#1A1A1A"/>
+        <rect x="22.5" y="0" width="5" height="18" rx="1" fill="#1A1A1A" opacity="0.3"/>
+      </svg>
+      <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+        <path d="M11 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="#1A1A1A"/>
+        <path d="M4.929 10.929a8.5 8.5 0 0 1 12.142 0" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M1.757 7.757a13 13 0 0 1 18.486 0" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <svg width="38" height="18" viewBox="0 0 38 18" fill="none">
+        <rect x="0.5" y="0.5" width="32" height="17" rx="3.5" stroke="#1A1A1A" stroke-opacity="0.35"/>
+        <rect x="2" y="2" width="26" height="14" rx="2.5" fill="#1A1A1A"/>
+        <path d="M34 6v6a3 3 0 0 0 0-6z" fill="#1A1A1A" fill-opacity="0.4"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== 导航栏 ===== -->
+  <div class="fdl-nav-bar">
+    <div class="fdl-nav-bar__back">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M14 17l-6-6 6-6" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="fdl-nav-bar__title">订单详情</div>
+    <div class="fdl-nav-bar__more">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <circle cx="11" cy="4.5" r="1.5" fill="#1A1A1A"/>
+        <circle cx="11" cy="11" r="1.5" fill="#1A1A1A"/>
+        <circle cx="11" cy="17.5" r="1.5" fill="#1A1A1A"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== 页面主体 ===== -->
+  <div class="fdl-page">
+
+    <!-- 订单状态头部 -->
+    <div class="fdl-order-header">
+      <div class="fdl-order-header__badge">
+        <div class="fdl-order-header__badge-dot"></div>
+        <span class="fdl-order-header__badge-text">出行提醒</span>
+      </div>
+      <div class="fdl-order-header__status">出票成功</div>
+      <div class="fdl-order-header__tip">请提前 2 小时到达机场，祝您旅途愉快</div>
+    </div>
+
+    <!-- 航班信息卡 -->
+    <div class="fdl-flight-card">
+      <div class="fdl-flight-card__header">
+        <span class="fdl-flight-card__label">去程 · 2025年5月10日 周六</span>
+        <span class="fdl-flight-card__status-tag">已出票</span>
+      </div>
+      <div class="fdl-flight-card__body">
+        <div class="fdl-flight-route">
+          <!-- 出发 -->
+          <div class="fdl-flight-route__city">
+            <div class="fdl-flight-route__time">08:30</div>
+            <div class="fdl-flight-route__city-name">上海</div>
+            <div class="fdl-flight-route__airport">浦东国际机场 T2</div>
+          </div>
+          <!-- 中间 -->
+          <div class="fdl-flight-route__mid">
+            <div class="fdl-flight-route__duration">3h 20m</div>
+            <div class="fdl-flight-route__arrow-line">
+              <div class="fdl-flight-route__line"></div>
+              <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                <path d="M1 7h15M12 3l4 4-4 4" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="fdl-flight-route__direct-tag">直飞</div>
+          </div>
+          <!-- 到达 -->
+          <div class="fdl-flight-route__city fdl-flight-route__city--right">
+            <div class="fdl-flight-route__time">11:50</div>
+            <div class="fdl-flight-route__city-name">三亚</div>
+            <div class="fdl-flight-route__airport">凤凰国际机场 T2</div>
+          </div>
+        </div>
+        <!-- 航司 -->
+        <div class="fdl-flight-card__airline">
+          <div class="fdl-flight-card__airline-logo">
+            <img
+              src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=88&h=88&fit=crop&q=80"
+              alt="航司"
+            >
+          </div>
+          <div class="fdl-flight-card__airline-info">
+            <div class="fdl-flight-card__airline-name">中国东方航空</div>
+            <div class="fdl-flight-card__flight-no">MU5735 · 经济舱 · 空客 A320neo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 乘客信息卡 -->
+    <div class="fdl-card">
+      <div class="fdl-card__header">
+        <span class="fdl-card__title">乘客信息</span>
+      </div>
+      <div class="fdl-card__body">
+        <div class="fdl-passenger-row">
+          <div class="fdl-passenger-row__left">
+            <div class="fdl-passenger-row__name">张三</div>
+            <div class="fdl-passenger-row__id">身份证 · 310***1234</div>
+          </div>
+          <div class="fdl-passenger-row__seat">22A 靠窗</div>
+        </div>
+        <div class="fdl-passenger-row">
+          <div class="fdl-passenger-row__left">
+            <div class="fdl-passenger-row__name">李四</div>
+            <div class="fdl-passenger-row__id">身份证 · 310***5678</div>
+          </div>
+          <div class="fdl-passenger-row__seat">22B 中间</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 价格明细卡 -->
+    <div class="fdl-card">
+      <div class="fdl-card__header">
+        <span class="fdl-card__title">价格明细</span>
+      </div>
+      <div class="fdl-card__body">
+        <div class="fdl-price-row">
+          <span class="fdl-price-row__label">机票 × 2</span>
+          <span class="fdl-price-row__value">¥1,960</span>
+        </div>
+        <div class="fdl-price-row">
+          <span class="fdl-price-row__label">机场建设费</span>
+          <span class="fdl-price-row__value">¥100</span>
+        </div>
+        <div class="fdl-price-row">
+          <span class="fdl-price-row__label">燃油附加费</span>
+          <span class="fdl-price-row__value">¥0</span>
+        </div>
+        <div class="fdl-price-row fdl-price-row--total">
+          <span class="fdl-price-row__label">实付金额</span>
+          <span class="fdl-price-row__value">¥2,060</span>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      ★★★ 海南免税商品推荐 Banner ★★★
+      透出条件：出发/到达为三亚/海口 + 已支付 + 未退款
+      本期：Banner 展示 + 点击跳转淘宝承接页（分端配置）
+      图片链接 & 跳转链接由运营后台分端分人群配置下发
+      埋点：曝光 & 点击 181.7437879.Product recommendation
+    -->
+    <div class="fdl-duty-free-wrap">
+      <!-- 分隔标签 -->
+      <div class="fdl-duty-free-section-label">
+        <div class="fdl-duty-free-section-label__line"></div>
+        <span class="fdl-duty-free-section-label__text">为您推荐</span>
+        <div class="fdl-duty-free-section-label__line"></div>
+      </div>
+
+      <!-- Banner 主体 -->
+      <a
+        class="fdl-duty-free-banner"
+        href="javascript:void(0)"
+        onclick="handleBannerClick(event)"
+        data-spm="181.7437879.Product_recommendation"
+        data-spm-click="gostr=/app/app.detail;targettype=link"
+        aria-label="海南离岛免税购物，点击前往选购"
+        role="link"
+      >
+        <!-- Banner 主图（运营配置，此处 Unsplash 占位） -->
+        <img
+          class="fdl-duty-free-banner__img"
+          src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=690&h=400&fit=crop&q=85"
+          alt="海南离岛免税购物"
+          onerror="this.style.display='none'; document.getElementById('bannerFallback').style.display='flex';"
+        >
+        <!-- 图片加载失败降级 -->
+        <div class="fdl-duty-free-banner__img-fallback" id="bannerFallback">
+          <span class="fdl-duty-free-banner__img-fallback-emoji">🛍️</span>
+        </div>
+
+        <!-- 内容覆盖层 -->
+        <div class="fdl-duty-free-banner__overlay">
+          <!-- 资质标签 -->
+          <div class="fdl-duty-free-banner__qualify-tag">
+            <div class="fdl-duty-free-banner__qualify-dot"></div>
+            <span class="fdl-duty-free-banner__qualify-text">您已获得离岛免税购物资格</span>
+          </div>
+          <!-- 主标题 -->
+          <div class="fdl-duty-free-banner__title">海南离岛免税</div>
+          <!-- 副标题 -->
+          <div class="fdl-duty-free-banner__subtitle">化妆品、香水、手表等热门商品免税购</div>
+          <!-- CTA -->
+          <div class="fdl-duty-free-banner__cta">
+            立即选购
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 3l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 跨端跳转提示（淘宝端隐藏） -->
+        <div class="fdl-duty-free-banner__platform-badge" id="platformBadge">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1l1.2 3.6H11L8.1 6.9 9.3 10.5 6 8.4l-3.3 2.1 1.2-3.6L1 4.6h3.8z" fill="#FFD700"/>
+          </svg>
+          <span class="fdl-duty-free-banner__platform-badge-text" id="platformBadgeText">将跳转至淘宝</span>
+        </div>
+      </a>
+
+      <!-- 底部说明 -->
+      <div class="fdl-duty-free-tip">
+        购买资格有效期：离岛日前 30 天至离岛日当天
+      </div>
+    </div>
+
+    <!-- 操作按钮区 -->
+    <div class="fdl-action-list">
+      <div class="fdl-action-item">
+        <div class="fdl-action-item__left">
+          <div class="fdl-action-item__icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 11l3 3L22 4" stroke="#FF6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="#FF6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="fdl-action-item__info">
+            <div class="fdl-action-item__title">退改签</div>
+            <div class="fdl-action-item__desc">查看退改规则及申请退改</div>
+          </div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 3l5 5-5 5" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="fdl-action-item">
+        <div class="fdl-action-item__left">
+          <div class="fdl-action-item__icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.06 6.06l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#FF6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="fdl-action-item__info">
+            <div class="fdl-action-item__title">联系客服</div>
+            <div class="fdl-action-item__desc">7×24 小时在线服务</div>
+          </div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 3l5 5-5 5" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="fdl-action-item">
+        <div class="fdl-action-item__left">
+          <div class="fdl-action-item__icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="3" width="20" height="14" rx="2" stroke="#FF6600" stroke-width="2"/>
+              <path d="M8 21h8M12 17v4" stroke="#FF6600" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="fdl-action-item__info">
+            <div class="fdl-action-item__title">值机选座</div>
+            <div class="fdl-action-item__desc">提前选好心仪座位</div>
+          </div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 3l5 5-5 5" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 订单元信息 -->
+    <div class="fdl-order-meta">
+      <div class="fdl-order-meta__row">
+        <span class="fdl-order-meta__label">订单号</span>
+        <span class="fdl-order-meta__value">FZ20250510123456</span>
+        <span class="fdl-order-meta__copy">复制</span>
+      </div>
+      <div class="fdl-order-meta__row">
+        <span class="fdl-order-meta__label">下单时间</span>
+        <span class="fdl-order-meta__value">2025-04-21 14:32:08</span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="fdl-safe-area"></div>
+
+  </div><!-- /fdl-page -->
+
+  <script>
+    /**
+     * 海南免税 Banner 点击处理
+     * 分端跳转逻辑（图片链接 & 跳转链接由运营后台配置下发）：
+     *   飞猪 App  → 淘宝唤端链接（淘宝侧提供）
+     *   支付宝    → 支付宝唤端链接（淘宝侧提供）
+     *   淘宝小程序 → 直接跳转承接页（通过来源页统计）
+     */
+    function handleBannerClick(event) {
+      event.preventDefault();
+      reportSpm('181.7437879.Product_recommendation', 'click');
+
+      var platform = detectPlatform();
+      // 实际链接由运营后台分端分人群配置下发，此处为占位
+      var jumpUrls = {
+        fliggy: 'taobao://...',
+        alipay: 'alipays://...',
+        taobao: '/pages/duty-free/index'
+      };
+
+      var url = jumpUrls[platform] || jumpUrls.fliggy;
+      console.log('[DutyFree Banner] platform:', platform, 'url:', url);
+      // window.location.href = url; // 联调时启用
+    }
+
+    function detectPlatform() {
+      var ua = navigator.userAgent.toLowerCase();
+      if (ua.indexOf('alipayclient') > -1) return 'alipay';
+      if (ua.indexOf('taobao') > -1 || ua.indexOf('tb/') > -1) return 'taobao';
+      return 'fliggy';
+    }
+
+    function reportSpm(spmId, action) {
+      console.log('[SPM]', spmId, action);
+      // 对接飞猪埋点 SDK（实际接入时替换）
+    }
+
+    // 初始化：根据端调整平台提示
+    (function initPlatformBadge() {
+      var platform = detectPlatform();
+      var badge = document.getElementById('platformBadge');
+      var badgeText = document.getElementById('platformBadgeText');
+      if (!badge || !badgeText) return;
+
+      if (platform === 'taobao') {
+        badge.style.display = 'none'; // 淘宝端不显示跨端提示
+      } else if (platform === 'alipay') {
+        badgeText.textContent = '将跳转至淘宝';
+      } else {
+        badgeText.textContent = '将跳转至淘宝';
+      }
+    })();
+  </script>
+
+</body>
+</html>

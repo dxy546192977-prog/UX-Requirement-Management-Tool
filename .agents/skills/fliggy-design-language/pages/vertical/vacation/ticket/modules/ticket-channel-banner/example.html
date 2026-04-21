@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>门票频道 — Banner</title>
+  <style>
+    body { margin: 0; background: #F2F3F5; font-family: 'PingFang SC', sans-serif; display: flex; justify-content: center; }
+    .ticket-banner {
+      box-sizing: border-box;
+      width: 750px;
+      height: 359px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #4a3f6b 50%, #f59a23 100%);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .ticket-banner__content {
+      position: absolute;
+      left: 32px;
+      bottom: 48px;
+      right: 32px;
+      color: #fff;
+    }
+    .ticket-banner__title { margin: 0; font-size: 44px; font-weight: 700; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    .ticket-banner__sub { margin: 12px 0 0; font-size: 26px; opacity: 0.95; }
+    .ticket-banner__dots { display: flex; gap: 8px; margin-top: 20px; }
+    .ticket-banner__dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+    .ticket-banner__dot.is-active { background: #FFE033; }
+  </style>
+</head>
+<body>
+  <section class="ticket-banner" aria-label="活动 Banner">
+    <div class="ticket-banner__content">
+      <h1 class="ticket-banner__title">门票·玩乐狂欢节</h1>
+      <p class="ticket-banner__sub">爆款直降 · 限时神券</p>
+      <div class="ticket-banner__dots">
+        <span class="ticket-banner__dot is-active"></span>
+        <span class="ticket-banner__dot"></span>
+        <span class="ticket-banner__dot"></span>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

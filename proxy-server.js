@@ -732,7 +732,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const allowedSkills = new Set(['default', 'prd_html_decompose']);
+    const allowedSkills = new Set(['default', 'prd_html_decompose', 'fliggy_flight_prd_to_h5']);
     const skill = allowedSkills.has(skillKey) ? skillKey : 'default';
 
     const config = loadConfig();

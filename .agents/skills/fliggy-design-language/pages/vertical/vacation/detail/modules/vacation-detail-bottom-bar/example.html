@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>商详底栏 · vacation-detail-bottom-bar</title>
+  <style>
+    body { background: #F2F3F5; margin: 0; display: flex; justify-content: center; align-items: flex-end; min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    .bottom-bar { width: 750px; background: #FFF; display: flex; flex-direction: column; }
+    .bottom-bar__divider { width: 750px; height: 1px; background: #D2D4D9; }
+    .bottom-bar__main {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 12px 24px 12px 36px;
+      gap: 36px;
+      width: 750px;
+      height: 108px;
+    }
+    .icon-nav { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 42px; flex-grow: 1; }
+    .icon-nav__item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .icon-nav__icon { width: 42px; height: 42px; }
+    .icon-nav__label { font-size: 20px; line-height: 20px; color: #5C5F66; white-space: nowrap; }
+    .action-buttons { display: flex; width: 400px; height: 84px; }
+    .action-buttons__button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 84px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 36px;
+      color: #FFF;
+    }
+    .action-buttons__button--add-to-cart { background: #FFB300; border-radius: 42px 0 0 42px; }
+    .action-buttons__button--buy-now { background: #FF6200; border-radius: 0 42px 42px 0; }
+    .bottom-bar__safe-area {
+      width: 750px;
+      height: 64px;
+      background: #FFF;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .bottom-bar__home-indicator { width: 268px; height: 10px; background: #000; border-radius: 20px; }
+  </style>
+</head>
+<body>
+  <section class="bottom-bar">
+    <div class="bottom-bar__divider"></div>
+    <div class="bottom-bar__main">
+      <nav class="icon-nav" aria-label="次要操作">
+        <a href="#" class="icon-nav__item">
+          <div class="icon-nav__icon" aria-hidden="true">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M6.27 2.63c2.39 0 4.57.78 6.24 2.21A18.2 18.2 0 0121 2.76c10.13 0 18.38 8.21 18.38 18.31C39.38 31.16 31.13 39.38 21 39.38S2.62 31.16 2.62 21.07c0-2.58.53-5.08 1.58-7.43.07-.15.62-1.15.75-1.39l.16-.31c.15-.31.27-.57.35-.77.03-.07.04-.12.05-.11l-.06-.48a16 16 0 00-.6-2.44l-.17-.45a8 8 0 00-.56-1.19 2.63 2.63 0 00-1.4-1.59 2.63 2.63 0 00-1.28-.35zm.17 2.62c.18.31.45.86.7 1.5.49 1.23.85 2.62 1 4.12.06.62-.17 1.23-.68 2.25-.06.11-.12.23-.19.35-.17.33-.66 1.21-.67 1.24-.89 2-1.35 4.17-1.35 6.36 0 8.65 7.07 15.68 15.75 15.68s15.75-7.04 15.75-15.68c0-8.65-7.07-15.67-15.75-15.67-2.85 0-5.6.75-8.04 2.19a1.05 1.05 0 01-1.86-.24 14.86 14.86 0 00-4.89-2.09zm15.22 10.5a1.97 1.97 0 012.3 2.3v2.62a1.97 1.97 0 01-3.92 0v-2.62a1.97 1.97 0 011.62-2.3zm7.88 0a1.97 1.97 0 012.39 2.57v2.62a1.97 1.97 0 01-3.94 0v-2.62c0-1.09.88-1.97 1.97-1.97z" fill="#5C5F66"/></svg>
+          </div>
+          <span class="icon-nav__label">咨询</span>
+        </a>
+        <a href="#" class="icon-nav__item">
+          <div class="icon-nav__icon" aria-hidden="true">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M10.15 3.94h21.8c1.72 0 3.2.92 3.81 2.43l3.1 7.96c.04.09.06.19.08.29.23.72.35 1.52.35 2.31 0 1.1-.23 2.18-.69 3.17-.45 1-.6 1.89-.6 9.97 0 1.04-.42 2.04-1.16 2.78-.77.74-1.77 1.16-2.81 1.16H9.19c-1.04 0-2.04-.42-2.78-1.16-.74-.74-1.16-1.74-1.16-2.78v-11.17a7.5 7.5 0 01-2.94-4.6c0-.79.12-1.58.36-2.35l.05-.15 3.34-8.12c.49-1.51 1.8-2.49 3.5-2.58l.27-.01zm16.38 18c-.66.82-1.5 1.49-2.45 1.95-.95.46-2 .7-3.05.71-1.06-.01-2.11-.24-3.07-.7-.95-.46-1.79-1.12-2.46-1.95-.67.83-1.52 1.5-2.48 1.96-.96.46-2.01.7-3.08.71-.69 0-1.38-.09-2.04-.26v11.18c0 .35.14.68.39.93.25.25.58.39.93.39h23.62c.35 0 .68-.14.93-.39.25-.25.39-.58.39-.93v-9.78a7.9 7.9 0 01-2.03.26c-1.07-.01-2.12-.25-3.09-.71-.99-.46-1.84-1.13-2.51-1.96zm5.43-15.27H10.14c-.95 0-1.19.54-1.28.78l-3.29 8.01a4.5 4.5 0 00-.29 1.68c0 .81.2 1.61.59 2.32.39.71.95 1.31 1.63 1.75l.25.15h.12l.23.11c.55.25 1.2.38 1.95.38 1.6-.01 3.08-.86 3.93-2.27.07-.15.17-.38.37-.59.54-.67 1.94-.71 2.56.09.16.18.26.39.32.52.85 1.43 2.32 2.28 3.92 2.29 1.58-.01 3.04-.85 3.89-2.27.07-.15.17-.4.35-.61.27-.34.75-.56 1.28-.56.65 0 1.05.3 1.27.55.19.22.29.44.35.57.86 1.43 2.33 2.27 3.94 2.27.87-.01 1.62-.18 2.22-.52.74-.42 1.35-1.03 1.78-1.77.42-.74.64-1.57.64-2.42 0-.52-.08-1.05-.25-1.56l-.02-.08-3.08-7.9c-.26-.78-.98-.86-1.4-.88zm3.67 5.14c.35 0 .68.14.93.39.25.25.39.58.39.93s-.14.68-.39.93c-.25.25-.58.39-.93.39H11.81c-.35 0-.68-.14-.93-.39-.25-.25-.39-.58-.39-.93s.14-.68.39-.93c.25-.25.58-.39.93-.39h18.38z" fill="#5C5F66"/></svg>
+          </div>
+          <span class="icon-nav__label">店铺</span>
+        </a>
+        <a href="#" class="icon-nav__item">
+          <div class="icon-nav__icon" aria-hidden="true">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M12.56 37.56a2.6 2.6 0 01-3.41-.31 2.6 2.6 0 01-.24-2.2l.54-9.06-5.76-7.01a2.62 2.62 0 01.32-3.39 2.62 2.62 0 012.1-.68l8.78-2.29 4.89-7.64a2.62 2.62 0 014.27 0l4.88 7.64 8.78 2.28c.41.09.79.3 1.1.59.31.29.54.66.67 1.06.13.4.16.83.08 1.25a2.6 2.6 0 01-.53 1.14l-5.76 7.01.54 9.05a2.6 2.6 0 01-3.54 2.51l-8.44-3.31-8.45 3.31zm8.89-5.75l8.89 3.49.01-.09-.57-9.53a1.5 1.5 0 01.28-1.15l6.06-7.38-9.24-2.4a1.5 1.5 0 01-.92-.52l-5.14-8.05-5.14 8.05c-.17.22-.4.4-.7.52l-9.24 2.4 6.01 7.38c.2.24.3.54.28.85l-.57 9.53.08.08 8.89-3.49c.29-.11.6-.11.89 0z" fill="#5C5F66"/></svg>
+          </div>
+          <span class="icon-nav__label">收藏</span>
+        </a>
+      </nav>
+      <div class="action-buttons">
+        <button type="button" class="action-buttons__button action-buttons__button--add-to-cart">加入购物车</button>
+        <button type="button" class="action-buttons__button action-buttons__button--buy-now">立即购买</button>
+      </div>
+    </div>
+    <div class="bottom-bar__safe-area"><div class="bottom-bar__home-indicator" aria-hidden="true"></div></div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — collapse（箭头链接 / 收起展开）示例</title>
+  <style>
+@font-face {
+  font-family: 'Fliggy Sans 102';
+  src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  padding: 48px 24px;
+  background: var(--color-white);
+  font-family: 'PingFang SC', 'SimHei', sans-serif;
+}
+
+/* ========== fdl-collapse ========== */
+.fdl-collapse {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 48px;
+  gap: 12px;
+  height: 60px;
+  margin: 0;
+  background: var(--color-label);
+  border: none;
+  border-radius: 9999px;
+  color: var(--color-indigo-1);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-collapse:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+}
+
+.fdl-collapse:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.fdl-collapse:hover:not(:disabled):not([aria-disabled="true"]):not(.fdl-collapse--disabled) {
+  background-color: color-mix(in srgb, var(--color-darkgray) 4%, var(--color-label));
+}
+
+.fdl-collapse:disabled,
+.fdl-collapse[aria-disabled="true"],
+.fdl-collapse.fdl-collapse--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.fdl-collapse__text {
+  font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.fdl-collapse__icon {
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  transform: rotate(0deg);
+  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.fdl-collapse__icon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fdl-collapse--arrow-down .fdl-collapse__icon {
+  transform: rotate(90deg);
+}
+
+.fdl-collapse--arrow-up .fdl-collapse__icon {
+  transform: rotate(-90deg);
+}
+  </style>
+</head>
+<body>
+
+  <button type="button" class="fdl-collapse fdl-collapse--arrow-right">
+    <span class="fdl-collapse__text">查看全部</span>
+    <span class="fdl-collapse__icon" aria-hidden="true">
+      <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 11L6.5 6L1.5 1" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+
+  <button type="button" class="fdl-collapse fdl-collapse--arrow-down">
+    <span class="fdl-collapse__text">展开更多</span>
+    <span class="fdl-collapse__icon" aria-hidden="true">
+      <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 11L6.5 6L1.5 1" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+
+  <button type="button" class="fdl-collapse fdl-collapse--arrow-up">
+    <span class="fdl-collapse__text">收起</span>
+    <span class="fdl-collapse__icon" aria-hidden="true">
+      <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 11L6.5 6L1.5 1" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+
+  <button type="button" class="fdl-collapse fdl-collapse--arrow-down" disabled>
+    <span class="fdl-collapse__text">暂无更多</span>
+    <span class="fdl-collapse__icon" aria-hidden="true">
+      <svg viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 11L6.5 6L1.5 1" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+
+</body>
+</html>

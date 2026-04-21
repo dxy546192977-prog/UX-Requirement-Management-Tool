@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>门票频道 — 推荐卡片</title>
+  <style>
+    body { margin: 0; background: #e9e9e9; padding: 24px 0; font-family: 'PingFang SC', 'Alibaba Sans 102', sans-serif; display: flex; justify-content: center; }
+    a { text-decoration: none; color: inherit; }
+    .recommendation-section {
+      box-sizing: border-box; width: 714px; padding: 12px 18px 18px;
+      background: linear-gradient(0deg, #FFFFFF 80.31%, #FFF0F0 100%); border-radius: 12px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .section-header-row { display: flex; align-items: flex-start; gap: 18px; }
+    .column-header { flex: 1; display: flex; justify-content: space-between; align-items: center; height: 42px; }
+    .column-header__title-wrapper { display: flex; justify-content: center; align-items: center; gap: 12px; flex-grow: 1; }
+    .column-header__title { margin: 0; font-size: 30px; font-weight: 500; line-height: 42px; color: #0F131A; }
+    .more-link { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 500; color: #0F131A; }
+    .card-content-row { display: flex; gap: 23px; }
+    .item-card { flex: 1; display: flex; gap: 12px; min-width: 0; }
+    .item-card__image {
+      flex-shrink: 0; width: 107px; height: 107px; background-color: #ddd; background-size: cover; background-position: center;
+      border-radius: 6px; position: relative;
+    }
+    .rank-badge {
+      position: absolute; top: 0; left: 0; width: 28px; height: 33px;
+      background: linear-gradient(145.14deg, #FFF0DB -1.79%, #FDD1A7 98.37%); color: #805540;
+      display: flex; flex-direction: column; align-items: center; font-weight: 700;
+    }
+    .rank-badge.rank-2 { background: linear-gradient(145.14deg, #EFF1FD -1.79%, #D5DBF3 98.37%); color: #61677D; }
+    .rank-badge__top-text { font-size: 8px; line-height: 1; padding-top: 2px; }
+    .rank-badge__number { font-size: 21px; line-height: 22px; }
+    .item-card__info { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+    .item-card__title {
+      margin: 0; font-size: 24px; line-height: 1.4; font-weight: 400; color: #0F131A;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 68px;
+    }
+    .item-card__footer { display: flex; justify-content: flex-end; align-items: center; padding-top: 12px; }
+    .price-info { display: flex; align-items: flex-end; gap: 5px; }
+    .item-card__subtext { font-size: 20px; color: #919499; }
+    .item-card__price { display: flex; align-items: baseline; color: #FF5533; font-weight: 700; }
+    .item-card__price-currency { font-size: 24px; }
+    .item-card__price-amount { font-size: 36px; line-height: 1; }
+    .item-card__price-suffix { font-size: 18px; font-weight: 400; margin-left: 2px; }
+  </style>
+</head>
+<body>
+  <section class="recommendation-section" aria-label="推荐">
+    <div class="section-header-row">
+      <header class="column-header">
+        <div class="column-header__title-wrapper">
+          <h2 class="column-header__title">玩乐推荐</h2>
+        </div>
+        <a href="#" class="more-link"><span>更多</span><span>&gt;</span></a>
+      </header>
+      <header class="column-header">
+        <div class="column-header__title-wrapper">
+          <h2 class="column-header__title">套餐推荐</h2>
+        </div>
+        <a href="#" class="more-link"><span>更多</span><span>&gt;</span></a>
+      </header>
+    </div>
+    <div class="card-content-row">
+      <a href="#" class="item-card">
+        <div class="item-card__image" style="background-image:url('https://picsum.photos/id/1018/107/107')">
+          <div class="rank-badge"><span class="rank-badge__top-text">TOP</span><span class="rank-badge__number">1</span></div>
+        </div>
+        <div class="item-card__info">
+          <h3 class="item-card__title">北京环球度假区：开启超凡之旅</h3>
+          <div class="item-card__footer">
+            <div class="price-info">
+              <span class="item-card__subtext">会员价</span>
+              <div class="item-card__price">
+                <span class="item-card__price-currency">¥</span><span class="item-card__price-amount">694</span><span class="item-card__price-suffix">起</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="item-card">
+        <div class="item-card__image" style="background-image:url('https://picsum.photos/id/237/107/107')"></div>
+        <div class="item-card__info">
+          <h3 class="item-card__title">三亚海棠湾豪华酒店2晚套餐</h3>
+          <div class="item-card__footer">
+            <div class="price-info">
+              <div class="item-card__price">
+                <span class="item-card__price-currency">¥</span><span class="item-card__price-amount">1299</span><span class="item-card__price-suffix">起</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="card-content-row">
+      <a href="#" class="item-card">
+        <div class="item-card__image" style="background-image:url('https://picsum.photos/id/1040/107/107')">
+          <div class="rank-badge rank-2"><span class="rank-badge__top-text">TOP</span><span class="rank-badge__number">2</span></div>
+        </div>
+        <div class="item-card__info">
+          <h3 class="item-card__title">迪士尼乐园一日游，不期而遇</h3>
+          <div class="item-card__footer">
+            <div class="price-info">
+              <div class="item-card__price">
+                <span class="item-card__price-currency">¥</span><span class="item-card__price-amount">588</span><span class="item-card__price-suffix">起</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="item-card">
+        <div class="item-card__image" style="background-image:url('https://picsum.photos/id/433/107/107')"></div>
+        <div class="item-card__info">
+          <h3 class="item-card__title">杭州西湖畔精品民宿体验</h3>
+          <div class="item-card__footer">
+            <div class="price-info">
+              <div class="item-card__price">
+                <span class="item-card__price-currency">¥</span><span class="item-card__price-amount">899</span><span class="item-card__price-suffix">起</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+</body>
+</html>

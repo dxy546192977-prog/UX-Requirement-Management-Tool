@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>机票首页 — 小金刚</title>
+  <style>
+    :root {
+      --color-darkgray: #0f131a;
+      --color-white: #ffffff;
+      --color-bg-page: #f2f3f5;
+      --radius-kong: 18px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "PingFang SC", "SimHei", sans-serif;
+      background: var(--color-bg-page);
+      width: 750px;
+      margin: 0 auto;
+      padding: 24px 0;
+    }
+    .fdl-flight-home-kingkong.kong {
+      width: 702px;
+      margin: 0 auto;
+      padding: 18px 24px 22px;
+      background: var(--color-white);
+      border-radius: var(--radius-kong);
+    }
+    .kong__row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 654px;
+      height: 88px;
+    }
+    .kong__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 102px;
+      height: 88px;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+    }
+    .kong__icon {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    .kong__label {
+      width: 96px;
+      height: 24px;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 100%;
+      color: var(--color-darkgray);
+      text-align: center;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <section class="fdl-flight-home-kingkong kong" aria-label="快捷功能入口">
+    <div class="kong__row">
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01vh7Hby1VxoQlO5u75_!!6000000002720-2-tps-120-120.png" alt="特价机票" />
+        <span class="kong__label">特价机票</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i3/O1CN01yerynW1DJolEEPzyh_!!6000000000196-2-tps-120-120.png" alt="机票次卡" />
+        <span class="kong__label">机票次卡</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i2/O1CN01y6eVFh20qiNjzhGRO_!!6000000006901-2-tps-120-120.png" alt="低价提醒" />
+        <span class="kong__label">低价提醒</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i3/O1CN013nZIJx1lJzqrMZzK3_!!6000000004799-2-tps-120-120.png" alt="企业认证" />
+        <span class="kong__label">企业认证</span>
+      </button>
+      <button class="kong__item" type="button">
+        <img class="kong__icon" src="https://gw.alicdn.com/imgextra/i4/O1CN01FBYXyV1xn6PWHZ79C_!!6000000006487-2-tps-120-120.png" alt="展开全部" />
+        <span class="kong__label">全部</span>
+      </button>
+    </div>
+  </section>
+</body>
+</html>

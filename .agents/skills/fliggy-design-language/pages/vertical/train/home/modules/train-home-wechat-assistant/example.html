@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, user-scalable=no">
+    <title>火车票首页 — 添加微信助手</title>
+    <style>
+        /* 预览环境样式 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #F7F8FA;
+            display: flex;
+            justify-content: center;
+            padding: 50px 0;
+            font-family: 'PingFang SC', 'SimHei', sans-serif;
+        }
+
+        /* 
+         ================================================
+         == 添加微信助手组件
+         ================================================
+         火车票首页引导用户关注飞猪服务号的横向卡片。
+         容器宽 702px，高 130px，白色背景，圆角 18px。
+        */
+
+        /* 卡片容器 */
+        .wechat-assistant-card {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            gap: 23px;
+            position: relative;
+            width: 702px;
+            height: 130px;
+            background: #FFFFFF;
+            border-radius: 18px;
+        }
+
+        /* 左侧内容区（图标 + 文案） */
+        .wechat-assistant-card .left-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+            gap: 23px;
+            width: 455px;
+            height: 82px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        /* 图标 */
+        .wechat-assistant-card .icon {
+            width: 60px;
+            height: 60px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        .wechat-assistant-card .icon img {
+            width: 60px;
+            height: 60px;
+            display: block;
+        }
+
+        /* 文案区 */
+        .wechat-assistant-card .text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0;
+            gap: 6px;
+            width: 372px;
+            height: 82px;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        /* 标题 */
+        .wechat-assistant-card .title {
+            width: 372px;
+            height: 42px;
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: #0F131A;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        /* 副标题 */
+        .wechat-assistant-card .subtitle {
+            width: 372px;
+            height: 34px;
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 140%;
+            color: #8C8C8C;
+            flex: none;
+            order: 1;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        /* 右侧按钮 */
+        .wechat-assistant-card .button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            gap: 10px;
+            width: 144px;
+            height: 60px;
+            background: #FFE033;
+            border-radius: 42px;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        /* 按钮文字 */
+        .wechat-assistant-card .button-text {
+            width: 84px;
+            height: 39px;
+            font-family: 'PingFang SC';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 28px;
+            line-height: 140%;
+            color: #0F131A;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== 添加微信助手组件 开始 ====== -->
+    <div class="wechat-assistant-card">
+        <!-- 左侧：图标 + 文案 -->
+        <div class="left-content">
+            <div class="icon">
+                <img src="https://gw.alicdn.com/imgextra/i3/O1CN01mupPFw1Z4AmK87UIA_!!6000000003140-2-tps-120-120.png" alt="微信助手图标">
+            </div>
+            <div class="text-content">
+                <p class="title">添加飞猪旅行助手</p>
+                <p class="subtitle">第一时间接收出票、出行信息</p>
+            </div>
+        </div>
+        <!-- 右侧：按钮 -->
+        <div class="button">
+            <span class="button-text">去添加</span>
+        </div>
+    </div>
+    <!-- ====== 添加微信助手组件 结束 ====== -->
+
+</body>
+</html>

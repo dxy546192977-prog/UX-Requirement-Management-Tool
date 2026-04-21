@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=750, user-scalable=no" />
+  <title>FDL — 选项卡 Tab 样式二（托起式）示例</title>
+  <style>
+:root {
+  --color-darkgray: #0f131a;
+  --color-midgray: #5c5f66;
+  --color-lightgray: #919499;
+  --color-auxiliary: #d2d4d9;
+  --color-bg: #f2f3f5;
+  --color-label: #f7f8fa;
+  --color-white: #ffffff;
+  --color-brand-1: #ffe033;
+  --color-brand-2: #fffceb;
+  --color-brand-4: #fff7cc;
+  --color-indigo-1: #6666ff;
+  --color-indigo-4: #ebebff;
+  --color-warning-1: #ff3333;
+  --color-pay-1: #ff5533;
+  --color-pay-2: #ff8c1a;
+  --color-promo-1: #ff0036;
+  --color-promo-2: #9537fd;
+  --color-green-0: #149aa8;
+  --color-safeguard-4: #fef5ec;
+  --color-safeguard-5: #5d3521;
+  --radius-l: 24px;
+  --radius-m: 12px;
+  --radius-s: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 48px 24px 64px;
+  background: var(--color-bg);
+  font-family: "PingFang SC", "SimHei", sans-serif;
+}
+
+.fdl-tabs-style-2-demo-page {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.fdl-tabs-style-2-demo__heading {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-darkgray);
+}
+
+.fdl-tabs-style-2-demo__heading:not(:first-child) {
+  margin-top: 48px;
+}
+
+.fdl-tabs-style-2-demo__card {
+  margin-bottom: 24px;
+  border: 1px solid var(--color-auxiliary);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-darkgray) 8%, transparent);
+}
+
+.fdl-tabs-style-2-demo__card-title {
+  margin: 0;
+  padding: 12px 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-midgray);
+  background: var(--color-label);
+  border-bottom: 1px solid var(--color-auxiliary);
+}
+
+/* ========== fdl-tabs-style-2 ========== */
+.fdl-tabs-style-2 {
+  height: 102px;
+  width: 100%;
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.fdl-tabs-style-2__list {
+  display: flex;
+  align-items: flex-end;
+  list-style: none;
+  padding: 0 18px;
+  margin: 0;
+  height: 100%;
+}
+
+.fdl-tabs-style-2__item {
+  position: relative;
+  height: 100%;
+}
+
+.fdl-tabs-style-2__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fdl-tabs-style-2__link:hover {
+  opacity: 0.92;
+}
+
+.fdl-tabs-style-2__link:focus-visible {
+  outline: 2px solid var(--color-indigo-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+  opacity: 1;
+}
+
+.fdl-tabs-style-2__bubble {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 2;
+  background-color: var(--color-pay-1);
+  color: var(--color-white);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--radius-m) var(--radius-m) var(--radius-m) var(--radius-s);
+}
+
+.fdl-tabs-style-2__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 92px;
+  padding: 0 10px;
+  border-radius: var(--radius-m) var(--radius-m) 0 0;
+  gap: 2px;
+  transition: background 0.3s ease;
+}
+
+.fdl-tabs-style-2__main {
+  font-size: 30px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--color-midgray);
+  font-weight: 400;
+  white-space: nowrap;
+  transition: font-weight 0.3s ease, color 0.3s ease;
+}
+
+.fdl-tabs-style-2__sub {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-lightgray);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.fdl-tabs-style-2:not(.fdl-tabs-style-2--scroll) .fdl-tabs-style-2__list {
+  justify-content: center;
+}
+
+.fdl-tabs-style-2:not(.fdl-tabs-style-2--scroll) .fdl-tabs-style-2__item {
+  flex: 1;
+}
+
+.fdl-tabs-style-2--scroll .fdl-tabs-style-2__list {
+  overflow-x: auto;
+  justify-content: flex-start;
+  gap: 18px;
+  padding: 0 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fdl-tabs-style-2--scroll .fdl-tabs-style-2__list::-webkit-scrollbar {
+  display: none;
+}
+
+.fdl-tabs-style-2--scroll .fdl-tabs-style-2__item {
+  flex-shrink: 0;
+}
+
+.fdl-tabs-style-2__item--active .fdl-tabs-style-2__content {
+  background: linear-gradient(180deg, var(--color-brand-1) 0%, transparent 100%);
+}
+
+.fdl-tabs-style-2__item--active .fdl-tabs-style-2__main {
+  font-weight: 500;
+  color: var(--color-darkgray);
+}
+
+.fdl-tabs-style-2__item--active .fdl-tabs-style-2__sub {
+  color: var(--color-midgray);
+}
+  </style>
+</head>
+<body>
+  <div class="fdl-tabs-style-2-demo-page">
+    <h1 class="fdl-tabs-style-2-demo__heading">托起式分类导航栏（fdl-tabs-style-2）</h1>
+
+    <div class="fdl-tabs-style-2-demo__card">
+      <p class="fdl-tabs-style-2-demo__card-title">均分模式（2～4 项）</p>
+      <nav class="fdl-tabs-style-2" id="fdl-tabs-style-2-fixed" aria-label="内容分类">
+        <ul class="fdl-tabs-style-2__list"></ul>
+      </nav>
+    </div>
+
+    <div class="fdl-tabs-style-2-demo__card">
+      <p class="fdl-tabs-style-2-demo__card-title">横滑模式（&gt;4 项）</p>
+      <nav class="fdl-tabs-style-2 fdl-tabs-style-2--scroll" id="fdl-tabs-style-2-scroll" aria-label="内容分类">
+        <ul class="fdl-tabs-style-2__list"></ul>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var fixedData = [
+    { mainText: "国内", subText: "推荐" },
+    { mainText: "国际/港澳台", bubbleText: "NEW" },
+    { mainText: "周边游" }
+  ];
+
+  var scrollData = [
+    { mainText: "全部" },
+    { mainText: "酒店", subText: "Hotel", bubbleText: "HOT" },
+    { mainText: "机票", subText: "Flight" },
+    { mainText: "火车票" },
+    { mainText: "度假", subText: "Vacation" },
+    { mainText: "景点门票" }
+  ];
+
+  function render(navId, data) {
+    var nav = document.getElementById(navId);
+    if (!nav) return;
+    var list = nav.querySelector(".fdl-tabs-style-2__list");
+    if (!list) return;
+
+    list.innerHTML = "";
+    data.forEach(function (item, index) {
+      var li = document.createElement("li");
+      li.className = "fdl-tabs-style-2__item";
+      if (index === 0) li.classList.add("fdl-tabs-style-2__item--active");
+
+      var bubbleHtml = item.bubbleText
+        ? '<span class="fdl-tabs-style-2__bubble" aria-hidden="true">' + item.bubbleText + "</span>"
+        : "";
+      var subHtml = item.subText
+        ? '<span class="fdl-tabs-style-2__sub">' + item.subText + "</span>"
+        : "";
+
+      li.innerHTML =
+        '<a href="#" class="fdl-tabs-style-2__link">' +
+        bubbleHtml +
+        '<div class="fdl-tabs-style-2__content">' +
+        '<span class="fdl-tabs-style-2__main">' +
+        item.mainText +
+        "</span>" +
+        subHtml +
+        "</div>" +
+        "</a>";
+
+      list.appendChild(li);
+    });
+
+    function setCurrent(activeLi) {
+      list.querySelectorAll(".fdl-tabs-style-2__item").forEach(function (item) {
+        item.classList.remove("fdl-tabs-style-2__item--active");
+        var a = item.querySelector(".fdl-tabs-style-2__link");
+        if (a) a.removeAttribute("aria-current");
+      });
+      activeLi.classList.add("fdl-tabs-style-2__item--active");
+      var link = activeLi.querySelector(".fdl-tabs-style-2__link");
+      if (link) link.setAttribute("aria-current", "true");
+    }
+
+    setCurrent(list.querySelector(".fdl-tabs-style-2__item--active"));
+
+    list.addEventListener("click", function (e) {
+      var link = e.target.closest(".fdl-tabs-style-2__link");
+      if (!link) return;
+      e.preventDefault();
+      var item = link.closest(".fdl-tabs-style-2__item");
+      if (item) setCurrent(item);
+    });
+  }
+
+  render("fdl-tabs-style-2-fixed", fixedData);
+  render("fdl-tabs-style-2-scroll", scrollData);
+})();
+  </script>
+</body>
+</html>
