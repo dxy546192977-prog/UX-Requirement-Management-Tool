@@ -85,35 +85,38 @@ function _yuqueGet(config, apiPath) {
 }
 
 /**
- * 通过 ali-mcpcli skylark_resolve_url 获取文档 doc_id，再用 skylark_doc_detail 读取正文
+ * 通过 yuque-fetch.mjs 用浏览器登录态抓取语雀文档
  * 适用于语雀 OpenAPI Token 无权限访问的文档（降级方案）
  */
-function fetchPrdViaCliMcp(prdUrl) {
+function fetchPrdViaYuqueFetch(prdUrl) {
   return new Promise((resolve, reject) => {
-    // 统一域名：aliyuque.antfin.com → yuque.antfin.com
-    const normalizedUrl = prdUrl.replace('aliyuque.antfin.com', 'yuque.antfin.com');
+    // 查找 yuque-fetch.mjs 脚本路径（支持多个可能的位置）
+    const path = require('path');
+    const possiblePaths = [
+      path.join(__dirname, '.agents/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
+      path.join(__dirname, '../.agents/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
+      path.join(process.env.HOME || '', '.claude/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
+    ];
 
-    execFile('ali-mcpcli', ['call', 'skylark', 'skylark_resolve_url', JSON.stringify({ url: normalizedUrl })], { timeout: 15000 }, (err, stdout) => {
-      if (err) return reject(new Error('ali-mcpcli resolve_url failed: ' + err.message));
-      try {
-        const result = JSON.parse(stdout);
-        if (!result.ok || !result.data || !result.data.id) {
-          return reject(new Error('skylark_resolve_url returned no doc id'));
-        }
-        const docId = result.data.id;
-        execFile('ali-mcpcli', ['call', 'skylark', 'skylark_doc_detail', JSON.stringify({ doc_id: docId })], { timeout: 15000 }, (err2, stdout2) => {
-          if (err2) return reject(new Error('ali-mcpcli doc_detail failed: ' + err2.message));
-          try {
-            const result2 = JSON.parse(stdout2);
-            if (!result2.ok || !result2.data) return reject(new Error('skylark_doc_detail returned no data'));
-            resolve(result2.data);
-          } catch (e) {
-            reject(new Error('Failed to parse skylark_doc_detail response: ' + e.message));
-          }
-        });
-      } catch (e) {
-        reject(new Error('Failed to parse skylark_resolve_url response: ' + e.message));
-      }
+    const scriptPath = possiblePaths.find(p => {
+      try { require('fs').accessSync(p); return true; } catch { return false; }
+    });
+
+    if (!scriptPath) {
+      return reject(new Error('yuque-fetch.mjs not found'));
+    }
+
+    execFile('node', [scriptPath, prdUrl], { timeout: 30000 }, (err, stdout, stderr) => {
+      if (err) return reject(new Error('yuque-fetch.mjs failed: ' + err.message));
+      const body = stdout.trim();
+      if (!body) return reject(new Error('yuque-fetch.mjs returned empty content'));
+      resolve({
+        title:   'PRD Document',
+        creator: 'Unknown',
+        description: '',
+        body,
+        body_text: body
+      });
     });
   });
 }
