@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=750, user-scalable=no">
+<title>确认订单</title>
+<style>
+:root {
+  --color-indigo-1: #FF6600;
+  --color-blue: #1677FF;
+  --color-bg: #F7F8FA;
+  --color-card: #FFFFFF;
+  --color-price: #FF4D00;
+  --color-success: #00B578;
+  --color-text-1: #1A1A1A;
+  --color-text-2: #333333;
+  --color-text-3: #666666;
+  --color-text-4: #999999;
+  --color-border: #E5E5E5;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.04);
+  --sp-6: 6px;
+  --sp-12: 12px;
+  --sp-18: 18px;
+  --sp-24: 24px;
+  --sp-30: 30px;
+  --sp-36: 36px;
+  --sp-42: 42px;
+  --sp-48: 48px;
+  --font-h1: 36px;
+  --font-h2: 32px;
+  --font-h3: 28px;
+  --font-body: 26px;
+  --font-sub: 22px;
+  --font-caption: 20px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-2);
+  font-size: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.fdl-container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 0 var(--sp-30);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: var(--sp-120);
+}
+.fdl-nav {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-30);
+  background: var(--color-card);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--color-border);
+}
+.fdl-nav-title { font-size: var(--font-h3); font-weight: 600; color: var(--color-text-1); }
+.fdl-nav-back { font-size: var(--font-sub); color: var(--color-text-3); cursor: pointer; }
+
+.fdl-section { margin-top: var(--sp-18); }
+.fdl-card {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  padding: var(--sp-24);
+  box-shadow: var(--shadow);
+}
+.fdl-card-title { font-size: var(--font-h3); font-weight: 600; color: var(--color-text-1); margin-bottom: var(--sp-18); }
+
+.fdl-route { display: flex; align-items: center; justify-content: space-between; }
+.fdl-city { font-size: var(--font-h2); font-weight: 700; color: var(--color-text-1); }
+.fdl-arrow { font-size: var(--font-h3); color: var(--color-text-4); margin: 0 var(--sp-18); }
+.fdl-date { font-size: var(--font-sub); color: var(--color-text-3); margin-top: var(--sp-6); }
+
+.fdl-passenger { display: flex; align-items: center; gap: var(--sp-18); }
+.fdl-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+.fdl-pax-info { flex: 1; }
+.fdl-pax-name { font-size: var(--font-body); font-weight: 600; color: var(--color-text-1); }
+.fdl-pax-id { font-size: var(--font-sub); color: var(--color-text-4); margin-top: var(--sp-6); }
+.fdl-check { width: 42px; height: 42px; border: 2px solid var(--color-indigo-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--color-indigo-1); font-weight: bold; font-size: var(--font-sub); }
+
+.fdl-price-row { display: flex; justify-content: space-between; align-items: center; padding: var(--sp-12) 0; border-bottom: 1px dashed var(--color-border); }
+.fdl-price-row:last-child { border-bottom: none; }
+.fdl-label { font-size: var(--font-body); color: var(--color-text-3); }
+.fdl-value { font-size: var(--font-body); color: var(--color-text-1); font-weight: 600; }
+.fdl-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: var(--sp-18); padding-top: var(--sp-18); border-top: 1px solid var(--color-border); }
+.fdl-total-label { font-size: var(--font-sub); color: var(--color-text-3); }
+.fdl-total-price { font-size: var(--font-h2); font-weight: 700; color: var(--color-price); }
+.fdl-total-price span { font-size: var(--font-sub); }
+
+.fdl-note { margin-top: var(--sp-24); font-size: var(--font-caption); color: var(--color-text-4); line-height: 1.6; }
+
+.fdl-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-card);
+  padding: var(--sp-24) var(--sp-30);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+.fdl-footer-price { font-size: var(--font-sub); color: var(--color-text-3); }
+.fdl-footer-price b { font-size: var(--font-h2); color: var(--color-price); }
+.fdl-btn {
+  background: transparent;
+  border: 2px solid var(--color-indigo-1);
+  color: var(--color-indigo-1);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-18) var(--sp-36);
+  font-size: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+}
+.fdl-btn-solid {
+  background: var(--color-indigo-1);
+  color: #FFFFFF;
+  border: none;
+}
+
+.fdl-trigger-area { margin-top: var(--sp-48); padding-bottom: var(--sp-120); text-align: center; }
+.fdl-trigger-btn {
+  background: var(--color-blue);
+  color: #FFFFFF;
+  border: none;
+  padding: var(--sp-18) var(--sp-30);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sub);
+  cursor: pointer;
+}
+
+.fdl-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.fdl-overlay.active { display: flex; }
+.fdl-popup {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  width: 630px;
+  padding: var(--sp-36) var(--sp-30) var(--sp-30);
+  text-align: center;
+  position: relative;
+}
+.fdl-popup-close { position: absolute; top: var(--sp-24); right: var(--sp-24); width: 48px; height: 48px; border: none; background: transparent; cursor: pointer; font-size: var(--font-h2); color: var(--color-text-4); }
+.fdl-popup-title { font-size: var(--font-h2); font-weight: 700; color: var(--color-text-1); margin-bottom: var(--sp-18); }
+.fdl-popup-content { font-size: var(--font-body); color: var(--color-text-2); line-height: 1.6; margin-bottom: var(--sp-30); }
+.fdl-popup-content strong { color: var(--color-indigo-1); font-weight: 700; }
+.fdl-popup-img { width: 100%; height: 240px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: var(--sp-24); }
+.fdl-popup-actions { display: flex; gap: var(--sp-18); }
+.fdl-popup-btn { flex: 1; padding: var(--sp-18) 0; border-radius: var(--radius-md); font-size: var(--font-body); font-weight: 600; cursor: pointer; border: none; }
+.fdl-popup-btn-left { background: var(--color-bg); color: var(--color-text-3); }
+.fdl-popup-btn-right { background: var(--color-indigo-1); color: #FFFFFF; }
+</style>
+</head>
+<body>
+<div class="fdl-container">
+  <nav class="fdl-nav">
+    <span class="fdl-nav-back" id="backBtn">← 返回</span>
+    <span class="fdl-nav-title">确认订单</span>
+    <span class="fdl-nav-back" style="visibility:hidden;">←</span>
+  </nav>
+
+  <main class="fdl-main">
+    <section class="fdl-section fdl-card">
+      <div class="fdl-route">
+        <div>
+          <div class="fdl-city">北京南</div>
+          <div class="fdl-date">10月24日 周四</div>
+        </div>
+        <div class="fdl-arrow">✈</div>
+        <div style="text-align:right;">
+          <div class="fdl-city">上海虹桥</div>
+          <div class="fdl-date">11:30 - 13:45</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fdl-section fdl-card">
+      <div class="fdl-card-title">乘机人</div>
+      <div class="fdl-passenger">
+        <img class="fdl-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop" alt="avatar">
+        <div class="fdl-pax-info">
+          <div class="fdl-pax-name">张三</div>
+          <div class="fdl-pax-id">身份证 110105199001011234</div>
+        </div>
+        <div class="fdl-check">✓</div>
+      </div>
+    </section>
+
+    <section class="fdl-section fdl-card">
+      <div class="fdl-card-title">费用明细</div>
+      <div class="fdl-price-row">
+        <span class="fdl-label">机票价格</span>
+        <span class="fdl-value">¥673</span>
+      </div>
+      <div class="fdl-price-row">
+        <span class="fdl-label">机建燃油</span>
+        <span class="fdl-value">¥100</span>
+      </div>
+      <div class="fdl-total">
+        <span class="fdl-total-label">合计应付</span>
+        <span class="fdl-total-price"><span>¥</span>773</span>
+      </div>
+    </section>
+
+    <div class="fdl-note">
+      <p>温馨提示：请确保乘机人证件信息准确无误。航班起飞前45分钟停止办理值机，请合理安排出行时间。</p>
+    </div>
+
+    <div class="fdl-trigger-area">
+      <button class="fdl-trigger-btn" id="triggerBtn">模拟触发返回拦截</button>
+    </div>
+  </main>
+
+  <footer class="fdl-footer">
+    <div class="fdl-footer-price">合计 <b>¥773</b></div>
+    <button class="fdl-btn fdl-btn-solid">提交订单</button>
+  </footer>
+</div>
+
+<div class="fdl-overlay" id="trainPopup">
+  <div class="fdl-popup">
+    <button class="fdl-popup-close" id="closePopup">×</button>
+    <img class="fdl-popup-img" src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=750&h=400&fit=crop" alt="train">
+    <h2 class="fdl-popup-title">火车出行更省钱</h2>
+    <p class="fdl-popup-content">北京南-上海虹桥 G1次高铁直达，二等座单人仅需553元，<strong>立省120元</strong></p>
+    <div class="fdl-popup-actions">
+      <button class="fdl-popup-btn fdl-popup-btn-left" id="leaveBtn">狠心离开</button>
+      <button class="fdl-popup-btn fdl-popup-btn-right" id="trainBtn">去看火车票</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const popup = document.getElementById('trainPopup');
+  const triggerBtn = document.getElementById('triggerBtn');
+  const closeBtn = document.getElementById('closePopup');
+  const leaveBtn = document.getElementById('leaveBtn');
+  const trainBtn = document.getElementById('trainBtn');
+  const backBtn = document.getElementById('backBtn');
+
+  function showPopup() {
+    popup.classList.add('active');
+  }
+  function hidePopup() {
+    popup.classList.remove('active');
+  }
+
+  triggerBtn.addEventListener('click', showPopup);
+  closeBtn.addEventListener('click', hidePopup);
+  leaveBtn.addEventListener('click', function() {
+    hidePopup();
+    window.history.back();
+  });
+  trainBtn.addEventListener('click', function() {
+    alert('即将跳转至火车票列表页，已自动筛选：高铁动车、有票、价格升序');
+    hidePopup();
+  });
+
+  backBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showPopup();
+  });
+
+  window.addEventListener('popstate', function(e) {
+    if (popup.classList.contains('active')) {
+      hidePopup();
+    } else {
+      history.pushState(null, null, window.location.href);
+      showPopup();
+    }
+  });
+
+  history.pushState(null, null, window.location.href);
+})();
+</script>
+</body>
+</html>

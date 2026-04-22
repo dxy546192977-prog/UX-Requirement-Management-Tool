@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>机票下单页 - 火车票引流弹窗</title>
+  <style>
+    :root {
+      /* 品牌色 */
+      --color-indigo-1: #FF6600;
+      --color-indigo-2: #FF8533;
+      --color-white: #FFFFFF;
+      --color-black: #1A1A1A;
+
+      /* 中性色 */
+      --color-gray-1: #333333;
+      --color-gray-2: #666666;
+      --color-gray-3: #999999;
+      --color-gray-4: #CCCCCC;
+      --color-gray-5: #E5E5E5;
+      --color-gray-6: #F5F5F5;
+      --color-bg: #F7F8FA;
+
+      /* 功能色 */
+      --color-price: #FF4D00;
+      --color-save: #FF2442;
+      --color-success: #00B578;
+      --color-info: #1677FF;
+      --color-tag-bg: #FFF0E6;
+      --color-tag-text: #FF6600;
+
+      /* 圆角 */
+      --radius-s: 6px;
+      --radius-m: 12px;
+      --radius-l: 18px;
+      --radius-xl: 24px;
+      --radius-full: 999px;
+
+      /* 阴影 */
+      --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+      --shadow-modal: 0 -4px 24px rgba(0, 0, 0, 0.15);
+      --shadow-btn: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-gray-1);
+      width: 750px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ========== 导航栏 ========== */
+    .fdl-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      height: 88px;
+      padding: 0 30px;
+      background: var(--color-white);
+    }
+
+    .fdl-nav-back {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .fdl-nav-back svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .fdl-nav-title {
+      flex: 1;
+      text-align: center;
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--color-black);
+    }
+
+    .fdl-nav-placeholder {
+      width: 44px;
+    }
+
+    /* ========== 步骤条 ========== */
+    .fdl-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 30px;
+      background: var(--color-white);
+      gap: 12px;
+    }
+
+    .fdl-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      color: var(--color-gray-3);
+    }
+
+    .fdl-step.active {
+      color: var(--color-indigo-1);
+      font-weight: 600;
+    }
+
+    .fdl-step-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: var(--radius-full);
+      background: var(--color-gray-4);
+    }
+
+    .fdl-step.active .fdl-step-dot {
+      background: var(--color-indigo-1);
+    }
+
+    .fdl-step-line {
+      width: 60px;
+      height: 2px;
+      background: var(--color-gray-5);
+    }
+
+    /* ========== 出票安心提示 ========== */
+    .fdl-assurance {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 18px 30px;
+      background: linear-gradient(90deg, #FFF8F0, var(--color-white));
+      font-size: 22px;
+      color: var(--color-gray-2);
+    }
+
+    .fdl-assurance-icon {
+      color: var(--color-success);
+      font-size: 24px;
+    }
+
+    /* ========== 航班信息卡 ========== */
+    .fdl-flight-card {
+      margin: 18px 30px;
+      padding: 30px;
+      background: var(--color-white);
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-card);
+    }
+
+    .fdl-flight-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--color-tag-bg);
+      color: var(--color-tag-text);
+      font-size: 20px;
+      border-radius: var(--radius-s);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+
+    .fdl-flight-route {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .fdl-flight-date {
+      font-size: 24px;
+      color: var(--color-gray-2);
+      margin-bottom: 6px;
+    }
+
+    .fdl-flight-time {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--color-black);
+    }
+
+    .fdl-flight-city {
+      font-size: 26px;
+      color: var(--color-gray-1);
+      margin-top: 6px;
+    }
+
+    .fdl-flight-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fdl-flight-arrow-line {
+      width: 120px;
+      height: 2px;
+      background: var(--color-gray-5);
+      position: relative;
+    }
+
+    .fdl-flight-arrow-line::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid var(--color-gray-4);
+      border-right: 2px solid var(--color-gray-4);
+      transform: rotate(45deg);
+    }
+
+    .fdl-flight-arrow-text {
+      font-size: 20px;
+      color: var(--color-gray-3);
+    }
+
+    .fdl-flight-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 18px;
+    }
+
+    .fdl-flight-price-label {
+      font-size: 24px;
+      color: var(--color-gray-2);
+    }
+
+    .fdl-flight-price-value {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+
+    .fdl-flight-price-unit {
+      font-size: 22px;
+      color: var(--color-gray-3);
+    }
+
+    /* ========== 服务标签 ========== */
+    .fdl-services {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .fdl-service-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 20px;
+      color: var(--color-gray-2);
+    }
+
+    .fdl-service-tag svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-success);
+    }
+
+    /* ========== 乘机人选择 ========== */
+    .fdl-passenger {
+      margin: 18px 30px;
+      padding: 30px;
+      background: var(--color-white);
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-card);
+    }
+
+    .fdl-passenger-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-black);
+      margin-bottom: 24px;
+    }
+
+    .fdl-passenger-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--color-gray-5);
+    }
+
+    .fdl-passenger-item:last-child {
+      border-bottom: none;
+    }
+
+    .fdl-passenger-info {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .fdl-checkbox {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-s);
+      border: 2px solid var(--color-gray-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .fdl-checkbox.checked {
+      background: var(--color-indigo-1);
+      border-color: var(--color-indigo-1);
+    }
+
+    .fdl-checkbox.checked svg {
+      display: block;
+    }
+
+    .fdl-checkbox svg {
+      display: none;
+      width: 20px;
+      height: 20px;
+      color: var(--color-white);
+    }
+
+    .fdl-passenger-name {
+      font-size: 28px;
+      color: var(--color-gray-1);
+    }
+
+    .fdl-passenger-type {
+      font-size: 22px;
+      color: var(--color-gray-3);
+    }
+
+    /* ========== 底部支付栏 ========== */
+    .fdl-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 750px;
+      padding: 18px 30px;
+      padding-bottom: 48px;
+      background: var(--color-white);
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 90;
+    }
+
+    .fdl-bottom-price {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fdl-bottom-total {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .fdl-bottom-total-label {
+      font-size: 24px;
+      color: var(--color-gray-2);
+    }
+
+    .fdl-bottom-total-value {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+
+    .fdl-bottom-detail {
+      font-size: 20px;
+      color: var(--color-info);
+      margin-top: 4px;
+    }
+
+    .fdl-pay-btn {
+      padding: 0 60px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--color-indigo-1), var(--color-indigo-2));
+      color: var(--color-white);
+      font-size: 30px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: var(--shadow-btn);
+    }
+
+    /* ========== 弹窗遮罩 ========== */
+    .fdl-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 750px;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .fdl-modal-overlay.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* ========== 引流弹窗 ========== */
+    .fdl-diversion-modal {
+      width: 750px;
+      background: var(--color-white);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 42px 30px;
+      padding-bottom: 60px;
+      animation: slideUp 0.3s ease;
+    }
+
+    .fdl-diversion-close {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .fdl-diversion-close svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-gray-3);
+    }
+
+    .fdl-diversion-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .fdl-diversion-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #4A90D9, #357ABD);
+      border-radius: var(--radius-m);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fdl-diversion-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--color-white);
+    }
+
+    .fdl-diversion-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--color-black);
+    }
+
+    /* 火车票信息卡 */
+    .fdl-train-card {
+      background: linear-gradient(135deg, #F0F7FF, #E8F4FD);
+      border-radius: var(--radius-l);
+      padding: 30px;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fdl-train-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      background: rgba(74, 144, 217, 0.08);
+      border-radius: 50%;
+    }
+
+    .fdl-train-route {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .fdl-train-station {
+      text-align: center;
+    }
+
+    .fdl-train-station-name {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--color-black);
+    }
+
+    .fdl-train-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fdl-train-number {
+      font-size: 22px;
+      color: #4A90D9;
+      font-weight: 500;
+    }
+
+    .fdl-train-type {
+      font-size: 20px;
+      color: var(--color-gray-3);
+    }
+
+    .fdl-train-line {
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #4A90D9, transparent);
+    }
+
+    .fdl-train-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fdl-train-price-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fdl-train-seat {
+      font-size: 24px;
+      color: var(--color-gray-2);
+    }
+
+    .fdl-train-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .fdl-train-price-symbol {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-price);
+    }
+
+    .fdl-train-price-value {
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+
+    .fdl-train-price-unit {
+      font-size: 22px;
+      color: var(--color-gray-3);
+    }
+
+    .fdl-train-save {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 16px;
+      background: linear-gradient(135deg, #FFF0F0, #FFE8E8);
+      border-radius: var(--radius-full);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-save);
+    }
+
+    /* 弹窗按钮组 */
+    .fdl-diversion-actions {
+      display: flex;
+      gap: 24px;
+    }
+
+    .fdl-btn-leave {
+      flex: 1;
+      height: 88px;
+      background: var(--color-gray-6);
+      color: var(--color-gray-2);
+      font-size: 28px;
+      font-weight: 500;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+    }
+
+    .fdl-btn-train {
+      flex: 1.5;
+      height: 88px;
+      background: linear-gradient(135deg, #4A90D9, #357ABD);
+      color: var(--color-white);
+      font-size: 28px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .fdl-btn-train svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* ========== 页面底部留白 ========== */
+    .fdl-page-spacer {
+      height: 180px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <div class="fdl-nav">
+    <div class="fdl-nav-back" onclick="showDiversionModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </div>
+    <div class="fdl-nav-title">填订单</div>
+    <div class="fdl-nav-placeholder"></div>
+  </div>
+
+  <!-- 步骤条 -->
+  <div class="fdl-steps">
+    <div class="fdl-step active">
+      <div class="fdl-step-dot"></div>
+      填订单
+    </div>
+    <div class="fdl-step-line"></div>
+    <div class="fdl-step">
+      <div class="fdl-step-dot"></div>
+      选服务
+    </div>
+    <div class="fdl-step-line"></div>
+    <div class="fdl-step">
+      <div class="fdl-step-dot"></div>
+      去支付
+    </div>
+  </div>
+
+  <!-- 出票安心提示 -->
+  <div class="fdl-assurance">
+    <span class="fdl-assurance-icon">&#10003;</span>
+    出票安心 支付成功后2小时内完成出票
+  </div>
+
+  <!-- 航班信息卡 -->
+  <div class="fdl-flight-card">
+    <div class="fdl-flight-tag">直飞</div>
+    <div class="fdl-flight-route">
+      <div>
+        <div class="fdl-flight-date">2月13日 周四</div>
+        <div class="fdl-flight-time">18:50</div>
+        <div class="fdl-flight-city">北京</div>
+      </div>
+      <div class="fdl-flight-arrow">
+        <div class="fdl-flight-arrow-line"></div>
+        <div class="fdl-flight-arrow-text">2h 10min</div>
+      </div>
+      <div style="text-align: right;">
+        <div class="fdl-flight-date">&nbsp;</div>
+        <div class="fdl-flight-time">21:00</div>
+        <div class="fdl-flight-city">杭州</div>
+      </div>
+    </div>
+    <div class="fdl-flight-price">
+      <span class="fdl-flight-price-label">成人</span>
+      <span class="fdl-flight-price-value">&yen;655</span>
+      <span class="fdl-flight-price-unit">机建燃油 &yen;70</span>
+    </div>
+    <div class="fdl-services">
+      <div class="fdl-service-tag">
+        <svg viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="8"/></svg>
+        提前改期免费
+      </div>
+      <div class="fdl-service-tag">
+        <svg viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="8"/></svg>
+        托运行李共20公斤
+      </div>
+      <div class="fdl-service-tag">
+        <svg viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="8"/></svg>
+        手提行李1件
+      </div>
+    </div>
+  </div>
+
+  <!-- 乘机人选择 -->
+  <div class="fdl-passenger">
+    <div class="fdl-passenger-title">已选择：2人</div>
+    <div class="fdl-passenger-item">
+      <div class="fdl-passenger-info">
+        <div class="fdl-checkbox checked" onclick="toggleCheckbox(this)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M4 10l4 4 8-8"/>
+          </svg>
+        </div>
+        <div>
+          <div class="fdl-passenger-name">张三</div>
+          <div class="fdl-passenger-type">成人</div>
+        </div>
+      </div>
+    </div>
+    <div class="fdl-passenger-item">
+      <div class="fdl-passenger-info">
+        <div class="fdl-checkbox checked" onclick="toggleCheckbox(this)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M4 10l4 4 8-8"/>
+          </svg>
+        </div>
+        <div>
+          <div class="fdl-passenger-name">李四</div>
+          <div class="fdl-passenger-type">成人</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fdl-page-spacer"></div>
+
+  <!-- 底部支付栏 -->
+  <div class="fdl-bottom-bar">
+    <div class="fdl-bottom-price">
+      <div class="fdl-bottom-total">
+        <span class="fdl-bottom-total-label">共2人</span>
+        <span class="fdl-bottom-total-value">&yen;1450</span>
+      </div>
+      <div class="fdl-bottom-detail">明细 已优惠 &yen;10</div>
+    </div>
+    <button class="fdl-pay-btn">去支付</button>
+  </div>
+
+  <!-- 火车票引流弹窗 -->
+  <div class="fdl-modal-overlay" id="diversionModal">
+    <div class="fdl-diversion-modal" style="position: relative;">
+      <div class="fdl-diversion-close" onclick="closeDiversionModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </div>
+
+      <div class="fdl-diversion-header">
+        <div class="fdl-diversion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 15l4-8h8l4 8M6 15h12M9 15v4M15 15v4M5 19h14"/>
+          </svg>
+        </div>
+        <div class="fdl-diversion-title">火车出行更省钱</div>
+      </div>
+
+      <div class="fdl-train-card">
+        <div class="fdl-train-route">
+          <div class="fdl-train-station">
+            <div class="fdl-train-station-name">北京西站</div>
+          </div>
+          <div class="fdl-train-mid">
+            <div class="fdl-train-number">G11</div>
+            <div class="fdl-train-line"></div>
+            <div class="fdl-train-type">高铁直达</div>
+          </div>
+          <div class="fdl-train-station">
+            <div class="fdl-train-station-name">杭州东站</div>
+          </div>
+        </div>
+
+        <div class="fdl-train-price-row">
+          <div class="fdl-train-price-info">
+            <div class="fdl-train-seat">二等座成人</div>
+            <div class="fdl-train-price">
+              <span class="fdl-train-price-symbol">&yen;</span>
+              <span class="fdl-train-price-value">533</span>
+              <span class="fdl-train-price-unit">/人</span>
+            </div>
+          </div>
+          <div class="fdl-train-save">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 2l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z"/>
+            </svg>
+            立省 &yen;192
+          </div>
+        </div>
+      </div>
+
+      <div class="fdl-diversion-actions">
+        <button class="fdl-btn-leave" onclick="closeDiversionModal()">狠心离开</button>
+        <button class="fdl-btn-train" onclick="goToTrain()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 15l4-8h8l4 8M6 15h12M9 15v4M15 15v4M5 19h14"/>
+          </svg>
+          去看火车票
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 弹窗控制
+    function showDiversionModal() {
+      document.getElementById('diversionModal').classList.add('show');
+    }
+
+    function closeDiversionModal() {
+      document.getElementById('diversionModal').classList.remove('show');
+    }
+
+    function goToTrain() {
+      closeDiversionModal();
+      alert('跳转到火车票 listing 页\n筛选条件：高铁 + 有票\n北京西站 → 杭州东站');
+    }
+
+    function toggleCheckbox(element) {
+      element.classList.toggle('checked');
+    }
+
+    // 点击遮罩关闭弹窗
+    document.getElementById('diversionModal').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeDiversionModal();
+      }
+    });
+  </script>
+
+</body>
+</html>

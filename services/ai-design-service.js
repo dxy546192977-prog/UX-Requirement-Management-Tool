@@ -638,15 +638,31 @@ function _callOpenAiCompat(aiConfig, messages) {
   const apiKey  = aiConfig.apiKey  || '';
   const model   = aiConfig.model   || 'gpt-4o-mini';
 
-  const body = JSON.stringify({ model, messages, temperature: 0.3, max_tokens: 2000 });
+  const body = JSON.stringify({ model, messages, temperature: 0.3, max_tokens: 4096 });
+
+  console.log(`[AiDesign] _callOpenAiCompat → model=${model}, apiBase=${apiBase}, bodyLen=${body.length}`);
 
   return _httpsPost(`${apiBase}/v1/chat/completions`, {
     'Authorization': `Bearer ${apiKey}`,
     'Content-Type':  'application/json'
-  }, body).then((resp) => {
+  }, body, 120000).then((resp) => {
+    console.log(`[AiDesign] _callOpenAiCompat ← resp keys: ${Object.keys(resp).join(',')}`);
+    if (resp.error) {
+      console.error(`[AiDesign] _callOpenAiCompat API error:`, JSON.stringify(resp.error).slice(0, 500));
+      throw new Error(`AI API error: ${resp.error.message || JSON.stringify(resp.error).slice(0, 200)}`);
+    }
     const choice = resp.choices && resp.choices[0];
-    if (!choice) throw new Error('AI 返回内容为空');
-    return choice.message.content;
+    if (!choice) {
+      console.error(`[AiDesign] _callOpenAiCompat — no choices in response:`, JSON.stringify(resp).slice(0, 500));
+      throw new Error('AI 返回内容为空 (no choices)');
+    }
+    const content = choice.message && choice.message.content;
+    if (!content) {
+      console.error(`[AiDesign] _callOpenAiCompat — empty content, choice:`, JSON.stringify(choice).slice(0, 500));
+      throw new Error('AI 返回内容为空 (empty content)');
+    }
+    console.log(`[AiDesign] _callOpenAiCompat ← content length: ${content.length}`);
+    return content;
   });
 }
 
@@ -657,16 +673,24 @@ function _callQwen(aiConfig, messages) {
   const body = JSON.stringify({
     model,
     input: { messages },
-    parameters: { result_format: 'message', temperature: 0.3, max_tokens: 2000 }
+    parameters: { result_format: 'message', temperature: 0.3, max_tokens: 4096 }
   });
+
+  console.log(`[AiDesign] _callQwen → model=${model}, bodyLen=${body.length}`);
 
   return _httpsPost('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
     'Authorization': `Bearer ${apiKey}`,
     'Content-Type':  'application/json'
-  }, body).then((resp) => {
+  }, body, 120000).then((resp) => {
+    console.log(`[AiDesign] _callQwen ← resp keys: ${Object.keys(resp).join(',')}`);
     const choice = resp.output && resp.output.choices && resp.output.choices[0];
-    if (!choice) throw new Error('Qwen 返回内容为空');
-    return choice.message.content;
+    if (!choice) {
+      console.error(`[AiDesign] _callQwen — no choices:`, JSON.stringify(resp).slice(0, 500));
+      throw new Error('Qwen 返回内容为空');
+    }
+    const content = choice.message && choice.message.content;
+    console.log(`[AiDesign] _callQwen ← content length: ${(content || '').length}`);
+    return content;
   });
 }
 
@@ -684,7 +708,8 @@ function _buildVisionUserContent(text, imageUrls, visionEnabled) {
   return content;
 }
 
-function _httpsPost(url, headers, body) {
+function _httpsPost(url, headers, body, timeoutMs) {
+  const timeout = timeoutMs || 120000;
   return new Promise((resolve, reject) => {
     const parsed   = new URL(url);
     const isHttps  = parsed.protocol === 'https:';
@@ -695,8 +720,6 @@ function _httpsPost(url, headers, body) {
       path:             parsed.pathname + parsed.search,
       method:           'POST',
       headers:          { ...headers, 'Content-Length': Buffer.byteLength(body) },
-      // Node.js v17+ OpenSSL 对部分服务器 TLS 握手更严格（SSL alert 40）
-      // 使用 SSL_OP_LEGACY_SERVER_CONNECT 兼容旧式握手（仅限内网开发环境）
       rejectUnauthorized: false,
       secureOptions:    crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT
     };
@@ -713,13 +736,13 @@ function _httpsPost(url, headers, body) {
           }
           resolve(json);
         } catch (err) {
-          reject(new Error('Failed to parse AI response: ' + err.message));
+          reject(new Error('Failed to parse AI response: ' + data.slice(0, 300)));
         }
       });
     });
 
     req.on('error', (err) => reject(new Error('AI request failed: ' + err.message)));
-    req.setTimeout(60000, () => { req.destroy(); reject(new Error('AI request timed out (60s)')); });
+    req.setTimeout(timeout, () => { req.destroy(); reject(new Error(`AI request timed out (${timeout / 1000}s)`)); });
     req.write(body);
     req.end();
   });
