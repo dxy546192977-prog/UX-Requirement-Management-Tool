@@ -310,11 +310,18 @@
     .modal {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); width: 90%; max-width: 640px;
-      max-height: 80vh; overflow-y: auto;
+      max-height: 80vh; overflow: hidden;
+      display: flex; flex-direction: column;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
+    .modal-sticky-section {
+      position: sticky; top: 0; z-index: 5;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
     .modal-header {
-      padding: 24px 28px 16px; border-bottom: 1px solid var(--border);
+      padding: 24px 28px 16px;
       display: flex; justify-content: space-between; align-items: flex-start;
     }
     .modal-title-area { flex: 1; }
@@ -327,7 +334,14 @@
       transition: all 0.2s; flex-shrink: 0;
     }
     .modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
-    .modal-body { padding: 20px 28px 28px; }
+    .modal-body { padding: 20px 28px 20px; }
+    .modal-scroll-content {
+      flex: 1;
+      min-height: 0;
+      padding: 18px 28px 28px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
     .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
     .modal-summary {
       font-size: 14px; color: var(--text-secondary); line-height: 1.7;
@@ -850,7 +864,8 @@
         border-radius: var(--radius) var(--radius) 0 0;
       }
       .modal-header { padding: 16px 18px 12px; }
-      .modal-body { padding: 14px 18px 24px; }
+      .modal-body { padding: 14px 18px 16px; }
+      .modal-scroll-content { padding: 12px 18px 24px; }
       .modal-name { font-size: 15px; }
       .submit-modal {
         width: 100%; max-width: 100%;
@@ -1071,6 +1086,27 @@
     .ai-change-reuse   { background: rgba(52,211,153,0.12);  color: var(--accent-green); }
     .ai-module-intent  { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
     .ai-module-notes   { font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .ai-module-review  {
+      margin-top: 6px; padding: 8px 10px; border-radius: var(--radius-sm);
+      background: rgba(99,102,241,0.04); border: 1px solid rgba(99,102,241,0.1);
+    }
+    .ai-review-header  { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .ai-review-gate    {
+      display: inline-flex; align-items: center; padding: 1px 6px;
+      border-radius: 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .ai-review-gate-pass       { background: rgba(52,211,153,0.12); color: #34d399; }
+    .ai-review-gate-notes      { background: rgba(251,191,36,0.12); color: #d97706; }
+    .ai-review-gate-blocked    { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .ai-review-dims   { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .ai-review-dim     {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 1px 6px; border-radius: 6px; font-size: 9px; font-weight: 500;
+    }
+    .ai-dim-pass       { background: rgba(52,211,153,0.08); color: #34d399; }
+    .ai-dim-advisory   { background: rgba(251,191,36,0.08); color: #d97706; }
+    .ai-dim-blocking   { background: rgba(239,68,68,0.08); color: #ef4444; }
+    .ai-review-summary { font-size: 10px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
     .ai-module-status-confirmed { border-color: rgba(52,211,153,0.3); }
     .ai-module-confirmed-tag {
       display: inline-flex; align-items: center; gap: 4px;
@@ -1907,7 +1943,8 @@ function openModal(reqId) {
   const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
 
   const modal = document.getElementById("modalContent");
-  modal.innerHTML = '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-name">' + escapeHtml(req.name) + '</div></div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
+  modal.innerHTML = '<div class="modal-sticky-section">'
+    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-name">' + escapeHtml(req.name) + '</div></div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
     + '<div class="modal-body">'
     + '<div class="modal-meta"><span class="badge badge-status ' + meta.cssClass + '">' + escapeHtml(req.status) + '</span><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">' + escapeHtml(req.part) + '</span></div>'
     + '<div class="modal-summary">' + escapeHtml(req.summary) + '</div>'
@@ -1920,7 +1957,10 @@ function openModal(reqId) {
       : '<button class="modal-link-add-design" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>+ Add Design</button>')
     + '</div>'
     + (req.notes ? '<div class="modal-notes">' + req.notes + '</div>' : '')
-    + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Owner: ' + req.owner + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
+    + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">提交人: ' + (req.owner || '未指定') + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
+    + '</div>'
+    + '</div>'
+    + '<div class="modal-scroll-content">'
     + renderStatusHistory(req)
     + renderAiDesignSection(req)
     + '</div>';
@@ -1948,18 +1988,37 @@ function forceCloseModal() {
 }
 
 // ==================== PRD URL Prompt ====================
-function promptPrdUrl(reqId) {
+async function promptPrdUrl(reqId) {
   const req = requirementsData.requirements.find(r => r.id === reqId);
   if (!req) return;
 
   const url = prompt("请输入语雀 PRD 链接：");
   if (url && url.trim()) {
-    req.prd_url = url.trim();
+    var prdUrl = url.trim();
+    req.prd_url = prdUrl;
+    var creatorSynced = false;
+
+    // 补充 PRD 时，优先同步语雀作者到提交人
+    try {
+      var docInfo = await fetchYuqueDocInfo(prdUrl);
+      var creator = resolveYuqueDocCreator(docInfo);
+      if (creator) {
+        req.owner = creator;
+        creatorSynced = true;
+      }
+    } catch (err) {
+      console.warn("[Yuque] Failed to enrich creator on promptPrdUrl:", err.message);
+    }
+
     req.updated_at = todayStr();
     saveData();
     openModal(reqId);
     renderKanban();
-    showToast("PRD 链接已保存", "success");
+    if (creatorSynced) {
+      showToast("PRD 链接已保存，已同步语雀作者为提交人", "success");
+    } else {
+      showToast("PRD 链接已保存，暂未识别语雀作者", "success");
+    }
   }
 }
 
@@ -2003,7 +2062,7 @@ function openEditModal(reqId) {
     + '<div class="form-row"><div><label>Part</label><select id="editPartSelect">' + partOptions + '</select></div>'
     + '<div><label>Priority</label><select id="editPrioritySelect">' + priorityOptions + '</select></div></div>'
     + '<div class="form-row"><div><label>Status</label><select id="editStatusSelect">' + statusOptions + '</select></div>'
-    + '<div><label>Owner</label><input type="text" id="editOwnerInput" value="' + (req.owner || '').replace(/"/g, '&quot;') + '" /></div></div>'
+    + '<div><label>提交人</label><input type="text" id="editOwnerInput" value="' + (req.owner || '').replace(/"/g, '&quot;') + '" /></div></div>'
     + '<label>Summary</label>'
     + '<textarea id="editSummaryInput">' + (req.summary || '') + '</textarea>'
     + '<label>PRD URL</label>'
@@ -2093,17 +2152,17 @@ function closeSubmitModal(event) {
 // ==================== Yuque URL & Text Parser ====================
 
 /**
- * Parse title and author from pasted Yuque link text.
+ * Parse title and URL from pasted Yuque link text.
  *
  * Supported input formats:
  *   "https://aliyuque.antfin.com/.../fgc6um08yipggeg3# 《通程权益表达（用户端）》"
  *   "https://aliyuque.antfin.com/.../fgc6um08yipggeg3/collaborator/join?token=...# 《通程权益表达（用户端）》"
  *   "https://aliyuque.antfin.com/journey.fyn/xolgry/fgc6um08yipggeg3"
  *
- * Returns: { title, author, cleanUrl }
+ * Returns: { title, cleanUrl }
  */
 function parseYuquePastedText(rawText) {
-  var result = { title: null, author: null, cleanUrl: rawText.trim() };
+  var result = { title: null, cleanUrl: rawText.trim() };
 
   // 1. Extract title from 《...》
   var titleMatch = rawText.match(/[《]([^》]+)[》]/);
@@ -2120,22 +2179,6 @@ function parseYuquePastedText(rawText) {
     cleanUrl = rawText.trim().split(/\s/)[0]; // fallback: take first URL-like part
   }
   result.cleanUrl = cleanUrl;
-
-  // 3. Extract author login from URL path (e.g., journey.fyn)
-  try {
-    var urlPart = cleanUrl.split('#')[0].split('?')[0];
-    var urlObj = new URL(urlPart);
-    var segments = urlObj.pathname.replace(/^\//, '').split('/').filter(Boolean);
-    // Skip leading 'g' segment if present (e.g., /g/journey.fyn/...)
-    if (segments[0] === 'g' && segments.length > 1) {
-      segments.shift();
-    }
-    if (segments.length >= 1) {
-      result.author = segments[0]; // e.g., "journey.fyn"
-    }
-  } catch (e) {
-    // ignore parse errors
-  }
 
   return result;
 }
@@ -2194,6 +2237,24 @@ async function fetchYuqueDocInfo(prdUrl) {
     }
     throw err;
   }
+}
+
+function resolveYuqueDocCreator(docInfo) {
+  if (!docInfo || typeof docInfo !== "object") return "";
+  var candidates = [
+    docInfo.creator,
+    docInfo.creator_name,
+    docInfo.creatorName,
+    docInfo.author,
+    docInfo.author_name
+  ];
+  for (var i = 0; i < candidates.length; i += 1) {
+    var value = candidates[i];
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+  return "";
 }
 
 function setSubmitBtnLoading(loading) {
@@ -2343,26 +2404,34 @@ async function handleSubmitReq() {
   // Step 1: Parse from pasted text (always works, no API needed)
   var parsed = parseYuquePastedText(rawInput);
   var docTitle = parsed.title || "New Requirement (from PRD)";
-  var docCreator = parsed.author || "未指定";
+  var docCreator = "";
   var prdUrl = parsed.cleanUrl;
   var docSummary = "待补充 - PRD 链接已提交";
 
-  console.log("[Yuque] Parsed from text - Title:", docTitle, "Author:", docCreator, "URL:", prdUrl);
+  console.log("[Yuque] Parsed from text - Title:", docTitle, "URL:", prdUrl);
 
-  // Step 2: Try API for richer info (title override, real name, description)
+  // Step 2: Pull PRD author/title/summary from Yuque API
   setSubmitBtnLoading(true);
 
   try {
     var docInfo = await fetchYuqueDocInfo(prdUrl);
     // API title overrides text-parsed title (more accurate)
     if (docInfo.title) docTitle = docInfo.title;
-    // API creator name overrides login (real name vs login)
-    if (docInfo.creator) docCreator = docInfo.creator;
+    // 提交人必须来自语雀 PRD 作者
+    docCreator = resolveYuqueDocCreator(docInfo);
     if (docInfo.description) docSummary = docInfo.description;
     console.log("[Yuque] API enriched - Title:", docTitle, "Creator:", docCreator);
   } catch (err) {
-    console.log("[Yuque] API unavailable, using text-parsed values:", err.message);
-    // No toast needed - text parsing already gave us good values
+    console.log("[Yuque] API unavailable:", err.message);
+    setSubmitBtnLoading(false);
+    showToast("无法获取语雀 PRD 作者，请检查链接或稍后重试", "error");
+    return;
+  }
+
+  if (!docCreator) {
+    setSubmitBtnLoading(false);
+    showToast("未识别到语雀 PRD 作者，暂无法提交该需求", "error");
+    return;
   }
 
   setSubmitBtnLoading(false);
@@ -2876,6 +2945,35 @@ function renderAiDesignSection(req) {
       if (mod.notes) {
         html += '<div class="ai-module-notes">备注：' + escapeHtml(mod.notes) + '</div>';
       }
+      // Gstack 四维审查结果
+      if (mod.review) {
+        var gateClass = { 'PASS': 'ai-review-gate-pass', 'PASS_WITH_NOTES': 'ai-review-gate-notes', 'BLOCKED': 'ai-review-gate-blocked' }[mod.review.gate_result] || 'ai-review-gate-pass';
+        var gateLabel = { 'PASS': 'PASS', 'PASS_WITH_NOTES': 'NOTES', 'BLOCKED': 'BLOCKED' }[mod.review.gate_result] || mod.review.gate_result;
+        html += '<div class="ai-module-review">';
+        html += '<div class="ai-review-header">'
+          + '<span class="ai-review-gate ' + gateClass + '">' + gateLabel + '</span>'
+          + '<span style="font-size:9px;color:var(--text-muted)">Gstack 审查</span>'
+          + '</div>';
+        if (mod.review.dimensions) {
+          html += '<div class="ai-review-dims">';
+          var dimLabels = { styleguide_branding: '品牌', color_typography: '排版', usability_review: '可用性', user_testing: '测试' };
+          var dimKeys = ['styleguide_branding', 'color_typography', 'usability_review', 'user_testing'];
+          dimKeys.forEach(function(dk) {
+            var dim = mod.review.dimensions[dk];
+            if (dim) {
+              var dimClass = { 'PASS': 'ai-dim-pass', 'ADVISORY': 'ai-dim-advisory', 'BLOCKING': 'ai-dim-blocking' }[dim.verdict] || 'ai-dim-pass';
+              html += '<span class="ai-review-dim ' + dimClass + '" title="' + escapeHtml(dim.note || '') + '">'
+                + (dimLabels[dk] || dk) + ':' + (dim.verdict || 'PASS')
+                + '</span>';
+            }
+          });
+          html += '</div>';
+        }
+        if (mod.review.summary) {
+          html += '<div class="ai-review-summary">' + escapeHtml(mod.review.summary) + '</div>';
+        }
+        html += '</div>';
+      }
       html += '</div>';
     });
   } else if (!isRunning && ai.status !== 'failed') {
@@ -2891,6 +2989,7 @@ function _stageLabel(stage) {
     fetching_prd:  '正在拉取 PRD 正文…',
     decomposing:   '正在拆解需求…',
     planning:      '正在生成设计方案…',
+    reviewing:     '正在进行设计审查…',
     generating_h5: '正在生成 H5 设计稿…'
   };
   return map[stage] || 'AI 处理中…';
@@ -2903,16 +3002,18 @@ function _stageLabel(stage) {
 function _calcAiProgress(ai) {
   // 各阶段在整体进度中的区间 [start%, end%]
   var stageRanges = {
-    fetching_prd:  [2,  20],
-    decomposing:   [20, 45],
-    planning:      [45, 65],
-    generating_h5: [65, 95]
+    fetching_prd:  [2,  18],
+    decomposing:   [18, 38],
+    planning:      [38, 55],
+    reviewing:     [55, 68],
+    generating_h5: [68, 95]
   };
   // 各阶段预估持续秒数
   var stageDurations = {
     fetching_prd:  15,
     decomposing:   30,
     planning:      30,
+    reviewing:     20,
     generating_h5: 60
   };
   // 总预估秒数
@@ -3135,7 +3236,7 @@ function _refreshAiSectionIfOpen(req) {
   if (!idEl || idEl.textContent !== req.id) return;
 
   // 找到或创建 AI 区块容器
-  var body = document.querySelector('#modalContent .modal-body');
+  var body = document.querySelector('#modalContent .modal-scroll-content');
   if (!body) return;
   var existing = body.querySelector('.ai-section');
   var newHtml   = renderAiDesignSection(req);
