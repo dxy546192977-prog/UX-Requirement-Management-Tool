@@ -25,6 +25,29 @@ function parseYuqueUrl(yuqueUrl) {
   }
 }
 
+/**
+ * 清洗语雀 URL：去掉协作者邀请后缀、/g/ 前缀、/markdown 后缀等，转换为标准文档链接
+ * 例如：
+ *   https://aliyuque.antfin.com/g/journey.fyn/xolgry/yay0cg2a0f0kskyc/collaborator/join?token=xxx
+ *   → https://aliyuque.antfin.com/journey.fyn/xolgry/yay0cg2a0f0kskyc
+ */
+function _cleanYuqueUrl(rawUrl) {
+  try {
+    const parsed = new URL(rawUrl);
+    const segments = parsed.pathname.replace(/^\//, '').split('/').filter(Boolean);
+    // 跳过 "g" 前缀段
+    if (segments[0] === 'g' && segments.length > 1) segments.shift();
+    // 只取前 3 段：group_login / book_slug / doc_slug
+    if (segments.length >= 3) {
+      const cleanPath = segments.slice(0, 3).join('/');
+      return `${parsed.protocol}//${parsed.host}/${cleanPath}`;
+    }
+    return rawUrl;
+  } catch {
+    return rawUrl;
+  }
+}
+
 function _pickDocBody(docData) {
   return docData.body_lake || docData.body || docData.body_draft || docData.description || '';
 }
@@ -127,18 +150,20 @@ function fetchPrdViaYuqueFetch(prdUrl) {
  * 当 OpenAPI Token 无权限（404）时，自动降级使用 ali-mcpcli 读取
  */
 async function fetchPrdFull(config, prdUrl) {
-  const parts = parseYuqueUrl(prdUrl);
+  // 清洗 URL：去掉协作者邀请后缀、/g/ 前缀等，转换为标准文档链接
+  const cleanedUrl = _cleanYuqueUrl(prdUrl);
+  const parts = parseYuqueUrl(cleanedUrl);
   if (!parts) throw new Error(`无法解析语雀 URL: ${prdUrl}`);
 
   let docData;
   try {
     docData = await fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
   } catch (err) {
-    // 当 OpenAPI 返回 404 时，尝试用 ali-mcpcli 降级读取
+    // 当 OpenAPI 返回 404 时，尝试用 yuque-fetch.mjs 降级读取（使用清洗后的 URL）
     if (err.message && err.message.includes('404')) {
-      console.warn(`[Yuque] OpenAPI 404，尝试 yuque-fetch.mjs 降级读取: ${prdUrl}`);
+      console.warn(`[Yuque] OpenAPI 404，尝试 yuque-fetch.mjs 降级读取: ${cleanedUrl}`);
       try {
-        docData = await fetchPrdViaYuqueFetch(prdUrl);
+        docData = await fetchPrdViaYuqueFetch(cleanedUrl);
       } catch (fetchErr) {
         console.warn(`[Yuque] yuque-fetch.mjs 降级也失败: ${fetchErr.message}`);
         throw err; // 抛出原始错误
