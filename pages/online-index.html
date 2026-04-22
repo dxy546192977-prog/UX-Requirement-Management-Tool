@@ -1106,7 +1106,13 @@
     .ai-dim-pass       { background: rgba(52,211,153,0.08); color: #34d399; }
     .ai-dim-advisory   { background: rgba(251,191,36,0.08); color: #d97706; }
     .ai-dim-blocking   { background: rgba(239,68,68,0.08); color: #ef4444; }
-    .ai-review-summary { font-size: 10px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+    .ai-review-detail-list { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+    .ai-review-detail-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .ai-review-detail-item:last-child { border-bottom: none; }
+    .ai-review-detail-header { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+    .ai-review-detail-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); }
+    .ai-review-detail-note { font-size: 10px; color: var(--text-muted); line-height: 1.5; padding-left: 2px; }
+    .ai-review-summary { font-size: 10px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; padding: 4px 6px; background: rgba(255,255,255,0.02); border-radius: 4px; }
     .ai-module-status-confirmed { border-color: rgba(52,211,153,0.3); }
     .ai-module-confirmed-tag {
       display: inline-flex; align-items: center; gap: 4px;
@@ -2988,27 +2994,41 @@ function renderAiDesignSection(req) {
         var gateClass = { 'PASS': 'ai-review-gate-pass', 'PASS_WITH_NOTES': 'ai-review-gate-notes', 'BLOCKED': 'ai-review-gate-blocked' }[mod.review.gate_result] || 'ai-review-gate-pass';
         var gateLabel = { 'PASS': 'PASS', 'PASS_WITH_NOTES': 'NOTES', 'BLOCKED': 'BLOCKED' }[mod.review.gate_result] || mod.review.gate_result;
         html += '<div class="ai-module-review">';
+        // 审查头部：来源 + 总结论
         html += '<div class="ai-review-header">'
           + '<span class="ai-review-gate ' + gateClass + '">' + gateLabel + '</span>'
-          + '<span style="font-size:9px;color:var(--text-muted)">Gstack 审查</span>'
+          + '<span style="font-size:9px;color:var(--text-muted)">Gstack awesome-design-gates 审查</span>'
           + '</div>';
+        // 四维审查详情（展开每个维度的具体建议）
         if (mod.review.dimensions) {
-          html += '<div class="ai-review-dims">';
-          var dimLabels = { styleguide_branding: '品牌', color_typography: '排版', usability_review: '可用性', user_testing: '测试' };
+          var dimLabels = {
+            styleguide_branding: 'Styleguide & Branding',
+            color_typography:    'Color & Typography',
+            usability_review:    'Usability Review',
+            user_testing:        'User Testing'
+          };
           var dimKeys = ['styleguide_branding', 'color_typography', 'usability_review', 'user_testing'];
+          html += '<div class="ai-review-detail-list">';
           dimKeys.forEach(function(dk) {
             var dim = mod.review.dimensions[dk];
             if (dim) {
               var dimClass = { 'PASS': 'ai-dim-pass', 'ADVISORY': 'ai-dim-advisory', 'BLOCKING': 'ai-dim-blocking' }[dim.verdict] || 'ai-dim-pass';
-              html += '<span class="ai-review-dim ' + dimClass + '" title="' + escapeHtml(dim.note || '') + '">'
-                + (dimLabels[dk] || dk) + ':' + (dim.verdict || 'PASS')
-                + '</span>';
+              html += '<div class="ai-review-detail-item">'
+                + '<div class="ai-review-detail-header">'
+                + '<span class="ai-review-dim ' + dimClass + '">' + (dim.verdict || 'PASS') + '</span>'
+                + '<span class="ai-review-detail-label">' + (dimLabels[dk] || dk) + '</span>'
+                + '</div>';
+              if (dim.note) {
+                html += '<div class="ai-review-detail-note">' + escapeHtml(dim.note) + '</div>';
+              }
+              html += '</div>';
             }
           });
           html += '</div>';
         }
+        // 审查总结
         if (mod.review.summary) {
-          html += '<div class="ai-review-summary">' + escapeHtml(mod.review.summary) + '</div>';
+          html += '<div class="ai-review-summary"><strong>审查结论：</strong>' + escapeHtml(mod.review.summary) + '</div>';
         }
         html += '</div>';
       }
