@@ -2239,6 +2239,25 @@ async function fetchYuqueDocInfo(prdUrl) {
   }
 }
 
+// 语雀用户名 → 花名映射表
+// 格式：{ "yuque_login": "花名" }
+// 新增成员时在此添加即可
+const YUQUE_NAME_MAP = {
+  "journey.fyn":  "良予",
+  "dengxinyang":  "良予",
+  "xiyu":         "晰予",
+  "sunli":        "孙笠",
+  "yiman":        "以慢",
+  "xinchuan":     "新川",
+  "loulan":       "楼兰",
+  "chefei":       "澈飞",
+  "zhixian":      "之娴",
+  "chenfang":     "宸芳",
+  "longcheng":    "龙城",
+  "shugui":       "黍归",
+  "youjin":       "又今"
+};
+
 function resolveYuqueDocCreator(docInfo) {
   if (!docInfo || typeof docInfo !== "object") return "";
   var candidates = [
@@ -2248,13 +2267,32 @@ function resolveYuqueDocCreator(docInfo) {
     docInfo.author,
     docInfo.author_name
   ];
+  var rawName = "";
   for (var i = 0; i < candidates.length; i += 1) {
     var value = candidates[i];
     if (typeof value === "string" && value.trim()) {
-      return value.trim();
+      rawName = value.trim();
+      break;
     }
   }
-  return "";
+  if (!rawName) return "";
+
+  // 尝试花名映射：先精确匹配，再模糊匹配（用户名可能带后缀如 .fyn）
+  if (YUQUE_NAME_MAP[rawName]) return YUQUE_NAME_MAP[rawName];
+
+  // 模糊匹配：检查 rawName 是否包含映射表中的 key，或 key 是否包含 rawName
+  for (var key in YUQUE_NAME_MAP) {
+    if (rawName.includes(key) || key.includes(rawName)) {
+      return YUQUE_NAME_MAP[key];
+    }
+  }
+
+  // 如果 rawName 本身已经是中文花名（在 PART_OWNER_MAP 中），直接返回
+  for (var part in PART_OWNER_MAP) {
+    if (PART_OWNER_MAP[part].includes(rawName)) return rawName;
+  }
+
+  return rawName;
 }
 
 function setSubmitBtnLoading(loading) {
