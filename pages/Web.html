@@ -2548,24 +2548,33 @@ function closeSubmitModal(event) {
  * Returns: { title, cleanUrl }
  */
 function parseYuquePastedText(rawText) {
-  var result = { title: null, cleanUrl: rawText.trim() };
+  var result = { title: null, cleanUrl: (rawText || "").trim() };
+  if (!rawText) return result;
 
-  // 1. Extract title from 《...》
   var titleMatch = rawText.match(/[《]([^》]+)[》]/);
   if (titleMatch) {
     result.title = titleMatch[1].trim();
   }
 
-  // 2. Clean URL: remove everything after # (including title suffix)
-  var cleanUrl = rawText.trim();
-  // Remove 《title》 part
-  cleanUrl = cleanUrl.replace(/[#＃]\s*[《].*[》].*$/, '').trim();
-  // Also handle case where # is part of anchor but not title
-  if (!cleanUrl.match(/^https?:\/\//)) {
-    cleanUrl = rawText.trim().split(/\s/)[0]; // fallback: take first URL-like part
-  }
-  result.cleanUrl = cleanUrl;
+  var urlMatch = rawText.match(/https?:\/\/[^\s<>《》"']+/);
+  var cleanUrl = urlMatch ? urlMatch[0] : rawText.trim().split(/\s/)[0];
 
+  cleanUrl = cleanUrl.replace(/[#＃].*$/, "").trim();
+
+  try {
+    var parsed = new URL(cleanUrl);
+    var segments = parsed.pathname.replace(/^\//, "").split("/").filter(Boolean);
+    if (segments[0] === "g" && segments.length > 1) segments.shift();
+    if (segments.length >= 3) {
+      cleanUrl = parsed.protocol + "//" + parsed.host + "/" + segments.slice(0, 3).join("/");
+    } else {
+      cleanUrl = parsed.protocol + "//" + parsed.host + parsed.pathname;
+    }
+  } catch (e) {
+    // 非标准 URL，保持上面的字符串兜底结果
+  }
+
+  result.cleanUrl = cleanUrl;
   return result;
 }
 
@@ -2595,34 +2604,92 @@ function apiUrl(path) {
   return base + p;
 }
 
-async function fetchYuqueDocInfo(prdUrl) {
-  if (!API_BASE) {
-    throw new Error("No API proxy configured");
-  }
+// 语雀 Token（内部工具，前端直连降级用）
+const YUQUE_TOKEN = "cjknt7Zps0surcgKcmgQVCWI8wcGimd00DFCcK4N";
+const YUQUE_API_BASE = "https://yuque-api.antfin-inc.com";
 
+/**
+ * 从语雀 URL 中解析出 group_login / book_slug / doc_slug
+ */
+function parseYuqueUrlParts(yuqueUrl) {
+  try {
+    var parsed = new URL(yuqueUrl);
+    var segments = parsed.pathname.replace(/^\//, "").split("/").filter(Boolean);
+    if (segments[0] === "g" && segments.length > 1) segments.shift();
+    if (segments.length < 3) return null;
+    return { group_login: segments[0], book_slug: segments[1], doc_slug: segments[2] };
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * 浏览器直连语雀 OpenAPI（用户在内网时可用，绕过 ECS 代理）
+ */
+async function fetchYuqueDocDirect(prdUrl) {
+  var parts = parseYuqueUrlParts(prdUrl);
+  if (!parts) throw new Error("无法解析语雀 URL");
+
+  var apiUrl = YUQUE_API_BASE + "/api/v2/repos/" + parts.group_login + "/" + parts.book_slug + "/docs/" + parts.doc_slug;
   var controller = new AbortController();
-  var timeoutId = setTimeout(function() { controller.abort(); }, 8000);
+  var timeoutId = setTimeout(function() { controller.abort(); }, 15000);
 
   try {
-    var res = await fetch(
-      API_BASE + "/api/yuque/doc?url=" + encodeURIComponent(prdUrl),
-      { signal: controller.signal }
-    );
+    var res = await fetch(apiUrl, {
+      signal: controller.signal,
+      headers: { "X-Auth-Token": YUQUE_TOKEN, "Content-Type": "application/json" }
+    });
     clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      var err = await res.json().catch(function() { return {}; });
-      throw new Error(err.error || "HTTP " + res.status);
-    }
-
-    return await res.json();
+    if (!res.ok) throw new Error("Yuque direct API HTTP " + res.status);
+    var json = await res.json();
+    var docData = json.data || json;
+    var creatorObj = docData.creator || docData.user || {};
+    return {
+      title: docData.title || "Untitled",
+      creator: creatorObj.name || creatorObj.login || creatorObj.nickname || "",
+      creator_login: creatorObj.login || "",
+      description: docData.description || ""
+    };
   } catch (err) {
     clearTimeout(timeoutId);
-    if (err.name === "AbortError") {
-      throw new Error("Request timed out");
-    }
+    if (err.name === "AbortError") throw new Error("Direct request timed out");
     throw err;
   }
+}
+
+async function fetchYuqueDocInfo(prdUrl) {
+  // 优先走 proxy（本地 localhost 或 ECS）
+  if (API_BASE) {
+    var controller = new AbortController();
+    // 后端 OpenAPI (30s) + Skylark (15s) 均可能串行执行，前端超时放宽到 45s
+    var timeoutId = setTimeout(function() { controller.abort(); }, 45000);
+
+    try {
+      var res = await fetch(
+        API_BASE + "/api/yuque/doc?url=" + encodeURIComponent(prdUrl),
+        { signal: controller.signal }
+      );
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        return await res.json();
+      }
+      // proxy 返回错误，记录后降级
+      var errBody = await res.json().catch(function() { return {}; });
+      console.warn("[Yuque] Proxy failed (" + (errBody.error || "HTTP " + res.status) + ")，降级到浏览器直连");
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === "AbortError") {
+        console.warn("[Yuque] Proxy timed out，降级到浏览器直连");
+      } else {
+        console.warn("[Yuque] Proxy error (" + err.message + ")，降级到浏览器直连");
+      }
+    }
+  }
+
+  // 降级：浏览器直连语雀 OpenAPI（用户在内网时可用）
+  console.log("[Yuque] 尝试浏览器直连语雀 API...");
+  return await fetchYuqueDocDirect(prdUrl);
 }
 
 // 语雀用户名 → 花名映射表
@@ -2650,10 +2717,13 @@ function resolveYuqueDocCreator(docInfo) {
     docInfo.creator,
     docInfo.creator_name,
     docInfo.creatorName,
+    docInfo.creator_login,
     docInfo.author,
-    docInfo.author_name
+    docInfo.author_name,
+    docInfo.author_login
   ];
   var rawName = "";
+  var loginHint = typeof docInfo.creator_login === "string" ? docInfo.creator_login.trim() : "";
   for (var i = 0; i < candidates.length; i += 1) {
     var value = candidates[i];
     if (typeof value === "string" && value.trim()) {
@@ -2661,14 +2731,16 @@ function resolveYuqueDocCreator(docInfo) {
       break;
     }
   }
+  if (!rawName && loginHint) rawName = loginHint;
   if (!rawName) return "";
 
-  // 尝试花名映射：先精确匹配，再模糊匹配（用户名可能带后缀如 .fyn）
+  var loginKey = loginHint || rawName;
+  if (YUQUE_NAME_MAP[loginKey]) return YUQUE_NAME_MAP[loginKey];
   if (YUQUE_NAME_MAP[rawName]) return YUQUE_NAME_MAP[rawName];
 
-  // 模糊匹配：检查 rawName 是否包含映射表中的 key，或 key 是否包含 rawName
+  // 模糊匹配：优先使用 login，fallback 到展示名
   for (var key in YUQUE_NAME_MAP) {
-    if (rawName.includes(key) || key.includes(rawName)) {
+    if (loginKey.includes(key) || key.includes(loginKey) || rawName.includes(key) || key.includes(rawName)) {
       return YUQUE_NAME_MAP[key];
     }
   }
@@ -3210,6 +3282,7 @@ var _aiPollTimers = {};
 function renderAiBadge(req) {
   var ai = req.ai_design;
   if (!ai || !ai.status || ai.status === 'idle') return '';
+  if (ai.status === 'needs_confirmation') return '';
 
   var labelMap = {
     queued:               '⏳ AI 排队中',

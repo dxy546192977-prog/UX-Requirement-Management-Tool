@@ -87,8 +87,10 @@ function skylarkDocDetail(docId) {
  * 返回格式：{ title, creator, creator_login, description, doc_id }
  */
 async function fetchDocViaSkylark(yuqueUrl) {
+  // Step 0: 先清洗 URL，去掉 /g/ 前缀、/collaborator/join 等协作者邀请后缀
+  const cleanedUrl = cleanYuqueUrl(yuqueUrl);
   // Step 1: 解析 URL 获取 doc_id
-  const resolved = await skylarkResolveUrl(yuqueUrl);
+  const resolved = await skylarkResolveUrl(cleanedUrl);
   if (resolved.type.toLowerCase() !== 'doc') {
     throw new Error(`URL 解析结果类型不是 doc，而是 ${resolved.type}`);
   }
@@ -114,12 +116,14 @@ async function fetchDocViaSkylark(yuqueUrl) {
 
 /**
  * 从语雀 URL 中解析出 group_login / book_slug / doc_slug
+ * 自动做 URL 清洗（去掉 /g/ 前缀、/collaborator/join 后缀等），保证解析稳定
  */
 function parseYuqueUrl(yuqueUrl) {
   try {
-    const parsed = new URL(yuqueUrl);
+    const cleaned = cleanYuqueUrl(yuqueUrl);
+    const parsed = new URL(cleaned);
     const segments = parsed.pathname.replace(/^\//, '').split('/').filter(Boolean);
-    // 跳过可能的 "g" 前缀段
+    // 再次跳过可能的 "g" 前缀段，兼容未经清洗的 URL
     if (segments[0] === 'g' && segments.length > 1) segments.shift();
     if (segments.length < 3) return null;
     return {
@@ -134,13 +138,19 @@ function parseYuqueUrl(yuqueUrl) {
 
 /**
  * 清洗语雀 URL：去掉协作者邀请后缀、/g/ 前缀、/markdown 后缀等，转换为标准文档链接
- * 例如：
+ * 同时去掉锚点和粘贴文本中残留的标题后缀，例如：
  *   https://aliyuque.antfin.com/g/journey.fyn/xolgry/yay0cg2a0f0kskyc/collaborator/join?token=xxx
  *   → https://aliyuque.antfin.com/journey.fyn/xolgry/yay0cg2a0f0kskyc
+ *   https://aliyuque.antfin.com/.../doc#《标题》
+ *   → https://aliyuque.antfin.com/.../doc
  */
-function _cleanYuqueUrl(rawUrl) {
+function cleanYuqueUrl(rawUrl) {
+  if (!rawUrl || typeof rawUrl !== 'string') return rawUrl;
+  let input = rawUrl.trim();
+  // 去掉粘贴文本中 # 或 ＃ 后残留的 《标题》等内容
+  input = input.replace(/[#＃].*$/, '').trim();
   try {
-    const parsed = new URL(rawUrl);
+    const parsed = new URL(input);
     const segments = parsed.pathname.replace(/^\//, '').split('/').filter(Boolean);
     // 跳过 "g" 前缀段
     if (segments[0] === 'g' && segments.length > 1) segments.shift();
@@ -149,11 +159,15 @@ function _cleanYuqueUrl(rawUrl) {
       const cleanPath = segments.slice(0, 3).join('/');
       return `${parsed.protocol}//${parsed.host}/${cleanPath}`;
     }
-    return rawUrl;
+    // 少于 3 段时返回去掉 query / hash 的版本，避免带着 token 继续请求
+    return `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
   } catch {
-    return rawUrl;
+    return input;
   }
 }
+
+// 保留内部别名以兼容既有调用
+const _cleanYuqueUrl = cleanYuqueUrl;
 
 function _pickDocBody(docData) {
   return docData.body_lake || docData.body || docData.body_draft || docData.description || '';
@@ -447,6 +461,7 @@ function _fetchRemoteBinaryInternal(url, redirectsLeft) {
 
 module.exports = {
   parseYuqueUrl,
+  cleanYuqueUrl,
   fetchYuqueDocMeta,
   fetchYuqueDocContent,
   fetchPrdFull,

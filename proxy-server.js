@@ -558,9 +558,9 @@ const server = http.createServer(async (req, res) => {
 
   // GET /api/yuque/doc?url=...
   if (pathname === '/api/yuque/doc' && req.method === 'GET') {
-    const yuqueUrl = parsed.searchParams.get('url');
+    const rawYuqueUrl = parsed.searchParams.get('url');
 
-    if (!yuqueUrl) {
+    if (!rawYuqueUrl) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Missing "url" query parameter' }));
       return;
@@ -573,21 +573,52 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (!config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Yuque API Token not configured. Please update config/config.json with your token.' }));
-      return;
+    // 统一先做 URL 清洗：去掉 /g/ 前缀、/collaborator/join 后缀、锚点等
+    const yuqueUrl = yuqueSvc.cleanYuqueUrl(rawYuqueUrl);
+    const parts = yuqueSvc.parseYuqueUrl(yuqueUrl);
+
+    const hasToken = Boolean(config.yuque_token && config.yuque_token !== 'YOUR_YUQUE_API_TOKEN_HERE');
+
+    // 策略：OpenAPI Token 优先（历史稳定路径），Skylark 兜底（内网登录态、无 Token 场景）
+    let openapiError = null;
+    if (hasToken) {
+      if (!parts) {
+        console.warn(`[Yuque] URL 无法解析为 {group}/{book}/{doc}，跳过 OpenAPI，尝试 Skylark: ${yuqueUrl}`);
+      } else {
+        console.log(`[Yuque] OpenAPI first: ${parts.group_login}/${parts.book_slug}/${parts.doc_slug}`);
+        try {
+          const result = await fetchYuqueDoc(config, parts.group_login, parts.book_slug, parts.doc_slug);
+          const docData = result.data || {};
+          const creatorObj = docData.creator || docData.user || {};
+          const creatorName = creatorObj.name || creatorObj.login || creatorObj.nickname || 'Unknown';
+          const creatorLogin = creatorObj.login || '';
+          const response = {
+            title: docData.title || 'Untitled',
+            creator: creatorName,
+            creator_login: creatorLogin,
+            description: docData.description || '',
+            doc_id: docData.id,
+            word_count: docData.word_count || 0,
+            created_at: docData.created_at,
+            updated_at: docData.updated_at
+          };
+          console.log(`[Yuque] OpenAPI success - Title: "${response.title}", Creator: "${response.creator}" (login=${creatorLogin})`);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(response));
+          return;
+        } catch (err) {
+          openapiError = err;
+          console.warn(`[Yuque] OpenAPI failed (${err.message})，尝试 Skylark 兜底`);
+        }
+      }
+    } else {
+      console.log('[Yuque] yuque_token 未配置，跳过 OpenAPI，直接走 Skylark');
     }
 
-    // 优先通过 ali-mcpcli skylark 工具读取（使用内网登录态，无需 Token）
-    // 失败时降级到语雀 OpenAPI Token 方式
-    console.log(`[Yuque] Fetching doc via skylark: ${yuqueUrl}`);
-
+    // Skylark 兜底（使用内网登录态，无需 Token）
     try {
       const skylarkResult = await yuqueSvc.fetchDocViaSkylark(yuqueUrl);
-
-      console.log(`[Yuque] Skylark success - Title: "${skylarkResult.title}", Creator: "${skylarkResult.creator}"`);
-
+      console.log(`[Yuque] Skylark success - Title: "${skylarkResult.title}", Creator: "${skylarkResult.creator}" (login=${skylarkResult.creator_login})`);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
         title: skylarkResult.title,
@@ -598,49 +629,15 @@ const server = http.createServer(async (req, res) => {
       }));
       return;
     } catch (skylarkErr) {
-      console.warn(`[Yuque] Skylark failed (${skylarkErr.message})，降级到 OpenAPI Token 方式`);
-    }
-
-    // 降级：使用语雀 OpenAPI Token
-    if (!config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Skylark 不可用，且 Yuque API Token 未配置。请检查内网/VPN 连接或更新 config/config.json。' }));
-      return;
-    }
-
-    const parts = parseYuqueUrl(yuqueUrl);
-    if (!parts) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Invalid Yuque URL format. Expected: https://aliyuque.antfin.com/{group}/{book}/{doc}' }));
-      return;
-    }
-
-    console.log(`[Yuque] Fallback OpenAPI: ${parts.group_login}/${parts.book_slug}/${parts.doc_slug}`);
-
-    try {
-      const result = await fetchYuqueDoc(config, parts.group_login, parts.book_slug, parts.doc_slug);
-      const docData = result.data;
-
-      const response = {
-        title: docData.title || 'Untitled',
-        creator: (docData.creator && docData.creator.name) || (docData.user && docData.user.name) || 'Unknown',
-        description: docData.description || '',
-        doc_id: docData.id,
-        word_count: docData.word_count || 0,
-        created_at: docData.created_at,
-        updated_at: docData.updated_at
-      };
-
-      console.log(`[Yuque] OpenAPI success - Title: "${response.title}", Creator: "${response.creator}"`);
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(response));
-    } catch (err) {
-      console.error('[Yuque] Error:', err.message);
+      console.error(`[Yuque] Skylark failed: ${skylarkErr.message}`);
+      const detail = openapiError ? `OpenAPI: ${openapiError.message}; Skylark: ${skylarkErr.message}` : `Skylark: ${skylarkErr.message}`;
+      const hint = !hasToken
+        ? '请配置 config/config.json 中的 yuque_token，或检查内网/VPN 与 ali-mcpcli 可用性。'
+        : '请检查语雀 Token 是否有该文档权限，或内网 / VPN 是否通畅。';
       res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: err.message }));
+      res.end(JSON.stringify({ error: `无法获取语雀 PRD 信息：${hint}`, detail }));
+      return;
     }
-    return;
   }
 
   // GET /api/yuque/doc-assets?url=... — 读取 PRD 正文 + 图片列表
