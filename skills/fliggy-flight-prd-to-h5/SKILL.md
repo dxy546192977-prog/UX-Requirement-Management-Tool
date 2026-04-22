@@ -38,11 +38,16 @@ H5 形成分为两条路径：
 
 ## 共同基线
 
-无论走哪条路径，最终 H5 都必须遵循 `skills/fliggy-flight-design-guide` 的设计和格式约束。
+无论走哪条路径，最终 H5 都必须使用以下 skill，不可跳过：
+
+> **强制要求（不可跳过）**
+> `skills/fliggy-flight-design-guide` — 飞猪机票设计 Guide，同时提供组件策略、Design Token、交互规范、页面物料（playbooks/flight-funnel）以及格式硬约束、审查闸门和 token 规范。H5 生成阶段必须完整读取并严格遵循其规范输出页面结构与样式，格式硬约束必须逐条执行，不允许事后对齐。
+>
+> Guide 必须在 H5 生成前完成读取，生成过程中同步执行。
 
 ### 必读约束
 
-- 总入口：`skills/fliggy-flight-design-guide/SKILL.md`
+- **fliggy-flight-design-guide 总入口**：`skills/fliggy-flight-design-guide/SKILL.md`
 - 格式硬约束：`skills/fliggy-flight-design-guide/references/html-and-token-standard.md`
 - 页面与组件物料：`skills/fliggy-flight-design-guide/playbooks/flight-funnel/`
 

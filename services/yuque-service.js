@@ -6,6 +6,113 @@ const { URL } = require('url');
 const { execFile } = require('child_process');
 
 /**
+ * 将语雀 URL 的域名统一转换为 yuque.antfin.com（skylark 工具要求）
+ * aliyuque.antfin.com → yuque.antfin.com
+ * yuque.alibaba-inc.com → yuque.antfin.com
+ */
+function normalizeYuqueDomain(rawUrl) {
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.hostname === 'aliyuque.antfin.com' || parsed.hostname === 'yuque.alibaba-inc.com') {
+      parsed.hostname = 'yuque.antfin.com';
+    }
+    return parsed.toString();
+  } catch {
+    return rawUrl;
+  }
+}
+
+/**
+ * 通过 ali-mcpcli 调用 skylark_resolve_url 解析语雀 URL，返回 { type, id }
+ */
+function skylarkResolveUrl(yuqueUrl) {
+  const normalizedUrl = normalizeYuqueDomain(yuqueUrl);
+  return new Promise((resolve, reject) => {
+    execFile(
+      'ali-mcpcli',
+      ['call', 'skylark', 'skylark_resolve_url', JSON.stringify({ url: normalizedUrl })],
+      { timeout: 15000 },
+      (err, stdout, stderr) => {
+        if (err) {
+          return reject(new Error('skylark_resolve_url failed: ' + (err.message || stderr)));
+        }
+        try {
+          const raw = JSON.parse(stdout.trim());
+          // ali-mcpcli 返回结构为 { ok, data: {...} } 或直接是文档对象
+          const result = (raw && raw.data) ? raw.data : raw;
+          if (!result || !result.id) {
+            return reject(new Error('skylark_resolve_url returned no id: ' + stdout));
+          }
+          resolve(result);
+        } catch (parseErr) {
+          reject(new Error('Failed to parse skylark_resolve_url output: ' + stdout));
+        }
+      }
+    );
+  });
+}
+
+/**
+ * 通过 ali-mcpcli 调用 skylark_doc_detail 获取文档详情
+ * 返回包含 title、user（creator）、description 等字段的文档对象
+ */
+function skylarkDocDetail(docId) {
+  return new Promise((resolve, reject) => {
+    execFile(
+      'ali-mcpcli',
+      ['call', 'skylark', 'skylark_doc_detail', JSON.stringify({ doc_id: docId })],
+      { timeout: 15000 },
+      (err, stdout, stderr) => {
+        if (err) {
+          return reject(new Error('skylark_doc_detail failed: ' + (err.message || stderr)));
+        }
+        try {
+          const result = JSON.parse(stdout.trim());
+          if (!result) {
+            return reject(new Error('skylark_doc_detail returned empty result'));
+          }
+          resolve(result);
+        } catch (parseErr) {
+          reject(new Error('Failed to parse skylark_doc_detail output: ' + stdout));
+        }
+      }
+    );
+  });
+}
+
+/**
+ * 通过 ali-mcpcli skylark 工具获取语雀文档的元数据（标题、创建者、描述）
+ * 优先路径：不依赖 OpenAPI Token，使用内网登录态
+ *
+ * 返回格式：{ title, creator, creator_login, description, doc_id }
+ */
+async function fetchDocViaSkylark(yuqueUrl) {
+  // Step 1: 解析 URL 获取 doc_id
+  const resolved = await skylarkResolveUrl(yuqueUrl);
+  if (resolved.type.toLowerCase() !== 'doc') {
+    throw new Error(`URL 解析结果类型不是 doc，而是 ${resolved.type}`);
+  }
+
+  // Step 2: 获取文档详情
+  const docDetail = await skylarkDocDetail(resolved.id);
+
+  // 兼容 skylark_doc_detail 返回的多种结构
+  const docData = docDetail.data || docDetail;
+
+  const creatorObj = docData.creator || docData.user || {};
+  const creatorName = creatorObj.name || creatorObj.login || creatorObj.nickname || '';
+  const creatorLogin = creatorObj.login || '';
+
+  return {
+    title: docData.title || 'Untitled',
+    creator: creatorName,
+    creator_login: creatorLogin,
+    description: docData.description || docData.abstract || '',
+    doc_id: resolved.id
+  };
+}
+
+/**
  * 从语雀 URL 中解析出 group_login / book_slug / doc_slug
  */
 function parseYuqueUrl(yuqueUrl) {
@@ -345,5 +452,6 @@ module.exports = {
   fetchPrdFull,
   extractTextFromDocBody,
   extractImageUrlsFromDoc,
-  fetchRemoteBinary
+  fetchRemoteBinary,
+  fetchDocViaSkylark
 };

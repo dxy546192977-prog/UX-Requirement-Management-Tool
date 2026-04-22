@@ -1,6 +1,6 @@
 # Phase 1.2 审查记录（Mock 演示）
 
-- workflow_ref: `skills/fliggy-flight-design-skill/Workflow.md`
+- workflow_ref: `skills/fliggy-flight-design-guide/Workflow.md`
 - gate_name: `gstackAwesomeReviewGate`
 - input_md: `mock-tests/prd-decompose-mock-flight-home-price-alert.md`
 - page_id: `vertical.flight.home`

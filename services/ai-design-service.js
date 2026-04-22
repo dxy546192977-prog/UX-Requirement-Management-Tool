@@ -284,7 +284,8 @@ async function _runJob(job, config, yuqueSvc) {
     prd_body_text:    bodyText,
     html_output_path: null,
     review_summary:   reviewResult.review_summary || '',
-    overall_gate_result: reviewResult.overall_gate_result || 'PASS'
+    overall_gate_result: reviewResult.overall_gate_result || 'PASS',
+    design_constraints: reviewResult.design_constraints || []
   });
 
   console.log(`[AiDesign] Job ${job.id} — Done. ${modules.length} modules identified. Gate: ${reviewResult.overall_gate_result}. Awaiting confirmation.`);
@@ -337,7 +338,8 @@ async function _runH5Generation(job, config, yuqueSvc) {
 
   const h5Result = await _callAi(h5AiConfig, _buildH5Prompt(prdTitle, bodyText, {
     summary: job.summary,
-    pages: job.pages
+    pages: job.pages,
+    design_constraints: job.design_constraints || []
   }, job.modules));
 
   const htmlOutputPath = await _saveH5Output(job.id, h5Result);
@@ -353,11 +355,11 @@ async function _runH5Generation(job, config, yuqueSvc) {
 // ---------- 设计规范文件读取 ----------
 
 /**
- * 启动时读取 fliggy-flight-design-skill 下的设计规范文件
+ * 启动时读取 fliggy-flight-design-guide 下的设计规范文件
  * 返回结构化的规范内容，供 H5 system prompt 使用
  */
 function _loadDesignSkillContent() {
-  const skillBase = path.join(__dirname, '..', 'skills', 'fliggy-flight-design-skill');
+  const skillBase = path.join(__dirname, '..', 'skills', 'fliggy-flight-design-guide');
   const fdsBase   = path.join(skillBase, 'playbooks', 'flight-funnel', '0 Fliggy Design Skill');
   const refsBase  = path.join(skillBase, 'references');
 
@@ -524,6 +526,9 @@ function _buildH5Prompt(title, bodyText, decomposed, modules) {
     `- ${m.name}（${m.page || ''}，${m.change_type || 'create'}）：${m.intent || ''}${m.notes ? '；备注：' + m.notes : ''}`
   ).join('\n');
 
+  // 从 modules 的 review 中提取设计要点和审查建议
+  const reviewSection = _buildReviewConstraintsSection(modules, decomposed);
+
   return [
     { role: 'system', content: FLIGGY_FLIGHT_H5_SYSTEM },
     {
@@ -537,7 +542,7 @@ function _buildH5Prompt(title, bodyText, decomposed, modules) {
 
 ## 已确认的模块清单
 ${moduleList}
-
+${reviewSection}
 ## PRD 正文
 ${(bodyText || '').slice(0, 6000)}
 
@@ -549,9 +554,82 @@ ${(bodyText || '').slice(0, 6000)}
 5. 必须包含完整的 :root token 定义（颜色、圆角、阴影等），严格使用上述 Design Tokens
 6. 使用 Unsplash 真实图片（从上述图片库中选取 ID），禁止纯色占位
 7. 数字和价格使用 Fliggy Sans 102 字体
-8. 直接输出完整 HTML，以 <!DOCTYPE html> 开头`
+8. 必须在设计中体现上述 Gstack 审查约束中的所有设计要点和建议
+9. 直接输出完整 HTML，以 <!DOCTYPE html> 开头`
     }
   ];
+}
+
+/**
+ * 从 modules 的 review 结果中构建审查约束段落，注入到 H5 prompt 中
+ */
+function _buildReviewConstraintsSection(modules, decomposed) {
+  const parts = [];
+
+  // 1. 每个模块的设计要点
+  const focusItems = [];
+  (modules || []).forEach(m => {
+    const review = m.review || {};
+    const focus = review.design_focus || [];
+    if (focus.length > 0) {
+      focusItems.push(`### ${m.name}`);
+      focus.forEach(f => focusItems.push(`- ${f}`));
+    }
+  });
+
+  // 2. 每个模块的 ADVISORY/BLOCKING 审查建议
+  const adviceItems = [];
+  (modules || []).forEach(m => {
+    const review = m.review || {};
+    const dims = review.dimensions || {};
+    const dimLabels = {
+      styleguide_branding: 'Styleguide & Branding',
+      color_typography: 'Color & Typography',
+      usability_review: 'Usability Review',
+      user_testing: 'User Testing'
+    };
+    const notes = [];
+    for (const [dk, dv] of Object.entries(dims)) {
+      if (dv && (dv.verdict === 'ADVISORY' || dv.verdict === 'BLOCKING') && dv.note) {
+        notes.push(`- [${dv.verdict}] ${dimLabels[dk] || dk}：${dv.note}`);
+      }
+    }
+    if (notes.length > 0) {
+      adviceItems.push(`### ${m.name}`);
+      adviceItems.push(...notes);
+    }
+  });
+
+  // 3. 整体设计约束
+  const constraints = decomposed.design_constraints || [];
+
+  // 如果没有任何审查数据，返回空
+  if (focusItems.length === 0 && adviceItems.length === 0 && constraints.length === 0) {
+    return '\n';
+  }
+
+  parts.push('\n## Gstack 审查约束（必须在设计中体现）');
+  parts.push('> 以下约束来自 Gstack awesome-design-gates（Phase 1.2）审查，设计生成时必须逐条体现。\n');
+
+  if (focusItems.length > 0) {
+    parts.push('### 设计要点（每个模块需重点设计的要点）');
+    parts.push(focusItems.join('\n'));
+    parts.push('');
+  }
+
+  if (constraints.length > 0) {
+    parts.push('### 整体设计约束');
+    constraints.forEach(c => parts.push(`- ${c}`));
+    parts.push('');
+  }
+
+  if (adviceItems.length > 0) {
+    parts.push('### 审查建议（ADVISORY/BLOCKING 项，必须在设计中解决）');
+    parts.push(adviceItems.join('\n'));
+    parts.push('');
+  }
+
+  return parts.join('\n');
 }
 
 async function _saveH5Output(jobId, h5Content) {
@@ -750,7 +828,7 @@ function _buildGstackReviewPrompt(title, bodyText, decomposed, modules) {
 
   const systemPrompt = `你是飞猪机票资深设计审查专家，负责在设计生成前对 PRD 拆解结果进行结构审查和 awesome-design 四维检查。
 
-你的审查基于 https://github.com/gztchan/awesome-design 的方法论框架，对每个模块执行以下四维检查：
+你的审查基于 Gstack awesome-design-gates（Phase 1.2）方法论框架，参考 https://github.com/gztchan/awesome-design 的方法层（不照搬视觉），对每个模块执行以下四维检查：
 
 1. styleguide_branding（风格与品牌）：信息与品牌表达是否一致，模块命名与语义是否清晰
 2. color_typography（色彩与排版）：信息层级、可读性与文本组织是否满足设计落地
@@ -759,12 +837,17 @@ function _buildGstackReviewPrompt(title, bodyText, decomposed, modules) {
 
 每个维度的判定标准：
 - PASS：完全满足，无需修改
-- ADVISORY：建议优化，不阻断流程
+- ADVISORY：建议优化，不阻断流程，但需在设计中体现
 - BLOCKING：存在严重问题，必须修正后才能进入设计生成
+
+你的核心职责不只是打分，更重要的是：
+1. 提炼出每个模块需要重点设计的要点（design_focus），这些要点将直接约束后续 H5 设计生成
+2. 给出整体的设计约束清单（design_constraints），确保设计生成时不遗漏关键场景
+3. 每个维度的 note 不只是描述问题，还要给出具体的设计建议
 
 **必须用 JSON 格式输出，不要添加任何 Markdown 代码块标记，直接输出 JSON 对象。**`;
 
-  const userPrompt = `请对以下 PRD 拆解结果进行 Gstack + awesome-design 四维审查。
+  const userPrompt = `请对以下 PRD 拆解结果进行 Gstack awesome-design-gates（Phase 1.2）四维审查。
 
 ## PRD 信息
 - 标题：${title}
@@ -791,22 +874,36 @@ ${(bodyText || '').slice(0, 4000)}
   "modules": [
     {
       "name": "模块名（与输入一致）",
+      "design_focus": [
+        "该模块需要重点设计的要点1（如：弹窗触发时机与动画过渡）",
+        "该模块需要重点设计的要点2（如：价差信息的视觉层级）",
+        "该模块需要重点设计的要点3（如：网络异常/空态的降级展示）"
+      ],
       "dimensions": {
-        "styleguide_branding": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "简要说明" },
-        "color_typography": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "简要说明" },
-        "usability_review": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "简要说明" },
-        "user_testing": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "简要说明" }
+        "styleguide_branding": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "问题描述 + 具体设计建议" },
+        "color_typography": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "问题描述 + 具体设计建议" },
+        "usability_review": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "问题描述 + 具体设计建议" },
+        "user_testing": { "verdict": "PASS|ADVISORY|BLOCKING", "note": "问题描述 + 具体设计建议" }
       },
       "blocking_count": 0,
-      "summary": "该模块的审查结论摘要（≤50字）"
+      "summary": "该模块的审查结论摘要（<=50字）"
     }
+  ],
+  "design_constraints": [
+    "整体设计约束1（如：所有动态拼接文案需定义最大字符数和换行规则）",
+    "整体设计约束2（如：弹窗必须包含 Loading、异常、空态三种状态）",
+    "整体设计约束3（如：按钮文案需对齐飞猪品牌情感化设计规范）"
   ],
   "blocking_items": [],
   "advisory_items": ["建议项描述"],
-  "review_summary": "整体审查结论摘要（≤80字）"
+  "review_summary": "整体审查结论摘要（<=80字）"
 }
 
-直接输出 JSON，不要有任何其他内容。`;
+注意：
+1. design_focus 是该模块需要重点设计的要点清单，至少 2-5 条，将直接约束后续 H5 设计生成
+2. design_constraints 是整体的设计约束清单，至少 2-4 条，确保设计生成时不遗漏关键场景
+3. 每个维度的 note 必须包含具体的设计建议，而不只是问题描述
+4. 直接输出 JSON，不要有任何其他内容。`;
 
   return [
     { role: 'system', content: systemPrompt },
@@ -861,7 +958,8 @@ function _parseReviewResult(reviewText, modules) {
                      (reviewData.overall_gate_result === 'PASS' ? 'PASS' : 'PASS_WITH_NOTES'),
         dimensions: reviewMod.dimensions || {},
         blocking_count: reviewMod.blocking_count || 0,
-        summary: reviewMod.summary || ''
+        summary: reviewMod.summary || '',
+        design_focus: reviewMod.design_focus || []
       };
     } else {
       m.review = {
@@ -873,7 +971,8 @@ function _parseReviewResult(reviewText, modules) {
           user_testing: { verdict: 'PASS', note: '未单独审查' }
         },
         blocking_count: 0,
-        summary: '未单独审查，默认通过'
+        summary: '未单独审查，默认通过',
+        design_focus: []
       };
     }
     return m;
@@ -882,6 +981,7 @@ function _parseReviewResult(reviewText, modules) {
   return {
     overall_gate_result: reviewData.overall_gate_result || 'PASS',
     review_summary: reviewData.review_summary || '',
+    design_constraints: reviewData.design_constraints || [],
     modules: enrichedModules
   };
 }

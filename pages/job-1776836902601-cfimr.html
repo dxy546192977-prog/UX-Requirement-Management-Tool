@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>机票订详页 - 飞猪</title>
+  <style>
+    @font-face { font-family: 'Fliggy Sans 102'; src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-indigo-1: #6666ff;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #ff3333;
+      --color-pay-1: #ff5533;
+      --color-white: #ffffff;
+      --color-label: #F7F8FA;
+      --color-bg: #f2f3f5;
+      --radius-xl: 36px;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--color-label); font-family: 'PingFang SC','SimHei',sans-serif; color: var(--color-darkgray); -webkit-font-smoothing: antialiased; }
+    
+    .fdl-container { width: 750px; margin: 0 auto; padding: 176px 30px 258px; display: flex; flex-direction: column; gap: 24px; }
+    
+    .fdl-text-h1 { font-size: 36px; font-weight: 700; line-height: 1.2; }
+    .fdl-text-h2 { font-size: 32px; font-weight: 600; line-height: 1.2; }
+    .fdl-text-h3 { font-size: 28px; font-weight: 600; line-height: 1.2; }
+    .fdl-text-body { font-size: 26px; font-weight: 400; line-height: 1.5; }
+    .fdl-text-aux { font-size: 22px; font-weight: 400; line-height: 1.4; }
+    .fdl-text-note { font-size: 20px; font-weight: 400; line-height: 1.4; }
+    .fdl-text-num { font-family: 'Fliggy Sans 102', 'PingFang SC', sans-serif; font-weight: bold; }
+    
+    .fdl-nav { position: fixed; top: 0; left: 0; width: 100%; height: 176px; background: var(--color-white); display: flex; align-items: center; justify-content: center; z-index: 100; border-bottom: 1px solid var(--color-bg); }
+    .fdl-nav-title { font-size: 32px; font-weight: 600; color: var(--color-darkgray); }
+    
+    .fdl-card { background: var(--color-white); border-radius: var(--radius-l); padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .fdl-card-inner { display: flex; flex-direction: column; gap: 18px; }
+    
+    .fdl-banner-wrapper {
+      position: relative; width: 100%; aspect-ratio: 2 / 1;
+      border-radius: var(--radius-l); overflow: hidden;
+      background-color: #E0E0E0; background-size: cover; background-position: center;
+      transition: opacity 0.3s ease;
+    }
+    .fdl-banner-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 24px;
+    }
+    .fdl-banner-title {
+      color: var(--color-white); font-size: 30px; font-weight: 600; line-height: 1.3;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 12px;
+    }
+    .fdl-banner-sub { color: rgba(255,255,255,0.95); font-size: 22px; margin-bottom: 18px; }
+    .fdl-banner-cta {
+      align-self: flex-start; background: var(--color-indigo-4); color: var(--color-indigo-1);
+      padding: 12px 24px; border-radius: var(--radius-l); font-size: 26px; font-weight: 500;
+      border: none; cursor: pointer; display: flex; align-items: center; gap: 8px;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .fdl-banner-cta:active { transform: scale(0.96); opacity: 0.85; }
+    .fdl-banner-cta:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .fdl-skeleton { width: 100%; aspect-ratio: 2/1; background: var(--color-bg); border-radius: var(--radius-l); display: flex; align-items: center; justify-content: center; color: var(--color-lightgray); font-size: 22px; }
+    .fdl-hidden { display: none !important; }
+    
+    .fdl-flex-row { display: flex; align-items: center; justify-content: space-between; }
+    .fdl-gap-12 { gap: 12px; }
+    .fdl-mt-12 { margin-top: 12px; }
+    .fdl-divider { height: 1px; background: var(--color-bg); margin: 12px 0; width: 100%; }
+    
+    .fdl-toast {
+      position: fixed; bottom: 320px; left: 50%; transform: translateX(-50%);
+      background: rgba(15,19,26,0.88); color: var(--color-white);
+      padding: 18px 36px; border-radius: var(--radius-l); font-size: 24px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 200; text-align: center; max-width: 600px;
+    }
+    .fdl-toast.show { opacity: 1; }
+    
+    .fdl-bottom { position: fixed; bottom: 0; left: 0; width: 100%; height: 258px; background: var(--color-white); border-top: 1px solid var(--color-bg); display: flex; align-items: center; padding: 0 30px; z-index: 100; }
+    .fdl-bottom-input { flex: 1; height: 96px; background: var(--color-bg); border-radius: var(--radius-l); padding: 0 24px; display: flex; align-items: center; color: var(--color-lightgray); font-size: 26px; }
+    .fdl-bottom-btn { margin-left: 24px; background: var(--color-indigo-4); color: var(--color-indigo-1); padding: 18px 36px; border-radius: var(--radius-l); font-size: 26px; font-weight: 500; border: none; cursor: pointer; }
+    .fdl-bottom-btn:active { opacity: 0.8; }
+    
+    .fdl-action-row { display: flex; gap: 24px; margin-top: 12px; }
+    .fdl-action-btn { flex: 1; background: var(--color-white); color: var(--color-midgray); padding: 18px 0; border-radius: var(--radius-l); font-size: 26px; font-weight: 500; border: 1px solid var(--color-bg); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+    .fdl-action-btn:active { background: var(--color-bg); }
+    
+    .fdl-info-block { padding: 18px 0; }
+    .fdl-info-title { font-size: 28px; font-weight: 600; margin-bottom: 12px; }
+    .fdl-info-text { font-size: 26px; color: var(--color-midgray); line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <nav class="fdl-nav">
+    <div class="fdl-nav-title">订单详情</div>
+  </nav>
+
+  <div class="fdl-container">
+    <!-- 订单核心信息 -->
+    <div class="fdl-card">
+      <div class="fdl-card-inner">
+        <div class="fdl-flex-row">
+          <span class="fdl-text-h3">北京首都 T3 → 三亚凤凰 T1</span>
+          <span class="fdl-text-aux" style="color: var(--color-indigo-1);">已出票</span>
+        </div>
+        <div class="fdl-flex-row">
+          <div>
+            <div class="fdl-text-h1 fdl-text-num">08:30</div>
+            <div class="fdl-text-aux" style="color: var(--color-midgray);">3月15日 周六</div>
+          </div>
+          <div style="flex:1; text-align:center; color: var(--color-lightgray); font-size: 22px;">
+            <div>飞行时长 3小时25分</div>
+            <div class="fdl-divider"></div>
+            <div>CA1357 | 波音737</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="fdl-text-h1 fdl-text-num">11:55</div>
+            <div class="fdl-text-aux" style="color: var(--color-midgray);">3月15日 周六</div>
+          </div>
+        </div>
+        <div class="fdl-flex-row fdl-mt-12">
+          <span class="fdl-text-body">乘机人：张三</span>
+          <span class="fdl-text-body fdl-text-num" style="color: var(--color-pay-1);">¥ 1,280</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 海免商品推荐模块（含显隐控制与加载态） -->
+    <div id="fdl-hainan-module">
+      <div class="fdl-skeleton" id="fdl-banner-skeleton">航线资格校验中...</div>
+      <div id="fdl-banner-content" class="fdl-hidden">
+        <div class="fdl-banner-wrapper" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=750&h=375&fit=crop');">
+          <div class="fdl-banner-overlay">
+            <div class="fdl-banner-title">海南离岛免税 · 专属特惠</div>
+            <div class="fdl-banner-sub">凭机票享折上折，最高立减 ¥500</div>
+            <button class="fdl-banner-cta" id="fdl-cta-btn">
+              <span>立即前往免税商城</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 说明性文本铺在背景色上，不使用白底卡片 -->
+    <div class="fdl-info-block">
+      <div class="fdl-info-title">退改签规则</div>
+      <div class="fdl-info-text">起飞前4小时以上，退票手续费 ¥150/人；起飞前4小时内，退票手续费 ¥300/人。改签规则同退票。具体以航司实际规定为准。</div>
+    </div>
+    <div class="fdl-info-block">
+      <div class="fdl-info-title">行李额度</div>
+      <div class="fdl-info-text">托运行李：20KG | 手提行李：5KG（限1件，尺寸不超过20×40×55cm）</div>
+    </div>
+
+    <!-- 点赞与分享 -->
+    <div class="fdl-action-row">
+      <button class="fdl-action-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        有用
+      </button>
+      <button class="fdl-action-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+        分享
+      </button>
+    </div>
+
+    <!-- 追问 -->
+    <div class="fdl-info-block" style="border-top: 1px solid var(--color-bg); padding-top: 24px;">
+      <div class="fdl-text-aux" style="color: var(--color-lightgray);">猜你想问</div>
+      <div class="fdl-flex-row fdl-gap-12" style="margin-top: 12px; flex-wrap: wrap;">
+        <span class="fdl-text-body" style="background: var(--color-bg); padding: 12px 18px; border-radius: var(--radius-m);">如何申请免税提货？</span>
+        <span class="fdl-text-body" style="background: var(--color-bg); padding: 12px 18px; border-radius: var(--radius-m);">航班延误影响免税额度吗？</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部输入区 -->
+  <div class="fdl-bottom">
+    <div class="fdl-bottom-input">联系人工客服 / 咨询问题</div>
+    <button class="fdl-bottom-btn">查看行程单</button>
+  </div>
+
+  <!-- 降级提示 Toast -->
+  <div id="fdl-toast" class="fdl-toast">跳转失败，已为您打开网页版</div>
+
+  <script>
+    (function() {
+      const module = document.getElementById('fdl-hainan-module');
+      const skeleton = document.getElementById('fdl-banner-skeleton');
+      const content = document.getElementById('fdl-banner-content');
+      const ctaBtn = document.getElementById('fdl-cta-btn');
+      const toast = document.getElementById('fdl-toast');
+
+      // 模拟异步校验航线资格与订单状态（已支付/未退款/含三亚或海口）
+      // 满足条件则展示，不满足则 display:none 防 CLS
+      setTimeout(() => {
+        const isEligible = true; // 模拟校验通过
+        if (isEligible) {
+          skeleton.classList.add('fdl-hidden');
+          content.classList.remove('fdl-hidden');
+          // 曝光埋点触发（视口进入50%逻辑由IntersectionObserver在实际环境实现）
+          console.log('[Track] 181.7437879.Product recommendation | exposure | order_id: 123456789 | env: fliggy');
+        } else {
+          module.classList.add('fdl-hidden'); //

@@ -1,28 +1,23 @@
 ### gstack-review-and-design-skill-integration ###
-
 # 任务清单
 
-## 后端改造
+## 后端改进
 
-- [x] 1. 新增 `_loadDesignSkillContent()` 函数，启动时读取 `0 Fliggy Design Skill/SKILL.md`、`html-and-token-standard.md`、`框架组件.md` 的核心内容
-- [x] 2. 新增 `_buildH5SystemPrompt()` 函数，用读取到的设计规范替代硬编码的 `FLIGGY_FLIGHT_H5_SYSTEM`
-- [x] 3. 新增 `_buildGstackReviewPrompt()` 函数，构建 Gstack 四维审查 prompt
-- [x] 4. 新增 `_parseReviewResult()` 函数，解析审查结果并合并到 modules
-- [x] 5. 在 `_runJob` 中插入 Phase 3.5 审查阶段（planning 之后、存入 job 之前）
-- [x] 6. 更新 `_updateJob` 调用，将审查结果（review_summary、overall_gate_result）存入 job 对象
+- [ ] 改进 `_buildGstackReviewPrompt`：新增 `design_focus` 和 `design_constraints` 输出要求
+- [ ] 改进 `_parseReviewResult`：解析 `design_focus` 和 `design_constraints` 字段
+- [ ] 改进 `_buildH5Prompt`：将审查结果（design_focus、design_constraints、审查建议）注入 H5 prompt
+- [ ] 修改 `proxy-server.js`：根路径映射到 `pages/online-index.html`
 
-## 前端改造
+## 前端改进
 
-- [x] 7. 在 `online-index.html` 中新增 Gstack 审查结果的 CSS 样式（审查标签、四维维度、摘要）
-- [x] 8. 修改模块清单渲染逻辑，增加审查信息展示（四维标签 + 摘要）
-- [x] 9. 在进度展示中增加 `reviewing` 阶段的文案和进度条区间
+- [ ] 改进审查结果展示：明确展示 skill 名称、设计要点、每个维度的具体建议
+- [ ] 删除根目录旧的 `online-index.html`，避免不同步
 
 ## 验证
 
-- [x] 10. 重启后端，验证设计规范文件加载成功（SKILL.md 6951 chars, html-and-token-standard.md 1733 chars, 框架组件.md 16644 chars）
-- [ ] 11. 确认方案后生成 H5，验证 token 和组件规范符合 SKILL.md（需用户手动触发 AI 拆解验证）
+- [ ] 重启后端，触发完整 AI 拆解流程，确认审查结果包含 design_focus
+- [ ] 确认方案后生成 H5，验证 H5 中体现了审查约束
 
-
-updateAtTime: 2026/4/22 10:34:59
+updateAtTime: 2026/4/22 12:30:56
 
 planId: a89f176a-59ac-4fa9-b65c-4b0256c5b761

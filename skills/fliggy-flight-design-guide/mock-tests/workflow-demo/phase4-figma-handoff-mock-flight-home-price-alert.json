@@ -13,13 +13,13 @@
     "html_files": [
       {
         "page_id": "vertical.flight.home",
-        "path": "skills/fliggy-flight-design-skill/mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html"
+        "path": "skills/fliggy-flight-design-guide/mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html"
       }
     ],
     "review_evidence": {
-      "phase12_gate_report": "skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase1.2-gstack-awesome-review-mock-flight-home-price-alert.md",
-      "phase15_benchmark_report": "skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase1.5-awesome-benchmark-mapping-mock-flight-home-price-alert.md",
-      "phase3_review_report": "skills/fliggy-flight-design-skill/mock-tests/workflow-demo/phase3-review-report-mock-flight-home-price-alert.md"
+      "phase12_gate_report": "skills/fliggy-flight-design-guide/mock-tests/workflow-demo/phase1.2-gstack-awesome-review-mock-flight-home-price-alert.md",
+      "phase15_benchmark_report": "skills/fliggy-flight-design-guide/mock-tests/workflow-demo/phase1.5-awesome-benchmark-mapping-mock-flight-home-price-alert.md",
+      "phase3_review_report": "skills/fliggy-flight-design-guide/mock-tests/workflow-demo/phase3-review-report-mock-flight-home-price-alert.md"
     },
     "review_summary": {
       "result": "PASS_WITH_NOTES",

@@ -1,6 +1,6 @@
 # Phase 3 审查报告（Mock 演示）
 
-- workflow_ref: `skills/fliggy-flight-design-skill/Workflow.md`
+- workflow_ref: `skills/fliggy-flight-design-guide/Workflow.md`
 - target_html: `mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html`
 - review_time: `2026-04-19 21:24`
 

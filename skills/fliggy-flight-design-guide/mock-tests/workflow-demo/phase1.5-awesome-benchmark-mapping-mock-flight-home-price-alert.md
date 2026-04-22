@@ -1,6 +1,6 @@
 # Phase 1.5 对标映射记录（Mock 演示）
 
-- workflow_ref: `skills/fliggy-flight-design-skill/Workflow.md`
+- workflow_ref: `skills/fliggy-flight-design-guide/Workflow.md`
 - input_from: `mock-tests/workflow-demo/phase1.2-gstack-awesome-review-mock-flight-home-price-alert.md`
 - output_to: `mock-tests/outputs/flight-home-price-alert-v5.shaped-from-1-home.mock.html`
 - mapping_time: `2026-04-19 21:18`

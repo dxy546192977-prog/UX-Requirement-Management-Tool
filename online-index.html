@@ -285,6 +285,12 @@
       font-size: 10px; font-weight: 600;
       padding: 1px 6px; border-radius: 4px;
     }
+    .modal-title-row .req-card-priority {
+      padding: 5px 6px;
+      border-radius: 8px;
+      line-height: 12px;
+      font-size: 10px;
+    }
     .priority-p0 { background: rgba(239,68,68,0.15); color: #ef4444; }
     .priority-p1 { background: rgba(245,158,11,0.15); color: #f59e0b; }
     .priority-p2 { background: rgba(79,140,255,0.15); color: #4f8cff; }
@@ -308,18 +314,89 @@
     }
     .modal-overlay.visible { display: flex; }
     .modal {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); width: 90%; max-width: 640px;
-      max-height: 80vh; overflow-y: auto;
+      background: var(--bg-card);
+      border-radius: var(--radius); width: 90%; max-width: 763px;
+      max-height: 80vh; overflow: hidden;
+      display: flex; flex-direction: column;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
-    .modal-header {
-      padding: 24px 28px 16px; border-bottom: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: flex-start;
+    .modal-sticky-section {
+      position: sticky; top: 0; z-index: 5;
+      background: var(--bg-card);
+      border-bottom: none;
+      box-shadow: none;
     }
-    .modal-title-area { flex: 1; }
-    .modal-id { font-size: 12px; color: var(--text-muted); font-family: 'SF Mono','Fira Code',monospace; margin-bottom: 4px; }
-    .modal-name { font-size: 18px; font-weight: 600; }
+    .modal-header {
+      padding: 20px 28px 14px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px;
+    }
+    .modal-title-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+    }
+    .modal-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+    .modal-id { display: none; }
+    .modal-name {
+      font-size: 20px; font-weight: 600;
+      line-height: 20px;
+      min-width: 0;
+      flex: 0 1 auto;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal-header-meta {
+      font-size: 12px;
+      line-height: 17px;
+      color: var(--text-muted);
+    }
+    .modal-header-links {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .modal-header-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      transition: all 0.2s;
+    }
+    .modal-header-link:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(79,140,255,0.08);
+    }
+    .modal-header-link-add {
+      background: rgba(79,140,255,0.14);
+      color: var(--accent-blue);
+      border-color: rgba(79,140,255,0.3);
+      cursor: pointer;
+    }
+    .modal-header-link-add:hover {
+      background: rgba(79,140,255,0.22);
+      border-color: rgba(79,140,255,0.45);
+      color: #8eb6ff;
+    }
     .modal-close {
       width: 32px; height: 32px; border: none; background: var(--bg-primary);
       color: var(--text-muted); border-radius: 8px; cursor: pointer;
@@ -327,13 +404,127 @@
       transition: all 0.2s; flex-shrink: 0;
     }
     .modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
-    .modal-body { padding: 20px 28px 28px; }
-    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    /* 用 grid 0fr/1fr 按真实高度过渡，避免 max-height 大数字导致「前段不动、后段猛收」 */
+    .modal-body-collapse {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      transition: grid-template-rows 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+      overflow: hidden;
+    }
+    .modal-sticky-section.is-body-collapsed .modal-body-collapse {
+      grid-template-rows: 0fr;
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .modal-body-collapse {
+        transition-duration: 0.01ms;
+      }
+    }
+    .modal-body-collapse > .modal-body {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .modal-body {
+      padding: 12px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    /* 外层包一层，底部渐隐提示「还可下滑」，避免内容像被硬裁切 */
+    .modal-scroll-outer {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-scroll-outer.has-bottom-action .modal-scroll-content {
+      padding-bottom: max(96px, calc(72px + env(safe-area-inset-bottom, 0px)));
+    }
+    .modal-scroll-content {
+      flex: 1;
+      min-height: 0;
+      padding: 18px 28px max(28px, calc(28px + env(safe-area-inset-bottom, 0px)));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-scroll-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 80px;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      background: linear-gradient(
+        to top,
+        var(--bg-card) 0%,
+        rgba(34, 37, 51, 0.5) 42%,
+        transparent 100%
+      );
+    }
+    .modal-scroll-outer.modal-scroll-outer--more-below .modal-scroll-fade {
+      opacity: 1;
+    }
+    .modal-bottom-action {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4;
+      padding: 12px 28px calc(12px + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      justify-content: center;
+      background: linear-gradient(to top, var(--bg-card) 45%, rgba(34,37,51,0.88) 75%, rgba(34,37,51,0));
+      pointer-events: none;
+    }
+    .modal-bottom-action .ai-btn {
+      min-width: 180px;
+      justify-content: center;
+      pointer-events: auto;
+      box-shadow: 0 6px 20px rgba(52,211,153,0.25);
+    }
+    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .modal-meta-scroll-hide {
+      transition: opacity 0.18s ease;
+    }
+    .modal.modal-scrolled .modal-meta-scroll-hide {
+      display: none;
+    }
+    .badge-part {
+      background: rgba(79,140,255,0.15);
+      color: var(--accent-blue);
+    }
     .modal-summary {
+      display: none;
       font-size: 14px; color: var(--text-secondary); line-height: 1.7;
       padding: 12px 16px; background: rgba(79,140,255,0.05);
       border-left: 3px solid var(--accent-blue);
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 16px;
+    }
+    .modal-history-card {
+      padding: 18px;
+      background: rgba(79,140,255,0.05);
+      border-radius: var(--radius-sm);
+      height: auto;
+      min-height: 0;
+    }
+    .modal-history-card .status-history {
+      margin-top: 0;
+      padding-top: 0;
+      height: auto;
+      min-height: 0;
+    }
+    .modal-history-card .status-history-list {
+      height: auto;
+      min-height: 0;
+      align-items: flex-start;
+    }
+    .modal-history-card .status-history-title {
+      margin-bottom: 6px;
     }
     .modal-links { display: flex; gap: 10px; margin-bottom: 16px; }
     .modal-link {
@@ -361,6 +552,7 @@
     }
     .modal-link-add-design:hover { background: #3a7aef; box-shadow: 0 2px 12px rgba(79,140,255,0.3); }
     .modal-notes {
+      display: none;
       padding: 10px 14px; background: rgba(245,158,11,0.06);
       border-radius: var(--radius-sm); font-size: 13px; color: var(--text-muted);
       border: 1px dashed rgba(245,158,11,0.2);
@@ -407,6 +599,15 @@
       color: var(--text-primary); font-size: 14px; margin-bottom: 14px;
       font-family: inherit; transition: border-color 0.2s;
     }
+    .submit-modal select {
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.75L6 7.75L9 4.75' stroke='%238B93A6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px 12px;
+    }
     .submit-modal input:focus, .submit-modal select:focus, .submit-modal textarea:focus {
       outline: none; border-color: var(--accent-blue);
     }
@@ -439,11 +640,11 @@
     .status-history {
       margin-top: 20px;
       padding-top: 16px;
-      border-top: 1px solid var(--border);
+      border-top: none;
     }
     .status-history-title {
       font-size: 11px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px;
+      margin-bottom: 12px;
     }
     .status-history-list {
       display: flex; flex-direction: column; gap: 8px;
@@ -849,9 +1050,25 @@
         max-height: 90vh;
         border-radius: var(--radius) var(--radius) 0 0;
       }
-      .modal-header { padding: 16px 18px 12px; }
-      .modal-body { padding: 14px 18px 24px; }
-      .modal-name { font-size: 15px; }
+      .modal-header { padding: 14px 18px 10px; }
+      .modal-body { padding: 14px 18px 16px; }
+      .modal-scroll-content { padding: 12px 18px max(40px, calc(24px + env(safe-area-inset-bottom, 0px))); }
+      .modal-scroll-outer.has-bottom-action .modal-scroll-content {
+        padding-bottom: max(88px, calc(64px + env(safe-area-inset-bottom, 0px)));
+      }
+      .modal-bottom-action {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+      .modal-bottom-action .ai-btn {
+        min-width: 160px;
+      }
+      .modal-name { font-size: 15px; line-height: 1.3; }
+      .modal-title-area { gap: 8px; }
+      .modal-title-row { gap: 6px; }
+      .modal-header-links { gap: 4px; }
+      .modal-header-link { padding: 3px 8px; font-size: 11px; }
+      .modal-header-meta { font-size: 11px; line-height: 15px; }
       .submit-modal {
         width: 100%; max-width: 100%;
         border-radius: var(--radius) var(--radius) 0 0;
@@ -961,25 +1178,60 @@
 
     /* Modal 内 AI 区块 */
     .ai-section {
-      margin-top: 20px; border-top: 1px solid var(--border); padding-top: 18px;
+      margin-top: 20px;
+      border-top: 1px solid rgba(148, 163, 184, 0.22);
+      padding-top: 18px;
+    }
+    .modal-scroll-content > .ai-section:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
     }
     .ai-section-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .ai-section--empty .ai-section-header {
+      align-items: center;
+      margin-bottom: 0;
+      min-height: 28px;
+      flex-wrap: nowrap;
+    }
+    .ai-section-title-group {
+      display: flex; align-items: flex-start; gap: 8px;
+      min-width: 0; flex: 1 1 320px;
+      flex-wrap: wrap;
+    }
+    .ai-section--empty .ai-section-title-group {
+      align-items: center;
+      flex-wrap: nowrap;
+      flex: 1 1 auto;
     }
     .ai-section-title {
       display: flex; align-items: center; gap: 8px;
       font-size: 13px; font-weight: 600; color: var(--text-primary);
+      flex-shrink: 0;
     }
     .ai-section-title svg { color: var(--accent-purple); }
-    .ai-section-actions { display: flex; gap: 8px; }
+    .ai-section-title-group .ai-trigger-hint {
+      font-size: 12px; line-height: 17px; color: var(--text-muted);
+      white-space: normal;
+      overflow: visible; text-overflow: clip;
+      min-width: 0;
+      flex: 1 1 220px;
+    }
+    .ai-section-actions { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
+    .ai-section--empty .ai-section-actions { align-items: center; }
     .ai-btn {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px;
       font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;
     }
     .ai-btn-primary {
-      background: var(--accent-purple); color: #fff;
+      background: var(--accent-purple); color: #e8eaed;
+      font-size: 13px; font-weight: 600;
     }
     .ai-btn-primary:hover { background: #9370e8; box-shadow: 0 2px 10px rgba(167,139,250,0.3); }
     .ai-btn-secondary {
@@ -1011,6 +1263,23 @@
     @keyframes ai-spin { to { transform: rotate(360deg); } }
 
     /* 进度条 + 时间预估 */
+    .ai-running-box {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.2);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .ai-running-box .ai-status-bar {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+    .ai-running-box .ai-progress-wrap {
+      margin-bottom: 0;
+    }
     .ai-progress-wrap {
       margin-bottom: 14px;
     }
@@ -1071,6 +1340,33 @@
     .ai-change-reuse   { background: rgba(52,211,153,0.12);  color: var(--accent-green); }
     .ai-module-intent  { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
     .ai-module-notes   { font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .ai-module-review  {
+      margin-top: 6px; padding: 8px 10px; border-radius: var(--radius-sm);
+      background: rgba(99,102,241,0.04); border: 1px solid rgba(99,102,241,0.1);
+    }
+    .ai-review-header  { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .ai-review-gate    {
+      display: inline-flex; align-items: center; padding: 1px 6px;
+      border-radius: 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .ai-review-gate-pass       { background: rgba(52,211,153,0.12); color: #34d399; }
+    .ai-review-gate-notes      { background: rgba(251,191,36,0.12); color: #d97706; }
+    .ai-review-gate-blocked    { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .ai-review-dims   { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .ai-review-dim     {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 1px 6px; border-radius: 6px; font-size: 9px; font-weight: 500;
+    }
+    .ai-dim-pass       { background: rgba(52,211,153,0.08); color: #34d399; }
+    .ai-dim-advisory   { background: rgba(251,191,36,0.08); color: #d97706; }
+    .ai-dim-blocking   { background: rgba(239,68,68,0.08); color: #ef4444; }
+    .ai-review-detail-list { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+    .ai-review-detail-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .ai-review-detail-item:last-child { border-bottom: none; }
+    .ai-review-detail-header { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+    .ai-review-detail-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); }
+    .ai-review-detail-note { font-size: 10px; color: var(--text-muted); line-height: 1.5; padding-left: 2px; }
+    .ai-review-summary { font-size: 10px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; padding: 4px 6px; background: rgba(255,255,255,0.02); border-radius: 4px; }
     .ai-module-status-confirmed { border-color: rgba(52,211,153,0.3); }
     .ai-module-confirmed-tag {
       display: inline-flex; align-items: center; gap: 4px;
@@ -1875,14 +2171,31 @@ function renderStatusHistory(req) {
   const history = req.status_history;
   if (!Array.isArray(history) || history.length === 0) return "";
 
-  const itemsHtml = history.map(function(item, index) {
+  const validItems = history
+    .map(function(item, index) {
+      const date = item && item.date != null ? String(item.date).trim() : "";
+      const from = item && item.from != null ? String(item.from).trim() : "";
+      const to = item && item.to != null ? String(item.to).trim() : "";
+      if (!date && !from && !to) return null;
+      return {
+        index: index,
+        date: date,
+        from: from,
+        to: to
+      };
+    })
+    .filter(Boolean);
+
+  if (validItems.length === 0) return "";
+
+  const itemsHtml = validItems.map(function(item) {
     return '<div class="status-history-item">'
-      + '<span class="status-history-date">' + item.date + '</span>'
+      + '<span class="status-history-date">' + escapeHtml(item.date) + '</span>'
       + '<span class="status-history-dot"></span>'
-      + '<span class="status-history-from">' + item.from + '</span>'
+      + '<span class="status-history-from">' + escapeHtml(item.from) + '</span>'
       + '<span class="status-history-arrow">→</span>'
-      + '<span class="status-history-to">' + item.to + '</span>'
-      + '<button class="status-history-delete" title="删除此记录" onclick="event.stopPropagation();deleteStatusHistory(\'' + req.id + '\',' + index + ')">'
+      + '<span class="status-history-to">' + escapeHtml(item.to) + '</span>'
+      + '<button class="status-history-delete" title="删除此记录" onclick="event.stopPropagation();deleteStatusHistory(\'' + req.id + '\',' + item.index + ')">'
       + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
       + '<polyline points="3 6 5 6 21 6"/>'
       + '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'
@@ -1898,6 +2211,56 @@ function renderStatusHistory(req) {
 }
 
 // ==================== Detail Modal ====================
+/**
+ * 需求详情内滚动：顶区折叠 + 底部渐隐（可继续下滑时显示，避免像硬截断）
+ */
+function updateModalScrollAffordance() {
+  var modal = document.getElementById("modalContent");
+  if (!modal) return;
+  var scrollEl = modal.querySelector(".modal-scroll-content");
+  if (!scrollEl) return;
+  var outer = modal.querySelector(".modal-scroll-outer");
+  modal.classList.toggle("modal-scrolled", scrollEl.scrollTop > 10);
+  if (outer) {
+    var sh = scrollEl.scrollHeight;
+    var ch = scrollEl.clientHeight;
+    var st = scrollEl.scrollTop;
+    var canScroll = sh > ch + 1;
+    var atEnd = st + ch >= sh - 12;
+    outer.classList.toggle("modal-scroll-outer--more-below", canScroll && !atEnd);
+  }
+}
+
+function _syncModalBottomConfirmAction(req) {
+  var modal = document.getElementById("modalContent");
+  if (!modal) return;
+  var outer = modal.querySelector(".modal-scroll-outer");
+  if (!outer) return;
+
+  var shouldShow = !!(req && req.ai_design && req.ai_design.status === "needs_confirmation");
+  var existing = outer.querySelector(".modal-bottom-action");
+
+  if (!shouldShow) {
+    outer.classList.remove("has-bottom-action");
+    if (existing) existing.remove();
+    return;
+  }
+
+  outer.classList.add("has-bottom-action");
+  if (existing) return;
+
+  var actionWrap = document.createElement("div");
+  actionWrap.className = "modal-bottom-action";
+  actionWrap.innerHTML = '<button class="ai-btn ai-btn-confirm"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>确认方案</button>';
+  var btn = actionWrap.querySelector("button");
+  if (btn) {
+    btn.addEventListener("click", function() {
+      confirmAiDesign(req.id);
+    });
+  }
+  outer.appendChild(actionWrap);
+}
+
 function openModal(reqId) {
   if (draggedReqId) return;
   const req = requirementsData.requirements.find(r => r.id === reqId);
@@ -1905,24 +2268,39 @@ function openModal(reqId) {
 
   const meta = getStatusMeta(req.status);
   const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
+  const prdHeaderLink = req.prd_url
+    ? '<a href="' + req.prd_url + '" target="_blank" class="modal-header-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
+    : '<button class="modal-header-link modal-header-link-add" onclick="event.preventDefault();promptPrdUrl(\'' + req.id + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</button>';
+  const figmaHeaderLink = req.design_url
+    ? '<a href="' + req.design_url + '" target="_blank" class="modal-header-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Figma</a>'
+    : '<button class="modal-header-link modal-header-link-add" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Figma</button>';
+
+  const needsConfirmation = !!(req.ai_design && req.ai_design.status === 'needs_confirmation');
+  const modalBottomAction = needsConfirmation
+    ? '<div class="modal-bottom-action"><button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>确认方案</button></div>'
+    : '';
 
   const modal = document.getElementById("modalContent");
-  modal.innerHTML = '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-name">' + escapeHtml(req.name) + '</div></div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
-    + '<div class="modal-body">'
-    + '<div class="modal-meta"><span class="badge badge-status ' + meta.cssClass + '">' + escapeHtml(req.status) + '</span><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">' + escapeHtml(req.part) + '</span></div>'
-    + '<div class="modal-summary">' + escapeHtml(req.summary) + '</div>'
-    + '<div class="modal-links">'
-    + (req.prd_url
-      ? '<a href="' + req.prd_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
-      : '<button class="modal-link-add-prd" onclick="event.preventDefault();promptPrdUrl(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ 添加 PRD</button>')
-    + (req.design_url
-      ? '<a href="' + req.design_url + '" target="_blank" class="modal-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Design</a>'
-      : '<button class="modal-link-add-design" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>+ Add Design</button>')
+  modal.setAttribute("data-open-req-id", req.id);
+  modal.classList.remove("modal-scrolled");
+  var historyHtml = renderStatusHistory(req);
+  var historyCard = historyHtml ? '<div class="modal-history-card">' + historyHtml + '</div>' : '';
+  var metaLineHtml = '<div class="modal-header-meta">提交人: ' + escapeHtml(req.owner || '未指定') + ' | Created: ' + escapeHtml(req.created_at || '') + ' | Updated: ' + escapeHtml(req.updated_at || '') + '</div>';
+
+  modal.innerHTML = '<div class="modal-sticky-section">'
+    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-title-row"><div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><div class="modal-header-links">' + prdHeaderLink + figmaHeaderLink + '</div></div>' + metaLineHtml + '</div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
+    + '<div class="modal-body-collapse"><div class="modal-body">'
+    + '<div class="modal-meta modal-meta-scroll-hide"><span class="badge badge-status ' + meta.cssClass + '">' + escapeHtml(req.status) + '</span><span class="badge badge-part">' + escapeHtml(req.part) + '</span></div>'
+    + historyCard
+    + '</div></div>'
     + '</div>'
-    + (req.notes ? '<div class="modal-notes">' + req.notes + '</div>' : '')
-    + '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Owner: ' + req.owner + ' | Created: ' + req.created_at + ' | Updated: ' + req.updated_at + '</div>'
-    + renderStatusHistory(req)
+    + '<div class="modal-scroll-outer' + (needsConfirmation ? ' has-bottom-action' : '') + '">'
+    + '<div class="modal-scroll-content">'
     + renderAiDesignSection(req)
+    + renderGstackReviewSection(req)
+    + '</div>'
+    + '<div class="modal-scroll-fade" aria-hidden="true"></div>'
+    + modalBottomAction
     + '</div>';
 
   document.getElementById("modalOverlay").classList.add("visible");
@@ -1933,6 +2311,18 @@ function openModal(reqId) {
       (req.ai_design.status === 'queued' || req.ai_design.status === 'processing')) {
     startAiPolling(req.id, req.ai_design.job_id);
   }
+
+  var scrollEl2 = modal.querySelector(".modal-scroll-content");
+  if (scrollEl2) {
+    scrollEl2.addEventListener("scroll", updateModalScrollAffordance, { passive: true });
+  }
+  [0, 32, 120, 400].forEach(function (ms) {
+    setTimeout(updateModalScrollAffordance, ms);
+  });
+  requestAnimationFrame(function () {
+    requestAnimationFrame(updateModalScrollAffordance);
+  });
+  _syncModalBottomConfirmAction(req);
 }
 
 function closeModal(event) {
@@ -1948,18 +2338,37 @@ function forceCloseModal() {
 }
 
 // ==================== PRD URL Prompt ====================
-function promptPrdUrl(reqId) {
+async function promptPrdUrl(reqId) {
   const req = requirementsData.requirements.find(r => r.id === reqId);
   if (!req) return;
 
   const url = prompt("请输入语雀 PRD 链接：");
   if (url && url.trim()) {
-    req.prd_url = url.trim();
+    var prdUrl = url.trim();
+    req.prd_url = prdUrl;
+    var creatorSynced = false;
+
+    // 补充 PRD 时，优先同步语雀作者到提交人
+    try {
+      var docInfo = await fetchYuqueDocInfo(prdUrl);
+      var creator = resolveYuqueDocCreator(docInfo);
+      if (creator) {
+        req.owner = creator;
+        creatorSynced = true;
+      }
+    } catch (err) {
+      console.warn("[Yuque] Failed to enrich creator on promptPrdUrl:", err.message);
+    }
+
     req.updated_at = todayStr();
     saveData();
     openModal(reqId);
     renderKanban();
-    showToast("PRD 链接已保存", "success");
+    if (creatorSynced) {
+      showToast("PRD 链接已保存，已同步语雀作者为提交人", "success");
+    } else {
+      showToast("PRD 链接已保存，暂未识别语雀作者", "success");
+    }
   }
 }
 
@@ -2003,7 +2412,7 @@ function openEditModal(reqId) {
     + '<div class="form-row"><div><label>Part</label><select id="editPartSelect">' + partOptions + '</select></div>'
     + '<div><label>Priority</label><select id="editPrioritySelect">' + priorityOptions + '</select></div></div>'
     + '<div class="form-row"><div><label>Status</label><select id="editStatusSelect">' + statusOptions + '</select></div>'
-    + '<div><label>Owner</label><input type="text" id="editOwnerInput" value="' + (req.owner || '').replace(/"/g, '&quot;') + '" /></div></div>'
+    + '<div><label>提交人</label><input type="text" id="editOwnerInput" value="' + (req.owner || '').replace(/"/g, '&quot;') + '" /></div></div>'
     + '<label>Summary</label>'
     + '<textarea id="editSummaryInput">' + (req.summary || '') + '</textarea>'
     + '<label>PRD URL</label>'
@@ -2093,17 +2502,17 @@ function closeSubmitModal(event) {
 // ==================== Yuque URL & Text Parser ====================
 
 /**
- * Parse title and author from pasted Yuque link text.
+ * Parse title and URL from pasted Yuque link text.
  *
  * Supported input formats:
  *   "https://aliyuque.antfin.com/.../fgc6um08yipggeg3# 《通程权益表达（用户端）》"
  *   "https://aliyuque.antfin.com/.../fgc6um08yipggeg3/collaborator/join?token=...# 《通程权益表达（用户端）》"
  *   "https://aliyuque.antfin.com/journey.fyn/xolgry/fgc6um08yipggeg3"
  *
- * Returns: { title, author, cleanUrl }
+ * Returns: { title, cleanUrl }
  */
 function parseYuquePastedText(rawText) {
-  var result = { title: null, author: null, cleanUrl: rawText.trim() };
+  var result = { title: null, cleanUrl: rawText.trim() };
 
   // 1. Extract title from 《...》
   var titleMatch = rawText.match(/[《]([^》]+)[》]/);
@@ -2120,22 +2529,6 @@ function parseYuquePastedText(rawText) {
     cleanUrl = rawText.trim().split(/\s/)[0]; // fallback: take first URL-like part
   }
   result.cleanUrl = cleanUrl;
-
-  // 3. Extract author login from URL path (e.g., journey.fyn)
-  try {
-    var urlPart = cleanUrl.split('#')[0].split('?')[0];
-    var urlObj = new URL(urlPart);
-    var segments = urlObj.pathname.replace(/^\//, '').split('/').filter(Boolean);
-    // Skip leading 'g' segment if present (e.g., /g/journey.fyn/...)
-    if (segments[0] === 'g' && segments.length > 1) {
-      segments.shift();
-    }
-    if (segments.length >= 1) {
-      result.author = segments[0]; // e.g., "journey.fyn"
-    }
-  } catch (e) {
-    // ignore parse errors
-  }
 
   return result;
 }
@@ -2194,6 +2587,62 @@ async function fetchYuqueDocInfo(prdUrl) {
     }
     throw err;
   }
+}
+
+// 语雀用户名 → 花名映射表
+// 格式：{ "yuque_login": "花名" }
+// 新增成员时在此添加即可
+const YUQUE_NAME_MAP = {
+  "journey.fyn":  "良予",
+  "dengxinyang":  "良予",
+  "xiyu":         "晰予",
+  "sunli":        "孙笠",
+  "yiman":        "以慢",
+  "xinchuan":     "新川",
+  "loulan":       "楼兰",
+  "chefei":       "澈飞",
+  "zhixian":      "之娴",
+  "chenfang":     "宸芳",
+  "longcheng":    "龙城",
+  "shugui":       "黍归",
+  "youjin":       "又今"
+};
+
+function resolveYuqueDocCreator(docInfo) {
+  if (!docInfo || typeof docInfo !== "object") return "";
+  var candidates = [
+    docInfo.creator,
+    docInfo.creator_name,
+    docInfo.creatorName,
+    docInfo.author,
+    docInfo.author_name
+  ];
+  var rawName = "";
+  for (var i = 0; i < candidates.length; i += 1) {
+    var value = candidates[i];
+    if (typeof value === "string" && value.trim()) {
+      rawName = value.trim();
+      break;
+    }
+  }
+  if (!rawName) return "";
+
+  // 尝试花名映射：先精确匹配，再模糊匹配（用户名可能带后缀如 .fyn）
+  if (YUQUE_NAME_MAP[rawName]) return YUQUE_NAME_MAP[rawName];
+
+  // 模糊匹配：检查 rawName 是否包含映射表中的 key，或 key 是否包含 rawName
+  for (var key in YUQUE_NAME_MAP) {
+    if (rawName.includes(key) || key.includes(rawName)) {
+      return YUQUE_NAME_MAP[key];
+    }
+  }
+
+  // 如果 rawName 本身已经是中文花名（在 PART_OWNER_MAP 中），直接返回
+  for (var part in PART_OWNER_MAP) {
+    if (PART_OWNER_MAP[part].includes(rawName)) return rawName;
+  }
+
+  return rawName;
 }
 
 function setSubmitBtnLoading(loading) {
@@ -2343,26 +2792,34 @@ async function handleSubmitReq() {
   // Step 1: Parse from pasted text (always works, no API needed)
   var parsed = parseYuquePastedText(rawInput);
   var docTitle = parsed.title || "New Requirement (from PRD)";
-  var docCreator = parsed.author || "未指定";
+  var docCreator = "";
   var prdUrl = parsed.cleanUrl;
   var docSummary = "待补充 - PRD 链接已提交";
 
-  console.log("[Yuque] Parsed from text - Title:", docTitle, "Author:", docCreator, "URL:", prdUrl);
+  console.log("[Yuque] Parsed from text - Title:", docTitle, "URL:", prdUrl);
 
-  // Step 2: Try API for richer info (title override, real name, description)
+  // Step 2: Pull PRD author/title/summary from Yuque API
   setSubmitBtnLoading(true);
 
   try {
     var docInfo = await fetchYuqueDocInfo(prdUrl);
     // API title overrides text-parsed title (more accurate)
     if (docInfo.title) docTitle = docInfo.title;
-    // API creator name overrides login (real name vs login)
-    if (docInfo.creator) docCreator = docInfo.creator;
+    // 提交人必须来自语雀 PRD 作者
+    docCreator = resolveYuqueDocCreator(docInfo);
     if (docInfo.description) docSummary = docInfo.description;
     console.log("[Yuque] API enriched - Title:", docTitle, "Creator:", docCreator);
   } catch (err) {
-    console.log("[Yuque] API unavailable, using text-parsed values:", err.message);
-    // No toast needed - text parsing already gave us good values
+    console.log("[Yuque] API unavailable:", err.message);
+    setSubmitBtnLoading(false);
+    showToast("无法获取语雀 PRD 作者，请检查链接或稍后重试", "error");
+    return;
+  }
+
+  if (!docCreator) {
+    setSubmitBtnLoading(false);
+    showToast("未识别到语雀 PRD 作者，暂无法提交该需求", "error");
+    return;
   }
 
   setSubmitBtnLoading(false);
@@ -2743,30 +3200,30 @@ function renderAiBadge(req) {
 function renderAiDesignSection(req) {
   var ai = req.ai_design;
 
-  var header = '<div class="ai-section-header">'
-    + '<div class="ai-section-title">'
-    + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
-    + '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>'
-    + '</svg>AI 设计助理</div>';
+  var titleSvg = 'AI帮你画原型';
+
+  function buildHeader(hintText, actionsHtml) {
+    return '<div class="ai-section-header">'
+      + '<div class="ai-section-title-group">'
+      + '<div class="ai-section-title">' + titleSvg + '</div>'
+      + (hintText ? '<span class="ai-trigger-hint">' + hintText + '</span>' : '')
+      + '</div>'
+      + '<div class="ai-section-actions">' + (actionsHtml || '') + '</div>'
+      + '</div>';
+  }
 
   // 没有 AI 任务时：显示触发按钮
   if (!ai || !ai.status) {
     if (!req.prd_url) {
-      return '<div class="ai-section">'
-        + header
-        + '<div class="ai-section-actions"></div></div>'
-        + '<div class="ai-trigger-wrap">'
-        + '<div class="ai-empty-hint">请先添加 PRD 链接，然后触发 AI 拆解</div>'
-        + '</div></div>';
+      return '<div class="ai-section ai-section--design ai-section--empty">'
+        + buildHeader('请先添加 PRD 链接，然后开始', '')
+        + '</div>';
     }
-    return '<div class="ai-section">'
-      + header
-      + '<div class="ai-section-actions">'
-      + '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
+    var triggerBtn = '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
       + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
-      + '触发 AI 拆解</button>'
-      + '</div></div>'
-      + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案</div>'
+      + '开始</button>';
+    return '<div class="ai-section ai-section--design ai-section--empty">'
+      + buildHeader('LLM将读取 PRD 正文，生成页面/模块设计方案', triggerBtn)
       + '</div>';
   }
 
@@ -2796,12 +3253,13 @@ function renderAiDesignSection(req) {
       + '预览 H5</a>';
   }
 
-  var html = '<div class="ai-section">'
-    + header
-    + '<div class="ai-section-actions">'
-    + (isRunning ? '' : retryBtn)
-    + confirmBtn
-    + '</div></div>';
+  var taskActions = (isRunning ? '' : retryBtn) + confirmBtn;
+  var html = '<div class="ai-section ai-section--design">'
+    + buildHeader('', taskActions);
+
+  if (isRunning) {
+    html += '<div class="ai-running-box">';
+  }
 
   // 状态条
   html += '<div class="ai-status-bar ' + ai.status + '">'
@@ -2827,6 +3285,7 @@ function renderAiDesignSection(req) {
       + '</div>';
     // 启动进度条自动推进
     _startProgressTick(req.id, ai);
+    html += '</div>';
   }
 
   // 失败原因
@@ -2876,6 +3335,49 @@ function renderAiDesignSection(req) {
       if (mod.notes) {
         html += '<div class="ai-module-notes">备注：' + escapeHtml(mod.notes) + '</div>';
       }
+      // Gstack 四维审查结果
+      if (mod.review) {
+        var gateClass = { 'PASS': 'ai-review-gate-pass', 'PASS_WITH_NOTES': 'ai-review-gate-notes', 'BLOCKED': 'ai-review-gate-blocked' }[mod.review.gate_result] || 'ai-review-gate-pass';
+        var gateLabel = { 'PASS': 'PASS', 'PASS_WITH_NOTES': 'NOTES', 'BLOCKED': 'BLOCKED' }[mod.review.gate_result] || mod.review.gate_result;
+        html += '<div class="ai-module-review">';
+        // 审查头部：来源 + 总结论
+        html += '<div class="ai-review-header">'
+          + '<span class="ai-review-gate ' + gateClass + '">' + gateLabel + '</span>'
+          + '<span style="font-size:9px;color:var(--text-muted)">Gstack awesome-design-gates 审查</span>'
+          + '</div>';
+        // 四维审查详情（展开每个维度的具体建议）
+        if (mod.review.dimensions) {
+          var dimLabels = {
+            styleguide_branding: 'Styleguide & Branding',
+            color_typography:    'Color & Typography',
+            usability_review:    'Usability Review',
+            user_testing:        'User Testing'
+          };
+          var dimKeys = ['styleguide_branding', 'color_typography', 'usability_review', 'user_testing'];
+          html += '<div class="ai-review-detail-list">';
+          dimKeys.forEach(function(dk) {
+            var dim = mod.review.dimensions[dk];
+            if (dim) {
+              var dimClass = { 'PASS': 'ai-dim-pass', 'ADVISORY': 'ai-dim-advisory', 'BLOCKING': 'ai-dim-blocking' }[dim.verdict] || 'ai-dim-pass';
+              html += '<div class="ai-review-detail-item">'
+                + '<div class="ai-review-detail-header">'
+                + '<span class="ai-review-dim ' + dimClass + '">' + (dim.verdict || 'PASS') + '</span>'
+                + '<span class="ai-review-detail-label">' + (dimLabels[dk] || dk) + '</span>'
+                + '</div>';
+              if (dim.note) {
+                html += '<div class="ai-review-detail-note">' + escapeHtml(dim.note) + '</div>';
+              }
+              html += '</div>';
+            }
+          });
+          html += '</div>';
+        }
+        // 审查总结
+        if (mod.review.summary) {
+          html += '<div class="ai-review-summary"><strong>审查结论：</strong>' + escapeHtml(mod.review.summary) + '</div>';
+        }
+        html += '</div>';
+      }
       html += '</div>';
     });
   } else if (!isRunning && ai.status !== 'failed') {
@@ -2891,6 +3393,7 @@ function _stageLabel(stage) {
     fetching_prd:  '正在拉取 PRD 正文…',
     decomposing:   '正在拆解需求…',
     planning:      '正在生成设计方案…',
+    reviewing:     '正在进行设计审查…',
     generating_h5: '正在生成 H5 设计稿…'
   };
   return map[stage] || 'AI 处理中…';
@@ -2903,16 +3406,18 @@ function _stageLabel(stage) {
 function _calcAiProgress(ai) {
   // 各阶段在整体进度中的区间 [start%, end%]
   var stageRanges = {
-    fetching_prd:  [2,  20],
-    decomposing:   [20, 45],
-    planning:      [45, 65],
-    generating_h5: [65, 95]
+    fetching_prd:  [2,  18],
+    decomposing:   [18, 38],
+    planning:      [38, 55],
+    reviewing:     [55, 68],
+    generating_h5: [68, 95]
   };
   // 各阶段预估持续秒数
   var stageDurations = {
     fetching_prd:  15,
     decomposing:   30,
     planning:      30,
+    reviewing:     20,
     generating_h5: 60
   };
   // 总预估秒数
@@ -3073,7 +3578,20 @@ function startAiPolling(reqId, jobId) {
 
     try {
       var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId);
-      if (!res.ok) return;
+      if (!res.ok) {
+        // Job 不存在（后端重启后内存丢失），重置 AI 状态
+        if (res.status === 404) {
+          var reqForReset = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+          if (reqForReset && reqForReset.ai_design) {
+            reqForReset.ai_design = { status: 'failed', last_error: '任务已丢失（服务重启），请重新触发', updated_at: new Date().toISOString() };
+            saveData();
+            _refreshAiSectionIfOpen(reqForReset);
+          }
+          clearInterval(_aiPollTimers[reqId]);
+          delete _aiPollTimers[reqId];
+        }
+        return;
+      }
       var job = await res.json();
 
       var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
@@ -3129,16 +3647,44 @@ function startAiPolling(reqId, jobId) {
  * 如果当前 Modal 打开的就是这个需求，刷新其中的 AI 区块（避免整页重建）
  */
 function _refreshAiSectionIfOpen(req) {
+  _refreshSectionByModifier(req, 'design', renderAiDesignSection);
+  _syncModalBottomConfirmAction(req);
+  updateModalScrollAffordance();
+  setTimeout(updateModalScrollAffordance, 0);
+  setTimeout(updateModalScrollAffordance, 120);
+}
+
+/**
+ * 刷新 Gstack 审查区块（与 _refreshAiSectionIfOpen 对称）
+ */
+function _refreshReviewSectionIfOpen(req) {
+  _refreshSectionByModifier(req, 'review', renderGstackReviewSection);
+  updateModalScrollAffordance();
+  setTimeout(updateModalScrollAffordance, 0);
+  setTimeout(updateModalScrollAffordance, 120);
+}
+
+/**
+ * 通用区块刷新：按 .ai-section--<modifier> 定位并替换
+ */
+function _refreshSectionByModifier(req, modifier, renderFn) {
   var overlay = document.getElementById('modalOverlay');
   if (!overlay || !overlay.classList.contains('visible')) return;
-  var idEl = document.querySelector('#modalContent .modal-id');
-  if (!idEl || idEl.textContent !== req.id) return;
+  var modal = document.getElementById('modalContent');
+  if (!modal) return;
+  var currentReqId = modal.getAttribute('data-open-req-id');
+  if (!currentReqId) {
+    var idEl = modal.querySelector('.modal-id');
+    currentReqId = idEl ? idEl.textContent : '';
+  }
+  if (currentReqId !== req.id) return;
 
-  // 找到或创建 AI 区块容器
-  var body = document.querySelector('#modalContent .modal-body');
+  var body = document.querySelector('#modalContent .modal-scroll-content');
   if (!body) return;
-  var existing = body.querySelector('.ai-section');
-  var newHtml   = renderAiDesignSection(req);
+
+  var selector = '.ai-section--' + modifier;
+  var existing = body.querySelector(selector);
+  var newHtml = renderFn(req);
   var tmp = document.createElement('div');
   tmp.innerHTML = newHtml;
   var newSection = tmp.firstElementChild;

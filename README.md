@@ -103,6 +103,15 @@ node proxy-server.js
 
 完整流程见 `docs/ai-design-assistant-workflow.md`。
 
+## AI API 快速索引
+
+启动 `proxy-server.js` 后可用：
+
+- `POST /api/ai-design/jobs`：创建 AI 拆解任务
+- `GET /api/ai-design/jobs/:id`：查询任务状态与产物
+- `POST /api/ai-design/jobs/:id/retry`：重跑任务
+- `GET /api/yuque/doc-content?url=`：读取 PRD 正文
+
 ## 开发约定
 
 - 页面文案与注释以中文为主，便于业务协作。

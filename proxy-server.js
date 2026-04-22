@@ -143,8 +143,8 @@ const MIME_TYPES = {
 };
 
 function serveStaticFile(pathname, res) {
-  // Default to online-index.html（需求看板入口）
-  if (pathname === '/') pathname = '/online-index.html';
+  // Default to pages/online-index.html（需求看板入口）
+  if (pathname === '/') pathname = '/pages/online-index.html';
 
   const filePath = path.join(__dirname, pathname);
 
@@ -576,6 +576,35 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // 优先通过 ali-mcpcli skylark 工具读取（使用内网登录态，无需 Token）
+    // 失败时降级到语雀 OpenAPI Token 方式
+    console.log(`[Yuque] Fetching doc via skylark: ${yuqueUrl}`);
+
+    try {
+      const skylarkResult = await yuqueSvc.fetchDocViaSkylark(yuqueUrl);
+
+      console.log(`[Yuque] Skylark success - Title: "${skylarkResult.title}", Creator: "${skylarkResult.creator}"`);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        title: skylarkResult.title,
+        creator: skylarkResult.creator,
+        creator_login: skylarkResult.creator_login,
+        description: skylarkResult.description,
+        doc_id: skylarkResult.doc_id
+      }));
+      return;
+    } catch (skylarkErr) {
+      console.warn(`[Yuque] Skylark failed (${skylarkErr.message})，降级到 OpenAPI Token 方式`);
+    }
+
+    // 降级：使用语雀 OpenAPI Token
+    if (!config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Skylark 不可用，且 Yuque API Token 未配置。请检查内网/VPN 连接或更新 config/config.json。' }));
+      return;
+    }
+
     const parts = parseYuqueUrl(yuqueUrl);
     if (!parts) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -583,7 +612,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    console.log(`[Yuque] Fetching doc: ${parts.group_login}/${parts.book_slug}/${parts.doc_slug}`);
+    console.log(`[Yuque] Fallback OpenAPI: ${parts.group_login}/${parts.book_slug}/${parts.doc_slug}`);
 
     try {
       const result = await fetchYuqueDoc(config, parts.group_login, parts.book_slug, parts.doc_slug);
@@ -599,7 +628,7 @@ const server = http.createServer(async (req, res) => {
         updated_at: docData.updated_at
       };
 
-      console.log(`[Yuque] Success - Title: "${response.title}", Creator: "${response.creator}"`);
+      console.log(`[Yuque] OpenAPI success - Title: "${response.title}", Creator: "${response.creator}"`);
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(response));
