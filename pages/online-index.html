@@ -3212,7 +3212,20 @@ function startAiPolling(reqId, jobId) {
 
     try {
       var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId);
-      if (!res.ok) return;
+      if (!res.ok) {
+        // Job 不存在（后端重启后内存丢失），重置 AI 状态
+        if (res.status === 404) {
+          var reqForReset = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+          if (reqForReset && reqForReset.ai_design) {
+            reqForReset.ai_design = { status: 'failed', last_error: '任务已丢失（服务重启），请重新触发', updated_at: new Date().toISOString() };
+            saveData();
+            _refreshAiSectionIfOpen(reqForReset);
+          }
+          clearInterval(_aiPollTimers[reqId]);
+          delete _aiPollTimers[reqId];
+        }
+        return;
+      }
       var job = await res.json();
 
       var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
