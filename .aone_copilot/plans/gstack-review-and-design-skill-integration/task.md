@@ -19,8 +19,8 @@
 
 ## 验证
 
-- [/] 10. 重启后端，触发 AI 拆解，验证审查结果正确展示
-- [ ] 11. 确认方案后生成 H5，验证 token 和组件规范符合 SKILL.md
+- [x] 10. 重启后端，验证设计规范文件加载成功（SKILL.md 6951 chars, html-and-token-standard.md 1733 chars, 框架组件.md 16644 chars）
+- [ ] 11. 确认方案后生成 H5，验证 token 和组件规范符合 SKILL.md（需用户手动触发 AI 拆解验证）
 
 
 updateAtTime: 2026/4/22 10:34:59

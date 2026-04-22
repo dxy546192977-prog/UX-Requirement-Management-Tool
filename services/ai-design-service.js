@@ -931,14 +931,27 @@ ${fieldsHtml}
 
 // ---------- AI 调用 ----------
 
-async function _callAi(aiConfig, messages) {
+async function _callAi(aiConfig, messages, retries) {
+  const maxRetries = retries || 2;
   const provider = (aiConfig.provider || 'openai').toLowerCase();
 
-  if (provider === 'qwen' || provider === 'dashscope') {
-    return _callQwen(aiConfig, messages);
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      if (provider === 'qwen' || provider === 'dashscope') {
+        return await _callQwen(aiConfig, messages);
+      }
+      return await _callOpenAiCompat(aiConfig, messages);
+    } catch (err) {
+      const isRetryable = /provider returned error|timed out|ECONNRESET|ETIMEDOUT|429|502|503/i.test(err.message);
+      if (isRetryable && attempt < maxRetries) {
+        const delay = attempt * 3000;
+        console.warn(`[AiDesign] _callAi attempt ${attempt}/${maxRetries} failed (retryable): ${err.message}. Retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      throw err;
+    }
   }
-  // 默认 OpenAI 兼容接口
-  return _callOpenAiCompat(aiConfig, messages);
 }
 
 function _callOpenAiCompat(aiConfig, messages) {
