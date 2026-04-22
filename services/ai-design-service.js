@@ -54,13 +54,14 @@ const jobs = new Map();
 
 function _now() { return new Date().toISOString(); }
 
-function _newJob(reqId, prdUrl, skillKey) {
+function _newJob(reqId, prdUrl, skillKey, figmaUrl) {
   const id = 'job-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
   /** @type {AiDesignJob} */
   const job = {
     id,
     req_id:     reqId,
     prd_url:    prdUrl,
+    figma_url:  figmaUrl || '',
     skill_key:  skillKey || 'default',
     status:     'queued',
     stage:      null,
@@ -92,7 +93,18 @@ function _updateJob(job, patch) {
  */
 function createJob(reqId, prdUrl, config, yuqueSvc, opts) {
   const skillKey = (opts && opts.skillKey) || 'default';
-  const job = _newJob(reqId, prdUrl, skillKey);
+  const figmaUrl = (opts && opts.figmaUrl) || '';
+  const job = _newJob(reqId, prdUrl, skillKey, figmaUrl);
+
+  // Gstack 审查 skill 走独立分支，不经过 PRD -> 拆解 -> H5 流水线
+  if (skillKey === 'fliggy_flight_h5_review') {
+    _runReviewJob(job, config, yuqueSvc).catch((err) => {
+      console.error(`[AiDesign] Review job ${job.id} uncaught error:`, err.message);
+      _updateJob(job, { status: 'failed', stage: null, last_error: err.message });
+    });
+    return job;
+  }
+
   // 异步执行，不阻塞 HTTP 响应
   _runJob(job, config, yuqueSvc).catch((err) => {
     console.error(`[AiDesign] Job ${job.id} uncaught error:`, err.message);
@@ -118,6 +130,14 @@ function retryJob(jobId, config, yuqueSvc) {
     pages:      [],
     modules:    []
   });
+
+  if (job.skill_key === 'fliggy_flight_h5_review') {
+    _runReviewJob(job, config, yuqueSvc).catch((err) => {
+      console.error(`[AiDesign] Review job ${job.id} retry uncaught error:`, err.message);
+      _updateJob(job, { status: 'failed', stage: null, last_error: err.message });
+    });
+    return job;
+  }
 
   _runJob(job, config, yuqueSvc).catch((err) => {
     console.error(`[AiDesign] Job ${job.id} retry uncaught error:`, err.message);
@@ -696,6 +716,183 @@ async function _runJobMock(job, config, yuqueSvc) {
   });
 
   console.log(`[AiDesign Mock] Job ${job.id} — Done (mock). ${modules.length} modules.`);
+}
+
+// ---------- Gstack 审设计稿（fliggy_flight_h5_review）----------
+
+/**
+ * 执行 Gstack 审查任务
+ * 输入：job.figma_url（必需）+ job.prd_url（可选，提供更多上下文）
+ * 输出：审查结论 review_summary + 可选的报告文件 report_path
+ *
+ * 说明：真实的 fliggy-flight-h5-to-review skill 依赖 Claude 智能体 + Figma MCP，
+ * 在后端无法直接调用，因此此处基于 Figma 链接与 PRD 元数据做一次 AI 审查，
+ * 给出文字版本的审查结论；报告以 markdown 形式落盘到 pages/ 目录。
+ */
+async function _runReviewJob(job, config, yuqueSvc) {
+  const mockMode = _isMockMode(config);
+  if (mockMode) {
+    console.log(`[AiReview] Job ${job.id} — MOCK MODE`);
+    return _runReviewJobMock(job, config, yuqueSvc);
+  }
+
+  // Phase 1: 读取 Figma / PRD 上下文
+  _updateJob(job, { status: 'processing', stage: 'fetching_figma' });
+  console.log(`[AiReview] Job ${job.id} — Phase 1: preparing context (figma=${job.figma_url})`);
+
+  let prdTitle = '';
+  let prdBodyText = '';
+  if (job.prd_url) {
+    try {
+      const prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
+      prdTitle = prdContent.title || '';
+      prdBodyText = _stripHtml(prdContent.body || prdContent.description || '').slice(0, 4000);
+    } catch (err) {
+      console.warn(`[AiReview] Job ${job.id} — PRD fetch failed, continuing without PRD context: ${err.message}`);
+    }
+  }
+
+  // Phase 2: 调用 AI 执行审查
+  _updateJob(job, { stage: 'reviewing' });
+  const reviewAiConfig = _resolveStageAiConfig(config, 'planning');
+  console.log(`[AiReview] Job ${job.id} — Review model: ${reviewAiConfig.provider}/${reviewAiConfig.model}`);
+
+  let reviewText;
+  try {
+    reviewText = await _callAi(reviewAiConfig, _buildFigmaReviewPrompt(prdTitle, prdBodyText, job.figma_url, job.req_id));
+  } catch (err) {
+    throw new Error('Gstack 审查执行失败: ' + err.message);
+  }
+
+  // Phase 3: 整理报告（写入 markdown 文件）
+  _updateJob(job, { stage: 'finalizing' });
+  let reportPath = null;
+  let reviewSummary = '';
+  try {
+    const parsed = _parseFigmaReviewText(reviewText);
+    reviewSummary = parsed.summary;
+    reportPath = await _saveReviewReport(job, parsed.markdown);
+  } catch (err) {
+    console.warn(`[AiReview] Job ${job.id} — Save report failed (non-blocking): ${err.message}`);
+    reviewSummary = (reviewText || '').slice(0, 500);
+  }
+
+  _updateJob(job, {
+    status:          'completed',
+    stage:           null,
+    summary:         reviewSummary,
+    review_summary:  reviewSummary,
+    report_path:     reportPath
+  });
+  console.log(`[AiReview] Job ${job.id} — Done. report=${reportPath || '-'}`);
+}
+
+async function _runReviewJobMock(job, config, yuqueSvc) {
+  const _sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  _updateJob(job, { status: 'processing', stage: 'fetching_figma' });
+  await _sleep(800);
+
+  _updateJob(job, { stage: 'reviewing' });
+  await _sleep(1200);
+
+  _updateJob(job, { stage: 'finalizing' });
+  await _sleep(600);
+
+  const summary = `【Mock】Gstack 四维审查已完成。Figma 链接：${job.figma_url || '(未提供)'}。接入 AI API Key 后将使用真实审查结论。`;
+  const markdown = `# Gstack 审设计稿报告（Mock）
+
+- **需求 ID**：${job.req_id}
+- **Figma 链接**：${job.figma_url || '-'}
+- **PRD 链接**：${job.prd_url || '-'}
+
+## 总体结论
+PASS_WITH_NOTES（Mock 模式未执行真实审查）
+
+## 四维审查
+1. Styleguide & Branding：建议核对组件与飞猪品牌风格的一致性。
+2. Color & Typography：确认色彩对比度与字号层级。
+3. Usability Review：检查关键任务路径与异常态。
+4. User Testing：补充验收用例与最小可验证场景。
+
+> 接入 AI API Key 后将输出真实的四维审查结论。`;
+
+  let reportPath = null;
+  try {
+    reportPath = await _saveReviewReport(job, markdown);
+  } catch (err) {
+    console.warn(`[AiReview Mock] save report failed: ${err.message}`);
+  }
+
+  _updateJob(job, {
+    status:         'completed',
+    stage:          null,
+    summary,
+    review_summary: summary,
+    report_path:    reportPath
+  });
+  console.log(`[AiReview Mock] Job ${job.id} — Done (mock).`);
+}
+
+function _buildFigmaReviewPrompt(prdTitle, prdBodyText, figmaUrl, reqId) {
+  const systemPrompt = `你是飞猪机票资深设计审查专家，执行 Gstack awesome-design-gates 四维审查（Styleguide & Branding、Color & Typography、Usability Review、User Testing）。
+
+当前场景：在后端服务中对一份 Figma 设计稿执行结构化审查。由于你无法直接访问 Figma，需要结合 Figma 链接路径、PRD 上下文与飞猪机票设计规范，输出一份可指导设计评审的结论报告。
+
+输出必须是纯 Markdown，包含以下板块：
+1. 顶部一行输出 JSON 摘要（单行、以 <!--SUMMARY: ... --> 形式包裹），字段为 { "gate_result": "PASS|PASS_WITH_NOTES|BLOCKED", "summary": "<=80字结论" }
+2. 正文分为：总体结论 / 四维审查（每个维度 verdict + 关键建议） / 风险与优先级 / 建议行动项
+3. 所有建议要具体、可执行，避免空话；如缺信息请注明"需要人工核对"`;
+
+  const userPrompt = `请对以下 Figma 设计稿执行 Gstack 四维审查。
+
+- 需求 ID：${reqId}
+- Figma 链接：${figmaUrl}
+- PRD 标题：${prdTitle || '(未提供)'}
+- PRD 摘要：${prdBodyText || '(未提供)'}
+
+请按 system 中定义的格式输出 Markdown。`;
+
+  return [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt }
+  ];
+}
+
+/**
+ * 从 AI 返回的 markdown 中解析出摘要 JSON 与 markdown 本体
+ */
+function _parseFigmaReviewText(reviewText) {
+  const text = String(reviewText || '').trim();
+  const summaryMatch = text.match(/<!--\s*SUMMARY:\s*(\{[\s\S]*?\})\s*-->/);
+  let summary = '';
+  if (summaryMatch) {
+    try {
+      const json = JSON.parse(summaryMatch[1]);
+      summary = json.summary || '';
+    } catch (e) {
+      // 忽略解析失败
+    }
+  }
+  if (!summary) {
+    // 降级：取第一段非标题文字作为摘要
+    const firstPara = text.split(/\n{2,}/).find(p => p && !p.trim().startsWith('#') && !p.trim().startsWith('<!--'));
+    summary = (firstPara || text).replace(/\s+/g, ' ').slice(0, 200);
+  }
+  return { summary, markdown: text };
+}
+
+async function _saveReviewReport(job, markdown) {
+  const pagesDir = path.join(__dirname, '..', 'pages');
+  try {
+    fs.mkdirSync(pagesDir, { recursive: true });
+  } catch (e) {
+    // ignore
+  }
+  const fileName = `review-${job.id}.md`;
+  const absPath = path.join(pagesDir, fileName);
+  fs.writeFileSync(absPath, markdown, 'utf8');
+  return `pages/${fileName}`;
 }
 
 /** 根据 PRD 标题关键词推断涉及页面 */

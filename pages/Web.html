@@ -81,14 +81,7 @@
     .header-right {
       display: flex; align-items: center; gap: 16px;
       flex-shrink: 0;
-      margin-left: auto; /* 把统计数字推到最右 */
-    }
-    /* 标题右侧吸附按钮组：铃铛 + 搜索 + 提需求，紧跟标题 */
-    .header-title-actions {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
+      margin-left: auto;
     }
     /* 铃铛 + 搜索贴紧，避免被父级 gap 拉成「两列很开」 */
     .header-tools-inline {
@@ -107,7 +100,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 9px 18px;
+      padding: 8px 16px;
       border-radius: var(--radius-sm);
       font-size: 14px;
       font-weight: 500;
@@ -292,6 +285,12 @@
       font-size: 10px; font-weight: 600;
       padding: 1px 6px; border-radius: 4px;
     }
+    .modal-title-row .req-card-priority {
+      padding: 5px 6px;
+      border-radius: 8px;
+      line-height: 12px;
+      font-size: 10px;
+    }
     .priority-p0 { background: rgba(239,68,68,0.15); color: #ef4444; }
     .priority-p1 { background: rgba(245,158,11,0.15); color: #f59e0b; }
     .priority-p2 { background: rgba(79,140,255,0.15); color: #4f8cff; }
@@ -315,33 +314,43 @@
     }
     .modal-overlay.visible { display: flex; }
     .modal {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); width: 90%; max-width: 640px;
-      max-height: 80vh; overflow-y: auto; overflow-x: hidden;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      width: min(763px, calc(100vw - 56px));
+      max-height: 80vh; overflow: hidden;
       display: flex; flex-direction: column;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
     .modal-sticky-section {
       position: sticky; top: 0; z-index: 5;
       background: var(--bg-card);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-bottom: none;
+      box-shadow: none;
     }
-    .modal-sticky-top {
-      padding: 18px 28px 10px;
+    .modal-header {
+      padding: 20px 28px 14px;
       display: flex; justify-content: space-between; align-items: flex-start;
       gap: 12px;
     }
-    .modal-title-area { flex: 1; min-width: 0; }
+    .modal-title-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+    }
     .modal-title-row {
       display: flex;
       align-items: center;
       gap: 10px;
       min-width: 0;
+      flex-wrap: wrap;
     }
-    .modal-id { font-size: 11px; color: var(--text-muted); font-family: 'SF Mono','Fira Code',monospace; margin-bottom: 2px; letter-spacing: 0.3px; }
+    .modal-id { display: none; }
     .modal-name {
-      font-size: 17px; font-weight: 600;
+      font-size: 20px; font-weight: 600;
+      line-height: 20px;
       min-width: 0;
       flex: 0 1 auto;
       max-width: 100%;
@@ -349,16 +358,30 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .modal-header-meta {
+      font-size: 12px;
+      line-height: 17px;
+      color: var(--text-muted);
+    }
+    .modal-header-note {
+      font-size: 12px;
+      line-height: 17px;
+      color: var(--accent-blue);
+      background: rgba(79,140,255,0.08);
+      border: 1px solid rgba(79,140,255,0.22);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
     .modal-header-links {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
       flex-shrink: 0;
     }
     .modal-header-link {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       padding: 4px 10px;
       border-radius: var(--radius-sm);
       font-size: 12px;
@@ -391,62 +414,116 @@
       transition: all 0.2s; flex-shrink: 0;
     }
     .modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
-    .modal-sticky-detail {
-      padding: 0 28px 14px;
+    /* 用 grid 0fr/1fr 按真实高度过渡，避免 max-height 大数字导致「前段不动、后段猛收」 */
+    .modal-body-collapse {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      transition: grid-template-rows 0.42s cubic-bezier(0.32, 0.72, 0, 1);
       overflow: hidden;
-      max-height: 260px;
-      opacity: 1;
-      transition: max-height 0.22s ease, opacity 0.16s ease, padding 0.2s ease;
     }
-    .modal.modal-condensed .modal-sticky-detail {
-      max-height: 0;
-      opacity: 0;
-      padding-top: 0;
-      padding-bottom: 0;
+    .modal-sticky-section.is-body-collapsed .modal-body-collapse {
+      grid-template-rows: 0fr;
       pointer-events: none;
     }
-    .modal-detail-row-badges {
+    @media (prefers-reduced-motion: reduce) {
+      .modal-body-collapse {
+        transition-duration: 0.01ms;
+      }
+    }
+    .modal-body-collapse > .modal-body {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .modal-body {
+      padding: 12px 28px 28px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 16px;
     }
-    .modal-detail-row-badges .modal-meta {
-      display: inline-flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 0;
+    /* 外层包一层，底部渐隐提示「还可下滑」，避免内容像被硬裁切 */
+    .modal-scroll-outer {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
-    .modal-owner-badge {
-      font-size: 11px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .modal-sticky-detail .modal-summary {
-      padding: 10px 14px;
-      margin-bottom: 10px;
-    }
-    .modal-sticky-detail .modal-notes {
-      margin-bottom: 10px;
-    }
-    .modal-detail-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      opacity: 0.75;
+    .modal-scroll-outer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 28px;
+      right: 28px;
+      height: 1px;
+      background: rgba(148, 163, 184, 0.22);
+      pointer-events: none;
     }
     .modal-scroll-content {
-      padding: 18px 28px 28px;
-      overflow: visible;
+      flex: 1;
+      min-height: 0;
+      padding: 18px 28px max(28px, calc(28px + env(safe-area-inset-bottom, 0px)));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
-    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .modal-scroll-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 80px;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      background: linear-gradient(
+        to top,
+        var(--bg-card) 0%,
+        rgba(34, 37, 51, 0.5) 42%,
+        transparent 100%
+      );
+    }
+    .modal-scroll-outer.modal-scroll-outer--more-below .modal-scroll-fade {
+      opacity: 1;
+    }
+    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .modal-meta-scroll-hide {
+      transition: opacity 0.18s ease;
+    }
+    .modal.modal-scrolled .modal-meta-scroll-hide {
+      display: none;
+    }
+    .badge-part {
+      background: rgba(79,140,255,0.15);
+      color: var(--accent-blue);
+    }
     .modal-summary {
+      display: none;
       font-size: 14px; color: var(--text-secondary); line-height: 1.7;
       padding: 12px 16px; background: rgba(79,140,255,0.05);
       border-left: 3px solid var(--accent-blue);
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 16px;
+    }
+    .modal-history-card {
+      padding: 18px;
+      background: rgba(79,140,255,0.05);
+      border-radius: var(--radius-sm);
+      height: auto;
+      min-height: 0;
+    }
+    .modal-history-card .status-history {
+      margin-top: 0;
+      padding-top: 0;
+      height: auto;
+      min-height: 0;
+    }
+    .modal-history-card .status-history-list {
+      height: auto;
+      min-height: 0;
+      align-items: flex-start;
+    }
+    .modal-history-card .status-history-title {
+      margin-bottom: 6px;
     }
     .modal-links { display: flex; gap: 10px; margin-bottom: 16px; }
     .modal-link {
@@ -474,6 +551,7 @@
     }
     .modal-link-add-design:hover { background: #3a7aef; box-shadow: 0 2px 12px rgba(79,140,255,0.3); }
     .modal-notes {
+      display: none;
       padding: 10px 14px; background: rgba(245,158,11,0.06);
       border-radius: var(--radius-sm); font-size: 13px; color: var(--text-muted);
       border: 1px dashed rgba(245,158,11,0.2);
@@ -561,11 +639,11 @@
     .status-history {
       margin-top: 20px;
       padding-top: 16px;
-      border-top: 1px solid var(--border);
+      border-top: none;
     }
     .status-history-title {
       font-size: 11px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px;
+      margin-bottom: 12px;
     }
     .status-history-list {
       display: flex; flex-direction: column; gap: 8px;
@@ -867,7 +945,8 @@
       .header-stats::-webkit-scrollbar { display: none; }
       .stat-item { min-width: 56px; }
       .stat-value { font-size: 20px; }
-      .header-title-actions { flex-shrink: 0; min-width: 0; }
+      .header-tools-inline { flex-shrink: 0; min-width: 0; }
+      .btn-submit-desktop { flex-shrink: 0; }
       /* 看板延续默认：grid-auto-flow: column，所有列一行不换行不滚动 */
       .tab-btn { padding: 8px 14px; }
     }
@@ -916,7 +995,7 @@
         padding: 6px 12px;
         font-size: 13px;
       }
-      .header-title-actions { display: none; }
+      .btn-submit-desktop { display: none; }
 
       .header-stats {
         grid-area: stats;
@@ -936,7 +1015,11 @@
       .stat-value { font-size: 18px; }
       .stat-label { font-size: 10px; }
 
-      /* header-title-actions 在移动端已隐藏，铃铛+搜索由移动端专用布局处理 */
+      .header-tools-inline {
+        grid-area: tools;
+        justify-self: end;
+        align-self: center;
+      }
 
       /* Tab bar — horizontal scroll */
       .tab-bar {
@@ -966,25 +1049,15 @@
         max-height: 90vh;
         border-radius: var(--radius) var(--radius) 0 0;
       }
-      .modal-sticky-top { padding: 14px 18px 8px; gap: 8px; }
-      .modal-sticky-detail { padding: 0 18px 12px; max-height: 260px; }
-      .modal-scroll-content { padding: 12px 18px 24px; }
-      .modal-name { font-size: 15px; }
+      .modal-header { padding: 14px 18px 10px; }
+      .modal-body { padding: 14px 18px 16px; }
+      .modal-scroll-content { padding: 12px 18px max(40px, calc(24px + env(safe-area-inset-bottom, 0px))); }
+      .modal-name { font-size: 15px; line-height: 1.3; }
+      .modal-title-area { gap: 8px; }
       .modal-title-row { gap: 6px; }
-      .modal-header-links { gap: 6px; }
+      .modal-header-links { gap: 4px; }
       .modal-header-link { padding: 3px 8px; font-size: 11px; }
-      .modal-detail-row-badges {
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-      .modal-owner-badge {
-        width: 100%;
-        order: 2;
-      }
-      .modal-detail-row-badges .modal-meta {
-        order: 1;
-        width: 100%;
-      }
+      .modal-header-meta { font-size: 11px; line-height: 15px; }
       .submit-modal {
         width: 100%; max-width: 100%;
         border-radius: var(--radius) var(--radius) 0 0;
@@ -1094,27 +1167,60 @@
 
     /* Modal 内 AI 区块 */
     .ai-section {
-      margin-top: 20px;
-      border-top: 1px solid rgba(148, 163, 184, 0.22);
-      padding-top: 18px;
+      margin-top: 16px;
+      border-top: none;
+      padding-top: 0;
+    }
+    .modal-scroll-content > .ai-section:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
     }
     .ai-section-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .ai-section--empty .ai-section-header {
+      align-items: center;
+      margin-bottom: 0;
+      min-height: 28px;
+      flex-wrap: nowrap;
+    }
+    .ai-section-title-group {
+      display: flex; align-items: flex-start; gap: 8px;
+      min-width: 0; flex: 1 1 320px;
+      flex-wrap: wrap;
+    }
+    .ai-section--empty .ai-section-title-group {
+      align-items: center;
+      flex-wrap: nowrap;
+      flex: 1 1 auto;
     }
     .ai-section-title {
       display: flex; align-items: center; gap: 8px;
       font-size: 13px; font-weight: 600; color: var(--text-primary);
+      flex-shrink: 0;
     }
     .ai-section-title svg { color: var(--accent-purple); }
-    .ai-section-actions { display: flex; gap: 8px; }
+    .ai-section-title-group .ai-trigger-hint {
+      font-size: 12px; line-height: 17px; color: var(--text-muted);
+      white-space: normal;
+      overflow: visible; text-overflow: clip;
+      min-width: 0;
+      flex: 1 1 220px;
+    }
+    .ai-section-actions { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
+    .ai-section--empty .ai-section-actions { align-items: center; }
     .ai-btn {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px;
       font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;
     }
     .ai-btn-primary {
-      background: var(--accent-purple); color: #fff;
+      background: var(--accent-purple); color: #e8eaed;
+      font-size: 13px; font-weight: 600;
     }
     .ai-btn-primary:hover { background: #9370e8; box-shadow: 0 2px 10px rgba(167,139,250,0.3); }
     .ai-btn-secondary {
@@ -1199,104 +1305,29 @@
       font-size: 11px; font-weight: 600; color: var(--accent-purple);
       text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
     }
+    .ai-review-merged {
+      border: 1px solid rgba(52,211,153,0.22);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 14px;
+      background: rgba(52,211,153,0.04);
+    }
+    .ai-review-merged .ai-status-bar {
+      margin-bottom: 0;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0;
+      padding: 10px 14px;
+    }
+    .ai-review-merged-body {
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      background: rgba(255,255,255,0.01);
+    }
 
-    /* 模块表 */
-    .ai-modules-label {
-      font-size: 11px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
-    }
-    .ai-module-item {
-      padding: 12px 14px; border-radius: var(--radius-sm);
-      border: 1px solid var(--border); background: var(--bg-column);
-      margin-bottom: 8px; display: grid; gap: 5px;
-    }
-    .ai-module-item:last-child { margin-bottom: 0; }
-    .ai-module-header { display: flex; align-items: center; gap: 8px; }
-    .ai-module-name { font-size: 13px; font-weight: 600; color: var(--text-primary); flex: 1; }
-    .ai-module-edit-btn {
-      border: 1px solid rgba(99,102,241,0.25);
-      background: rgba(99,102,241,0.08);
-      color: #a5b4fc;
-      border-radius: 8px;
-      font-size: 10px;
-      padding: 2px 8px;
-      cursor: pointer;
-      transition: all 0.16s;
-    }
-    .ai-module-edit-btn:hover {
-      background: rgba(99,102,241,0.16);
-      border-color: rgba(99,102,241,0.4);
-      color: #c7d2fe;
-    }
-    .ai-module-inline-edit {
-      border-color: rgba(99,102,241,0.35);
-      box-shadow: inset 0 0 0 1px rgba(99,102,241,0.1);
-    }
-    .ai-inline-grid {
-      display: grid;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .ai-inline-field label {
-      display: block;
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .ai-inline-field input,
-    .ai-inline-field textarea,
-    .ai-inline-field select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.02);
-      color: var(--text-primary);
-      font-size: 12px;
-      padding: 7px 9px;
-      font-family: inherit;
-    }
-    .ai-inline-field textarea {
-      min-height: 64px;
-      resize: vertical;
-      line-height: 1.5;
-    }
-    .ai-inline-two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .ai-inline-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 4px;
-    }
-    .ai-inline-save-btn,
-    .ai-inline-cancel-btn {
-      border-radius: 8px;
-      font-size: 11px;
-      padding: 5px 10px;
-      cursor: pointer;
-      border: 1px solid transparent;
-    }
-    .ai-inline-save-btn {
-      background: rgba(52,211,153,0.14);
-      border-color: rgba(52,211,153,0.3);
-      color: #6ee7b7;
-    }
-    .ai-inline-cancel-btn {
-      background: rgba(148,163,184,0.12);
-      border-color: rgba(148,163,184,0.25);
-      color: #cbd5e1;
-    }
-    .ai-inline-section-title {
-      font-size: 10px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-top: 2px;
-    }
-    .ai-module-page { font-size: 11px; color: var(--text-muted); }
+    /* 模块徽标（沿用于 Gstack 单卡片内部） */
     .ai-change-badge {
       display: inline-flex; align-items: center;
       padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600;
@@ -1304,60 +1335,88 @@
     .ai-change-create  { background: rgba(34,211,238,0.12);  color: var(--accent-cyan); }
     .ai-change-modify  { background: rgba(245,158,11,0.12);  color: var(--accent-orange); }
     .ai-change-reuse   { background: rgba(52,211,153,0.12);  color: var(--accent-green); }
-    .ai-module-intent  { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
-    .ai-module-notes   { font-size: 11px; color: var(--text-muted); font-style: italic; }
-    .ai-module-review  {
-      margin-top: 6px; padding: 8px 10px; border-radius: var(--radius-sm);
-      background: rgba(99,102,241,0.04); border: 1px solid rgba(99,102,241,0.1);
+
+    /* Gstack 风格单卡片 */
+    .ai-gstack-card {
+      margin-bottom: 14px;
+      border: 1px solid rgba(52,211,153,0.22);
+      border-radius: var(--radius-sm);
+      background: rgba(52,211,153,0.04);
+      overflow: hidden;
     }
-    .ai-review-header  { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-    .ai-review-gate    {
-      display: inline-flex; align-items: center; padding: 1px 6px;
-      border-radius: 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+    .ai-gstack-status {
+      margin-bottom: 0;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .ai-review-gate-pass       { background: rgba(52,211,153,0.12); color: #34d399; }
-    .ai-review-gate-notes      { background: rgba(251,191,36,0.12); color: #d97706; }
-    .ai-review-gate-blocked    { background: rgba(239,68,68,0.12); color: #ef4444; }
-    .ai-review-dims   { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-    .ai-review-dim     {
-      display: inline-flex; align-items: center; gap: 3px;
-      padding: 1px 6px; border-radius: 6px; font-size: 9px; font-weight: 500;
+    /* 让 AI 统一卡片头部与下方“审查完成”头部视觉一致 */
+    .ai-status-bar.ai-gstack-status {
+      background: rgba(52,211,153,0.08);
+      color: var(--accent-green);
+      border: 1px solid rgba(52,211,153,0.2);
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .ai-dim-pass       { background: rgba(52,211,153,0.08); color: #34d399; }
-    .ai-dim-advisory   { background: rgba(251,191,36,0.08); color: #d97706; }
-    .ai-dim-blocking   { background: rgba(239,68,68,0.08); color: #ef4444; }
-    .ai-review-skill-tag { font-size: 9px; color: var(--text-muted); font-style: italic; }
-    .ai-review-focus { margin-top: 6px; }
-    .ai-review-focus-label { font-size: 10px; font-weight: 600; color: var(--accent-indigo, #6366f1); margin-bottom: 3px; }
-    .ai-review-focus-list {
-      margin: 0; padding-left: 16px; font-size: 10px; color: var(--text-secondary);
-      line-height: 1.6; list-style-type: disc;
+    .ai-gstack-status-time {
+      margin-left: auto;
+      font-size: 11px;
+      opacity: 0.6;
     }
-    .ai-review-focus-list li { margin-bottom: 1px; }
-    .ai-review-detail-list { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
-    .ai-review-detail-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .ai-review-detail-item:last-child { border-bottom: none; }
-    .ai-review-detail-header { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-    .ai-review-detail-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); }
-    .ai-review-detail-note { font-size: 10px; color: var(--text-muted); line-height: 1.5; padding-left: 2px; }
-    .ai-review-summary { font-size: 10px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; padding: 4px 6px; background: rgba(255,255,255,0.02); border-radius: 4px; }
-    .ai-module-status-confirmed { border-color: rgba(52,211,153,0.3); }
-    .ai-module-confirmed-tag {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 10px; color: var(--accent-green);
+    .ai-gstack-body {
+      padding: 14px;
+      background: rgba(255,255,255,0.01);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .ai-gstack-section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-purple);
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+    .ai-gstack-section-text {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+    .ai-gstack-module-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .ai-gstack-module-row {
+      padding: 12px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+      display: grid;
+      gap: 4px;
+    }
+    .ai-gstack-module-row:first-child { padding-top: 2px; }
+    .ai-gstack-module-row:last-child { border-bottom: none; padding-bottom: 2px; }
+    .ai-gstack-module-head {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .ai-gstack-module-name {
+      font-size: 13px; font-weight: 600; color: var(--text-primary); flex: 1;
+    }
+    .ai-gstack-module-meta {
+      font-size: 11px; color: var(--text-muted);
+    }
+    .ai-gstack-module-desc {
+      font-size: 12px; color: var(--text-secondary); line-height: 1.6;
+    }
+    .ai-gstack-module-notes {
+      font-size: 11px; color: var(--text-muted); font-style: italic;
     }
     .ai-empty-hint {
       text-align: center; padding: 24px; color: var(--text-muted);
       font-size: 13px; border: 1px dashed var(--border);
       border-radius: var(--radius-sm);
-    }
-    .ai-pages-row {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
-    }
-    .ai-page-tag {
-      padding: 3px 10px; border-radius: 10px; font-size: 11px;
-      background: rgba(79,140,255,0.1); color: var(--accent-blue);
-      border: 1px solid rgba(79,140,255,0.2);
     }
     .ai-trigger-wrap { display: flex; align-items: center; gap: 10px; }
     .ai-trigger-hint { font-size: 12px; color: var(--text-muted); }
@@ -1375,25 +1434,6 @@
       <div class="header-left-title">
         <h1>需求看板</h1>
       </div>
-      <!-- 标题右侧吸附按钮组：铃铛 + 搜索 + 提需求（桌面端紧贴标题） -->
-      <div class="header-title-actions">
-        <button class="btn-notify-settings" id="notifySettingsBtn" onclick="openNotifySettings()" title="钉钉通知设置">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="notify-dot"></span>
-        </button>
-        <div class="search-wrapper">
-          <button class="search-icon-btn" id="searchIconBtn" onclick="toggleSearch()" title="搜索需求">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
-          <div class="search-input-wrap" id="searchInputWrap">
-            <input class="search-input" id="searchInput" type="text" placeholder="搜索需求名称..." oninput="handleSearch(this.value)" />
-          </div>
-        </div>
-        <button class="btn-submit-req" onclick="openSubmitModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          提需求
-        </button>
-      </div>
       <div class="month-switcher">
         <button class="month-btn" onclick="shiftMonth(-1)" title="上个月">&#8249;</button>
         <span class="month-display" id="monthDisplay">-</span>
@@ -1408,6 +1448,25 @@
     </div>
     <div class="header-right">
       <div class="header-stats" id="headerStats"></div>
+      <div class="header-tools-inline">
+        <button class="btn-notify-settings" id="notifySettingsBtn" onclick="openNotifySettings()" title="钉钉通知设置">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notify-dot"></span>
+        </button>
+        <div class="search-wrapper">
+          <button class="search-icon-btn" id="searchIconBtn" onclick="toggleSearch()" title="搜索需求">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <div class="search-input-wrap" id="searchInputWrap">
+            <input class="search-input" id="searchInput" type="text" placeholder="搜索需求名称..." oninput="handleSearch(this.value)" />
+          </div>
+        </div>
+      </div>
+      <!-- 桌面端提需求按钮 -->
+      <button class="btn-submit-req btn-submit-desktop" onclick="openSubmitModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        提需求
+      </button>
     </div>
   </div>
 </header>
@@ -2143,16 +2202,50 @@ function deleteStatusHistory(reqId, index) {
 
 function renderStatusHistory(req) {
   const history = req.status_history;
-  if (!Array.isArray(history) || history.length === 0) return "";
+  if (!Array.isArray(history) || history.length === 0) {
+    if (req && req.status === "待对焦") {
+      const intakeTime = getPendingFocusIntakeTime(req);
+      return '<div class="status-history">'
+        + '<div class="status-history-title">状态变更记录</div>'
+        + '<div class="status-history-list">'
+        + '<div class="status-history-item">'
+        + '<span class="status-history-date">' + escapeHtml(intakeTime || "未记录") + '</span>'
+        + '<span class="status-history-dot"></span>'
+        + '<span class="status-history-from">提入</span>'
+        + '<span class="status-history-arrow">→</span>'
+        + '<span class="status-history-to">待对焦</span>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+    }
+    return "";
+  }
 
-  const itemsHtml = history.map(function(item, index) {
+  const validItems = history
+    .map(function(item, index) {
+      const date = item && item.date != null ? String(item.date).trim() : "";
+      const from = item && item.from != null ? String(item.from).trim() : "";
+      const to = item && item.to != null ? String(item.to).trim() : "";
+      if (!date && !from && !to) return null;
+      return {
+        index: index,
+        date: date,
+        from: from,
+        to: to
+      };
+    })
+    .filter(Boolean);
+
+  if (validItems.length === 0) return "";
+
+  const itemsHtml = validItems.map(function(item) {
     return '<div class="status-history-item">'
-      + '<span class="status-history-date">' + item.date + '</span>'
+      + '<span class="status-history-date">' + escapeHtml(item.date) + '</span>'
       + '<span class="status-history-dot"></span>'
-      + '<span class="status-history-from">' + item.from + '</span>'
+      + '<span class="status-history-from">' + escapeHtml(item.from) + '</span>'
       + '<span class="status-history-arrow">→</span>'
-      + '<span class="status-history-to">' + item.to + '</span>'
-      + '<button class="status-history-delete" title="删除此记录" onclick="event.stopPropagation();deleteStatusHistory(\'' + req.id + '\',' + index + ')">'
+      + '<span class="status-history-to">' + escapeHtml(item.to) + '</span>'
+      + '<button class="status-history-delete" title="删除此记录" onclick="event.stopPropagation();deleteStatusHistory(\'' + req.id + '\',' + item.index + ')">'
       + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
       + '<polyline points="3 6 5 6 21 6"/>'
       + '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'
@@ -2167,106 +2260,117 @@ function renderStatusHistory(req) {
     + '</div>';
 }
 
+function getPendingFocusIntakeTime(req) {
+  if (!req) return "";
+
+  if (req.intake_at != null && String(req.intake_at).trim()) {
+    return String(req.intake_at).trim();
+  }
+
+  if (Array.isArray(req.status_history)) {
+    for (let i = 0; i < req.status_history.length; i++) {
+      const item = req.status_history[i];
+      if (!item) continue;
+      const toStatus = item.to != null ? String(item.to).trim() : "";
+      const date = item.date != null ? String(item.date).trim() : "";
+      if (toStatus === "待对焦" && date) return date;
+    }
+  }
+
+  return req.created_at != null ? String(req.created_at).trim() : "";
+}
+
 // ==================== Detail Modal ====================
+/**
+ * 需求详情内滚动：顶区折叠 + 底部渐隐（可继续下滑时显示，避免像硬截断）
+ */
+function updateModalScrollAffordance() {
+  var modal = document.getElementById("modalContent");
+  if (!modal) return;
+  var scrollEl = modal.querySelector(".modal-scroll-content");
+  if (!scrollEl) return;
+  var outer = modal.querySelector(".modal-scroll-outer");
+  modal.classList.toggle("modal-scrolled", scrollEl.scrollTop > 10);
+  if (outer) {
+    var sh = scrollEl.scrollHeight;
+    var ch = scrollEl.clientHeight;
+    var st = scrollEl.scrollTop;
+    var canScroll = sh > ch + 1;
+    var atEnd = st + ch >= sh - 12;
+    outer.classList.toggle("modal-scroll-outer--more-below", canScroll && !atEnd);
+  }
+}
+
 function openModal(reqId) {
   if (draggedReqId) return;
-  _aiInlineEditState = { reqId: null, moduleIndex: null };
   const req = requirementsData.requirements.find(r => r.id === reqId);
   if (!req) return;
 
   const meta = getStatusMeta(req.status);
   const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
-
   const prdHeaderLink = req.prd_url
     ? '<a href="' + req.prd_url + '" target="_blank" class="modal-header-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</a>'
     : '<button class="modal-header-link modal-header-link-add" onclick="event.preventDefault();promptPrdUrl(\'' + req.id + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PRD</button>';
-  const designHeaderLink = req.design_url
+  const figmaHeaderLink = req.design_url
     ? '<a href="' + req.design_url + '" target="_blank" class="modal-header-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Figma</a>'
-    : '<button class="modal-header-link modal-header-link-add" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>添加Figma链接</button>';
+    : '<button class="modal-header-link modal-header-link-add" onclick="event.preventDefault();promptDesignUrl(\'' + req.id + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Figma</button>';
 
   const modal = document.getElementById("modalContent");
-  const summaryText = (req.summary || '').trim();
-  const summaryBlock = summaryText
-    ? '<div class="modal-summary">' + escapeHtml(summaryText) + '</div>'
-    : '';
-  const notesBlock = req.notes
-    ? '<div class="modal-notes">' + req.notes + '</div>'
-    : '';
+  modal.setAttribute("data-open-req-id", req.id);
+  modal.classList.remove("modal-scrolled");
+  var historyHtml = renderStatusHistory(req);
+  var historyCard = historyHtml ? '<div class="modal-history-card">' + historyHtml + '</div>' : '';
+  var metaLineHtml = '<div class="modal-header-meta">提交人: ' + escapeHtml(req.owner || '未指定') + ' | Created: ' + escapeHtml(req.created_at || '') + ' | Updated: ' + escapeHtml(req.updated_at || '') + '</div>';
 
   modal.innerHTML = '<div class="modal-sticky-section">'
-    + '<div class="modal-sticky-top">'
-    +   '<div class="modal-title-area">'
-    +     '<div class="modal-id">' + escapeHtml(req.id) + '</div>'
-    +     '<div class="modal-title-row">'
-    +       '<div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div>'
-    +       '<div class="modal-header-links">' + prdHeaderLink + designHeaderLink + '</div>'
-    +     '</div>'
-    +   '</div>'
-    +   '<div class="modal-actions">'
-    +     '<button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'
-    +     '<button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>'
-    +     '<button class="modal-close" onclick="forceCloseModal()">&times;</button>'
-    +   '</div>'
+    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-title-row"><div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><div class="modal-header-links">' + prdHeaderLink + figmaHeaderLink + '</div></div>' + metaLineHtml + '</div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
+    + '<div class="modal-body-collapse"><div class="modal-body">'
+    + historyCard
+    + '</div></div>'
     + '</div>'
-    + '<div class="modal-sticky-detail">'
-    +   '<div class="modal-detail-row-badges">'
-    +     '<div class="modal-meta">'
-    +       '<span class="badge badge-status ' + meta.cssClass + '">' + escapeHtml(req.status) + '</span>'
-    +       '<span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span>'
-    +       '<span class="badge" style="background:rgba(79,140,255,0.1);color:var(--accent-blue);border:1px solid rgba(79,140,255,0.2)">' + escapeHtml(req.part) + '</span>'
-    +     '</div>'
-    +     '<div class="modal-owner-badge">提交人：' + escapeHtml(req.owner || '未指定') + '</div>'
-    +   '</div>'
-    +   summaryBlock
-    +   notesBlock
-    +   '<div class="modal-detail-meta">Created: ' + req.created_at + ' · Updated: ' + req.updated_at + '</div>'
-    + '</div>'
-    + '</div>'
+    + '<div class="modal-scroll-outer">'
     + '<div class="modal-scroll-content">'
-    + renderStatusHistory(req)
     + renderAiDesignSection(req)
+    + renderGstackReviewSection(req)
+    + '</div>'
+    + '<div class="modal-scroll-fade" aria-hidden="true"></div>'
     + '</div>';
 
   document.getElementById("modalOverlay").classList.add("visible");
   document.body.style.overflow = "hidden";
-  bindModalScrollBehavior();
 
   // 若任务正在执行则自动轮询
   if (req.ai_design && req.ai_design.job_id &&
       (req.ai_design.status === 'queued' || req.ai_design.status === 'processing')) {
     startAiPolling(req.id, req.ai_design.job_id);
   }
+  if (req.ai_review && req.ai_review.job_id &&
+      (req.ai_review.status === 'queued' || req.ai_review.status === 'processing')) {
+    startGstackReviewPolling(req.id, req.ai_review.job_id);
+  }
+
+  var scrollEl2 = modal.querySelector(".modal-scroll-content");
+  if (scrollEl2) {
+    scrollEl2.addEventListener("scroll", updateModalScrollAffordance, { passive: true });
+  }
+  [0, 32, 120, 400].forEach(function (ms) {
+    setTimeout(updateModalScrollAffordance, ms);
+  });
+  requestAnimationFrame(function () {
+    requestAnimationFrame(updateModalScrollAffordance);
+  });
 }
 
 function closeModal(event) {
   // Allow direct calls (no event) or clicks on the overlay backdrop only
   if (event && event.target !== document.getElementById("modalOverlay")) return;
-  _aiInlineEditState = { reqId: null, moduleIndex: null };
   document.getElementById("modalOverlay").classList.remove("visible");
   document.body.style.overflow = "";
 }
 
 function forceCloseModal() {
-  _aiInlineEditState = { reqId: null, moduleIndex: null };
   document.getElementById("modalOverlay").classList.remove("visible");
   document.body.style.overflow = "";
-}
-
-function bindModalScrollBehavior() {
-  var modal = document.getElementById("modalContent");
-  if (!modal) return;
-  var scroller = modal;
-
-  var toggleCondensed = function() {
-    if (scroller.scrollTop > 12) {
-      modal.classList.add("modal-condensed");
-    } else {
-      modal.classList.remove("modal-condensed");
-    }
-  };
-
-  scroller.addEventListener("scroll", toggleCondensed, { passive: true });
-  toggleCondensed();
 }
 
 // ==================== PRD URL Prompt ====================
@@ -2309,14 +2413,14 @@ function promptDesignUrl(reqId) {
   const req = requirementsData.requirements.find(r => r.id === reqId);
   if (!req) return;
 
-  const url = prompt("请输入 Figma 链接：");
+  const url = prompt("Please enter the Design URL (Figma, etc.):");
   if (url && url.trim()) {
     req.design_url = url.trim();
     req.updated_at = todayStr();
     saveData();
     openModal(reqId);
     renderKanban();
-    showToast("Figma 链接已保存", "success");
+    showToast("Design link saved", "success");
   }
 }
 
@@ -2349,7 +2453,7 @@ function openEditModal(reqId) {
     + '<textarea id="editSummaryInput">' + (req.summary || '') + '</textarea>'
     + '<label>PRD URL</label>'
     + '<input type="url" id="editPrdUrlInput" value="' + (req.prd_url || '') + '" />'
-    + '<label>Figma URL</label>'
+    + '<label>Design URL</label>'
     + '<input type="url" id="editDesignUrlInput" value="' + (req.design_url || '') + '" />'
     + '<label>Notes</label>'
     + '<textarea id="editNotesInput">' + (req.notes || '') + '</textarea>'
@@ -3099,7 +3203,6 @@ if (API_BASE) {
 
 /** 当前活跃的轮询 timer，用于清除 */
 var _aiPollTimers = {};
-var _aiInlineEditState = { reqId: null, moduleIndex: null };
 
 /**
  * 渲染卡片级 AI 状态徽标
@@ -3133,28 +3236,30 @@ function renderAiBadge(req) {
 function renderAiDesignSection(req) {
   var ai = req.ai_design;
 
-  var header = '<div class="ai-section-header">'
-    + '<div class="ai-section-title">'
-    + 'AI帮你画原型</div>';
+  var titleSvg = 'AI帮你画原型';
+
+  function buildHeader(hintText, actionsHtml) {
+    return '<div class="ai-section-header">'
+      + '<div class="ai-section-title-group">'
+      + '<div class="ai-section-title">' + titleSvg + '</div>'
+      + (hintText ? '<span class="ai-trigger-hint">' + hintText + '</span>' : '')
+      + '</div>'
+      + '<div class="ai-section-actions">' + (actionsHtml || '') + '</div>'
+      + '</div>';
+  }
 
   // 没有 AI 任务时：显示触发按钮
   if (!ai || !ai.status) {
     if (!req.prd_url) {
-      return '<div class="ai-section">'
-        + header
-        + '<div class="ai-section-actions"></div></div>'
-        + '<div class="ai-trigger-wrap">'
-        + '<div class="ai-empty-hint">请先添加 PRD 链接，然后触发 AI 拆解</div>'
-        + '</div></div>';
+      return '<div class="ai-section ai-section--design ai-section--empty">'
+        + buildHeader('请先添加 PRD 链接，然后开始', '')
+        + '</div>';
     }
-    return '<div class="ai-section">'
-      + header
-      + '<div class="ai-section-actions">'
-      + '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
+    var triggerBtn = '<button class="ai-btn ai-btn-primary" onclick="triggerAiDesign(\'' + req.id + '\')">'
       + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
-      + '触发 AI 拆解</button>'
-      + '</div></div>'
-      + '<div class="ai-trigger-hint">AI 将读取 PRD 正文，生成页面/模块设计方案</div>'
+      + '开始</button>';
+    return '<div class="ai-section ai-section--design ai-section--empty">'
+      + buildHeader('LLM将读取 PRD 正文，生成页面/模块设计方案', triggerBtn)
       + '</div>';
   }
 
@@ -3173,34 +3278,37 @@ function renderAiDesignSection(req) {
     + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>'
     + '重跑</button>';
 
-  var confirmBtn = '';
+  var actionBtn = '';
   if (ai.status === 'needs_confirmation') {
-    confirmBtn = '<button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')">'
+    actionBtn = '<button class="ai-btn ai-btn-confirm" onclick="confirmAiDesign(\'' + req.id + '\')">'
       + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
       + '确认方案</button>';
   } else if (ai.status === 'completed' && ai.html_output_path) {
-    confirmBtn = '<a class="ai-btn ai-btn-confirm" href="/' + ai.html_output_path + '" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;">'
+    actionBtn = '<a class="ai-btn ai-btn-confirm" href="/' + ai.html_output_path + '" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;">'
       + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
       + '预览 H5</a>';
   }
 
-  var html = '<div class="ai-section">'
-    + header
-    + '<div class="ai-section-actions">'
-    + (isRunning ? '' : retryBtn)
-    + confirmBtn
-    + '</div></div>';
+  var taskActions = (isRunning ? '' : retryBtn) + actionBtn;
+  var html = '<div class="ai-section ai-section--design">'
+    + buildHeader('', taskActions);
 
   if (isRunning) {
     html += '<div class="ai-running-box">';
   }
 
-  // 状态条
-  html += '<div class="ai-status-bar ' + ai.status + '">'
-    + (isRunning ? '<div class="ai-spinner"></div>' : '')
-    + '<span>' + escapeHtml(statusLabel) + '</span>'
-    + (ai.updated_at ? '<span style="margin-left:auto;font-size:11px;opacity:0.6">' + ai.updated_at.slice(0, 16).replace('T', ' ') + '</span>' : '')
-    + '</div>';
+  var hasPages   = ai.pages && ai.pages.length;
+  var hasModules = ai.modules && ai.modules.length;
+  var shouldUseUnifiedCard = !isRunning && ai.status !== 'failed' && (hasPages || hasModules || !!ai.summary);
+
+  // 状态条（未合并时单独展示）
+  if (!shouldUseUnifiedCard) {
+    html += '<div class="ai-status-bar ' + ai.status + '">'
+      + (isRunning ? '<div class="ai-spinner"></div>' : '')
+      + '<span>' + escapeHtml(statusLabel) + '</span>'
+      + (ai.updated_at ? '<span style="margin-left:auto;font-size:11px;opacity:0.6">' + ai.updated_at.slice(0, 16).replace('T', ' ') + '</span>' : '')
+      + '</div>';
+  }
 
   // 进度条 + 时间预估（仅在运行中时展示）
   if (isRunning) {
@@ -3229,143 +3337,82 @@ function renderAiDesignSection(req) {
       + escapeHtml(ai.last_error) + '</div>';
   }
 
-  // 摘要
-  if (ai.summary) {
+  // 摘要（未合并时单独展示）
+  if (ai.summary && !shouldUseUnifiedCard) {
     html += '<div class="ai-summary">'
       + '<div class="ai-summary-label">需求摘要</div>'
       + escapeHtml(ai.summary)
       + '</div>';
   }
 
-  // 涉及页面
-  if (ai.pages && ai.pages.length) {
-    html += '<div class="ai-pages-row">';
-    ai.pages.forEach(function(p) {
-      html += '<span class="ai-page-tag">' + escapeHtml(p) + '</span>';
-    });
-    html += '</div>';
-  }
+  // Gstack 风格单卡片：状态条 + 需求摘要 + 汇总结论 + 模块清单 收拢到一张卡片
+  if (shouldUseUnifiedCard) {
+    var moduleCount = hasModules ? ai.modules.length : 0;
+    var pageCount   = hasPages ? ai.pages.length : 0;
 
-  // 模块清单
-  if (ai.modules && ai.modules.length) {
-    html += '<div class="ai-modules-label">模块清单（' + ai.modules.length + ' 个）</div>';
-    ai.modules.forEach(function(mod, idx) {
-      var changeClass = { create: 'ai-change-create', modify: 'ai-change-modify', reuse: 'ai-change-reuse' }[mod.change_type] || 'ai-change-create';
-      var changeLabel = { create: '新建', modify: '改现有', reuse: '直接复用' }[mod.change_type] || mod.change_type;
-      var isConfirmed = mod.status === 'confirmed';
-      var isEditing = (_aiInlineEditState.reqId === req.id && _aiInlineEditState.moduleIndex === idx);
-      var idPrefix = _buildAiModuleInputIdPrefix(req.id, idx);
+    // 汇总结论文案：按是否多模块自动组织
+    var conclusionText;
+    if (moduleCount > 1) {
+      conclusionText = '已将 ' + moduleCount + ' 个模块收拢为 1 个交付单元'
+        + (pageCount ? '，涉及 ' + pageCount + ' 个页面：' + ai.pages.join('、') : '')
+        + '。模块明细如下，默认展开供统一确认。';
+    } else if (moduleCount === 1) {
+      conclusionText = '当前需求拆解为 1 个模块'
+        + (pageCount ? '，涉及页面：' + ai.pages.join('、') : '')
+        + '。';
+    } else {
+      conclusionText = '当前需求涉及页面：' + (ai.pages || []).join('、') + '。';
+    }
 
-      html += '<div class="ai-module-item' + (isConfirmed ? ' ai-module-status-confirmed' : '') + (isEditing ? ' ai-module-inline-edit' : '') + '">'
-        + '<div class="ai-module-header">'
-        + '<span class="ai-module-name">' + escapeHtml(mod.name) + '</span>'
-        + (isEditing
-          ? '<button class="ai-module-edit-btn" onclick="event.stopPropagation();saveAiModuleInfo(\'' + req.id + '\',' + idx + ')">保存</button><button class="ai-module-edit-btn" onclick="event.stopPropagation();cancelEditAiModuleInfo(\'' + req.id + '\',' + idx + ')">取消</button>'
-          : '<button class="ai-module-edit-btn" onclick="event.stopPropagation();editAiModuleInfo(\'' + req.id + '\',' + idx + ')">编辑</button>')
-        + (isConfirmed ? '<span class="ai-module-confirmed-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>已确认</span>' : '')
+    var statusTime = ai.updated_at ? ai.updated_at.slice(0, 16).replace('T', ' ') : '';
+    html += '<div class="ai-gstack-card">'
+      + '<div class="ai-status-bar ' + ai.status + ' ai-gstack-status">'
+      + '<span>' + escapeHtml(statusLabel) + '</span>'
+      + (statusTime ? '<span class="ai-gstack-status-time">' + escapeHtml(statusTime) + '</span>' : '')
+      + '</div>'
+      + '<div class="ai-gstack-body">';
+
+    if (ai.summary) {
+      html += '<div>'
+        + '<div class="ai-gstack-section-label">需求摘要</div>'
+        + '<div class="ai-gstack-section-text">' + escapeHtml(ai.summary) + '</div>'
         + '</div>';
+    }
 
-      if (isEditing) {
-        var review = mod.review || {};
-        var dims = review.dimensions || {};
-        var dimKeys = ['styleguide_branding', 'color_typography', 'usability_review', 'user_testing'];
-        var dimLabelsEdit = {
-          styleguide_branding: 'Styleguide & Branding',
-          color_typography: 'Color & Typography',
-          usability_review: 'Usability Review',
-          user_testing: 'User Testing'
-        };
+    // 汇总结论
+    html += '<div>'
+      + '<div class="ai-gstack-section-label">汇总结论</div>'
+      + '<div class="ai-gstack-section-text">' + escapeHtml(conclusionText) + '</div>'
+      + '</div>';
 
-        html += '<div class="ai-inline-grid">'
-          + '<div class="ai-inline-two-col">'
-          + '<div class="ai-inline-field"><label>模块名称</label><input id="' + idPrefix + '-name" type="text" value="' + escapeHtml(mod.name || '') + '"></div>'
-          + '<div class="ai-inline-field"><label>页面</label><input id="' + idPrefix + '-page" type="text" value="' + escapeHtml(mod.page || '') + '"></div>'
-          + '</div>'
-          + '<div class="ai-inline-field"><label>意图描述</label><textarea id="' + idPrefix + '-intent">' + escapeHtml(mod.intent || '') + '</textarea></div>'
-          + '<div class="ai-inline-field"><label>备注</label><textarea id="' + idPrefix + '-notes">' + escapeHtml(mod.notes || '') + '</textarea></div>'
-          + '<div class="ai-inline-field"><label>审查结论</label><textarea id="' + idPrefix + '-review-summary">' + escapeHtml(review.summary || '') + '</textarea></div>'
-          + '<div class="ai-inline-field"><label>设计要点（每行一条）</label><textarea id="' + idPrefix + '-design-focus">' + escapeHtml((review.design_focus || []).join('\n')) + '</textarea></div>'
-          + '<div class="ai-inline-two-col">'
-          + '<div class="ai-inline-field"><label>Gate 结果</label><select id="' + idPrefix + '-gate-result">'
-          + _renderSelectOptions(['PASS', 'PASS_WITH_NOTES', 'BLOCKED'], review.gate_result || 'PASS')
-          + '</select></div>'
-          + '<div class="ai-inline-field"><label>审查来源</label><input id="' + idPrefix + '-review-source" type="text" value="' + escapeHtml(review.source || 'Gstack awesome-design-gates (Phase 1.2)') + '"></div>'
-          + '</div>'
-          + '<div class="ai-inline-section-title">四维审查</div>';
-
-        dimKeys.forEach(function(dk) {
-          var dim = dims[dk] || {};
-          html += '<div class="ai-inline-two-col">'
-            + '<div class="ai-inline-field"><label>' + dimLabelsEdit[dk] + ' Verdict</label><select id="' + idPrefix + '-dim-' + dk + '-verdict">'
-            + _renderSelectOptions(['PASS', 'ADVISORY', 'BLOCKING'], dim.verdict || 'PASS')
-            + '</select></div>'
-            + '<div class="ai-inline-field"><label>' + dimLabelsEdit[dk] + ' Note</label><textarea id="' + idPrefix + '-dim-' + dk + '-note">' + escapeHtml(dim.note || '') + '</textarea></div>'
-            + '</div>';
-        });
-        html += '</div>';
-      } else {
+    // 模块清单（默认展开，行样式内嵌）
+    if (hasModules) {
+      html += '<div>'
+        + '<div class="ai-gstack-section-label">模块清单（' + moduleCount + ' 个）</div>'
+        + '<div class="ai-gstack-module-list">';
+      ai.modules.forEach(function(mod) {
+        var changeClass = { create: 'ai-change-create', modify: 'ai-change-modify', reuse: 'ai-change-reuse' }[mod.change_type] || 'ai-change-create';
+        var changeLabel = { create: '新建', modify: '改现有', reuse: '直接复用' }[mod.change_type] || mod.change_type;
+        html += '<div class="ai-gstack-module-row">'
+          + '<div class="ai-gstack-module-head">'
+          + '<span class="ai-gstack-module-name">' + escapeHtml(mod.name || '未命名模块') + '</span>'
+          + '<span class="ai-change-badge ' + changeClass + '">' + changeLabel + '</span>'
+          + '</div>';
         if (mod.page) {
-          html += '<div class="ai-module-page">页面：' + escapeHtml(mod.page) + '</div>';
+          html += '<div class="ai-gstack-module-meta">页面：' + escapeHtml(mod.page) + '</div>';
         }
         if (mod.intent) {
-          html += '<div class="ai-module-intent">' + escapeHtml(mod.intent) + '</div>';
+          html += '<div class="ai-gstack-module-desc">' + escapeHtml(mod.intent) + '</div>';
         }
         if (mod.notes) {
-          html += '<div class="ai-module-notes">备注：' + escapeHtml(mod.notes) + '</div>';
-        }
-      }
-      // Gstack 四维审查结果
-      if (mod.review && !isEditing) {
-        html += '<div class="ai-module-review">';
-        // 审查头部：来源 + 总结论
-        html += '<div class="ai-review-header">'
-          + '<span class="ai-review-skill-tag">' + escapeHtml(mod.review.source || 'Gstack awesome-design-gates 审查') + '</span>'
-          + '</div>';
-        // 设计要点（design_focus）
-        if (mod.review.design_focus && mod.review.design_focus.length > 0) {
-          html += '<div class="ai-review-focus">';
-          html += '<div class="ai-review-focus-label">设计要点</div>';
-          html += '<ul class="ai-review-focus-list">';
-          mod.review.design_focus.forEach(function(f) {
-            html += '<li>' + escapeHtml(f) + '</li>';
-          });
-          html += '</ul></div>';
-        }
-        // 四维审查详情（展开每个维度的具体建议）
-        if (mod.review.dimensions) {
-          var dimLabels = {
-            styleguide_branding: 'Styleguide & Branding',
-            color_typography:    'Color & Typography',
-            usability_review:    'Usability Review',
-            user_testing:        'User Testing'
-          };
-          var dimKeys = ['styleguide_branding', 'color_typography', 'usability_review', 'user_testing'];
-          html += '<div class="ai-review-detail-list">';
-          dimKeys.forEach(function(dk) {
-            var dim = mod.review.dimensions[dk];
-            if (dim) {
-              var dimClass = { 'PASS': 'ai-dim-pass', 'ADVISORY': 'ai-dim-advisory', 'BLOCKING': 'ai-dim-blocking' }[dim.verdict] || 'ai-dim-pass';
-              html += '<div class="ai-review-detail-item">'
-                + '<div class="ai-review-detail-header">'
-                + '<span class="ai-review-dim ' + dimClass + '">' + (dim.verdict || 'PASS') + '</span>'
-                + '<span class="ai-review-detail-label">' + (dimLabels[dk] || dk) + '</span>'
-                + '</div>';
-              if (dim.note) {
-                html += '<div class="ai-review-detail-note">' + escapeHtml(dim.note) + '</div>';
-              }
-              html += '</div>';
-            }
-          });
-          html += '</div>';
-        }
-        // 审查总结
-        if (mod.review.summary) {
-          html += '<div class="ai-review-summary"><strong>审查结论：</strong>' + escapeHtml(mod.review.summary) + '</div>';
+          html += '<div class="ai-gstack-module-notes">备注：' + escapeHtml(mod.notes) + '</div>';
         }
         html += '</div>';
-      }
-      html += '</div>';
-    });
+      });
+      html += '</div></div>';
+    }
+
+    html += '</div></div>';
   } else if (!isRunning && ai.status !== 'failed') {
     html += '<div class="ai-empty-hint">暂无模块数据</div>';
   }
@@ -3383,83 +3430,6 @@ function _stageLabel(stage) {
     generating_h5: '正在生成 H5 设计稿…'
   };
   return map[stage] || 'AI 处理中…';
-}
-
-function editAiModuleInfo(reqId, moduleIndex) {
-  _aiInlineEditState = { reqId: reqId, moduleIndex: moduleIndex };
-  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
-  if (!req) return;
-  _refreshAiSectionIfOpen(req, { force: true });
-}
-
-function cancelEditAiModuleInfo(reqId, moduleIndex) {
-  if (_aiInlineEditState.reqId !== reqId || _aiInlineEditState.moduleIndex !== moduleIndex) return;
-  _aiInlineEditState = { reqId: null, moduleIndex: null };
-  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
-  if (!req) return;
-  _refreshAiSectionIfOpen(req, { force: true });
-}
-
-function saveAiModuleInfo(reqId, moduleIndex) {
-  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
-  if (!req || !req.ai_design || !Array.isArray(req.ai_design.modules)) return;
-  var mod = req.ai_design.modules[moduleIndex];
-  if (!mod) return;
-  if (_aiInlineEditState.reqId !== reqId || _aiInlineEditState.moduleIndex !== moduleIndex) return;
-
-  var idPrefix = _buildAiModuleInputIdPrefix(reqId, moduleIndex);
-  var getValue = function(suffix) {
-    var el = document.getElementById(idPrefix + '-' + suffix);
-    return el ? el.value : "";
-  };
-
-  var name = getValue('name').trim();
-  if (!name) {
-    showToast("模块名称不能为空", "error");
-    return;
-  }
-  mod.name = name;
-  mod.page = getValue('page').trim();
-  mod.intent = getValue('intent').trim();
-  mod.notes = getValue('notes').trim();
-
-  var designFocusLines = getValue('design-focus')
-    .split('\n')
-    .map(function(item) { return item.trim(); })
-    .filter(Boolean);
-
-  var dimKeys = ['styleguide_branding', 'color_typography', 'usability_review', 'user_testing'];
-  var dimensions = {};
-  dimKeys.forEach(function(dk) {
-    dimensions[dk] = {
-      verdict: getValue('dim-' + dk + '-verdict') || 'PASS',
-      note: getValue('dim-' + dk + '-note').trim()
-    };
-  });
-
-  mod.review = mod.review || {};
-  mod.review.gate_result = getValue('gate-result') || 'PASS';
-  mod.review.source = getValue('review-source').trim() || 'Gstack awesome-design-gates (Phase 1.2)';
-  mod.review.summary = getValue('review-summary').trim();
-  mod.review.design_focus = designFocusLines;
-  mod.review.dimensions = dimensions;
-
-  req.updated_at = todayStr();
-  saveData();
-  _aiInlineEditState = { reqId: null, moduleIndex: null };
-  _refreshAiSectionIfOpen(req, { force: true });
-  renderKanban();
-  showToast("模块信息已更新", "success");
-}
-
-function _buildAiModuleInputIdPrefix(reqId, moduleIndex) {
-  return 'ai-module-inline-' + String(reqId).replace(/[^a-zA-Z0-9_-]/g, '_') + '-' + moduleIndex;
-}
-
-function _renderSelectOptions(options, currentValue) {
-  return options.map(function(option) {
-    return '<option value="' + option + '"' + (option === currentValue ? ' selected' : '') + '>' + option + '</option>';
-  }).join('');
 }
 
 /**
@@ -3709,19 +3679,44 @@ function startAiPolling(reqId, jobId) {
 /**
  * 如果当前 Modal 打开的就是这个需求，刷新其中的 AI 区块（避免整页重建）
  */
-function _refreshAiSectionIfOpen(req, options) {
-  var opts = options || {};
+function _refreshAiSectionIfOpen(req) {
+  _refreshSectionByModifier(req, 'design', renderAiDesignSection);
+  updateModalScrollAffordance();
+  setTimeout(updateModalScrollAffordance, 0);
+  setTimeout(updateModalScrollAffordance, 120);
+}
+
+/**
+ * 刷新 Gstack 审查区块（与 _refreshAiSectionIfOpen 对称）
+ */
+function _refreshReviewSectionIfOpen(req) {
+  _refreshSectionByModifier(req, 'review', renderGstackReviewSection);
+  updateModalScrollAffordance();
+  setTimeout(updateModalScrollAffordance, 0);
+  setTimeout(updateModalScrollAffordance, 120);
+}
+
+/**
+ * 通用区块刷新：按 .ai-section--<modifier> 定位并替换
+ */
+function _refreshSectionByModifier(req, modifier, renderFn) {
   var overlay = document.getElementById('modalOverlay');
   if (!overlay || !overlay.classList.contains('visible')) return;
-  var idEl = document.querySelector('#modalContent .modal-id');
-  if (!idEl || idEl.textContent !== req.id) return;
-  if (!opts.force && _aiInlineEditState.reqId === req.id && _aiInlineEditState.moduleIndex !== null) return;
+  var modal = document.getElementById('modalContent');
+  if (!modal) return;
+  var currentReqId = modal.getAttribute('data-open-req-id');
+  if (!currentReqId) {
+    var idEl = modal.querySelector('.modal-id');
+    currentReqId = idEl ? idEl.textContent : '';
+  }
+  if (currentReqId !== req.id) return;
 
-  // 找到或创建 AI 区块容器
   var body = document.querySelector('#modalContent .modal-scroll-content');
   if (!body) return;
-  var existing = body.querySelector('.ai-section');
-  var newHtml   = renderAiDesignSection(req);
+
+  var selector = '.ai-section--' + modifier;
+  var existing = body.querySelector(selector);
+  var newHtml = renderFn(req);
   var tmp = document.createElement('div');
   tmp.innerHTML = newHtml;
   var newSection = tmp.firstElementChild;
@@ -3840,6 +3835,391 @@ async function retryAiDesign(reqId, jobId) {
     openModal(reqId);
     showToast('AI 任务已重新启动', 'success');
     startAiPolling(reqId, job.id);
+  } catch (err) {
+    showToast('网络错误：' + err.message, 'error');
+  }
+}
+
+// ==================== Gstack 审设计稿 ====================
+
+/** 审查任务轮询定时器（按 reqId 索引） */
+var _reviewPollTimers = {};
+
+/**
+ * 渲染 Modal 内的 Gstack 审设计稿区块（与 AI 帮你画原型区块样式一致）
+ */
+function renderGstackReviewSection(req) {
+  var review = req.ai_review;
+  var title = 'Gstack审设计稿';
+
+  function buildHeader(hintText, actionsHtml) {
+    return '<div class="ai-section-header">'
+      + '<div class="ai-section-title-group">'
+      + '<div class="ai-section-title">' + title + '</div>'
+      + (hintText ? '<span class="ai-trigger-hint">' + hintText + '</span>' : '')
+      + '</div>'
+      + '<div class="ai-section-actions">' + (actionsHtml || '') + '</div>'
+      + '</div>';
+  }
+
+  // 没有审查任务时：显示触发按钮（无 Figma 时置灰）
+  if (!review || !review.status) {
+    var hasFigma = !!req.design_url;
+    var hintText = hasFigma
+      ? '基于 Figma 设计稿执行 Gstack 审查'
+      : '请先添加 Figma 链接，然后开始';
+
+    var startBtn;
+    if (hasFigma) {
+      startBtn = '<button class="ai-btn ai-btn-primary" onclick="triggerGstackReview(\'' + req.id + '\')">'
+        + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+        + '开始</button>';
+    } else {
+      startBtn = '<button class="ai-btn ai-btn-primary" disabled title="请先添加 Figma 链接">'
+        + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+        + '开始</button>';
+    }
+    return '<div class="ai-section ai-section--review ai-section--empty">'
+      + buildHeader(hintText, startBtn)
+      + '</div>';
+  }
+
+  // 有任务时：状态 + 内容
+  var statusLabelMap = {
+    queued:     '排队等待中…',
+    processing: _reviewStageLabel(review.stage),
+    completed:  '审查完成',
+    failed:     '审查失败'
+  };
+  var statusLabel = statusLabelMap[review.status] || review.status;
+  var isRunning = review.status === 'queued' || review.status === 'processing';
+
+  var retryBtn = '<button class="ai-btn ai-btn-secondary" onclick="retryGstackReview(\'' + req.id + '\', \'' + (review.job_id || '') + '\')">'
+    + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>'
+    + '重跑</button>';
+
+  var reportBtn = '';
+  if (review.status === 'completed' && review.report_path) {
+    reportBtn = '<a class="ai-btn ai-btn-confirm" href="/' + review.report_path + '" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;">'
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+      + '查看报告</a>';
+  }
+
+  var taskActions = (isRunning ? '' : retryBtn) + reportBtn;
+  var html = '<div class="ai-section ai-section--review">'
+    + buildHeader('', taskActions);
+
+  if (isRunning) {
+    html += '<div class="ai-running-box">';
+  }
+
+  var statusBarHtml = '<div class="ai-status-bar ' + review.status + '">'
+    + (isRunning ? '<div class="ai-spinner"></div>' : '')
+    + '<span>' + escapeHtml(statusLabel) + '</span>'
+    + (review.updated_at ? '<span style="margin-left:auto;font-size:11px;opacity:0.6">' + review.updated_at.slice(0, 16).replace('T', ' ') + '</span>' : '')
+    + '</div>';
+
+  if (!isRunning && review.status === 'completed' && review.summary) {
+    html += '<div class="ai-review-merged">'
+      + statusBarHtml
+      + '<div class="ai-review-merged-body">'
+      + '<div class="ai-summary-label">审查结论</div>'
+      + escapeHtml(review.summary)
+      + '</div>'
+      + '</div>';
+  } else {
+    html += statusBarHtml;
+  }
+
+  // 进度条（运行中）
+  if (isRunning) {
+    var progressInfo = _calcReviewProgress(review);
+    html += '<div class="ai-progress-wrap" id="review-progress-wrap-' + req.id + '">'
+      + '<div class="ai-progress-meta">'
+      + '<span class="ai-progress-pct" id="review-progress-pct-' + req.id + '">' + progressInfo.pct + '%</span>'
+      + '<span class="ai-progress-eta">'
+      + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+      + '<span id="review-progress-eta-' + req.id + '">' + progressInfo.eta + '</span>'
+      + '</span>'
+      + '</div>'
+      + '<div class="ai-progress-track">'
+      + '<div class="ai-progress-bar" id="review-progress-bar-' + req.id + '" style="width:' + progressInfo.pct + '%"></div>'
+      + '</div>'
+      + '</div>';
+    _startReviewProgressTick(req.id, review);
+    html += '</div>';
+  }
+
+  // 失败原因
+  if (review.status === 'failed' && review.last_error) {
+    html += '<div style="font-size:12px;color:var(--accent-red);padding:8px 12px;'
+      + 'background:rgba(239,68,68,0.06);border-radius:var(--radius-sm);margin-bottom:12px">'
+      + escapeHtml(review.last_error) + '</div>';
+  }
+
+  // 审查摘要（完成态已并入状态模块）
+  if (review.summary && !(review.status === 'completed' && !isRunning)) {
+    html += '<div class="ai-summary">'
+      + '<div class="ai-summary-label">审查结论</div>'
+      + escapeHtml(review.summary)
+      + '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function _reviewStageLabel(stage) {
+  var map = {
+    fetching_figma: '正在读取 Figma 设计稿…',
+    reviewing:      '正在执行 Gstack 四维审查…',
+    finalizing:     '正在整理审查报告…'
+  };
+  return map[stage] || 'Gstack 审查中…';
+}
+
+/**
+ * 审查任务进度估算（与 _calcAiProgress 类似，但阶段更短）
+ */
+function _calcReviewProgress(review) {
+  var stageRanges = {
+    fetching_figma: [2,  30],
+    reviewing:      [30, 80],
+    finalizing:     [80, 95]
+  };
+  var stageDurations = {
+    fetching_figma: 15,
+    reviewing:      40,
+    finalizing:     10
+  };
+  var totalEstSec = 65;
+
+  var stage = review.stage || (review.status === 'queued' ? 'queued' : 'fetching_figma');
+  if (review.status === 'queued' || !stageRanges[stage]) {
+    return { pct: 2, eta: '预计约 1 分钟' };
+  }
+
+  var range = stageRanges[stage];
+  var stageSec = stageDurations[stage] || 20;
+
+  var elapsedInStage = 0;
+  if (review.updated_at) {
+    var updatedMs = new Date(review.updated_at).getTime();
+    elapsedInStage = Math.max(0, (Date.now() - updatedMs) / 1000);
+  }
+
+  var stageProgress = Math.min(elapsedInStage / stageSec, 0.95);
+  var pct = Math.round(range[0] + stageProgress * (range[1] - range[0]));
+  pct = Math.min(pct, 92);
+
+  var remainSec = Math.max(0, totalEstSec - (pct / 100) * totalEstSec);
+  var etaText;
+  if (remainSec < 10) {
+    etaText = '即将完成…';
+  } else if (remainSec < 60) {
+    etaText = '预计还需约 ' + Math.ceil(remainSec) + ' 秒';
+  } else {
+    etaText = '预计还需约 ' + Math.ceil(remainSec / 60) + ' 分钟';
+  }
+  return { pct: pct, eta: etaText };
+}
+
+var _reviewProgressTickTimers = {};
+
+function _startReviewProgressTick(reqId, review) {
+  if (_reviewProgressTickTimers[reqId]) {
+    clearInterval(_reviewProgressTickTimers[reqId]);
+  }
+  _reviewProgressTickTimers[reqId] = setInterval(function() {
+    var barEl = document.getElementById('review-progress-bar-' + reqId);
+    var pctEl = document.getElementById('review-progress-pct-' + reqId);
+    var etaEl = document.getElementById('review-progress-eta-' + reqId);
+    if (!barEl || !pctEl || !etaEl) {
+      clearInterval(_reviewProgressTickTimers[reqId]);
+      delete _reviewProgressTickTimers[reqId];
+      return;
+    }
+    var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+    if (!req || !req.ai_review) {
+      clearInterval(_reviewProgressTickTimers[reqId]);
+      delete _reviewProgressTickTimers[reqId];
+      return;
+    }
+    var latest = req.ai_review;
+    var isStillRunning = latest.status === 'queued' || latest.status === 'processing';
+    if (!isStillRunning) {
+      clearInterval(_reviewProgressTickTimers[reqId]);
+      delete _reviewProgressTickTimers[reqId];
+      return;
+    }
+    var info = _calcReviewProgress(latest);
+    barEl.style.width = info.pct + '%';
+    pctEl.textContent = info.pct + '%';
+    etaEl.textContent = info.eta;
+  }, 1000);
+}
+
+/**
+ * 触发 Gstack 审查任务
+ */
+async function triggerGstackReview(reqId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req) return;
+  if (!req.design_url) {
+    showToast('请先添加 Figma 链接', 'error');
+    return;
+  }
+  if (!API_BASE) {
+    showToast('需要启动代理服务才能使用 Gstack 审查', 'error');
+    return;
+  }
+
+  try {
+    var res = await fetch(API_BASE + '/api/ai-design/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        reqId:    req.id,
+        prdUrl:   req.prd_url || '',
+        figmaUrl: req.design_url,
+        skillKey: 'fliggy_flight_h5_review'
+      })
+    });
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      showToast('创建审查任务失败：' + (err.error || res.status), 'error');
+      return;
+    }
+    var job = await res.json();
+
+    req.ai_review = {
+      status:     job.status,
+      stage:      job.stage,
+      job_id:     job.id,
+      summary:    null,
+      last_error: null,
+      updated_at: job.updated_at
+    };
+    saveData();
+    _refreshReviewSectionIfOpen(req);
+    showToast('Gstack 审查已启动，正在分析设计稿…', 'success');
+
+    startGstackReviewPolling(reqId, job.id);
+  } catch (err) {
+    showToast('网络错误：' + err.message, 'error');
+  }
+}
+
+/**
+ * 轮询审查任务状态（每 3 秒一次，最多 5 分钟）
+ */
+function startGstackReviewPolling(reqId, jobId) {
+  if (_reviewPollTimers[reqId]) {
+    clearInterval(_reviewPollTimers[reqId]);
+  }
+  var maxPolls = 100;
+  var pollCount = 0;
+
+  _reviewPollTimers[reqId] = setInterval(async function() {
+    pollCount++;
+    if (pollCount > maxPolls) {
+      clearInterval(_reviewPollTimers[reqId]);
+      delete _reviewPollTimers[reqId];
+      return;
+    }
+    try {
+      var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId);
+      if (!res.ok) {
+        if (res.status === 404) {
+          var reqForReset = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+          if (reqForReset && reqForReset.ai_review) {
+            reqForReset.ai_review = { status: 'failed', last_error: '任务已丢失（服务重启），请重新触发', updated_at: new Date().toISOString() };
+            saveData();
+            _refreshReviewSectionIfOpen(reqForReset);
+          }
+          clearInterval(_reviewPollTimers[reqId]);
+          delete _reviewPollTimers[reqId];
+        }
+        return;
+      }
+      var job = await res.json();
+      var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+      if (!req) {
+        clearInterval(_reviewPollTimers[reqId]);
+        delete _reviewPollTimers[reqId];
+        return;
+      }
+
+      req.ai_review = {
+        status:      job.status,
+        stage:       job.stage,
+        job_id:      job.id,
+        summary:     job.review_summary || job.summary || null,
+        last_error:  job.last_error,
+        report_path: job.report_path || null,
+        updated_at:  job.updated_at
+      };
+
+      _refreshReviewSectionIfOpen(req);
+
+      if (job.status === 'completed' || job.status === 'failed') {
+        saveData();
+        clearInterval(_reviewPollTimers[reqId]);
+        delete _reviewPollTimers[reqId];
+        if (job.status === 'completed') {
+          showToast('Gstack 审查完成', 'success');
+        } else {
+          showToast('Gstack 审查失败：' + (job.last_error || '未知错误'), 'error');
+        }
+      }
+    } catch (err) {
+      console.warn('[ReviewPoll] Error:', err.message);
+    }
+  }, 3000);
+}
+
+/**
+ * 重跑审查任务
+ */
+async function retryGstackReview(reqId, jobId) {
+  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+  if (!req) return;
+  if (!API_BASE) {
+    showToast('需要启动代理服务才能重跑任务', 'error');
+    return;
+  }
+  if (!jobId) {
+    return triggerGstackReview(reqId);
+  }
+  try {
+    var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId + '/retry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        req_id:    req.id,
+        prd_url:   req.prd_url || '',
+        figma_url: req.design_url || '',
+        skill_key: 'fliggy_flight_h5_review'
+      })
+    });
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      showToast('重跑失败：' + (err.error || res.status), 'error');
+      return;
+    }
+    var job = await res.json();
+    req.ai_review = {
+      status:     job.status,
+      stage:      job.stage,
+      job_id:     job.id,
+      summary:    null,
+      last_error: null,
+      updated_at: job.updated_at
+    };
+    saveData();
+    _refreshReviewSectionIfOpen(req);
+    showToast('审查任务已重新启动', 'success');
+    startGstackReviewPolling(reqId, job.id);
   } catch (err) {
     showToast('网络错误：' + err.message, 'error');
   }

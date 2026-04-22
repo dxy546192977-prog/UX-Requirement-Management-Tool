@@ -79,18 +79,23 @@ function injectLoadData(html, payload) {
     "    }"
   ].join("\n");
 
-  const pattern = /    async function loadData\(\)\s*\{[\s\S]*?    \}\n\n    \/\* ======================================================================/;
-  if (!pattern.test(html)) {
+  const patternWithAnchor = /    async function loadData\(\)\s*\{[\s\S]*?    \}\n\n    \/\* ======================================================================/;
+  const patternWithoutAnchor = /    async function loadData\(\)\s*\{[\s\S]*?\n    \}/;
+
+  if (patternWithAnchor.test(html)) {
+    return html.replace(patternWithAnchor, `${replacement}\n\n    /* ======================================================================`);
+  }
+  if (!patternWithoutAnchor.test(html)) {
     fail("未找到 loadData() 代码块，无法注入 summary 数据");
   }
-  return html.replace(pattern, `${replacement}\n\n    /* ======================================================================`);
+  return html.replace(patternWithoutAnchor, replacement);
 }
 
 function main() {
   const args = parseArgs(process.argv);
   const cwd = process.cwd();
   const inputPath = args.input ? path.resolve(cwd, args.input) : null;
-  const monitorPath = path.resolve(cwd, args.monitor || "workflow-monitor.html");
+  const monitorPath = path.resolve(cwd, args.monitor || "pages/Token.html");
 
   if (!inputPath) fail("缺少 --input 参数");
   ensureFileExists(inputPath, "输入文件");
@@ -108,7 +113,7 @@ function main() {
   const nextHtml = injectLoadData(originalHtml, payload);
   fs.writeFileSync(monitorPath, nextHtml, "utf8");
 
-  console.log("[fliggy-flight-summary] 已更新 workflow-monitor.html");
+  console.log("[fliggy-flight-summary] 已更新 pages/Token.html");
   console.log(`[fliggy-flight-summary] task: ${payload.monitor.taskName}`);
   console.log(`[fliggy-flight-summary] requirement: ${payload.monitor.requirementName}`);
   console.log(`[fliggy-flight-summary] skills: ${payload.monitor.skillIds.join(", ")}`);

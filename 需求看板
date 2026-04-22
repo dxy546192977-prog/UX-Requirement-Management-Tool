@@ -15,12 +15,12 @@ pkill -f "node proxy-server.js" 2>/dev/null
 sleep 1
 
 echo "🚀 正在启动需求看板后端服务..."
-echo "📌 启动后请在浏览器访问：http://localhost:3001"
+echo "📌 启动后请在浏览器访问：http://localhost:3001/pages/Web.html"
 echo "⌨️  按 Ctrl+C 可停止服务"
 echo ""
 
 # 自动打开浏览器
-sleep 2 && open "http://localhost:3001" &
+sleep 2 && open "http://localhost:3001/pages/Web.html" &
 
 # 启动代理服务
 node proxy-server.js

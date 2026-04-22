@@ -143,8 +143,11 @@ const MIME_TYPES = {
 };
 
 function serveStaticFile(pathname, res) {
-  // Default to pages/online-index.html（需求看板入口）
-  if (pathname === '/') pathname = '/pages/online-index.html';
+  // Default to pages/Web.html（需求看板入口）
+  if (pathname === '/') pathname = '/pages/Web.html';
+  // Canonical routes: keep old links working after page rename
+  if (pathname === '/online-index.html' || pathname === '/pages/online-index.html') pathname = '/pages/Web.html';
+  if (pathname === '/workflow-monitor.html' || pathname === '/pages/workflow-monitor.html') pathname = '/pages/Token.html';
 
   const filePath = path.join(__dirname, pathname);
 
@@ -754,15 +757,28 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const { reqId, prdUrl, skillKey } = body;
-    if (!reqId || !prdUrl) {
+    const { reqId, prdUrl, skillKey, figmaUrl } = body;
+    if (!reqId) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'reqId and prdUrl are required' }));
+      res.end(JSON.stringify({ error: 'reqId is required' }));
       return;
     }
 
-    const allowedSkills = new Set(['default', 'prd_html_decompose', 'fliggy_flight_prd_to_h5']);
+    const allowedSkills = new Set(['default', 'prd_html_decompose', 'fliggy_flight_prd_to_h5', 'fliggy_flight_h5_review']);
     const skill = allowedSkills.has(skillKey) ? skillKey : 'default';
+
+    // fliggy_flight_h5_review 需要 figmaUrl；其它 skill 需要 prdUrl
+    if (skill === 'fliggy_flight_h5_review') {
+      if (!figmaUrl) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'figmaUrl is required for fliggy_flight_h5_review' }));
+        return;
+      }
+    } else if (!prdUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'prdUrl is required' }));
+      return;
+    }
 
     const config = loadConfig();
     if (!config) {
@@ -776,8 +792,8 @@ const server = http.createServer(async (req, res) => {
       console.log('[AiDesign] No valid ai_api_key / ai_decompose_api_key — running in MOCK mode');
     }
 
-    const job = aiDesignSvc.createJob(reqId, prdUrl, config, yuqueSvc, { skillKey: skill });
-    console.log(`[AiDesign] Created job ${job.id} for req ${reqId}${isMock ? ' (mock)' : ''}`);
+    const job = aiDesignSvc.createJob(reqId, prdUrl || '', config, yuqueSvc, { skillKey: skill, figmaUrl: figmaUrl || '' });
+    console.log(`[AiDesign] Created job ${job.id} for req ${reqId} (skill=${skill})${isMock ? ' (mock)' : ''}`);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(job));
@@ -822,14 +838,16 @@ const server = http.createServer(async (req, res) => {
           try { resolve(JSON.parse(raw)); } catch { resolve({}); }
         });
       });
-      const { req_id, prd_url, skill_key } = body;
-      if (!req_id || !prd_url) {
+      const { req_id, prd_url, skill_key, figma_url } = body;
+      const skill = skill_key || 'default';
+      // review 任务以 figma_url 为主，其它任务以 prd_url 为主
+      if (!req_id || (skill === 'fliggy_flight_h5_review' ? !figma_url : !prd_url)) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `Job ${jobId} not found，请提供 req_id 和 prd_url 重新创建` }));
+        res.end(JSON.stringify({ error: `Job ${jobId} not found，请提供 req_id 及 ${skill === 'fliggy_flight_h5_review' ? 'figma_url' : 'prd_url'} 重新创建` }));
         return;
       }
-      console.log(`[AiDesign] Job ${jobId} not in memory, creating new job for req ${req_id}`);
-      job = aiDesignSvc.createJob(req_id, prd_url, config, yuqueSvc, { skillKey: skill_key || 'default' });
+      console.log(`[AiDesign] Job ${jobId} not in memory, creating new job for req ${req_id} (skill=${skill})`);
+      job = aiDesignSvc.createJob(req_id, prd_url || '', config, yuqueSvc, { skillKey: skill, figmaUrl: figma_url || '' });
     } else {
       console.log(`[AiDesign] Retrying job ${jobId}`);
     }
