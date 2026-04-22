@@ -3174,7 +3174,15 @@ async function confirmAiDesign(reqId) {
 
   // 调后端 confirm 接口，触发 H5 生成
   try {
-    var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId + '/confirm', { method: 'POST' });
+    var res = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId + '/confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        req_id:    req.id,
+        prd_url:   req.prd_url || '',
+        skill_key: (req.ai_design && req.ai_design.skill_key) || 'fliggy_flight_prd_to_h5'
+      })
+    });
     if (!res.ok) {
       var err = await res.json().catch(function() { return {}; });
       showToast('确认失败：' + (err.error || res.status), 'error');

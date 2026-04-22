@@ -821,13 +821,30 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const job = aiDesignSvc.confirmJob(jobId, config, yuqueSvc);
+    // 先尝试确认内存中已有的 Job
+    let job = aiDesignSvc.confirmJob(jobId, config, yuqueSvc);
+
+    // Job 不在内存中（后端重启后丢失），从请求 body 读取参数重新创建并直接生成 H5
     if (!job) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: `Job ${jobId} not found` }));
-      return;
+      const body = await new Promise((resolve) => {
+        let raw = '';
+        req.on('data', chunk => { raw += chunk; });
+        req.on('end', () => {
+          try { resolve(JSON.parse(raw)); } catch { resolve({}); }
+        });
+      });
+      const { req_id, prd_url, skill_key } = body;
+      if (!req_id || !prd_url) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: `Job ${jobId} not found，请提供 req_id 和 prd_url` }));
+        return;
+      }
+      console.log(`[AiDesign] Job ${jobId} not in memory, creating new job for req ${req_id} and generating H5`);
+      job = aiDesignSvc.createJob(req_id, prd_url, config, yuqueSvc, { skillKey: skill_key || 'fliggy_flight_prd_to_h5' });
+    } else {
+      console.log(`[AiDesign] Confirmed job ${jobId}, H5 generation started`);
     }
-    console.log(`[AiDesign] Confirmed job ${jobId}, H5 generation started`);
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(job));
     return;
