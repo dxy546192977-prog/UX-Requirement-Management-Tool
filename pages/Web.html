@@ -2636,7 +2636,7 @@ function handleEditReq(reqId) {
   req.summary = document.getElementById("editSummaryInput").value.trim();
   req.prd_url = normalizedPrdUrl;
   req.design_url = normalizedDesignUrl;
-  req.notes = document.getElementById("editNotesInput").value.trim() || null;
+  req.notes = null;
   req.updated_at = todayStr();
   saveData();
 
