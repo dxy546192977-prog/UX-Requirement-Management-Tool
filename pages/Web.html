@@ -1546,9 +1546,11 @@
 <div class="modal-overlay" id="submitOverlay" onclick="closeSubmitModal(event)">
   <div class="submit-modal" id="submitModalContent" onclick="event.stopPropagation()">
     <h2>提交需求</h2>
-    <p>粘贴语雀 PRD 链接，系统将自动解析需求名称和提出人，并添加到「待对焦」</p>
-    <label>语雀 PRD 链接</label>
-    <input type="text" id="prdUrlInput" placeholder="粘贴语雀链接，如：https://aliyuque.antfin.com/...# 《需求名称》" />
+    <p>粘贴语雀 PRD 链接（可选）和 PRD Markdown 内容，系统将自动解析需求名称和提出人</p>
+    <label>语雀 PRD 链接（可选）</label>
+    <input type="text" id="prdUrlInput" placeholder="粘贴语雀链接，如：https://aliyuque.antfin.com/..." />
+    <label style="margin-top:12px;">PRD Markdown 内容（粘贴后自动解析标题和提出人）</label>
+    <textarea id="prdMarkdownInput" placeholder="将语雀文档导出为 Markdown 后粘贴到这里，系统将自动提取需求名称和 PD 信息..." style="min-height:120px;"></textarea>
     <div class="submit-parse-hint" id="submitParseHint"></div>
     <div class="submit-modal-actions">
       <button class="btn-cancel" onclick="closeSubmitModal()">取消</button>
@@ -2668,6 +2670,9 @@ function openSubmitModal() {
   document.getElementById("submitOverlay").classList.add("visible");
   document.body.style.overflow = "hidden";
   document.getElementById("prdUrlInput").value = "";
+  var mdInput = document.getElementById("prdMarkdownInput");
+  if (mdInput) mdInput.value = "";
+  setSubmitParseHint("");
   setTimeout(() => document.getElementById("prdUrlInput").focus(), 100);
 }
 
@@ -2717,6 +2722,39 @@ function parseYuquePastedText(rawText) {
   }
 
   result.cleanUrl = cleanUrl;
+  return result;
+}
+
+/**
+ * 从粘贴的 Markdown 内容中提取需求标题和 PD 信息
+ * 支持提取：
+ *   - 第一个 # 标题作为需求名
+ *   - 表格中 "PD：xxx" 或 "PD:xxx" 作为提出人
+ */
+function parseMarkdownContent(markdown) {
+  var result = { title: null, creator: null };
+  if (!markdown || !markdown.trim()) return result;
+
+  // 提取第一个 # 标题（去掉 # 和 * 等 Markdown 符号）
+  var titleMatch = markdown.match(/^#{1,3}\s+\*{0,2}([^*\n]+?)\*{0,2}\s*$/m);
+  if (titleMatch) {
+    result.title = titleMatch[1].trim();
+  }
+
+  // 提取 PD 信息：匹配 "PD：晰予" 或 "PD:晰予" 或 "PD：<br/>晰予" 等格式
+  var pdPatterns = [
+    /PD[：:]\s*<br\/?>\s*([^\s<|,，\n]+)/i,
+    /PD[：:]\s*([^\s<|,，\n<>]+)/i,
+    /用户端[^|]*\|\s*PD[：:]\s*([^\s<|,，\n]+)/i,
+  ];
+  for (var i = 0; i < pdPatterns.length; i++) {
+    var pdMatch = markdown.match(pdPatterns[i]);
+    if (pdMatch && pdMatch[1] && pdMatch[1].trim()) {
+      result.creator = pdMatch[1].trim();
+      break;
+    }
+  }
+
   return result;
 }
 
@@ -3034,44 +3072,51 @@ function inferPartFromOwner(ownerName, currentFilter) {
 
 async function handleSubmitReq() {
   var rawInput = document.getElementById("prdUrlInput").value.trim();
+  var markdownInput = (document.getElementById("prdMarkdownInput") && document.getElementById("prdMarkdownInput").value) || "";
+  markdownInput = markdownInput.trim();
   setSubmitParseHint("");
 
-  if (!rawInput) {
-    showToast("请粘贴 PRD 链接", "error");
+  if (!rawInput && !markdownInput) {
+    showToast("请粘贴 PRD 链接或 Markdown 内容", "error");
     return;
   }
 
-  // Step 1: Parse from pasted text (always works, no API needed)
-  var parsed = parseYuquePastedText(rawInput);
-  var docTitle = parsed.title || "New Requirement (from PRD)";
-  var docCreator = "";
-  var prdUrl = parsed.cleanUrl;
+  // Step 1: 优先从 Markdown 内容解析标题和 PD
+  var mdParsed = parseMarkdownContent(markdownInput);
+  var docTitle = mdParsed.title || "New Requirement (from PRD)";
+  var docCreator = mdParsed.creator || "";
   var docSummary = "待补充 - PRD 链接已提交";
 
-  console.log("[Yuque] Parsed from text - Title:", docTitle, "URL:", prdUrl);
+  // Step 2: 从链接里提取 URL（用于存储 prd_url）
+  var parsed = parseYuquePastedText(rawInput || "");
+  var prdUrl = parsed.cleanUrl || rawInput;
 
-  // Step 2: Pull PRD author/title/summary from Yuque API
-  setSubmitBtnLoading(true);
-
-  try {
-    var docInfo = await fetchYuqueDocInfo(prdUrl);
-    // API title overrides text-parsed title (more accurate)
-    if (docInfo.title) docTitle = docInfo.title;
-    // 提交人必须来自语雀 PRD 作者
-    docCreator = resolveYuqueDocCreator(docInfo);
-    if (docInfo.description) docSummary = docInfo.description;
-    console.log("[Yuque] API enriched - Title:", docTitle, "Creator:", docCreator);
-  } catch (err) {
-    console.log("[Yuque] API unavailable:", err.message);
+  // Step 3: 如果 Markdown 已经解析出标题和作者，直接提交，不调 API
+  if (mdParsed.title && mdParsed.creator) {
+    console.log("[Submit] Markdown 解析成功 - Title:", docTitle, "Creator:", docCreator);
+    setSubmitParseHint("✓ 已从 Markdown 解析：" + docTitle + " / " + docCreator, "success");
+  } else if (rawInput) {
+    // Step 4: Markdown 解析不完整，尝试调语雀 API 补充
+    console.log("[Submit] Markdown 解析不完整，尝试语雀 API...");
+    setSubmitBtnLoading(true);
+    try {
+      var docInfo = await fetchYuqueDocInfo(prdUrl);
+      if (docInfo.title) docTitle = docInfo.title;
+      var apiCreator = resolveYuqueDocCreator(docInfo);
+      if (apiCreator) docCreator = apiCreator;
+      if (docInfo.description) docSummary = docInfo.description;
+      console.log("[Submit] API 补充 - Title:", docTitle, "Creator:", docCreator);
+    } catch (err) {
+      console.log("[Submit] API 不可用:", err.message);
+    }
     setSubmitBtnLoading(false);
-    setSubmitParseHint("解析失败，请检查链接后重试", "error");
-    return;
   }
 
+  // Step 5: 如果还是没有作者，提示用户
   if (!docCreator) {
-    setSubmitBtnLoading(false);
-    setSubmitParseHint("解析失败，请检查链接后重试", "error");
-    return;
+    setSubmitParseHint("未能识别提出人，请在 Markdown 中确认包含「PD：姓名」信息，或手动填写", "error");
+    // 仍然允许提交，使用默认值
+    docCreator = "待补充";
   }
 
   setSubmitBtnLoading(false);
