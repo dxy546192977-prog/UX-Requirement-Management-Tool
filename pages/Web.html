@@ -3119,45 +3119,14 @@ async function handleSubmitReq() {
     return;
   }
 
-  // Step 1: 需求名称和提交人直接用用户填写的，Markdown 存入 summary
+  // 需求名称和提交人直接用用户填写的，Markdown 存入 summary
   var docTitle = reqNameInput;
   var docCreator = reqOwnerInput;
   var docSummary = markdownInput;
-  var docSummary = "待补充 - PRD 链接已提交";
 
-  // Step 2: 从链接里提取 URL（用于存储 prd_url）
+  // 从链接里提取 URL（用于存储 prd_url）
   var parsed = parseYuquePastedText(rawInput || "");
   var prdUrl = parsed.cleanUrl || rawInput;
-
-  // Step 3: 如果 Markdown 已经解析出标题和作者，直接提交，不调 API
-  if (mdParsed.title && mdParsed.creator) {
-    console.log("[Submit] Markdown 解析成功 - Title:", docTitle, "Creator:", docCreator);
-    setSubmitParseHint("✓ 已从 Markdown 解析：" + docTitle + " / " + docCreator, "success");
-  } else if (rawInput) {
-    // Step 4: Markdown 解析不完整，尝试调语雀 API 补充
-    console.log("[Submit] Markdown 解析不完整，尝试语雀 API...");
-    setSubmitBtnLoading(true);
-    try {
-      var docInfo = await fetchYuqueDocInfo(prdUrl);
-      if (docInfo.title) docTitle = docInfo.title;
-      var apiCreator = resolveYuqueDocCreator(docInfo);
-      if (apiCreator) docCreator = apiCreator;
-      if (docInfo.description) docSummary = docInfo.description;
-      console.log("[Submit] API 补充 - Title:", docTitle, "Creator:", docCreator);
-    } catch (err) {
-      console.log("[Submit] API 不可用:", err.message);
-    }
-    setSubmitBtnLoading(false);
-  }
-
-  // Step 5: 如果还是没有作者，提示用户
-  if (!docCreator) {
-    setSubmitParseHint("未能识别提出人，请在 Markdown 中确认包含「PD：姓名」信息，或手动填写", "error");
-    // 仍然允许提交，使用默认值
-    docCreator = "待补充";
-  }
-
-  setSubmitBtnLoading(false);
 
   var inferredPart = inferPartFromOwner(docCreator, currentFilter);
 
