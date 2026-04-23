@@ -2585,8 +2585,6 @@ function openEditModal(reqId) {
     + '<input type="url" id="editPrdUrlInput" value="' + (req.prd_url || '') + '" />'
     + '<label>Design URL</label>'
     + '<input type="url" id="editDesignUrlInput" value="' + (req.design_url || '') + '" />'
-    + '<label>Notes</label>'
-    + '<textarea id="editNotesInput">' + (req.notes || '') + '</textarea>'
     + '<div class="submit-modal-actions">'
     + '<button class="btn-cancel" onclick="closeEditModal()">Cancel</button>'
     + '<button class="btn-confirm" onclick="handleEditReq(\'' + req.id + '\')">Save</button>'
