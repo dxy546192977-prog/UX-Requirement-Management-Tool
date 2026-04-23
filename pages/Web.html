@@ -2800,10 +2800,12 @@ async function fetchYuqueDocDirect(prdUrl) {
 }
 
 async function fetchYuqueDocInfo(prdUrl) {
-  // 优先走 proxy（本地 localhost 或 ECS）
-  if (API_BASE) {
+  var host = window.location.hostname;
+  var isLocal = (host === 'localhost' || host === '127.0.0.1');
+
+  // 本地环境：优先走 proxy（可访问阿里内网语雀 API）
+  if (isLocal && API_BASE) {
     var controller = new AbortController();
-    // 后端 OpenAPI (30s) + Skylark (15s) 均可能串行执行，前端超时放宽到 45s
     var timeoutId = setTimeout(function() { controller.abort(); }, 45000);
 
     try {
@@ -2816,7 +2818,6 @@ async function fetchYuqueDocInfo(prdUrl) {
       if (res.ok) {
         return await res.json();
       }
-      // proxy 返回错误，记录后降级
       var errBody = await res.json().catch(function() { return {}; });
       console.warn("[Yuque] Proxy failed (" + (errBody.error || "HTTP " + res.status) + ")，降级到浏览器直连");
     } catch (err) {
@@ -2829,8 +2830,8 @@ async function fetchYuqueDocInfo(prdUrl) {
     }
   }
 
-  // 降级：浏览器直连语雀 OpenAPI（用户在内网时可用）
-  console.log("[Yuque] 尝试浏览器直连语雀 API...");
+  // 线上环境 / 降级：浏览器直连语雀 OpenAPI（内网用户可用，语雀 API 支持跨域）
+  console.log("[Yuque] 浏览器直连语雀 API...");
   return await fetchYuqueDocDirect(prdUrl);
 }
 
