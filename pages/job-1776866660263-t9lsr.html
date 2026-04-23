@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>飞猪千问</title>
+  <style>
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-indigo-1: #6666ff;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #ff3333;
+      --color-pay-1: #ff5533;
+      --color-white: #ffffff;
+      --color-label: #F7F8FA;
+      --color-bg: #f2f3f5;
+      --radius-xl: 36px;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+    }
+    @font-face { font-family: 'Fliggy Sans 102'; src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--color-label); font-family: 'PingFang SC','SimHei',sans-serif; color: var(--color-darkgray); overflow-x: hidden; }
+    
+    .fdl-container { width: 750px; margin: 0 auto; padding: 176px 30px 258px; display: flex; flex-direction: column; gap: 24px; }
+    .fdl-nav { position: fixed; top: 0; left: 0; width: 100%; height: 120px; background: var(--color-white); display: flex; align-items: center; justify-content: center; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+    .fdl-nav-title { font-size: 32px; font-weight: 600; color: var(--color-darkgray); }
+    
+    .fdl-card { background: var(--color-white); border-radius: var(--radius-xl); padding: 30px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+    .fdl-input-bubble { background: var(--color-white); border-radius: var(--radius-l); padding: 24px 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.03); cursor: pointer; }
+    .fdl-section-text { padding: 12px 0; }
+    
+    .fdl-text-h1 { font-size: 36px; font-weight: 700; line-height: 1.2; }
+    .fdl-text-title { font-size: 32px; font-weight: 600; line-height: 1.2; }
+    .fdl-text-subtitle { font-size: 28px; font-weight: 600; line-height: 1.2; }
+    .fdl-text-body { font-size: 26px; font-weight: 400; line-height: 1.5; color: var(--color-midgray); }
+    .fdl-text-input { font-size: 30px; font-weight: 500; line-height: 1.4; }
+    .fdl-text-sub { font-size: 22px; font-weight: 400; line-height: 1.4; color: var(--color-lightgray); }
+    .fdl-text-note { font-size: 20px; font-weight: 400; line-height: 1.4; color: var(--color-lightgray); }
+    .fdl-font-num { font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif; font-weight: bold; }
+    
+    .fdl-btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px 36px; border-radius: var(--radius-l); font-size: 28px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+    .fdl-btn-primary { background: var(--color-indigo-4); color: var(--color-indigo-1); }
+    .fdl-btn-ghost { background: transparent; border: 2px solid var(--color-bg); color: var(--color-midgray); }
+    .fdl-btn-full { width: 100%; }
+    
+    .fdl-checkbox { width: 42px; height: 42px; border-radius: var(--radius-m); border: 2px solid var(--color-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+    .fdl-checkbox.checked { background: var(--color-indigo-4); border-color: var(--color-indigo-1); }
+    .fdl-checkbox.checked::after { content: '✓'; color: var(--color-indigo-1); font-size: 24px; font-weight: bold; }
+    
+    .fdl-tag { display: inline-flex; align-items: center; padding: 8px 18px; border-radius: var(--radius-s); background: var(--color-bg); color: var(--color-midgray); font-size: 22px; margin-right: 12px; margin-bottom: 12px; }
+    .fdl-tag-family { background: #FFF3E0; color: #FF8800; }
+    
+    .fdl-radio-group { display: flex; gap: 18px; flex-wrap: wrap; margin: 18px 0; }
+    .fdl-radio-item { flex: 1; min-width: 200px; padding: 24px; border: 2px solid var(--color-bg); border-radius: var(--radius-l); text-align: center; cursor: pointer; transition: all 0.2s; }
+    .fdl-radio-item.selected { border-color: var(--color-indigo-1); background: var(--color-indigo-4); }
+    .fdl-radio-item.selected .fdl-text-body { color: var(--color-indigo-1); font-weight: 600; }
+    
+    .fdl-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+    .fdl-overlay.active { display: flex; }
+    .fdl-panel { background: var(--color-white); width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0; padding: 30px; max-height: 85vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .fdl-overlay.active .fdl-panel { transform: translateY(0); }
+    .fdl-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .fdl-close-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--color-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 24px; color: var(--color-midgray); }
+    
+    .fdl-bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--color-white); padding: 24px 30px; display: flex; gap: 18px; z-index: 90; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); }
+    
+    .fdl-divider { height: 2px; background: var(--color-bg); margin: 18px 0; }
+    .fdl-flex { display: flex; }
+    .fdl-col { flex-direction: column; }
+    .fdl-items-center { align-items: center; }
+    .fdl-justify-between { justify-content: space-between; }
+    .fdl-gap-12 { gap: 12px; }
+    .fdl-gap-18 { gap: 18px; }
+    .fdl-mt-12 { margin-top: 12px; }
+    .fdl-mt-24 { margin-top: 24px; }
+    .fdl-mb-12 { margin-bottom: 12px; }
+    .fdl-mb-24 { margin-bottom: 24px; }
+    .fdl-hidden { display: none; }
+    .fdl-bg-cover { background-size: cover; background-position: center; background-color: #E0E0E0; border-radius: var(--radius-l); width: 100%; height: 240px; margin-bottom: 18px; }
+    
+    .fdl-search-row { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-bottom: 2px solid var(--color-bg); margin-bottom: 18px; }
+    .fdl-search-row:last-child { border-bottom: none; margin-bottom: 0; }
+    .fdl-city { font-size: 36px; font-weight: 700; color: var(--color-darkgray); }
+    .fdl-date { font-size: 28px; font-weight: 600; color: var(--color-midgray); }
+    .fdl-passenger { font-size: 24px; font-weight: 400; color: var(--color-lightgray); }
+    
+    .fdl-toast { position: fixed; top: 150px; left: 50%; transform: translateX(-50%) translateY(-20px); background: rgba(15, 19, 26, 0.85); color: #fff; padding: 18px 30px; border-radius: var(--radius-l); font-size: 26px; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 300; }
+    .fdl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <nav class="fdl-nav">
+    <div class="fdl-nav-title">飞猪机票</div>
+  </nav>
+
+  <main class="fdl-container">
+    <!-- 首页-小搜卡场景勾选区 -->
+    <div class="fdl-card">
+      <div class="fdl-flex fdl-items-center fdl-justify-between fdl-mb-12">
+        <span class="fdl-text-title fdl-color-dark">国内机票</span>
+        <span class="fdl-text-sub">单程</span>
+      </div>
+      <div class="fdl-search-row">
+        <div class="fdl-flex fdl-col">
+          <span class="fdl-text-sub fdl-mb-12">出发</span>
+          <span class="fdl-city">北京</span>
+        </div>
+        <span class="fdl-text-sub">✈</span>
+        <div class="fdl-flex fdl-col fdl-items-center">
+          <span class="fdl-text-sub fdl-mb-12">到达</span>
+          <span class="fdl-city">上海</span>
+        </div>
+      </div>
+      <div class="fdl-search-row">
+        <div class="fdl-flex fdl-col">
+          <span class="fdl-text-sub fdl-mb-12">日期</span>
+          <span class="fdl-date">12月25日 周三</span>
+        </div>
+        <div class="fdl-flex fdl-col fdl-items-center">
+          <span class="fdl-text-sub fdl-mb-12">舱位/人数</span>
+          <span class="fdl-passenger">经济舱 1人</span>
+        </div>
+      </div>
+      <div class="fdl-divider"></div>
+      <div class="fdl-flex fdl-items-center fdl-justify-between fdl-mt-12">
+        <div class="fdl-flex fdl-items-center fdl-gap-12">
+          <div class="fdl-checkbox checked" id="sceneCheckbox" onclick="toggleScene(this)"></div>
+          <span class="fdl-text-body fdl-color-dark">商旅出行</span>
+        </div>
+        <span class="fdl-text-sub fdl-color-brand" style="background: var(--color-indigo-4); padding: 6px 12px; border-radius: var(--radius-s);">补登享低价</span>
+      </div>
+    </div>
+
+    <!-- 首页-乘机人入口气泡 (与小搜卡互斥，默认隐藏，此处为演示展示) -->
+    <div class="fdl-input-bubble" id="passengerBubble" onclick="openPanel('intentPanel')">
+      <div class="fdl-flex fdl-items-center fdl-gap-12">
+        <div class="fdl-bg-cover" style="width: 60px; height: 60px; border-radius: var(--radius-m); background-image: url('https://images.unsplash.com/photo-1533847103089-443f29bb8cba?w=120&h=120&fit=crop');"></div>
+        <div class="fdl-flex fdl-col">
+          <span class="fdl-text-input fdl-color-dark">选择出行目的，匹配专属低价</span>
+          <span class="fdl-text-sub fdl-mt-12">点击完善乘机人与出行意图</span>
+        </div>
+      </div>
+      <span class="fdl-text-sub fdl-color-brand">去设置 ></span>
+    </div>
+
+    <!-- 列表页-开票偏好中插卡片 -->
+    <div class="fdl-card">
+      <div class="fdl-flex fdl-justify-between fdl-items-center fdl-mb-12">
+        <span class="fdl-text-subtitle fdl-color-dark">作为商旅出行的用户，您对报销凭证有要求吗？</span>
+        <div class="fdl-close-btn" onclick="openPanel('feedbackPanel')" style="width: 36px; height: 36px; font-size: 20px;">×</div>
+      </div>
+      <div class="fdl-radio-group">
+        <div class="fdl-radio-item" onclick="selectRadio(this)">
+          <div class="fdl-text-body">电子发票</div>
+        </div>
+        <div class="fdl-radio-item selected" onclick="selectRadio(this)">
+          <div class="fdl-text-body">电子行程单</div>
+        </div>
+        <div class="fdl-radio-item" onclick="selectRadio(this)">
+          <div class="fdl-text-body">都可以</div>
+        </div>
+      </div>
+      <div class="fdl-text-note fdl-mt-12">* 选择后将同步至订单页与认证页，支持随时修改。</div>
+    </div>
+
+    <!-- 说明性文本（铺在背景上，禁止白底卡片） -->
+    <div class="fdl-section-text">
+      <h3 class="fdl-text-title fdl-mb-12">企业认证与偏好同步</h3>
+      <p class="fdl-text-body fdl-mb-12">在认证环节同步收集报销倾向，实现平台与业务域数据互通。非必填单选，支持完整H5与半浮层自适应布局。</p>
+      <p class="fdl-text-body fdl-mb-12">偏好确认面板集中展示已选商旅场景与开票倾��，提供快捷修改入���。一键保存后数据实时同步至搜索与��单域。</p>
+      <div class="fdl-bg-cover fdl-mt-24" style="background-image: url('https://images.unsplash.com/photo-1680636948266-ca30581f5f73?w=750&h=300&fit=crop'); height: 180px;"></div>
+    </div>
+
+    <!-- 浮层-家庭成员标签组件展示 -->
+    <div class="fdl-card">
+      <div class="fdl-flex fdl-justify-between fdl-items-center fdl-mb-12">
+        <span class="fdl-text-subtitle fdl-color-dark">已选乘机人</span>
+        <span class="fdl-text-sub" style="color: var(--color-indigo-1);"
