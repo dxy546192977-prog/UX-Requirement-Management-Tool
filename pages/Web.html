@@ -3760,7 +3760,7 @@ async function triggerAiDesign(reqId) {
   }
 
   if (!API_BASE) {
-    showToast('需要启动代理服务（node proxy-server.js）才能使用 AI 拆解', 'error');
+    showToast('暂无权限，请后台私信良予启动服务', 'error');
     return;
   }
 
@@ -4004,7 +4004,7 @@ async function retryAiDesign(reqId, jobId) {
   if (!req) return;
 
   if (!API_BASE) {
-    showToast('需要启动代理服务才能重跑任务', 'error');
+    showToast('暂无权限，请后台私信良予启动服务', 'error');
     return;
   }
 
@@ -4283,7 +4283,7 @@ async function triggerGstackReview(reqId) {
     return;
   }
   if (!API_BASE) {
-    showToast('需要启动代理服务才能使用 Gstack 审查', 'error');
+    showToast('暂无权限，请后台私信良予启动服务', 'error');
     return;
   }
 
@@ -4398,7 +4398,7 @@ async function retryGstackReview(reqId, jobId) {
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req) return;
   if (!API_BASE) {
-    showToast('需要启动代理服务才能重跑任务', 'error');
+    showToast('暂无权限，请后台私信良予启动服务', 'error');
     return;
   }
   if (!jobId) {
