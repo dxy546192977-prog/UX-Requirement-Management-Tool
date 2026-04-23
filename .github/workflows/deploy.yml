@@ -1,0 +1,25 @@
+name: 自动部署到 ECS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: SSH 部署到阿里云 ECS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 通过 SSH 拉取最新代码并重启服务
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
+          key: ${{ secrets.ECS_SSH_KEY }}
+          port: 22
+          script: |
+            cd /opt/apps/ux-tool
+            git pull
+            pm2 restart ux-tool-api
+            echo "✅ 部署完成：$(date '+%Y-%m-%d %H:%M:%S')"

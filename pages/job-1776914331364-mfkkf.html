@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=750, user-scalable=no">
+  <title>飞猪千问</title>
+  <style>
+    @font-face { font-family: 'Fliggy Sans 102'; src: url('https://g.alicdn.com/trip/common-assets/1.1.9/fonts/FliggySans102-Md.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+    :root {
+      --color-darkgray: #0f131a;
+      --color-midgray: #5c5f66;
+      --color-lightgray: #919499;
+      --color-indigo-1: #6666ff;
+      --color-indigo-4: #EBEBFF;
+      --color-warning-1: #ff3333;
+      --color-pay-1: #ff5533;
+      --color-white: #ffffff;
+      --color-label: #F7F8FA;
+      --color-bg: #f2f3f5;
+      --radius-xl: 36px;
+      --radius-l: 24px;
+      --radius-m: 12px;
+      --radius-s: 6px;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--color-label); margin: 0; font-family: 'PingFang SC','SimHei',sans-serif; color: var(--color-darkgray); }
+    .fdl-nav { position: fixed; top: 0; left: 0; width: 750px; height: 120px; background: var(--color-white); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 600; z-index: 50; border-bottom: 1px solid var(--color-bg); }
+    .fdl-container { padding: 176px 30px 258px; width: 750px; box-sizing: border-box; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+    .fdl-input-bubble { background: var(--color-white); border-radius: var(--radius-l); padding: 24px 30px; font-size: 30px; font-weight: 500; color: var(--color-darkgray); border: 1px solid var(--color-bg); min-height: 88px; display: flex; align-items: center; }
+    .fdl-card { background: var(--color-white); border-radius: var(--radius-xl); padding: 30px; box-sizing: border-box; width: 100%; }
+    .fdl-text-h1 { font-size: 36px; font-weight: 700; color: var(--color-darkgray); margin: 0 0 12px; }
+    .fdl-text-h2 { font-size: 32px; font-weight: 600; color: var(--color-darkgray); margin: 0 0 12px; }
+    .fdl-text-body { font-size: 26px; font-weight: 400; color: var(--color-darkgray); line-height: 1.5; margin: 0; }
+    .fdl-text-sub { font-size: 22px; font-weight: 400; color: var(--color-midgray); line-height: 1.5; margin: 0; }
+    .fdl-text-cap { font-size: 20px; font-weight: 400; color: var(--color-lightgray); line-height: 1.5; margin: 0; }
+    .fdl-text-price { font-family: 'Fliggy Sans 102', 'PingFang SC', 'SimHei', sans-serif; font-weight: bold; color: var(--color-darkgray); }
+    .fdl-btn { display: flex; align-items: center; justify-content: center; min-height: 88px; border-radius: var(--radius-l); font-size: 28px; font-weight: 500; cursor: pointer; border: none; box-sizing: border-box; transition: transform 0.15s ease; }
+    .fdl-btn:active { transform: scale(0.98); }
+    .fdl-btn-primary { background: var(--color-indigo-4); color: var(--color-indigo-1); }
+    .fdl-btn-secondary { background: var(--color-bg); color: var(--color-midgray); }
+    .fdl-btn-text { background: transparent; color: var(--color-indigo-1); padding: 0 18px; min-height: 48px; }
+    .fdl-search-card { display: flex; flex-direction: column; gap: 24px; position: relative; }
+    .fdl-scenario-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .fdl-tag { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; border-radius: var(--radius-m); font-size: 26px; font-weight: 500; min-height: 88px; box-sizing: border-box; cursor: pointer; transition: all 0.2s; border: 2px solid var(--color-bg); color: var(--color-midgray); background: transparent; }
+    .fdl-tag.checked { border-color: var(--color-indigo-4); background: var(--color-indigo-4); color: var(--color-indigo-1); }
+    .fdl-bubble { position: absolute; top: -18px; right: 30px; background: var(--color-white); border: 1px solid var(--color-bg); border-radius: var(--radius-m); padding: 12px 18px; font-size: 22px; color: var(--color-midgray); box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 12px; max-width: 400px; }
+    .fdl-bubble-close { width: 36px; height: 36px; border-radius: 50%; background: var(--color-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; color: var(--color-lightgray); flex-shrink: 0; }
+    .fdl-mid-card { background: var(--color-label); border-radius: var(--radius-l); padding: 24px; border: 1px solid var(--color-bg); display: flex; flex-direction: column; gap: 18px; position: relative; }
+    .fdl-mid-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .fdl-option-row { display: flex; gap: 18px; flex-wrap: wrap; }
+    .fdl-option { flex: 1; min-width: 200px; min-height: 88px; border-radius: var(--radius-m); border: 2px solid var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--color-midgray); cursor: pointer; background: var(--color-white); transition: all 0.2s; }
+    .fdl-option.selected { border-color: var(--color-indigo-1); color: var(--color-indigo-1); background: var(--color-indigo-4); }
+    .fdl-close-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--color-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 24px; color: var(--color-lightgray); flex-shrink: 0; }
+    .fdl-img-hero { width: 100%; height: 300px; border-radius: var(--radius-l); background-color: #E0E0E0; background-size: cover; background-position: center; margin-bottom: 18px; }
+    .fdl-skeleton { height: 24px; background: linear-gradient(90deg, #f2f3f5 25%, #e8e9eb 50%, #f2f3f5 75%); background-size: 200% 100%; animation: fdl-loading 1.5s infinite; border-radius: var(--radius-m); width: 100%; margin-bottom: 12px; }
+    @keyframes fdl-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .fdl-float { position: fixed; top: 0; left: 0; width: 750px; height: 100%; background: rgba(15,19,26,0.6); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
+    .fdl-float.active { display: flex; }
+    .fdl-float-content { background: var(--color-white); width: 750px; border-radius: var(--radius-xl) var(--radius-xl) 0 0; padding: 36px 30px 60px; box-sizing: border-box; max-height: 80vh; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
+    .fdl-float-header { display: flex; justify-content: space-between; align-items: center; }
+    .fdl-sync-status { display: flex; align-items: center; gap: 12px; font-size: 22px; color: var(--color-midgray); }
+    .fdl-dot { width: 12px; height: 12px; border-radius: 50%; background: #4CAF50; }
+    .fdl-dot.loading { background: var(--color-lightgray); animation: fdl-pulse 1s infinite; }
+    @keyframes fdl-pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+    .fdl-footer { position: fixed; bottom: 0; left: 0; width: 750px; height: 180px; background: var(--color-white); border-top: 1px solid var(--color-bg); display: flex; align-items: center; padding: 0 30px; box-sizing: border-box; gap: 18px; z-index: 40; }
+    .fdl-footer-input { flex: 1; height: 88px; border-radius: var(--radius-l); background: var(--color-label); border: 1px solid var(--color-bg); padding: 0 24px; font-size: 28px; color: var(--color-darkgray); display: flex; align-items: center; }
+    .fdl-footer-btn { width: 120px; height: 88px; border-radius: var(--radius-l); background: var(--color-indigo-1); color: var(--color-white); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 500; cursor: pointer; }
+    .fdl-feedback { display: flex; gap: 24px; padding: 12px 0; }
+    .fdl-followup { display: flex; flex-wrap: wrap; gap: 12px; }
+    .fdl-chip { padding: 12px 24px; background: var(--color-white); border: 1px solid var(--color-bg); border-radius: 100px; font-size: 24px; color: var(--color-midgray); cursor: pointer; }
+    .fdl-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,19,26,0.85); color: #fff; padding: 24px 48px; border-radius: var(--radius-l); font-size: 26px; z-index: 200; display: none; text-align: center; }
+    .fdl-toast.show { display: block; animation: fdl-fade 0.3s ease; }
+    @keyframes fdl-fade { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+    .fdl-safe-zone { height: 120px; }
+  </style>
+</head>
+<body>
+  <header class="fdl-nav">飞猪机票 · 商旅出行优化</header>
+
+  <div class="fdl-container">
+    <div class="fdl-input-bubble">查询北京到上海机票，10月20日出发</div>
+
+    <div class="fdl-content" style="display: flex; flex-direction: column; gap: 18px;">
+      <div class="fdl-img-hero" style="background-image: url('https://images.unsplash.com/photo-1533847103089-443f29bb8cba?w=750&h=300&fit=crop');"></div>
+
+      <div class="fdl-card fdl-search-card">
+        <div class="fdl-bubble" id="bubble-reminder">
+          <span>选择出行目的，匹配专属低价</span>
+          <div class="fdl-bubble-close" onclick="this.parentElement.style.display='none'">×</div>
+        </div>
+        <div class="fdl-text-h1">北京 → 上海</div>
+        <div class="fdl-text-sub">10月20日 周一 | 单程</div>
+        <div class="fdl-scenario-row">
+          <span class="fdl-text-sub" style="min-width: 120px;">出行场景</span>
+          <div class="fdl-tag checked" onclick="this.classList.toggle('checked')">商旅出行</div>
+          <div class="fdl-tag" onclick="this.classList.toggle('checked')">家庭出游</div>
+        </div>
+        <div class="fdl-text-cap" style="margin-top: 6px;">今日已提示 1/3 · 勾选态与浮层实时同步</div>
+      </div>
+
+      <div class="fdl-mid-card">
+        <div class="fdl-mid-header">
+          <div>
+            <div class="fdl-text-h2" style="font-size: 28px;">作为商旅出行的用户，您对报销凭证有要求吗？</div>
+            <div class="fdl-text-sub" style="margin-top: 6px;">精准匹配航司溢价货品与平台权益</div>
+          </div>
+          <div class="fdl-close-icon" onclick="openFloat('float-shield')">×</div>
+        </div>
+        <div class="fdl-option-row">
+          <div class="fdl-option" onclick="selectOption(this)">电子发票</div>
+          <div class="fdl-option" onclick="selectOption(this)">电子行程单</div>
+          <div class="fdl-option" onclick="selectOption(this)">都可以</div>
+        </div>
+        <div class="fdl-text-cap" style="margin-top: 12px;">模块冲突时自动平滑上移 · 300ms ease-out 过渡</div>
+      </div>
+
+      <div class="fdl-card">
+        <div class="fdl-text-h2" style="font-size: 28px;">快捷操作入口</div>
+        <div class="fdl-option-row" style="margin-top: 18px;">
+          <div class="fdl-btn fdl-btn-primary" onclick="openFloat('float-intent')">预选乘机人浮层</div>
+          <div class="fdl-btn fdl-btn-secondary" onclick="openFloat('float-pref')">出行偏好面板</div>
+          <div class="fdl-btn fdl-btn-secondary" onclick="openFloat('float-cert')">企业认证页</div>
+        </div>
+      </div>
+
+      <div class="fdl-safe-zone"></div>
+    </div>
+
+    <div class="fdl-feedback">
+      <div class="fdl-chip">���� 有帮助</div>
+      <div class="fdl-chip">👎 需改进</div>
+      <div class="fdl-chip">🔗 分享</div>
+    </div>
+
+    <div class="fdl-followup">
+      <div class="fdl-chip">查看行程单开具规则</div>
+      <div class="fdl-chip">修改舱等偏好</div>
+      <div class="fdl-chip">企业认证进度</div>
+    </div>
+  </div>
+
+  <footer class="fdl-footer">
+    <div class="fdl-footer-input">输入航班/目的地...</div>
+    <div class="fdl-footer-btn">发送</div>
+  </footer>
+
+  <div id
