@@ -14,6 +14,11 @@ fi
 pkill -f "node proxy-server.js" 2>/dev/null
 sleep 1
 
+# 自动同步数据（智能判断方向：哪边新就同步哪边）
+echo "🔄 正在同步数据..."
+node .claude/skills/oss-sync/scripts/oss-sync.mjs auto
+echo ""
+
 echo "🚀 正在启动需求看板后端服务..."
 echo "📌 启动后请在浏览器访问：http://localhost:3001/pages/Web.html"
 echo "⌨️  按 Ctrl+C 可停止服务"

@@ -1,6 +1,451 @@
 {
   "requirements": [
     {
+      "id": "REQ-037",
+      "part": "交易导购",
+      "name": "国内-ota一坑多货",
+      "status": "设计完成",
+      "priority": "P1",
+      "owner": "晰予",
+      "summary": "# 背景\n+ 业务需求：[https://aliyuque.antfin.com/geq8lo/vm77ff/vlyupfxl9nzvc58p?singleDoc#](https://aliyuque.antfin.com/geq8lo/vm77ff/vlyupfxl9nzvc58p?singleDoc#)\n+ **核心策略：**以用户的历史购买偏好+出行场景，分端/分人群/分出行日期选择溢价商品的可售类型和数量，突出商品类型的**<u>核心卖点</u>**，提升商品tab的点击；清晰表达不同航司/不同商品类型的**<u>权益规则</u>**，提高用户对溢价商品的认知，带来商品转化和规模的增长；\n\n# 需求说明\n<img src=\"https://intranetproxy.alipay.com/skylark/lark/0/2026/png/110356442/1776999429043-c239d587-25d5-4cc7-bec3-615f091636db.png\" width=\"508\" title=\"\" crop=\"0,0,1,1\" id=\"u1151c915\" class=\"ne-image\">\n\n坑位调整：即每个tab下支持多个货品\n\n<img src=\"https://intranetproxy.alipay.com/skylark/lark/0/2026/png/110356442/1776999482213-31d73504-ed16-4f41-b2c1-ab23171d27a6.png\" width=\"1023\" title=\"\" crop=\"0,0,1,1\" id=\"ued7f21ba\" class=\"ne-image\">",
+      "prd_url": "https://aliyuque.antfin.com/journey.fyn/xolgry/qfp6yrpifuu4phcq",
+      "design_url": "https://www.figma.com/design/ZptDjCFAFObLUI7jbOTcLD/%E5%9B%BD%E5%86%85%E5%9B%BD%E9%99%85%C2%B7OTA%E5%A4%A7%E6%94%B9%E7%89%88?node-id=7085-28815&t=57OgSxJOpUqussHl-4",
+      "notes": null,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "status_history": [
+        {
+          "date": "2026-04-24",
+          "from": "待对焦",
+          "to": "设计完成"
+        }
+      ]
+    },
+    {
+      "id": "REQ-036",
+      "part": "交易导购",
+      "name": "往返OTA页真往返坑",
+      "status": "设计完成",
+      "priority": "P1",
+      "owner": "晰予",
+      "summary": "# 背景\n希望针对往返行程，将真往返的价格单独一个坑位展示，去表达利益点，提升真往返的转化和规模。虽然按照之前OTA改版的大原则是坑位精简，但是现在从数据上看多TAB的点击率大概只有4%左右，真往返一般会跟拼接往返做多SKU展示，用户不会点击那个tab，也就看不到对应的利益点了，所以我们希望单拉一个坑位。\n\n\n\n# 需求\n按如下case，往返ota的常规坑位是：\n\n+ 超值精选\n+ 普通低价组\n+ 无忧联程组  <font style=\"color:#DF2A3F;\">本次新增</font>\n    - 售卖组利益点文案：任意一程航班取消/延误，全程可免费退改\n+ 人群好价组\n+ 行李推荐组：无行李的时候出，因此这个坑可以不用示意\n+ 更多报价\n\nto设计：把下图圈出来的这个报价单独拆出一个新坑，按上面的排序即可\n\n<img src=\"https://intranetproxy.alipay.com/skylark/lark/0/2026/png/110356442/1776943974485-294de1ea-4025-4f5e-9ae7-fedfc562182b.png\" width=\"330.5\" title=\"\" crop=\"0,0,1,1\" id=\"u2cd4f32d\" class=\"ne-image\">",
+      "prd_url": "https://aliyuque.antfin.com/journey.fyn/xolgry/mdmca5oc6bp0ky2c",
+      "design_url": "https://www.figma.com/design/ZptDjCFAFObLUI7jbOTcLD/%E5%9B%BD%E5%86%85%E5%9B%BD%E9%99%85%C2%B7OTA%E5%A4%A7%E6%94%B9%E7%89%88?node-id=7085-28820&t=57OgSxJOpUqussHl-4",
+      "notes": null,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "status_history": [
+        {
+          "date": "2026-04-24",
+          "from": "待对焦",
+          "to": "设计完成"
+        }
+      ]
+    },
+    {
+      "id": "REQ-035",
+      "part": "交易导购",
+      "name": "商旅用户出行意图识别与偏好信息收集",
+      "status": "待对焦",
+      "priority": "P1",
+      "owner": "良予",
+      "summary": "待补充 - PRD 链接已提交",
+      "prd_url": "https://aliyuque.antfin.com/journey.fyn/xolgry/akw923rpky2c2dib",
+      "design_url": null,
+      "notes": null,
+      "created_at": "2026-04-22",
+      "updated_at": "2026-04-23",
+      "ai_design": {
+        "status": "completed",
+        "stage": null,
+        "job_id": "job-1776866660263-t9lsr",
+        "summary": "优化商旅用户出行场景识别与信息补登，提升精准人货匹配和用户体验。",
+        "pages": [
+          "首页",
+          "列表页",
+          "OTA页",
+          "企业认证页",
+          "预选乘机人浮层",
+          "出行偏好选择页"
+        ],
+        "modules": [
+          {
+            "name": "首页-小搜卡场景勾选区",
+            "page": "首页",
+            "intent": "快速识别本次出行是否为商旅，为精准推荐提供核心场景信号。",
+            "change_type": "modify",
+            "notes": "需与浮层状态实时同步，气泡文案≤5字，勾选态需醒目且不干扰主搜索框输入。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "ADVISORY",
+                  "note": "气泡文案限制≤5字符合轻量化原则，但需确保与飞猪品牌情感化语调对齐。建议建立场景词库，并定义超长文案的省略号截断规则，保持业务语义完整。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "信息层级清晰，勾选态对比度满足标准。建议在设计稿中明确标注正常、悬停、选中、禁用四态的色值与透明度Token，便于开发直接调用。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "实时同步路径完整。建议补充网络延迟或同步失败时的本地缓存策略与UI降级提示（如骨架屏或微Toast），避免状态闪烁打断用户输入。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需明确同步成功的最小验证用例。建议定义“勾选后300ms内浮层状态同步”的验收口径，并加入自动化UI状态比对测试脚本，确保可复现。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "同步逻辑清晰，需补充文案截断规则与同步失败降级方案。",
+              "design_focus": [
+                "勾选态与主搜索框的视觉避让与层级控制",
+                "气泡文案≤5字的动态适配与截断规则",
+                "与小搜卡浮层状态的毫秒级实时同步反馈",
+                "未勾选/反选时的默认态与数据上报逻辑"
+              ]
+            }
+          },
+          {
+            "name": "首页-乘机人入口气泡",
+            "page": "首页",
+            "intent": "引导用户进入浮层完善乘机人与出行意图，提升信息主动补登率。",
+            "change_type": "modify",
+            "notes": "与小搜卡场景外露逻辑互斥，无���置则隐藏，视觉需轻量低打扰。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "命名与语义清晰，符合低打扰原则。建议统一气泡图标与飞猪IP形象或品牌辅助图形，增强视觉识别度。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "轻量低打扰需平衡可见性。建议采用品牌浅色系背景+深灰正文，字号不低于12px，确保在复杂首页背景下仍具备可读性。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "互斥逻辑已定义，但配置冲突时的优先级未明确。建议补充“当双配置同时下发时，默认优先展示小搜卡”的兜底规则，并设计平滑切换动画。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "曝光与点击路径明确。建议定义“气泡曝光转化率”与“互斥切换成功率”作为核心验收指标，便于A/B测试。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "互斥优先级需明确，视觉轻量化需兼顾可读性与品牌一致性。",
+              "design_focus": [
+                "与小搜卡场景外露的互斥优先级与降级展示",
+                "气泡视觉轻量化设计（低饱和度/微动效）",
+                "未配置时的占位与无缝隐藏逻辑",
+                "点击唤起浮层的平滑过渡与防误触区域"
+              ]
+            }
+          },
+          {
+            "name": "浮层-出行意图选择区",
+            "page": "预选乘机人浮层",
+            "intent": "收集用户出行目的（商旅/家庭），作为后续人货匹配的关键依据。",
+            "change_type": "modify",
+            "notes": "移除顶部冗余文案，选项单选，状态以点击确定为准，布局需紧凑易操作。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "选项命名准确，符合业务场景。建议为“商旅/家庭”选项配置专属场景插画或微图标，提升情感化表达。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "单选态层级清晰。建议采用品牌主色作为选中态边框/背景，未选中态使用浅灰描边，确保色盲用户可辨识。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "以点击确定为准符合预期，但缺乏默认态说明。建议设计“首次进入默认不选中”或“记忆上次选择”策略，并在UI上提供明确的未选提示。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "交互闭环完整。建议定义“浮层打开至点击确定的平均耗时”与“误触取消率”作为可用性测试指标。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "交互闭环完整，需补充默认态策略与选中态视觉强化。",
+              "design_focus": [
+                "单选组件的选中/未选中态视觉区分与点击热区",
+                "移除冗余文案后的信息密度与呼吸感平衡",
+                "“确定”按钮的状态��动（未选/已选）与防抖",
+                "浮层内信息架构的紧凑化重组与手势操作支持"
+              ]
+            }
+          },
+          {
+            "name": "浮层-家庭成员标签组件",
+            "page": "预选乘机������层",
+            "intent": "修复多端标签丢失与样式异常，清晰展示已认证的家庭成员身份。",
+            "change_type": "modify",
+            "notes": "紧跟基础标签后展示，统一Flutter与H5设计规范，确保跨端视觉一致。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "标签语义清晰。建议统一标签圆角、内边距与字体权重，严格对齐飞猪Design System规范。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "跨端样式易出现色差。建议在设计稿中明确标注标签背景色、文字色、边框色的Hex/RGBA值，并输出跨端映射表。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "紧跟基础标签展示逻辑合理。建议增加标签长按复制/查看详情的微交互，提升信息获取效率。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证多端渲染一致性。建议定义“Flutter与H5标签像素级差异≤2px”的视觉回归测试标准。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "跨端一致性是核心，需输出Token映射与像素级验收标准。",
+              "design_focus": [
+                "跨端（Flutter/H5）标签组件的样式对齐与Token映射",
+                "标签溢出/多行时的自适应排版与截断策略",
+                "基础标签与家庭成员标签的视觉分组与间距规范",
+                "标签加载失败或数据为空时的降级占位"
+              ]
+            }
+          },
+          {
+            "name": "列表页-开票偏好中插卡片",
+            "page": "列表页",
+            "intent": "在浏览列表时低打扰收集商旅用户报销凭证偏好，完善用户画像。",
+            "change_type": "create",
+            "notes": "置于第2屏直飞报价后，三选项单选，含关闭及负反馈入口，需预留疲劳度占位。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "ADVISORY",
+                  "note": "标题文案较长，易破坏卡片轻量化定位。建议精简为“商旅报销偏好？”或“开票倾向选择”，并统一使用品牌中性语调。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "三选项排版清晰。建议采用等宽卡片或Tag组布局，选中态使用品牌色填充，未选中态使用浅灰描边+深灰文字。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "疲劳度与负反馈路径完整。建议明确“每日曝光N次”的具体阈值，并在UI上预留疲劳占位高度，避免列表跳动。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证疲劳控制有效性。建议定义“卡片曝光转化率”与“负反馈触发率”双指标，设置7天屏蔽期的服务端校验用例。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "标题需精简，疲劳度占位与列表防跳动需重点设计。",
+              "design_focus": [
+                "中插卡片与航班列表的视觉融合与层级隔离",
+                "三选项单选的布局适配（横排/竖排）与点击反馈",
+                "疲劳度控制下的占位符设计与平滑上移动画",
+                "关闭与负反馈入口的防误触与明确提示"
+              ]
+            }
+          },
+          {
+            "name": "列表页-负反馈屏蔽浮层",
+            "page": "列表页",
+            "intent": "提供用户负反馈出口，尊重选择并控制推荐曝光疲劳度。",
+            "change_type": "create",
+            "notes": "点击卡片关闭触发，灰底点击关闭，复用专坑屏蔽逻辑，需明确提示7天不展示。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "提示语明确，符合用户预期。建议将“7天不展示”文案加粗或使用品牌提示色，增强信任感。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "灰底遮罩层级合理。建议背景透明度控制在60%-70%，确保底层内容隐约可见但不干扰浮层阅读。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "复用专坑屏蔽逻辑高效。建议增加“误触恢��”入口（���设置页可手动解��），提升容错率。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证跨端屏蔽同步。建议定义“同一账号多端登录时，屏蔽状态实时同步”的测试用例，并记录同步延迟阈值。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "交互逻辑完整，需补充跨端屏蔽同步验证与误触恢复机制。",
+              "design_focus": [
+                "负反馈浮层的触发时机与背景遮罩透明度控制",
+                "“7天不展示”提示的视觉强化与合规表述",
+                "点击灰色区域关闭的交互热区与手势冲突处理",
+                "屏蔽状态生效后的列表重排与无感过渡"
+              ]
+            }
+          },
+          {
+            "name": "OTA页-开票偏好中插卡片",
+            "page": "OTA页",
+            "intent": "在下单前关键节点再次捕捉未维护偏好用户，提升信息补全率。",
+            "change_type": "create",
+            "notes": "位置在第1屏下方，交互与疲劳度同列表页，需注意与核心下单表单的视觉层级。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "与列表页保持一致性。建议在OTA场景下增加“下单前确认”的引导语，强化业务价值。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "需严格避免与“提交订单”按钮争抢视觉焦点。建议降低卡片饱和度，采用幽灵按钮或弱化边框样式，确保主流程按钮最高层级。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "首屏插入易打断填写。建议设计“用户开始填写表单时自动收起/折叠卡片”的智能避让逻辑，保障核心转化。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "路径清晰。建议监控“卡片曝光对下单转化率的影响”，定义“转化率波动≤±2%”为安全验收线。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需严格避让下单主流程，补充智能折叠与转化率监控指标。",
+              "design_focus": [
+                "与核心下单表单的视觉层级避让（弱化卡片权重）",
+                "首屏下方插入的滚动锚点与布局防抖动",
+                "选项状态与订单页数据的实时同步机制",
+                "下单流程中的卡片自动隐藏/折叠策略"
+              ]
+            }
+          },
+          {
+            "name": "OTA页-快速选人入口",
+            "page": "OTA页",
+            "intent": "允许在OTA页直接唤起选人浮层，减少返回操作，优化下单路径。",
+            "change_type": "modify",
+            "notes": "需与上游浮层状态联动，点击后平滑过渡，避免打断当前订单填写流程。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "入口命名直观。建议采用“快捷图标+文字”组合，对齐OTA页现有操作入口规范。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "视觉层级适中。建议使用品牌辅助色作为入口背景，点击态增加微缩放或阴影反馈，提升操作确认感。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "减少返回操作路径优化明显。建议补充“浮层加载失败时降级为跳转原选人页”的兜底方案。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "路径完整。建议定义“唤起浮层至返回OTA页的耗时缩短比例”作为核心体验指标。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "路径优化显著，需补充加载失败降级与状态同步兜底策略。",
+              "design_focus": [
+                "快速选人入口的视觉样式与OTA页面整体风格融合",
+                "浮层唤起时的平滑过渡动画与上下文保持",
+                "与上游浮层状态的双向同步与冲突解决策略",
+                "订单填写中断时的数据暂存与恢复机制"
+              ]
+            }
+          },
+          {
+            "name": "认证页-报销凭证偏好选项",
+            "page": "企业认证页",
+            "intent": "在认证环节同步收集报销倾向，实现平台与业务域数据互通。",
+            "change_type": "modify",
+            "notes": "非必填单选，需适配完整H5与半浮层，数据双向同步，注意表单合规提示。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "选项语义清晰。建议增加“报销凭证说明”Tooltip，降低用户理解成本，符合合规要求。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "半浮层与H5布局差异大。建议采用响应式栅格系统，确保单选组件在窄屏下自动切换为垂直堆叠布局。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "非必填设计合理。建议明确“未选择时默认不传参”或“传空值”的后端逻辑，并在UI上提供“跳过”快捷入口。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "数据互通路径明确。建议定义“平台与机票域数据同步延迟≤1s”的�����标准��并增加同步失败重试机制测试。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "跨容器适配是重点，需明确非必填逻辑与数据同步延迟标准。",
+              "design_focus": [
+                "完整H5与半浮层���种容器下的表单自适应布局",
+                "非必填单选组件的默认态与合规提示文案排版",
+                "跨域（平台/机票）数据双向同步的加载与成功反馈",
+                "表单提交时的防重复点击与网络异常重试"
+              ]
+            }
+          },
+          {
+            "name": "偏好页-确认与修改面板",
+            "page": "出行偏好选择页",
+            "intent": "集中展示并确认用户已选的商旅场景与开票倾向，提供快捷修改入口。",
+            "change_type": "create",
+            "notes": "若为独立设置页需保持轻量化，支持一键保存，数据需实时同步至搜索与订单域。",
+            "status": "confirmed",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "面板结构清晰。建议采用卡片分组展示“场景+偏好”，保持与飞猪设置页统一的视觉语言。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "信息层级分明。建议保存按钮使用品牌主色实心样式，修改入口使用文字链或次级按钮，形成明确主次。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "一键保存路��完整。建议增加“修改未保存离开时的二次确认弹窗”，防止数据丢失。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证实时同步效果。建议定义“保存后返回搜索页，推荐结果即时刷新”的端到端测试用例，并记录同步成功率。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "架构轻量化达标，需补充未保存离开拦截与端到端同步验证。",
+              "design_focus": [
+                "已选偏好信息的只读展示与快捷修改入口布局",
+                "“一键保存”按钮的视觉权重与操作反馈（Toast/Loading）",
+                "独立设置页的轻量化信息架构与留白控制",
+                "数据同步至搜索/订单域的实时状态提示与异常降级"
+              ]
+            }
+          }
+        ],
+        "last_error": null,
+        "html_output_path": "pages/job-1776866660263-t9lsr.html",
+        "updated_at": "2026-04-23T02:39:27.899Z"
+      }
+    },
+    {
       "id": "REQ-034",
       "part": "机票辅营",
       "name": "淘天淘宝免税&飞猪交通合作",
@@ -12,13 +457,74 @@
       "design_url": "https://www.figma.com/design/TcGu62praBe53Kq9j3dJGh/%E8%AE%A2%E8%AF%A6_%E8%BE%85%E8%90%A5%E8%B4%A7%E6%9E%B6%E9%9C%80%E6%B1%82%E6%B1%87%E6%80%BB?node-id=6693-2307&t=pVwQ5IHjP5uUFBYp-4",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16"
+      "updated_at": "2026-04-16",
+      "ai_design": {
+        "status": "needs_confirmation",
+        "stage": null,
+        "job_id": "job-1776847847383-6t9rr",
+        "summary": "针对飞猪和淘天侧需求，设计机票订详页新增海免商品推荐模块，提升海南离岛免税购物转化率。",
+        "pages": [
+          "机票订详页"
+        ],
+        "modules": [
+          {
+            "name": "海免商品推荐Banner模块",
+            "page": "机票订详页",
+            "intent": "针对海南航线旅客精准透出免税商品，利用出行场景刺激购物转化，提升交叉销售收益。",
+            "change_type": "create",
+            "notes": "本期仅做Banner坑位，需支持分端分人群动态配置图文与跳转链；注意与订单核心操作区保持视觉层级，避免干扰主流程；预留后续千人千面数据接口。",
+            "status": "pending",
+            "review": {
+              "gate_result": "BLOCKED",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "ADVISORY",
+                  "note": "模块命名清晰，但跨端（飞猪/淘宝/支付宝）品牌表达需统一。建议：Banner视觉遵循飞猪主品牌色与旅行场景氛围，避免过度促销感；文案明确“海南离岛免税”权益属性，与订单主信息区保持品牌调性一致。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "动态图文配置易导致排版混乱。建议：定义Banner固定宽高比（如16:9）与安全边距；主标题限2行内，副标题限1行；背景图强制叠加暗色渐变遮罩，确保文案对比度≥4.5:1。"
+                },
+                "usability_review": {
+                  "verdict": "BLOCKING",
+                  "note": "缺失空态、加载态及异常态设计，且未定义点击热区与手势反馈。建议：补充无配置/加载失败时的降级占位或隐藏逻辑；明确点击热区≥44x44pt，增加按下态（opacity 0.8）；资格不符时由服务端控制隐藏。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "验收口径偏向数据埋点，缺乏前端交互验收标准。建议：定义最小可验证用例（如海南航线已支付订单正确展示并跳转，非海南订单不展示）；明确埋点上报时机（曝光需≥50%可视区域停留1s）。"
+                }
+              },
+              "blocking_count": 1,
+              "summary": "该模块需补充状态机与交互规范，明确排版安全区与跨端跳转策略后方可设计。",
+              "design_focus": [
+                "动态图文适配与排版安全区（防文字溢出/遮挡）",
+                "核心操作区视觉层级隔离（避免����������������支付/改签主按钮）",
+                "多端跳转链路与唤端降级策略（飞猪/淘宝/支付宝差异处理）",
+                "模块显隐逻辑与空态/异常态降级展示",
+                "点击热区与交互动效（按下反馈、跳转过渡）"
+              ]
+            }
+          }
+        ],
+        "last_error": null,
+        "html_output_path": null,
+        "updated_at": "2026-04-22T08:53:29.106Z"
+      },
+      "ai_review": {
+        "status": "completed",
+        "stage": null,
+        "job_id": "job-1776853024093-1s74s",
+        "summary": "设计方向符合PRD，需补充多端适配、异常态规范及埋点映射，建议评审通过后进入开发。",
+        "last_error": null,
+        "report_path": "pages/review-job-1776853024093-1s74s.md",
+        "updated_at": "2026-04-22T10:18:22.103Z"
+      }
     },
     {
       "id": "REQ-001",
       "part": "交易导购",
       "name": "通程权益表达（用户端）",
-      "status": "待对焦",
+      "status": "已上线",
       "priority": "P1",
       "owner": "晰予",
       "summary": "待补充 - PRD 链接已提交",
@@ -26,7 +532,14 @@
       "design_url": "https://www.figma.com/design/oO4YBGEzDEN9C0teJLOmkS/%E5%9B%BD%E5%86%85%C2%B7Listing?node-id=3837-3522&t=SUoOvNo0rzg7ryIa-4",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16"
+      "updated_at": "2026-04-24",
+      "status_history": [
+        {
+          "date": "2026-04-24",
+          "from": "待对焦",
+          "to": "已上线"
+        }
+      ]
     },
     {
       "id": "REQ-002",
@@ -40,20 +553,418 @@
       "design_url": "https://www.figma.com/design/usgAklz7EPzQ9R9dUvePv5/%E9%AB%98%E5%BE%B7%E6%9C%BA%E7%A5%A8%E5%85%A8%E9%87%8F%E5%88%87%E9%A3%9E%E7%8C%AA?t=TPmrsXjFP8d7DaMt-0",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16",
+      "updated_at": "2026-04-22",
       "status_history": [
         {
           "date": "2026-04-16",
           "from": "设计完成",
           "to": "待开发"
         }
-      ]
+      ],
+      "ai_review": {
+        "status": "completed",
+        "stage": null,
+        "job_id": "job-1776851359635-zly6s",
+        "summary": "整体链路符合流量承接目标，但品牌融合、登录异常态、列表页信息密度及深色模式需人工核对与优化。按清单修复后可进入开发。",
+        "last_error": null,
+        "report_path": "pages/review-job-1776851359635-zly6s.md",
+        "updated_at": "2026-04-22T09:50:40.426Z"
+      },
+      "ai_design": {
+        "status": "needs_confirmation",
+        "stage": null,
+        "job_id": "job-1776851358637-l52b9",
+        "summary": "优化高德地图与飞猪合作，提升机票和火车票预订体验，包括首页切量、地图导航搜索优化、登录授权和公共交通推荐。",
+        "pages": [
+          "高德首页",
+          "地图导航搜索页",
+          "登录授权页",
+          "公共交通推荐页",
+          "机票列表页",
+          "火车票列表页"
+        ],
+        "modules": [
+          {
+            "name": "金刚区机火入口",
+            "page": "高德首页",
+            "intent": "统一跳转至飞猪首页，支持国际机票搜索，优化新用户预订路径。",
+            "change_type": "modify",
+            "notes": "保持原有视觉规范，调整路由逻辑；需兼容未登录态的授权拦截与引导。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "命名与语义清晰。建议图标采用高德网格规范，辅以飞猪品牌色微光点缀以强化合作心智。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "信息层级合理。建议明确国际/国内标签的最大字符数与截断规则，避免���行���坏布局。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "未登录拦截路径需优化。建议采用底部半屏轻量引导替代全屏硬跳转，保留原搜索上下文。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需定义新用户路径优化验收口径。建议设置A/B测试对比直接跳转与引导跳转的授权转化率。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需优化未登录拦截体验，明确国际/国内视觉区分，确保跳转平滑。",
+              "design_focus": [
+                "未登录态拦截的轻量级引导弹窗设计",
+                "国际/国内机票入口的视觉区分与图标规范",
+                "跳转飞猪首页的动效过渡与上下文保留",
+                "金刚区点击热区与防误触边界定义"
+              ]
+            }
+          },
+          {
+            "name": "飞机快捷预订入口",
+            "page": "地图导航搜索页",
+            "intent": "缩短决策链路，点击直达飞猪独家列表页，提升长距离出行转化。",
+            "change_type": "modify",
+            "notes": "需透传起降地与日期参数，样式与高德现有结果卡片保持一致。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "风格一致。建议在高德结果卡片基础上增加半透明飞猪专属角标，保持视觉克制。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "文本组织清晰。建议价格使用飞猪主色加粗，日期使用中性灰，形成明确阅读动线。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "参数透传异常需兜底。建议设计参数缺失时的降级卡片，提供‘重新搜索’快捷入口。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证参数透传稳定性。建议设定100%参数继承测试用例，并监控跳转后列表页加载耗时。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "重点保障参数透传稳定性，设计降级方案，保持卡片风格统一。",
+              "design_focus": [
+                "参数透传失败时的降级展示与手动搜索入口",
+                "飞猪独家标识的轻量化植入规范",
+                "起降地与日期参数的紧凑排版",
+                "点击跳转的加载态与飞猪列表页衔接"
+              ]
+            }
+          },
+          {
+            "name": "智慧出行方案卡片",
+            "page": "地图导航搜索页",
+            "intent": "整合多交通方式组合，提供异地出行最优解，引导飞猪购票。",
+            "change_type": "create",
+            "notes": "采用时间轴+价格对比布局，明确标注飞猪独家标识，支持一键跳转。",
+            "status": "pending",
+            "review": {
+              "gate_result": "BLOCKED",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "语义���晰。建议时间轴节点采用高德标准圆点，飞猪购票节点采��品牌蓝强化识���。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "信息密度较高。建议采用2列网格布局，价格H2加粗，耗时Body���规，避免视觉拥挤。"
+                },
+                "usability_review": {
+                  "verdict": "BLOCKING",
+                  "note": "缺失信����展开/收起交互。建���增加‘展开详情’箭头与折叠态，确保一键跳转不丢失对比上下文。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需定义最小验证用例。建议测试2+交通方式组合渲染，核对价格/耗时数据准确性与转化率。"
+                }
+              },
+              "blocking_count": 1,
+              "summary": "需补充信息展开/收起交互，优化价格时间排版层级，避免信息过载。",
+              "design_focus": [
+                "时间轴+价格对比的网格化信息架构",
+                "多交通方式图标的统一语义与色彩区分",
+                "飞猪独家角标的位置与尺寸规范",
+                "一键跳转的防误触与上下文保留设计"
+              ]
+            }
+          },
+          {
+            "name": "500km+长距路线推荐模块",
+            "page": "地图导航搜索页",
+            "intent": "针对长距离导航场景智能推荐飞机方案，提升客单价与体验。",
+            "change_type": "create",
+            "notes": "基于距离阈值动态触发，展示耗时与价格对比，避免干扰核心导航。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "命名准确。建议采用微阴影+圆角容器，与地图POI气泡风格保持一致。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "对比数据清晰。建议节省时间用绿色语义标签，溢价用橙色，建立直观价值感知。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "动态触发易造成布局跳动。建议增加平滑高度动画与常驻关闭按钮，支持用户主动隐藏。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "阈值逻辑明确。建议验证500km触发准确率，并监控对主导航路线完成率的干扰指标。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需设计平滑触发与关闭动效，强化对比数据可读性，确保不干扰导航。",
+              "design_focus": [
+                "动态触发时的平滑高度过渡动画",
+                "耗时与价格对比的语义化色彩应用",
+                "避免干扰核心导航的折叠/关闭机制",
+                "推荐卡片与地图底层的视觉层级隔离"
+              ]
+            }
+          },
+          {
+            "name": "机场/异地城市返程入口",
+            "page": "地图导航搜索页",
+            "intent": "挖掘本地机场搜索场景的返程需求，拓展增量交易机会。",
+            "change_type": "create",
+            "notes": "结合LBS定位，采用轻量底部卡片，突出订返程行动点与低价提示。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "符合场景。建议底部卡片遵循高德BottomSheet规范，CTA按钮使用飞猪品牌色。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "低价提示需防干扰。建议采用胶囊标签+高对比度文字，避免大面积色块抢夺视线。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "路径完整。���议LBS��败时自动降级为‘搜索返程’输入框，保障任务连续性。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "场景明确��建议测试LBS定位精度与卡片曝光率，追踪低价标签点击转化漏斗。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需完善LBS异常兜底，优化底部卡片手势交互，控制低价标签视觉权重。",
+              "design_focus": [
+                "LBS定位异常时的兜底展示与手动输入入口",
+                "底部轻量卡片的滑出/收起手势交互",
+                "低价提示标签的视觉权重控制",
+                "订返程行动点的点击热区优化"
+              ]
+            }
+          },
+          {
+            "name": "统一账号授权与引导模块",
+            "page": "登录授权页",
+            "intent": "打通双端账号体系，降低授权门槛，确保营销权益一致。",
+            "change_type": "modify",
+            "notes": "优先淘宝一键登录，无账号时提供手机号快捷注册；明确提示权益同步。",
+            "status": "pending",
+            "review": {
+              "gate_result": "BLOCKED",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "命名规范。建议对齐淘宝/高德登录UI标准，增加飞猪Logo联合信任背书。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "主次分明。建议主按钮实心高亮，次按钮描边，权益提示使用小号中性灰文本。"
+                },
+                "usability_review": {
+                  "verdict": "BLOCKING",
+                  "note": "缺失跨端数据共享协议展示。建议增加显性勾选框与协议详情链接，阻断前必须完成授权确认。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证授权成功率。建议分路径（淘宝/手机）测试授权耗时，并评估权益提示理解度。"
+                }
+              },
+              "blocking_count": 1,
+              "summary": "必须补充跨端授权协议显性展示，优化主次登录路径视觉，完善异常反馈。",
+              "design_focus": [
+                "跨端授权协议的显性化展示与勾选交互",
+                "淘宝一键登录与手机号注册的视觉主次区分",
+                "权益同步提示的文案精简与图标辅助",
+                "授权失败/网络异常的明确反馈与重试路径"
+              ]
+            }
+          },
+          {
+            "name": "异地多式联运方案列表",
+            "page": "公共交通推荐页",
+            "intent": "提供火车/飞机/大巴组合方案，满足复杂���行需求并引导下单。",
+            "change_type": "create",
+            "notes": "横向滑动展示不同组合，突出总价与耗时，飞猪方案加专属角标区分。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "语义清晰。建议横向滑动采用卡片peek设计，明确暗示可滑动查看更多方案。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "横向卡片易拥挤。建议固定左中右三栏布局（图标/路线-时间/价格-CTA），统一字号层级。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "交互完整。建议设置滚动吸附点与卡片中心对齐，提升滑动操作效率。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "用例明确。建议测试横向滑动可发现性，记录首屏卡片与滑动后卡片的转化差异。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需规范横向滑动交互与卡片信息分区，强化角标位置，补充骨架屏。",
+              "design_focus": [
+                "横向滑动列表的滚动吸附与边缘渐隐提示",
+                "组合方案总价与总耗时的固定信息区块布局",
+                "飞猪专属角标在卡片内的标准化位置",
+                "空态/加载态的骨架屏与占位设计"
+              ]
+            }
+          },
+          {
+            "name": "本地机场返程购票模块",
+            "page": "公共交通推荐页",
+            "intent": "精准推送返程机票，提升本地机场搜索场景的复购转化率。",
+            "change_type": "create",
+            "notes": "置于结果页显著位置，结合日期选择器，默认展示近期低价航班。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "定位准确。建议模块背景与公共交通结果页底色融合，使用分割线区分层级。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "重点突出。建议日期选择器采用内联紧凑样式，低价航班价格使用品牌色加粗。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "缺失无航班状态处理。建议设计空态插��+‘查看次日/火车替代’快捷入口，避免任务中断。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "场景清晰。建议测试日期选择器交互流畅度，验证默认低价展示对下单转化的提升效果。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需补充无航班空态设计，优化内联日期选择器交互��确保页面视觉融合。",
+              "design_focus": [
+                "无航班/售罄状态的友好空态与替代方案推荐",
+                "紧凑型日期选择器的内联交互设计",
+                "近期低价航班的默认高亮与排序逻辑可视化",
+                "模块在公共交通结果页的视觉融合策略"
+              ]
+            }
+          },
+          {
+            "name": "联合营销头图模块",
+            "page": "机票列表页",
+            "intent": "强化高德飞猪合作心智���展示专���优惠，提升首屏下单转化。",
+            "change_type": "create",
+            "notes": "顶部通栏设计，突出高德用户专享价，支持后台动态配置活动素材。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "心智强化明确。建议通栏采用高德品牌渐变背景，叠加飞猪专属优惠标签。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "动态配置易破版。建议强制限定标题2行/副标题1行，超出自动省略，预留安全边距。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "路径清晰。建议增加右上角关闭按钮，且���闭后列表自���上滑填补空白，不遮挡筛选器。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "可验证性强。建议A/B测试头图CTR与列表滚动深度，验证多端动态配置渲染一致性。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需定义动态素材安全区与截断规则，优化与筛选器层级关系，强化专��价。",
+              "design_focus": [
+                "动态配置素材的自适应安全区与文案截断规则",
+                "顶部通栏与列表筛选器的层级避让策略",
+                "高德用户专享价的视觉强化与信任背书设计",
+                "头图关闭/收起的交互与状态记忆"
+              ]
+            }
+          },
+          {
+            "name": "机火交叉推荐模块",
+            "page": "火车票列表页",
+            "intent": "在火车票列表智能推荐更优飞机方案，实现流量交叉转化。",
+            "change_type": "create",
+            "notes": "当距离超500km或耗时过长时展示，采用对比卡片，一键切换至机票。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "语义明确。建议左火车右飞机分栏，使用各自品牌色区分，中间用对比箭头连接。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "对比直观。建议‘切换至机票’CTA使用高对比度主色，价格差异用绿色/红色语义标注。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "触发逻辑需透明化。建议增加‘省时X小时/更舒适’微提示标签，降低用户决策成本。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "逻辑可测。建议验证>500km触发准确率，追踪一键切换后的参数继承成功率与交叉转化率。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需增加触发条件可视化���示，优化对比布局，确保参数无缝继承。",
+              "design_focus": [
+                "触发条件的可视化提示（如“省时X小���”标签）",
+                "火车与飞机方案对比的左右分栏布局",
+                "一键切换至机票的无缝参数继承与加载态",
+                "推荐模块的折叠/展开与用户偏好记忆"
+              ]
+            }
+          }
+        ],
+        "last_error": null,
+        "html_output_path": null,
+        "updated_at": "2026-04-22T09:54:10.492Z"
+      }
     },
     {
       "id": "REQ-021",
       "part": "AI",
       "name": "AI线路规划",
-      "status": "灰度中",
+      "status": "待设计",
       "priority": "P0",
       "owner": "雷邱",
       "summary": "",
@@ -61,35 +972,673 @@
       "design_url": "https://www.figma.com/design/jGv2WBbUfTf2sOxnP6YQ0a/AI%E4%BD%8E%E4%BB%B7%E8%A7%84%E5%88%92%EF%BC%88%E7%89%B9%E4%BB%B7%E7%BA%BF%E8%B7%AF%EF%BC%89?node-id=1416-72500&t=IqrqoZibI9smDbbJ-4",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16",
+      "updated_at": "2026-04-24",
       "status_history": [
         {
           "date": "2026-04-16",
           "from": "开发中",
           "to": "灰度中"
         }
-      ]
+      ],
+      "ai_review": {
+        "status": "completed",
+        "stage": null,
+        "job_id": "job-1776853014273-6g11d",
+        "summary": "设计契合AI低价规划场景，但地图交互、Copilot组件规范及多端适配细节需人工核对，补充状态说明后可推进。",
+        "last_error": null,
+        "report_path": "pages/review-job-1776853014273-6g11d.md",
+        "updated_at": "2026-04-22T10:18:21.051Z"
+      },
+      "ai_design": {
+        "status": "needs_confirmation",
+        "stage": null,
+        "job_id": "job-1776911290023-8lczq",
+        "summary": "优化机票搜索体验，新增AI助手和地图功能，提升用户在交通领域的交叉效率和地图功能的引导效率。",
+        "pages": [
+          "首页",
+          "地图首页",
+          "点到点Query",
+          "点到线Query",
+          "点到线详情",
+          "一键下单"
+        ],
+        "modules": [
+          {
+            "name": "地图探索入口卡片",
+            "page": "首页",
+            "intent": "提供统一逛心智入口，引导用户进入地图与AI规划场景。",
+            "change_type": "create",
+            "notes": "建议置于首屏核心视觉区，采用动态低价数据或热门目的地插画，点击跳转地图首页。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "命名与语义清晰。建议复用飞猪官方旅行插画组件库，确保品牌调性一致。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "低价数据需突出。建议价格数字采用品牌主色+加粗字重，背景增加微渐变提升可读性。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "路径完整。建议增加点击后的触觉反馈（H5震动API）与加载骨架屏。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需定义验收指标。建议以首屏曝光CTR与地图页UV转化率为最小可验证用例。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "入口视觉需强化逛心智，动态数据加载与降级需完善。",
+              "design_focus": [
+                "动态价格数据加载态与空态降级展示",
+                "首屏视觉权重分配与品牌插画对齐",
+                "点击热区范围与跳转过渡动效",
+                "弱网/接口超时静态兜底策略"
+              ]
+            }
+          },
+          {
+            "name": "AI Copilot 对话面板",
+            "page": "地图首页",
+            "intent": "承接模糊意图，通过自然语言交互降低线路规划门槛。",
+            "change_type": "create",
+            "notes": "悬浮于地图底部，支持快捷Query点击、语音输入与历史会话记忆，需适配多端尺寸。",
+            "status": "pending",
+            "review": {
+              "gate_result": "BLOCKED",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "符合AI助手定位。建议采用圆角卡片+品牌蓝渐变气泡，区分用户与AI身份。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "长文本易疲劳。建议AI回复采用14px/1.6行高，关键实体（日期/价格）高亮加粗。"
+                },
+                "usability_review": {
+                  "verdict": "BLOCKING",
+                  "note": "H5端语音权限与键盘易冲突。设计建议：增加显式麦克风开关，历史会话限制展示5条并支持归档，提供ASR失败时的纯文本输入兜底。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证意图承接率。建议以模糊Query一次对话解决率≥60%为验收口径。"
+                }
+              },
+              "blocking_count": 1,
+              "summary": "交互复杂度高，需重点解决悬浮遮挡与语音输入容错。",
+              "design_focus": [
+                "悬浮面板层级与手势收起逻辑",
+                "语音输入状态反馈与键盘切换",
+                "历史会话折叠与截断策略",
+                "多端软键盘适配与防遮挡"
+              ]
+            }
+          },
+          {
+            "name": "动态低价地图底图",
+            "page": "地图首页",
+            "intent": "直观展示空间分布与价格梯度，强化“逛”与发现心智。",
+            "change_type": "modify",
+            "notes": "替换原静态地图，接入实时票价API，采用热力/气泡聚合渲染，避免信息过载。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "替换静态底图合理。建议保持飞猪浅色地图基底，避免自定义底图喧宾夺主。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "气泡易重叠。建议定义最大聚合阈值，采用语义化渐变色（绿-黄-红）映射价格梯度。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "交互标准。建议��加双指缩放阻尼感，点击气泡后地图平滑居中并放大。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证信息过载阈值。建议以首屏加载<1.5s、气泡点击误触率<5%为测试标准。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "信息密度高，需严格控制聚合渲染与缩放交互，避免视觉过载。",
+              "design_focus": [
+                "热力/气泡聚合算法视觉映射",
+                "缩放层级信息密度控制",
+                "点击选中态与轨迹高亮反馈",
+                "弱网降级为静态地图策略"
+              ]
+            }
+          },
+          {
+            "name": "智能推荐Query标签组",
+            "page": "地图首页",
+            "intent": "预设高频场景问题，缩短用户输入路径，提升冷启动转化率。",
+            "change_type": "create",
+            "notes": "横向滑动布局，支持“换一批”刷新，文案需结合用户画像与季节动态生成。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "预设高频场景合理。建议采用胶囊标签样式，结合季节主题色动态渲染。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "排版规范。建议标签内文字限制单行，超出显示省略号，字号12px。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "换一批需明确反馈。设计建议：增加旋转加载图标，滑动到底部提供“换一批”固定按钮，避免无限滚动迷失。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证冷启动效率。建议以标签点击率与手动输入转化率对比为验收依据。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "布局成熟，需优化滑动体验与换一批加载反馈，提升冷启动转化。",
+              "design_focus": [
+                "横向滑动阻尼与惯性控制",
+                "换一批加载动效与防抖",
+                "标签文案截断与换行规则",
+                "冷启动默认数据兜底"
+              ]
+            }
+          },
+          {
+            "name": "目的地空间比价卡片",
+            "page": "点到点Query",
+            "intent": "将传统列表转化为空间可视化，辅助用户快速对比距离与价格。",
+            "change_type": "modify",
+            "notes": "结合地图缩略图与价格标签，突出“低价+距离”双维度，支持一键切换列表视图。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "空间可视化符合场景。建议缩略图风格与主地图保持一致，维持品牌连贯性。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "双维度易混淆。设计建议：用气泡大小映射价格，颜色深浅映射距离，右上角增加固定图例。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "视图切换路径清晰。建议切换时保留当前选中态，使用平滑过渡动画。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证认知成本。建议以用户理解双维度映射准确率≥85%为测试目标。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "双维度对比需清晰视觉编码，视图切换需保持上下文连贯。",
+              "design_focus": [
+                "双维度（价格+距离）可视化映射",
+                "地图缩略图与列表视图无缝切换",
+                "标签防重叠与图例说明",
+                "空数据与无结果提示"
+              ]
+            }
+          },
+          {
+            "name": "AI 行程摘要模块",
+            "page": "点到点Query",
+            "intent": "提炼航班核心优势与目的地特色，辅助决策并减少外部跳转。",
+            "change_type": "create",
+            "notes": "位于结果页顶部，采用卡片式排版，展示飞行时长、中转提示及AI生成的游玩建议。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "辅助决策定位明确。建议增加AI标识徽��，与常规结果卡片做视觉区分。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "卡片结构清晰。建议关键数据采用16px加粗，辅助说明采用12px灰色。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "生成延迟需管理。设计建议：采用打字机流式输出，提供“重新生成”与“查看完整攻略”快捷入口。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证决策提效。建议以外部攻略APP跳转流失率下降20%为验收口径。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "需优化AI生成等待体验，强化核心决策信息，降低外部流失。",
+              "design_focus": [
+                "AI生成流式加载动效",
+                "核心指标（时长/中转）高亮排版",
+                "外部跳转阻断与站内承接策略",
+                "生成失败/超时降级方案"
+              ]
+            }
+          },
+          {
+            "name": "多段�����拓扑图",
+            "page": "点到线Query",
+            "intent": "清晰呈现复杂行程的节点顺序与交通方式，降低理解成本。",
+            "change_type": "create",
+            "notes": "采用时间轴+地图轨迹结合形式，区分飞机/高铁/汽车图标，支持点击节点展开详情。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "未单独审查"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "未单独审查"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "未单独审查"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "未单独审查"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "未单独审查，默认通过",
+              "design_focus": []
+            }
+          },
+          {
+            "name": "偏好匹配度指示器",
+            "page": "点到线Query",
+            "intent": "可视化展示推荐线路与用户输入意图的契合程度，建立信任。",
+            "change_type": "create",
+            "notes": "进度条或雷达图形式，标注“低价”“顺路”“景点覆盖”等维度，数据由AI模型实时计算。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "信任感构建合理。建议采用雷达图或分段进度条，对齐飞猪数据可视化规范。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "维度过多易噪音。设计建议：仅保留“低价/顺路/景点覆盖”3项，采用绿-黄-红语义渐变。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "AI计算需透明。设计建议：增加“计算依据”折叠说明，加载时显示动态波纹动画。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证信任转化。建议以指示器曝光后下单转化率提升为验收指标。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "信任感构建关键，需控制维度数量并明确计算逻辑，避免信息噪音。",
+              "design_focus": [
+                "维度���量控制与语义化配色",
+                "实时计算加载态与骨架屏",
+                "匹配度Tooltip解释逻辑",
+                "���常��/低匹配度处理"
+              ]
+            }
+          },
+          {
+            "name": "每日行程拆解面板",
+            "page": "点到线详情",
+            "intent": "将长线路按天拆分，提供交通、住宿、景点的结构化信息。",
+            "change_type": "create",
+            "notes": "手风琴折叠设计，每日展示POI地图定位、耗时预估与AI避坑提示，支持一键添加至日历。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "结构化信息清晰。建议采用飞猪标准手风琴组件，��持折叠态视觉一致性。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "层级分明。建议每日标题加粗，POI名称使用品牌色，耗时采用辅助灰。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "日历集成需容错。设计建议：调用系统日历API前检测权限，拒绝时提供“复制行程文本”降级入口。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证长行程体验。建议以5天以上行程滑动帧率≥55fps为性能验收标准。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "结构化信息多，需优化手风琴性能与日历集成体验，保障长列表流畅。",
+              "design_focus": [
+                "手风琴展开/收起动效与性能",
+                "每日POI定位与耗时排版",
+                "日历添加权限与降级方案",
+                "长列表虚拟滚动优化"
+              ]
+            }
+          },
+          {
+            "name": "分段预订聚合入口",
+            "page": "���到线详情",
+            "intent": "整合多段交通票务，支持灵活勾选与组合购买。",
+            "change_type": "modify",
+            "notes": "复用现有票务卡片组件，增加“全选/单选”状态联动，实时计算总价与优惠抵扣。",
+            "status": "pending",
+            "review": {
+              "gate_result": "BLOCKED",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "复用现有组件合理。建议增加选中态高亮边框，保持与飞猪票务卡片一致。"
+                },
+                "color_typography": {
+                  "verdict": "ADVISORY",
+                  "note": "总价需突出。设计建议：总价采用20px加粗，原价加删除线，优惠标签使用品牌红。"
+                },
+                "usability_review": {
+                  "verdict": "BLOCKING",
+                  "note": "实时计价易引发变价纠纷。设计建议：增加300ms防抖，勾选时实时校验库存，变价/无票时弹出明确拦截Toast并自动取消勾选。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证交易转化。建议以组合勾选成功率与支付前流失率为核心指标。"
+                }
+              },
+              "blocking_count": 1,
+              "summary": "交易核心模块，需严格处理状态联动与实时计价，防范库存与变价风险。",
+              "design_focus": [
+                "全选/单选状态联动逻辑",
+                "实时计价防抖与加载态",
+                "库存不足/变��拦截提示",
+                "优惠抵扣明细展开规则"
+              ]
+            }
+          },
+          {
+            "name": "复杂行程订单总览",
+            "page": "一键下单",
+            "intent": "清晰汇总多段行程、乘客信息与费用明细，降低支付焦虑。",
+            "change_type": "modify",
+            "notes": "顶部固定行程摘要，中部明细可折叠，突出总价与权益抵扣，支持分步确认。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "结账页标准规范。建议顶部采用毛玻璃吸顶效果，保持飞猪订单页视觉基因。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "信息层级清晰。建议费用项左对齐，金额右对齐，使用分割线区分模块。"
+                },
+                "usability_review": {
+                  "verdict": "PASS",
+                  "note": "路径完整。建议分步确认增加进度指示，返回键明确提示“数据已保存”。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证支付焦虑降低。建议以支付页停留时长缩短15%为验收口径。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "结账页需强化信息层级与防错设计，降低多段行程支付焦虑。",
+              "design_focus": [
+                "顶部行程摘要吸顶与折叠联动",
+                "费用明细层级划分与对齐",
+                "分步确认防���触设计",
+                "支付前二次校验提示"
+              ]
+            }
+          },
+          {
+            "name": "AI 行程确认与改签提示",
+            "page": "一键下单",
+            "intent": "预判用户潜在顾虑，提供退改规则解读与行程保护建议。",
+            "change_type": "create",
+            "notes": "支付按钮上方展示，采用温和提示语，链接至详细规则页，避免打断支付主流程。",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "辅助提示定位准确。建议采用信息提示（Info）图标，文案语气保持专业温和。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "视觉权重合理。建议背景使用浅蓝/浅灰底色，链接文字采用品牌蓝，避免喧宾夺主。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "防打断支付流。设计建议：置于按钮上方固定区域，最大高度限制为2行，支持左滑或点击关闭，规则页采用半屏抽屉打开。"
+                },
+                "user_testing": {
+                  "verdict": "PASS",
+                  "note": "需验证提示有效性。建议以规则页点击率与支付完成率双升为验收标准。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "辅助决策模块，需严格控制视觉权重与交互打断，保障支付主流程顺畅。",
+              "design_focus": [
+                "提示位置与支付按钮安全间距",
+                "温和提示语排版与图标",
+                "规则页跳转不中断主流程",
+                "可关闭/折叠状态��理"
+              ]
+            }
+          }
+        ],
+        "last_error": null,
+        "html_output_path": null,
+        "updated_at": "2026-04-23T02:33:26.047Z"
+      }
     },
     {
       "id": "REQ-033",
       "part": "交易导购",
-      "name": "【五一】机票下单页回退时向火车导流",
+      "name": "五一：机票下单页回退时向火车导流",
       "status": "待开发",
       "priority": "P1",
       "owner": "晰予",
-      "summary": "下单页挽留弹窗",
+      "summary": "下单页挽留弹���",
       "prd_url": "https://aliyuque.antfin.com/journey.fyn/xolgry/yay0cg2a0f0kskyc",
       "design_url": "https://www.figma.com/design/H6fe2rvXtF23HgT1FgR8YN/%E5%9B%BD%E5%86%85%E5%9B%BD%E9%99%85%C2%B7%E4%B8%8B%E5%8D%95%E9%A1%B5%E6%8C%BD%E7%95%99%E5%BC%B9%E7%AA%97?node-id=359-3582&t=tLaRRhM0xQTyKAXO-4",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16",
+      "updated_at": "2026-04-22",
       "status_history": [
         {
           "date": "2026-04-16",
           "from": "设计完成",
           "to": "待开发"
         }
-      ]
+      ],
+      "ai_design": {
+        "status": "needs_confirmation",
+        "stage": null,
+        "job_id": "job-1776851894321-ee8jv",
+        "summary": "优化国内机票下单页挽留弹窗，新增火车票引流功能，提升用户转化率。",
+        "pages": [
+          "下单页"
+        ],
+        "modules": [
+          {
+            "name": "火车票引流挽留弹窗",
+            "page": "下单页",
+            "intent": "通过价格对比引导用户转向火车票，提升跨品类转化率",
+            "change_type": "create",
+            "notes": "需动态拼接车次类型文案，按钮需区分主从操作层级，注意频控逻辑与现有弹窗隔离",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "标题与品牌“省钱”心智一致。建议：动态拼接的车次类型（G/D/C/S）前增加对应品牌图标，强化跨品类认知；价格数字需严格遵循飞猪数据排版规范（千分位、货币符号对齐）。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "信息层级清晰。建议：“立省xx元”使用品牌警示色（如#FF4D4F）并加粗，字号放大1-2级；主按钮“去看火车票”使用飞猪橙，次按钮“狠心离开”使用中性灰，确保视觉动线符合F型阅读习惯。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "关键路径完整，但缺失加载与异常态。建议：补充API请求价差时的Loading骨架屏；若接口超时或无匹配车次，设计静默降级策略（不弹窗或展示通用挽留），避免阻断返回操作；按钮最小触控区≥44px。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需定义最小验证用例。建议：验收用例包含：1）价差临界值（等于/小于阈值）的弹窗触发率；2）窄屏动态文案换行与截断表现；3）手势返回与点击返回按钮的触发一致性。埋点需区分按钮曝光与点击。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "视觉与交互框架完整，需补充异常降级与动态文案适配规则。",
+              "design_focus": [
+                "动态价差文案的视觉层级与防溢出布局",
+                "主从按钮的情感化色彩与触控热区",
+                "触发时机（勾选后+返回手势）的动效衔接",
+                "网络异常/无数据时的降级弹窗态"
+              ]
+            }
+          },
+          {
+            "name": "弹窗优先级控制模块",
+            "page": "下单页",
+            "intent": "优化多弹窗冲突场景下的展示逻辑，确保核心业务优先曝光",
+            "change_type": "modify",
+            "notes": "需重构弹窗队列调度逻辑，新增引流弹窗插入CRM与兜底弹窗之间，注意状态机管理",
+            "status": "pending",
+            "review": {
+              "gate_result": "BLOCKED",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "逻辑模块需保持品牌一致性。建议：所有弹窗统一使用飞猪标准圆角（如12px）与阴影层���，避免因优先级切换导致视觉风格割裂。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "排版无特殊要求。建议：统一各类型弹窗的遮罩透明度（如60%黑），确保底层下单页信息隐约可见，维持上下文感知。"
+                },
+                "usability_review": {
+                  "verdict": "BLOCKING",
+                  "note": "队列调度逻辑存在阻断风险。建议：必须明确定义“用户关闭当前弹窗后，是否立即弹出队列中下一个”或“需再次触发返回手�����。设计��输出状态流转图，���设计防抖机制避免连续弹窗轰炸。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证并发场景。建议：构造CRM、余票、引流同时命中的测试用例，验证仅展示最高优先级；记录状态机日志，确保无死锁或重复展示。"
+                }
+              },
+              "blocking_count": 1,
+              "summary": "队列消费逻辑未闭环，需明确状态流转与防抖设计后方可出稿。",
+              "design_focus": [
+                "多弹窗队列的调度状态机可视化映射",
+                "高优弹窗打断/替换的过渡动效",
+                "队列消费逻辑（立即触发 vs 下次返回）",
+                "状态冲突时的兜底展示策略"
+              ]
+            }
+          },
+          {
+            "name": "频控策略配置面板",
+            "page": "下单页",
+            "intent": "控制弹窗触发频率避免用户骚扰，平衡转化与体验",
+            "change_type": "modify",
+            "notes": "需区分自然日计数与页面生命周期计数，注意国内/国际业务线独立统计逻辑",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "后台面板需对齐飞猪B端设计规范。建议：使用标准表单组件，标题与字段命名与PRD保持一致，避免业务黑话。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "信息组织需清晰。建议：采用分组卡片布局区分“频次限制”与“触发条件”；关键开关与输入框使用高对比度边框，辅助说明文字使用次级灰色。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "配置逻辑复杂，易误操作。建议：增加“规则预览/模拟触发”浮层，允许运营输入测试参数查看命中结果；对互斥规则增加前端校验与Toast提示。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证计数准确性。建议：定义跨天（00:00）、App后台杀进程、多端登录等极端场景的计数重置逻辑测试用例；提供日志导出功能供QA核对。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "配置面板结构合理，需强化防错校验与模拟测试能力。",
+              "design_focus": [
+                "自然日与生命周期计数的UI区分与提示",
+                "国内/国际业务线的配置隔离布局",
+                "实时模拟测试入口与状态反馈",
+                "规则冲突校验与错误提示"
+              ]
+            }
+          },
+          {
+            "name": "火车票跳转承接页",
+            "page": "火车票列表页",
+            "intent": "无缝衔接引流流量，提供精准筛选结果提升决策效率",
+            "change_type": "reuse",
+            "notes": "需继承筛选参数（高铁/有票）及排序规则，注意与现有列表页组件兼容",
+            "status": "pending",
+            "review": {
+              "gate_result": "PASS_WITH_NOTES",
+              "dimensions": {
+                "styleguide_branding": {
+                  "verdict": "PASS",
+                  "note": "复用现有组件。建议：在列表页顶部增加轻量级“来自机票推荐”标签，保持引流链路品牌连贯性，但避免喧宾夺主。"
+                },
+                "color_typography": {
+                  "verdict": "PASS",
+                  "note": "继承现有排版。建议：确保预置筛选标签（高铁/有票）使用选中态高亮色，排序下拉框明确显示当前规则，避免用户困惑。"
+                },
+                "usability_review": {
+                  "verdict": "ADVISORY",
+                  "note": "参数继承路径完整，但缺失空态处理。建议：设计“无直达高铁/无票”专属空态，提供“放宽条件”或“返回机票下单页”双按钮；确保返回手势能精准恢复机票页勾选状态。"
+                },
+                "user_testing": {
+                  "verdict": "ADVISORY",
+                  "note": "需验证跳转准确性。建议：用例覆盖：1）参数透传成功率；2）空态转化率；3）返回机票页状态保持（如已填乘机人信息不丢失）；埋点追踪从曝光到火车票下单的漏斗。"
+                }
+              },
+              "blocking_count": 0,
+              "summary": "承接页复用成熟组件，重点保障参数透传准确性与空态引导。",
+              "design_focus": [
+                "筛选参数（高铁/有票）的继承与高亮展示",
+                "排序规则的状态同步与用户可修改性",
+                "无匹配结果时的空态与引导路径",
+                "跨端跳转的加载过渡与上下文保持"
+              ]
+            }
+          }
+        ],
+        "last_error": null,
+        "html_output_path": null,
+        "updated_at": "2026-04-22T10:00:59.207Z"
+      },
+      "ai_review": {
+        "status": "completed",
+        "stage": null,
+        "job_id": "job-1776851895729-q4f1f",
+        "summary": "结构合规，需补全埋点与验收标准，重点核对多端手势拦截与频控状态同步。",
+        "last_error": null,
+        "report_path": "pages/review-job-1776851895729-q4f1f.md",
+        "updated_at": "2026-04-22T09:59:31.055Z"
+      }
     }
   ]
 }
