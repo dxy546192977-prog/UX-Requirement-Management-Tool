@@ -1837,7 +1837,10 @@ async function seedOnlineDataFromLocalOnce() {
 }
 
 async function loadData() {
-  if (API_BASE) {
+  // 数据读取统一走 OSS，后端（API_BASE）仅用于 AI 拆解等功能，不用于数据加载
+  // 本地开发时（localhost）先尝试后端，失败后降级本地文件
+  var isLocalEnv = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  if (isLocalEnv && API_BASE) {
     const controller = new AbortController();
     const timeoutId  = setTimeout(function() { controller.abort(); }, 10000);
     try {
@@ -1858,24 +1861,17 @@ async function loadData() {
       console.warn("[API Load] Unexpected response:", res.status);
     } catch (err) {
       clearTimeout(timeoutId);
-      if (err.name === "AbortError") {
-        console.warn("[API Load] Request timed out after 10s");
-      } else {
-        console.warn("[API Load] Failed:", err.message);
-      }
+      console.warn("[API Load] Failed:", err.name === "AbortError" ? "timeout" : err.message);
     }
 
-    // 线上环境不降级到本地数据，直接提示错误
-    var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-    if (isLocal) {
-      const fallbackOk = await loadLocalDataFallback("后端加载失败");
-      if (fallbackOk) return;
-    }
+    // 本地环境降级到本地文件
+    const fallbackOk = await loadLocalDataFallback("后端加载失败");
+    if (fallbackOk) return;
 
     renderStats();
     renderTabs();
     renderKanban();
-    showToast("⚠️ 后端数据加载失败，请检查网络后刷新页面", "error");
+    showToast("⚠️ 本地数据加载失败，请检查网络后刷新页面", "error");
     return;
   }
 
