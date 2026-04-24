@@ -1,0 +1,9 @@
+# 部署：npx wrangler deploy -c wrangler.ecs-api.toml
+# 将 UPSTREAM 改为你的 ECS 公网 HTTP 根（Nginx:80 反代到 proxy-server）
+
+name = "ux-ecs-api-proxy"
+main = "ecs-api-proxy.js"
+compatibility_date = "2024-10-01"
+
+[vars]
+UPSTREAM = "http://121.41.229.77"

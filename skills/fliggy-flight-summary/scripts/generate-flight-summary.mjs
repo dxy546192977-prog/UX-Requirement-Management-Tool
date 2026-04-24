@@ -5,7 +5,7 @@ import path from "node:path";
 const ALLOWED_SKILLS = new Set([
   "fliggy-flight-prd-to-h5",
   "fliggy-flight-design-guide",
-  "fliggy-flight-h5-to-review",
+  "fliggy-flight-gstack-review",
   "fliggy-flight-h5-to-figma"
 ]);
 

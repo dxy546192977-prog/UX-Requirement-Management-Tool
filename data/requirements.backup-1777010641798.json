@@ -1,6 +1,53 @@
 {
   "requirements": [
     {
+      "id": "REQ-037",
+      "part": "交易导购",
+      "name": "国内-ota一坑多货",
+      "status": "待开发",
+      "priority": "P1",
+      "owner": "晰予",
+      "summary": "# 背景\n+ 业务需求：[https://aliyuque.antfin.com/geq8lo/vm77ff/vlyupfxl9nzvc58p?singleDoc#](https://aliyuque.antfin.com/geq8lo/vm77ff/vlyupfxl9nzvc58p?singleDoc#)\n+ **核心策略：**以用户的历史购买偏好+出行场景，分端/分人群/分出行日期选择溢价商品的可售类型和数量，突出商品类型的**<u>核心卖点</u>**，提升商品tab的点击；清晰表达不同航司/不同商品类型的**<u>权益规则</u>**，提高用户对溢价商品的认知，带来商品转化和规模的增长；\n\n# 需求说明\n<img src=\"https://intranetproxy.alipay.com/skylark/lark/0/2026/png/110356442/1776999429043-c239d587-25d5-4cc7-bec3-615f091636db.png\" width=\"508\" title=\"\" crop=\"0,0,1,1\" id=\"u1151c915\" class=\"ne-image\">\n\n坑位调整：即每个tab下支持多个货品\n\n<img src=\"https://intranetproxy.alipay.com/skylark/lark/0/2026/png/110356442/1776999482213-31d73504-ed16-4f41-b2c1-ab23171d27a6.png\" width=\"1023\" title=\"\" crop=\"0,0,1,1\" id=\"ued7f21ba\" class=\"ne-image\">",
+      "prd_url": "https://aliyuque.antfin.com/journey.fyn/xolgry/qfp6yrpifuu4phcq",
+      "design_url": "https://www.figma.com/design/ZptDjCFAFObLUI7jbOTcLD/%E5%9B%BD%E5%86%85%E5%9B%BD%E9%99%85%C2%B7OTA%E5%A4%A7%E6%94%B9%E7%89%88?node-id=7085-28815&t=57OgSxJOpUqussHl-4",
+      "notes": null,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "status_history": [
+        {
+          "date": "2026-04-24",
+          "from": "待对焦",
+          "to": "设计完成"
+        },
+        {
+          "date": "2026-04-24",
+          "from": "设计完成",
+          "to": "待开发"
+        }
+      ]
+    },
+    {
+      "id": "REQ-036",
+      "part": "交易导购",
+      "name": "往返OTA页真往返坑",
+      "status": "设计完成",
+      "priority": "P1",
+      "owner": "晰予",
+      "summary": "# 背景\n希望针对往返行程，将真往返的价格单独一个坑位展示，去表达利益点，提升真往返的转化和规模。虽然按照之前OTA改版的大原则是坑位精简，但是现在从数据上看多TAB的点击率大概只有4%左右，真往返一般会跟拼接往返做多SKU展示，用户不会点击那个tab，也就看不到对应的利益点了，所以我们希望单拉一个坑位。\n\n\n\n# 需求\n按如下case，往返ota的常规坑位是：\n\n+ 超值精选\n+ 普通低价组\n+ 无忧联程组  <font style=\"color:#DF2A3F;\">本次新增</font>\n    - 售卖组利益点文案：任意一程航班取消/延误，全程可免费退改\n+ 人群好价组\n+ 行李推荐组：无行李的时候出，因此这个坑可以不用示意\n+ 更多报价\n\nto设计：把下图圈出来的这个报价单独拆出一个新坑，按上面的排序即可\n\n<img src=\"https://intranetproxy.alipay.com/skylark/lark/0/2026/png/110356442/1776943974485-294de1ea-4025-4f5e-9ae7-fedfc562182b.png\" width=\"330.5\" title=\"\" crop=\"0,0,1,1\" id=\"u2cd4f32d\" class=\"ne-image\">",
+      "prd_url": "https://aliyuque.antfin.com/journey.fyn/xolgry/mdmca5oc6bp0ky2c",
+      "design_url": "https://www.figma.com/design/ZptDjCFAFObLUI7jbOTcLD/%E5%9B%BD%E5%86%85%E5%9B%BD%E9%99%85%C2%B7OTA%E5%A4%A7%E6%94%B9%E7%89%88?node-id=7085-28820&t=57OgSxJOpUqussHl-4",
+      "notes": null,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "status_history": [
+        {
+          "date": "2026-04-24",
+          "from": "待对焦",
+          "to": "设计完成"
+        }
+      ]
+    },
+    {
       "id": "REQ-035",
       "part": "交易导购",
       "name": "商旅用户出行意图识别与偏好信息收集",
@@ -69,7 +116,7 @@
             "page": "首页",
             "intent": "引导用户进入浮层完善乘机人与出行意图，提升信息主动补登率。",
             "change_type": "modify",
-            "notes": "与小搜卡场景外露逻辑互斥，无配置则隐藏，视觉需轻量低打扰。",
+            "notes": "与小搜卡场景外露逻辑互斥，无���置则隐藏，视觉需轻量低打扰。",
             "status": "confirmed",
             "review": {
               "gate_result": "PASS_WITH_NOTES",
@@ -140,7 +187,7 @@
           },
           {
             "name": "浮层-家庭成员标签组件",
-            "page": "预选乘机人浮层",
+            "page": "预选乘机������层",
             "intent": "修复多端标签丢失与样式异常，清晰展示已认证的家庭成员身份。",
             "change_type": "modify",
             "notes": "紧跟基础标签后展示，统一Flutter与H5设计规范，确保跨端视觉一致。",
@@ -365,7 +412,7 @@
             "page": "出行偏好选择页",
             "intent": "集中展示并确认用户已选的商旅场景与开票倾向，提供快捷修改入口。",
             "change_type": "create",
-            "notes": "若为独立设置页需保持轻量化，支持一键保存，数据需实时同步至搜索与订单域。",
+            "notes": "若为独立设置页需保持轻量化，支持一键保存，数据���实时同步至搜索与订单域。",
             "status": "confirmed",
             "review": {
               "gate_result": "PASS_WITH_NOTES",
@@ -441,7 +488,7 @@
                 },
                 "color_typography": {
                   "verdict": "ADVISORY",
-                  "note": "动态图文配置易导致排版混乱。建议：定义Banner固定宽高比（如16:9）与安全边距；主标题限2行内，副标题限1行；背景图强制叠加暗色渐变遮罩，确保文案对比度≥4.5:1。"
+                  "note": "动态图文配置易导致排版混乱。建���：定义Banner固定宽高比（如16:9）与安全边距；主标题限2行内，副标题限1行；背景图强制叠加暗色渐变遮罩，确保文案对比度≥4.5:1。"
                 },
                 "usability_review": {
                   "verdict": "BLOCKING",
@@ -482,7 +529,7 @@
       "id": "REQ-001",
       "part": "交易导购",
       "name": "通程权益表达（用户端）",
-      "status": "待对焦",
+      "status": "已上线",
       "priority": "P1",
       "owner": "晰予",
       "summary": "待补充 - PRD 链接已提交",
@@ -490,7 +537,14 @@
       "design_url": "https://www.figma.com/design/oO4YBGEzDEN9C0teJLOmkS/%E5%9B%BD%E5%86%85%C2%B7Listing?node-id=3837-3522&t=SUoOvNo0rzg7ryIa-4",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16"
+      "updated_at": "2026-04-24",
+      "status_history": [
+        {
+          "date": "2026-04-24",
+          "from": "待对焦",
+          "to": "已上线"
+        }
+      ]
     },
     {
       "id": "REQ-002",
@@ -674,7 +728,7 @@
                 }
               },
               "blocking_count": 0,
-              "summary": "需设计平滑触发与关闭动效，强化对比数据可读性，确保不干扰导航。",
+              "summary": "需设计平滑���发与关闭动效，强化对比数据可读性，确保不干扰导航。",
               "design_focus": [
                 "动态触发时的平滑高度过渡动画",
                 "耗时与价格对比的语义化色彩应用",
@@ -751,7 +805,7 @@
               "summary": "必须补充跨端授权协议显性展示，优化主次登录路径视觉，完善异常反馈。",
               "design_focus": [
                 "跨端授权协议的显性化展示与勾选交互",
-                "淘宝一键登录与手机号注册的视觉主次区分",
+                "淘宝一键登录与手机��注册的视觉主次区分",
                 "权益同步提示的文案精简与图标辅助",
                 "授权失败/网络异常的明确反馈与重试路径"
               ]
@@ -822,7 +876,7 @@
                 }
               },
               "blocking_count": 0,
-              "summary": "需补充无航班空态设计，优化内联日期选择器交互，确保页面视觉融合。",
+              "summary": "需补充无航班空态设计，优化内联日期选择器交互��确保页面视觉融合。",
               "design_focus": [
                 "无航班/售罄状态的友好空态与替代方案推荐",
                 "紧凑型日期选择器的内联交互设计",
@@ -896,9 +950,9 @@
                 }
               },
               "blocking_count": 0,
-              "summary": "需增加触发条件可视化提示，优化对比布局，确保参数无缝继承。",
+              "summary": "需增加触发条件可视化���示，优化对比布局，确保参数无缝继承。",
               "design_focus": [
-                "触发条件的可视化提示（如“省时X小时”标签）",
+                "触发条件的可视化提示（如“省时X小���”标签）",
                 "火车与飞机方案对比的左右分栏布局",
                 "一键切换至机票的无缝参数继承与加载态",
                 "推荐模块的折叠/展开与用户偏好记忆"
@@ -915,7 +969,7 @@
       "id": "REQ-021",
       "part": "AI",
       "name": "AI线路规划",
-      "status": "灰度中",
+      "status": "待设计",
       "priority": "P0",
       "owner": "雷邱",
       "summary": "",
@@ -923,7 +977,7 @@
       "design_url": "https://www.figma.com/design/jGv2WBbUfTf2sOxnP6YQ0a/AI%E4%BD%8E%E4%BB%B7%E8%A7%84%E5%88%92%EF%BC%88%E7%89%B9%E4%BB%B7%E7%BA%BF%E8%B7%AF%EF%BC%89?node-id=1416-72500&t=IqrqoZibI9smDbbJ-4",
       "notes": null,
       "created_at": "2026-04-14",
-      "updated_at": "2026-04-16",
+      "updated_at": "2026-04-24",
       "status_history": [
         {
           "date": "2026-04-16",
@@ -1151,7 +1205,7 @@
               "dimensions": {
                 "styleguide_branding": {
                   "verdict": "PASS",
-                  "note": "辅助决策定位明确。建议增加AI标识徽章，与常规结果卡片做视觉区分。"
+                  "note": "辅助决策定位明确。建议增加AI标识徽��，与常规结果卡片做视觉区分。"
                 },
                 "color_typography": {
                   "verdict": "PASS",
@@ -1159,7 +1213,7 @@
                 },
                 "usability_review": {
                   "verdict": "ADVISORY",
-                  "note": "生成延迟需管理。设计建议：采用打字机流式输出，提供“重新生成”与“查看完整攻略”快捷入口。"
+                  "note": "生成延迟需管理。设计建议：采用打字机流式输出，提供“重新生成”与“���看完整攻略”快捷入口。"
                 },
                 "user_testing": {
                   "verdict": "PASS",
@@ -1238,10 +1292,10 @@
               "blocking_count": 0,
               "summary": "信任感构建关键，需控制维度数量并明确计算逻辑，避免信息噪音。",
               "design_focus": [
-                "维度数量控制与语义化配色",
+                "维度���量控制与语义化配色",
                 "实时计算加载态与骨架屏",
                 "匹配度Tooltip解释逻辑",
-                "���常值/低匹配度处理"
+                "���常��/低匹配度处理"
               ]
             }
           },
@@ -1415,7 +1469,7 @@
       "status_history": [
         {
           "date": "2026-04-16",
-          "from": "设计完成",
+          "from": "设计完���",
           "to": "待开发"
         }
       ],
@@ -1477,7 +1531,7 @@
               "dimensions": {
                 "styleguide_branding": {
                   "verdict": "PASS",
-                  "note": "逻辑模块需保持品牌一致性。建议：所有弹窗统一使用飞猪标准圆角（如12px）与阴影层级，避免因优先级切换导致视觉风格割裂。"
+                  "note": "逻辑模块需保持品牌一致性。建议：所有弹窗统一使用飞猪标准圆角（如12px）与阴影层���，避免因优先级切换导致视觉风格割裂。"
                 },
                 "color_typography": {
                   "verdict": "PASS",
@@ -1485,7 +1539,7 @@
                 },
                 "usability_review": {
                   "verdict": "BLOCKING",
-                  "note": "队列调度逻辑存在阻断风险。建议：必须明确定义“用户关闭当前弹窗后，是否立即弹出队列中下一个”或“需再次触发返回手�����。设计��输出状态流转图，���设计防抖机制避免连续弹窗轰炸。"
+                  "note": "队列��度逻辑存在阻断风险。建议：必须明确定义“用户关闭当前弹窗后，是否立即弹出队列中下一个”或“需再次触发返回手�����。设计��输出状态流转图，���设计防抖机制避免连续弹窗轰炸。"
                 },
                 "user_testing": {
                   "verdict": "ADVISORY",

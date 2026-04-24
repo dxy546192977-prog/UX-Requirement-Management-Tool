@@ -54,13 +54,14 @@ const jobs = new Map();
 
 function _now() { return new Date().toISOString(); }
 
-function _newJob(reqId, prdUrl, skillKey, figmaUrl) {
+function _newJob(reqId, prdUrl, skillKey, figmaUrl, prdMd) {
   const id = 'job-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
   /** @type {AiDesignJob} */
   const job = {
     id,
     req_id:     reqId,
     prd_url:    prdUrl,
+    prd_md:     prdMd || '',
     figma_url:  figmaUrl || '',
     skill_key:  skillKey || 'default',
     status:     'queued',
@@ -88,13 +89,14 @@ function _updateJob(job, patch) {
  * @param {string} prdUrl
  * @param {object} config  — 来自 config.json
  * @param {object} yuqueSvc — yuque-service 模块引用
- * @param {{ skillKey?: string }} [opts]
+ * @param {{ skillKey?: string, figmaUrl?: string, prdMd?: string }} [opts]
  * @returns {AiDesignJob}  — 立即返回（状态为 queued），任务在后台运行
  */
 function createJob(reqId, prdUrl, config, yuqueSvc, opts) {
   const skillKey = (opts && opts.skillKey) || 'default';
   const figmaUrl = (opts && opts.figmaUrl) || '';
-  const job = _newJob(reqId, prdUrl, skillKey, figmaUrl);
+  const prdMd   = (opts && opts.prdMd)   || '';
+  const job = _newJob(reqId, prdUrl, skillKey, figmaUrl, prdMd);
 
   // Gstack 审查 skill 走独立分支，不经过 PRD -> 拆解 -> H5 流水线
   if (skillKey === 'fliggy_flight_h5_review') {
@@ -190,6 +192,11 @@ function _resolveStageAiConfig(config, stage) {
   return { provider, model, apiKey, apiBase, stage, visionEnabled, decomposeMaxImages };
 }
 
+function _buildPrdReconnectError(err) {
+  const detail = err && err.message ? `（${err.message}）` : '';
+  return `无法获取 PRD 文档，请重新连接语雀地址后重试${detail}`;
+}
+
 async function _runJob(job, config, yuqueSvc) {
   const mockMode = _isMockMode(config);
   if (mockMode) {
@@ -205,23 +212,20 @@ async function _runJob(job, config, yuqueSvc) {
   try {
     prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
   } catch (err) {
-    // fliggy_flight_prd_to_h5 skill 降级：PRD 无法抓取时，用需求 ID 和 URL 作为最小上下文继续生成 H5
-    // 降级：任何 skill 下语雀抓取失败，均用 PRD 链接作为最小上下文继续生成
-    console.warn(`[AiDesign] Job ${job.id} — PRD fetch failed, falling back to minimal context: ${err.message}`);
-    prdContent = {
-      title:       `需求 ${job.req_id}`,
-      creator:     'Unknown',
-      description: `PRD 链接：${job.prd_url}\n\n注意：PRD 文档无法自动抓取（${err.message}），以下方案基于需求 ID 和设计规范生成，请人工核对业务细节。`,
-      body:        `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
-      body_text:   `PRD 链接：${job.prd_url}\n\nPRD 文档无法自动抓取，原因：${err.message}`,
-      imageUrls:   [],
-      source:      'fallback'
-    };
+    // 链接拉取失败时，若用户提供了 Markdown 内容则 fallback 使用
+    if (job.prd_md && job.prd_md.trim()) {
+      console.warn(`[AiDesign] Job ${job.id} — PRD URL fetch failed, falling back to prd_md content. Reason: ${err.message}`);
+      prdContent = { title: '', body: job.prd_md, description: job.prd_md };
+    } else {
+      const finalErr = _buildPrdReconnectError(err);
+      console.warn(`[AiDesign] Job ${job.id} — PRD fetch failed: ${finalErr}`);
+      throw new Error(finalErr);
+    }
   }
 
   const rawBody = prdContent.body || prdContent.description || '';
-  const bodyText = prdContent.source === 'fallback' ? prdContent.body_text : _stripHtml(rawBody);
-  const imageUrls = prdContent.source === 'fallback' ? [] : _extractImageUrls(rawBody);
+  const bodyText = _stripHtml(rawBody);
+  const imageUrls = _extractImageUrls(rawBody);
 
   // Phase 2: 结构化需求拆解
   _updateJob(job, { stage: 'decomposing' });
@@ -683,15 +687,27 @@ async function _runJobMock(job, config, yuqueSvc) {
   let prdDesc  = '';
   const hasYuqueToken = config.yuque_token && config.yuque_token !== 'YOUR_YUQUE_API_TOKEN_HERE';
 
-  if (hasYuqueToken) {
-    try {
-      const prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
-      prdTitle = prdContent.title || prdTitle;
-      prdDesc  = prdContent.description || '';
-      console.log(`[AiDesign Mock] Fetched PRD title: "${prdTitle}"`);
-    } catch (err) {
-      console.warn('[AiDesign Mock] Could not fetch PRD, using defaults:', err.message);
-    }
+  if (!hasYuqueToken) {
+    _updateJob(job, {
+      status: 'failed',
+      stage: null,
+      last_error: '无法获取 PRD 文档，请重新连接语雀地址后重试（未配置语雀 Token）'
+    });
+    return;
+  }
+
+  try {
+    const prdContent = await yuqueSvc.fetchPrdFull(config, job.prd_url);
+    prdTitle = prdContent.title || prdTitle;
+    prdDesc  = prdContent.description || '';
+    console.log(`[AiDesign Mock] Fetched PRD title: "${prdTitle}"`);
+  } catch (err) {
+    _updateJob(job, {
+      status: 'failed',
+      stage: null,
+      last_error: _buildPrdReconnectError(err)
+    });
+    return;
   }
 
   // Phase 2: 模拟需求拆解（基于 title/desc 做简单规则推断）
@@ -725,7 +741,7 @@ async function _runJobMock(job, config, yuqueSvc) {
  * 输入：job.figma_url（必需）+ job.prd_url（可选，提供更多上下文）
  * 输出：审查结论 review_summary + 可选的报告文件 report_path
  *
- * 说明：真实的 fliggy-flight-h5-to-review skill 依赖 Claude 智能体 + Figma MCP，
+ * 说明：真实的 fliggy-flight-gstack-review skill 依赖 Claude 智能体 + Figma MCP，
  * 在后端无法直接调用，因此此处基于 Figma 链接与 PRD 元数据做一次 AI 审查，
  * 给出文字版本的审查结论；报告以 markdown 形式落盘到 pages/ 目录。
  */

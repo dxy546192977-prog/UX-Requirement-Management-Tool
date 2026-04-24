@@ -156,9 +156,51 @@ curl -m 8 -i http://<ECS公网IP>/health
 - `HTTP/1.1 200 OK`
 - `{"status":"ok"}`
 
-## 十、后续更新（手动部署）
+## 十、改为自动部署（GitHub Actions）
 
-每次本地代码 push 到 GitHub 后，在 ECS 执行：
+仓库已内置工作流：`.github/workflows/deploy.yml`，当 `main` 分支有新提交时自动执行 ECS 部署；也支持在 GitHub Actions 页面手动触发。
+
+### 1) 在 GitHub 仓库配置 Secrets
+
+进入 `Settings > Secrets and variables > Actions > Secrets`，新增：
+
+- `ECS_HOST`：ECS 公网 IP
+- `ECS_USER`：SSH 用户（如 `root`）
+- `ECS_SSH_KEY`：私钥内容（建议专用于 CI）
+- `ECS_SSH_PORT`：SSH 端口（可选，不填默认 22）
+
+### 2) 配置 Variables（可选）
+
+进入 `Settings > Secrets and variables > Actions > Variables`，按需新增：
+
+- `ECS_APP_DIR`：部署目录（默认 `/opt/apps/ux-tool`）
+- `ECS_DEPLOY_BRANCH`：部署分支（默认 `main`）
+- `ECS_PM2_APP_NAME`：PM2 进程名（默认 `ux-tool-api`）
+- `ECS_PRE_DEPLOY_CMD`：预部署命令（可选，如 `npm ci`）
+- `ECS_POST_DEPLOY_CMD`：后置命令（可选，如 `nginx -t && systemctl reload nginx`）
+
+### 3) 首次部署要求
+
+自动部署仅负责“拉最新代码并重启服务”，因此请先在 ECS 完成一次初始化（见前文步骤三到六），确保：
+
+- 代码目录已存在且是 Git 仓库
+- `pm2` 可用
+- `proxy-server.js` 可启动
+
+### 4) 验证自动部署
+
+1. 本地提交并 push 到 `main`
+2. 打开 GitHub Actions，确认 `自动部署到 ECS` 成功
+3. 在 ECS 验收：
+
+```bash
+pm2 status
+curl -m 8 -i http://127.0.0.1:3001/health
+```
+
+## 十一、后续更新（手动兜底）
+
+若 Actions 临时不可用，可手动执行：
 
 ```bash
 cd /opt/apps/ux-tool
@@ -166,7 +208,37 @@ git pull
 pm2 restart ux-tool-api
 ```
 
-## 十一、常见问题
+## 十二、与 GitHub Pages 联调（必须能走 HTTPS 调 API）
+
+静态站地址形如 `https://<user>.github.io/.../Web.html`（**页面为 https**）。若 `pages/Web.html` 里 `DEFAULT_API_BASE` 为 **`http://<ECS 公网 IP>`**，浏览器会把对「http 接口」的 `fetch` 判为**混合内容（mixed content）并拦截**，看板会无法从 ECS 拉取/保存数据，只会走兜底逻辑或报网络错误。
+
+任选其一解决：
+
+1. **推荐**：为 ECS 绑定**域名**，在 Nginx 或 Caddy 上配置 **Let’s Encrypt 等正式证书**，使 API 有 **`https://你的域名`**，再把 `DEFAULT_API_BASE` 改成该 https 根地址（不要带尾斜杠），重新推送 GitHub Pages。
+
+2. **无域名、短期联调**：在 **ECS 本机**运行 [Cloudflare Tunnel / cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)，将隧道指向 `http://127.0.0.1:3001`（或经 Nginx 的 `80`），拿到形如 **`https://\*.trycloudflare.com` 的 https 子域名**后，将 `DEFAULT_API_BASE` 设为该 https 基址（与仓库里曾经使用的 trycloudflare 形式类似，但隧道应跑在 ECS 上，而不是你个人电脑）。
+
+3. 在阿里云为该实例配置**带证书的 SLB/ALB 或全站加速**，对客户端暴露 **https 入口**即可。
+
+4. **本仓库已提供 Cloudflare Worker**（`cloudflare-worker/ecs-api-proxy.js`），将 **HTTPS 的 `*.workers.dev`** 反代到 ECS 的 **HTTP** `proxy-server`（与 `pages/Web.html` 同源的 `pages/ecs-api-endpoint.js` 里填写 Worker 根地址即可，无需再改大段 HTML）：
+
+```bash
+cd cloudflare-worker
+# 首次需：npx wrangler login
+# 按需编辑 wrangler.ecs-api.toml 中 [vars] UPSTREAM 为你的 ECS 公网根（如 http://121.41.229.77）
+npx wrangler deploy -c wrangler.ecs-api.toml
+```
+
+部署成功后，终端会输出 **`https://<worker 名>.<子域>.workers.dev`**。打开 `pages/ecs-api-endpoint.js`，将 `ecsHttpsBase` 设为该 **https 根地址**（无尾斜杠），保存后推送 GitHub Pages。页面会优先用 `window.API_BASE` 走 Worker，再转发到 ECS。
+
+**验收（在任意公网环境）：**
+
+```bash
+curl -m 8 -sS "https://<你的-HTTPS-API-基址>/health"
+# 应返回: {"status":"ok"}
+```
+
+## 十三、常见问题
 
 ### 1) `git: command not found`
 

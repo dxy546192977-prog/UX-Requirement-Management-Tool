@@ -754,7 +754,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const { reqId, prdUrl, skillKey, figmaUrl } = body;
+    const { reqId, prdUrl, prdMd, skillKey, figmaUrl } = body;
     if (!reqId) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'reqId is required' }));
@@ -764,16 +764,16 @@ const server = http.createServer(async (req, res) => {
     const allowedSkills = new Set(['default', 'prd_html_decompose', 'fliggy_flight_prd_to_h5', 'fliggy_flight_h5_review']);
     const skill = allowedSkills.has(skillKey) ? skillKey : 'default';
 
-    // fliggy_flight_h5_review 需要 figmaUrl；其它 skill 需要 prdUrl
+    // fliggy_flight_h5_review 需要 figmaUrl；其它 skill 需要 prdUrl 或 prdMd 至少一个
     if (skill === 'fliggy_flight_h5_review') {
       if (!figmaUrl) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'figmaUrl is required for fliggy_flight_h5_review' }));
         return;
       }
-    } else if (!prdUrl) {
+    } else if (!prdUrl && !(prdMd && prdMd.trim())) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'prdUrl is required' }));
+      res.end(JSON.stringify({ error: 'prdUrl or prdMd is required' }));
       return;
     }
 
@@ -789,8 +789,8 @@ const server = http.createServer(async (req, res) => {
       console.log('[AiDesign] No valid ai_api_key / ai_decompose_api_key — running in MOCK mode');
     }
 
-    const job = aiDesignSvc.createJob(reqId, prdUrl || '', config, yuqueSvc, { skillKey: skill, figmaUrl: figmaUrl || '' });
-    console.log(`[AiDesign] Created job ${job.id} for req ${reqId} (skill=${skill})${isMock ? ' (mock)' : ''}`);
+    const job = aiDesignSvc.createJob(reqId, prdUrl || '', config, yuqueSvc, { skillKey: skill, figmaUrl: figmaUrl || '', prdMd: prdMd || '' });
+    console.log(`[AiDesign] Created job ${job.id} for req ${reqId} (skill=${skill})${isMock ? ' (mock)' : ''}${prdMd ? ' (with prdMd fallback)' : ''}`);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(job));

@@ -6,7 +6,7 @@
 
 - `fliggy-flight-prd-to-h5`
 - `fliggy-flight-design-guide`
-- `fliggy-flight-h5-to-review`
+- `fliggy-flight-gstack-review`
 - `fliggy-flight-h5-to-figma`
 
 ## 快速开始

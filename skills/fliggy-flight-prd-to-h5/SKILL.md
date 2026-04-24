@@ -1,7 +1,7 @@
 ---
 name: fliggy-flight-prd-to-h5
 version: 0.2.0
-description: 飞猪机票场景全链路统一入口。基于 online-index.html 的 PRD 入口，把需求拆解成可路由执行单，在 fliggy-flight-design-guide 设计约束下生成 H5，并内嵌自动 review 闭环（原 fliggy-flight-h5-to-review 逻辑）。H5 生成后自动执行审查，Key 问题清零才算完成。支持两条路径：基于 PRD 图文从 0 到 1 生成 H5，或对产品提供的 H5 做飞猪风格优化校准。Figma 交付为可选下游。
+description: 飞猪机票场景全链路统一入口。基于 online-index.html 的 PRD 入口，把需求拆解成可路由执行单，在 fliggy-flight-design-guide 设计约束下生成 H5，并内嵌自动 review 闭环（原 fliggy-flight-gstack-review 逻辑）。H5 生成后自动执行审查，Key 问题清零才算完成。支持两条路径：基于 PRD 图文从 0 到 1 生成 H5，或对产品提供的 H5 做飞猪风格优化校准。Figma 交付为可选下游。
 ---
 
 # Fliggy Flight PRD to H5
@@ -14,7 +14,7 @@ description: 飞猪机票场景全链路统一入口。基于 online-index.html 
 
 **v0.2 核心变化：**
 - `fliggy-flight-design-guide` 的约束从"参考"升级为**强制内嵌**：H5 生成阶段直接执行 design-guide 的格式硬约束、审查闸门和 token 规范，不再是事后对齐。
-- `fliggy-flight-h5-to-review` 的 review 逻辑从"下游独立 skill"升级为**内嵌自动 review**：H5 生成完成后立即执行 review，发现 Key 问题自动修改 H5，循环直到 Key=0，不需要人工触发下游 skill。
+- `fliggy-flight-gstack-review` 的 review 逻辑从"下游独立 skill"升级为**内嵌自动 review**：H5 生成完成后立即执行 review，发现 Key 问题自动修改 H5，循环直到 Key=0，不需要人工触发下游 skill。
 - Figma 交付保留为可选下游，不在本 skill 内强制执行。
 
 H5 形成分为两条路径：
@@ -90,7 +90,7 @@ H5 形成分为两条路径：
 
 ### H5 自动 Review（内嵌闭环，不再是下游独立 skill）
 
-- **强制内嵌**：`skills/fliggy-flight-h5-to-review/SKILL.md` — H5 生成完成后立即执行 review，发现 Key 问题自动修改 H5，循环直到 Key=0
+- **强制内嵌**：`skills/fliggy-flight-gstack-review/SKILL.md` — H5 生成完成后立即执行 review，发现 Key 问题自动修改 H5，循环直到 Key=0
 - 若后续需要 Figma 交付，再进入独立的 Figma/Handoff 流程（可选）
 
 ## 标准执行流程
@@ -246,7 +246,7 @@ H5 形成分为两条路径：
 
 > **重要**：H5 生成完成后，**立即**在本 skill 内执行 review，不需要人工触发下游 skill。
 > review 发现 Key 问题时，**自动修改 H5**，修改完成后重新 review，循环直到 Key=0。
-> 本节逻辑来自 `skills/fliggy-flight-h5-to-review/SKILL.md`，已内嵌，不再是外部依赖。
+> 本节逻辑来自 `skills/fliggy-flight-gstack-review/SKILL.md`，已内嵌，不再是外部依赖。
 
 #### 3.5.1 Review 执行步骤
 

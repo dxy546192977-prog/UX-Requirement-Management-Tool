@@ -4,22 +4,71 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
 
 jobs:
   deploy:
     name: SSH 部署到阿里云 ECS
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: 通过 SSH 拉取最新代码并重启服务
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          APP_DIR: ${{ vars.ECS_APP_DIR }}
+          DEPLOY_BRANCH: ${{ vars.ECS_DEPLOY_BRANCH }}
+          PM2_APP_NAME: ${{ vars.ECS_PM2_APP_NAME }}
+          PRE_DEPLOY_CMD: ${{ vars.ECS_PRE_DEPLOY_CMD }}
+          POST_DEPLOY_CMD: ${{ vars.ECS_POST_DEPLOY_CMD }}
         with:
           host: ${{ secrets.ECS_HOST }}
           username: ${{ secrets.ECS_USER }}
           key: ${{ secrets.ECS_SSH_KEY }}
-          port: 22
+          port: ${{ secrets.ECS_SSH_PORT || 22 }}
+          script_stop: true
+          envs: APP_DIR,DEPLOY_BRANCH,PM2_APP_NAME,PRE_DEPLOY_CMD,POST_DEPLOY_CMD
           script: |
-            cd /opt/apps/ux-tool
-            git pull
-            pm2 restart ux-tool-api
-            echo "✅ 部署完成：$(date '+%Y-%m-%d %H:%M:%S')"
+            set -e
+
+            APP_DIR="${APP_DIR:-/opt/apps/ux-tool}"
+            DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
+            PM2_APP_NAME="${PM2_APP_NAME:-ux-tool-api}"
+
+            echo "开始部署：$(date '+%Y-%m-%d %H:%M:%S')"
+            echo "部署目录：$APP_DIR"
+            echo "部署分支：$DEPLOY_BRANCH"
+            echo "PM2 进程：$PM2_APP_NAME"
+
+            if [ ! -d "$APP_DIR/.git" ]; then
+              echo "错误：$APP_DIR 不是 git 仓库目录，请先在 ECS 完成首次部署。"
+              exit 1
+            fi
+
+            cd "$APP_DIR"
+            git fetch --all --prune
+            git checkout "$DEPLOY_BRANCH"
+            git pull origin "$DEPLOY_BRANCH"
+
+            if [ -n "$PRE_DEPLOY_CMD" ]; then
+              echo "执行预部署命令..."
+              bash -lc "$PRE_DEPLOY_CMD"
+            fi
+
+            if pm2 describe "$PM2_APP_NAME" >/dev/null 2>&1; then
+              pm2 restart "$PM2_APP_NAME"
+            else
+              pm2 start proxy-server.js --name "$PM2_APP_NAME"
+            fi
+            pm2 save
+
+            if [ -n "$POST_DEPLOY_CMD" ]; then
+              echo "执行后置命令..."
+              bash -lc "$POST_DEPLOY_CMD"
+            fi
+
+            echo "部署完成：$(date '+%Y-%m-%d %H:%M:%S')"

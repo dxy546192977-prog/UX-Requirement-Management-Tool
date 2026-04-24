@@ -12,4 +12,4 @@
 
 - 上游来源：`online-index.html` 中的需求卡片和 PRD 链接
 - 当前终点：H5 ready for review
-- 下游审查：`skills/fliggy-flight-h5-to-review/SKILL.md`
+- 下游审查：`skills/fliggy-flight-gstack-review/SKILL.md`

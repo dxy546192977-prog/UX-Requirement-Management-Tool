@@ -16,8 +16,8 @@
       "description": "飞猪机票设计规范执行；产出单文件 H5"
     },
     {
-      "id": "fliggy-flight-h5-to-review",
-      "name": "fliggy-flight-h5-to-review",
+      "id": "fliggy-flight-gstack-review",
+      "name": "fliggy-flight-gstack-review",
       "description": "H5 质量审查；Phase 3 关键问题清零"
     },
     {
@@ -29,7 +29,7 @@
   "runs": [
     {
       "id": "run-2026-04-20-004",
-      "skillId": "fliggy-flight-h5-to-review",
+      "skillId": "fliggy-flight-gstack-review",
       "taskTitle": "机票订详-海免商品推荐 · H5 评审",
       "requirementId": "REQ-FLT-2026-0419-HM01",
       "requirementTitle": "机票订详页新增海南离岛免税商品推荐模块",

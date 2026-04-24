@@ -2056,6 +2056,15 @@ function showToast(message, type, undoFn) {
   }
 }
 
+const AI_FEATURE_UNAVAILABLE_TOAST = "AI功能暂未开放，请后台私信良予启用权限";
+
+function showAiFeatureUnavailableToast(err, context) {
+  if (err) {
+    console.warn("[AI] Request failed in " + context + ":", err.message || err);
+  }
+  showToast(AI_FEATURE_UNAVAILABLE_TOAST, "error");
+}
+
 function handleUndo() {
   if (undoCallback) {
     undoCallback();
@@ -3888,7 +3897,7 @@ async function triggerAiDesign(reqId) {
 
     startAiPolling(reqId, job.id);
   } catch (err) {
-    showToast('网络错误：' + err.message, 'error');
+    showAiFeatureUnavailableToast(err, "triggerAiDesign");
   }
 }
 
@@ -4080,7 +4089,7 @@ async function confirmAiDesign(reqId) {
     // 轮询 H5 生成进度
     startAiPolling(reqId, jobId);
   } catch (err) {
-    showToast('网络错误：' + err.message, 'error');
+    showAiFeatureUnavailableToast(err, "confirmAiDesign");
   }
 }
 
@@ -4135,7 +4144,7 @@ async function retryAiDesign(reqId, jobId) {
     showToast('AI 任务已重新启动', 'success');
     startAiPolling(reqId, job.id);
   } catch (err) {
-    showToast('网络错误：' + err.message, 'error');
+    showAiFeatureUnavailableToast(err, "retryAiDesign");
   }
 }
 
@@ -4407,7 +4416,7 @@ async function triggerGstackReview(reqId) {
 
     startGstackReviewPolling(reqId, job.id);
   } catch (err) {
-    showToast('网络错误：' + err.message, 'error');
+    showAiFeatureUnavailableToast(err, "triggerGstackReview");
   }
 }
 
@@ -4550,7 +4559,7 @@ async function retryGstackReview(reqId, jobId) {
     showToast('审查任务已重新启动', 'success');
     startGstackReviewPolling(reqId, job.id);
   } catch (err) {
-    showToast('网络错误：' + err.message, 'error');
+    showAiFeatureUnavailableToast(err, "retryGstackReview");
   }
 }
 </script>

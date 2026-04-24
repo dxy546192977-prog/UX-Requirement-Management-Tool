@@ -1,7 +1,7 @@
 ---
 name: fliggy-flight-summary
 version: 0.1.0
-description: 飞猪机票流程收口汇总 Skill。用于在 fliggy-flight-prd-to-h5、fliggy-flight-design-guide、fliggy-flight-h5-to-review、fliggy-flight-h5-to-figma 执行后，自动生成 workflow-monitor.html 监控看板，统一呈现任务、需求、模型、token 与耗时。
+description: 飞猪机票流程收口汇总 Skill。用于在 fliggy-flight-prd-to-h5、fliggy-flight-design-guide、fliggy-flight-gstack-review、fliggy-flight-h5-to-figma 执行后，自动生成 workflow-monitor.html 监控看板，统一呈现任务、需求、模型、token 与耗时。
 ---
 
 # Fliggy Flight Summary
@@ -23,7 +23,7 @@ description: 飞猪机票流程收口汇总 Skill。用于在 fliggy-flight-prd-
 
 1. `skills/fliggy-flight-prd-to-h5`
 2. `skills/fliggy-flight-design-guide`
-3. `skills/fliggy-flight-h5-to-review`
+3. `skills/fliggy-flight-gstack-review`
 4. `skills/fliggy-flight-h5-to-figma`
 
 出现其他 skill 数据时，默认过滤，不进入看板统计。
@@ -37,7 +37,7 @@ description: 飞猪机票流程收口汇总 Skill。用于在 fliggy-flight-prd-
 
 推荐触发点：
 
-- `fliggy-flight-h5-to-review` 结束后（拿到审查结论）
+- `fliggy-flight-gstack-review` 结束后（拿到审查结论）
 - `fliggy-flight-h5-to-figma` 结束后（形成完整交付链路）
 
 ## 输入契约
@@ -53,7 +53,7 @@ description: 飞猪机票流程收口汇总 Skill。用于在 fliggy-flight-prd-
     "skillIds": [
       "fliggy-flight-prd-to-h5",
       "fliggy-flight-design-guide",
-      "fliggy-flight-h5-to-review",
+      "fliggy-flight-gstack-review",
       "fliggy-flight-h5-to-figma"
     ]
   },

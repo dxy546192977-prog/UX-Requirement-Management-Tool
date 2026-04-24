@@ -10,7 +10,7 @@
 |---|---|---|---|
 | [`fliggy-flight-prd-to-h5/`](./fliggy-flight-prd-to-h5/) | **飞猪机票前半段编排入口**（PRD → H5） | "把 PRD 变成 H5"、"走一遍机票前期流程" | 需要从 PRD 拆解、路由并产出 H5 时 |
 | [`fliggy-flight-design-guide/`](./fliggy-flight-design-guide/) | **机票 UX 执行层**（物料 + 规则 + 模板） | "飞猪机票首页/列表/OTA/下单"、"按 Workflow 生成 H5" | 已经拆解好，需要真正生成机票 H5 设计稿时 |
-| [`fliggy-flight-h5-to-review/`](./fliggy-flight-h5-to-review/) | **飞猪机票 H5 审查入口**（H5 → gstack report） | "审查这个 H5"、"把 H5 丢给 gstack 看看" | 已经有 H5，需要浏览器驱动审查和放行结论时 |
+| [`fliggy-flight-gstack-review/`](./fliggy-flight-gstack-review/) | **飞猪机票 H5 审查入口**（H5 → gstack report） | "审查这个 H5"、"把 H5 丢给 gstack 看看" | 已经有 H5，需要浏览器驱动审查和放行结论时 |
 | [`fliggy-flight-h5-to-figma/`](./fliggy-flight-h5-to-figma/) | **飞猪机票 H5 → Figma 改稿**（Vibma + MCP） | "用 Vibma 改 Figma 文案"、"只改文本不改 UI" | 已有 Figma 链接与 node-id，需 relay、节点级改稿与交付报告时 |
 | [`fliggy-flight-summary/`](./fliggy-flight-summary/) | **机票流程收口汇总**（执行监控看板） | "生成流程摘要"、"输出 workflow-monitor"、"汇总这次机票需求的执行数据" | 4 个机票 skill 执行完毕后，需要生成可视化监控看板时 |
 
@@ -42,7 +42,7 @@
         │
         ▼
 ┌──────────────────────────────────────┐
-│  fliggy-flight-h5-to-review          │  审查层：H5 → gstack report
+│  fliggy-flight-gstack-review         │  审查层：H5 → gstack report
 └──────────────────────────────────────┘
         │
         ▼
@@ -68,7 +68,7 @@
 2. 用户已经有拆解好的 MD 或想直接生成机票 H5
    → 进 `fliggy-flight-design-guide/SKILL.md`
 3. 用户已经有 H5，想交给 gstack 审查
-   → 进 `fliggy-flight-h5-to-review/SKILL.md`
+   → 进 `fliggy-flight-gstack-review/SKILL.md`
 4. 用户要在 Figma 里改文案 / 接 Vibma MCP、节点级批量改写
    → 进 `fliggy-flight-h5-to-figma/SKILL.md`
 5. 用户需要汇总本次机票需求的执行数据、生成流程监控看板
@@ -104,7 +104,7 @@ skills/
 │   ├── scripts/                           （Figma/HTML 自动化脚本）
 │   ├── assets/                            （模板）
 │   └── dist/                              （打包产物）
-├── fliggy-flight-h5-to-review/            ← H5 审查编排入口（H5 → gstack report）
+├── fliggy-flight-gstack-review/           ← H5 审查编排入口（H5 → gstack report）
 │   ├── SKILL.md
 │   └── README.md
 ├── fliggy-flight-h5-to-figma/            ← H5 / Figma：Vibma + MCP 文案改稿
