@@ -1542,14 +1542,14 @@
 <div class="modal-overlay" id="submitOverlay" onclick="closeSubmitModal(event)">
   <div class="submit-modal" id="submitModalContent" onclick="event.stopPropagation()">
     <h2>提交需求</h2>
-    <p>填写需求信息，并粘贴 PRD Markdown 内容，供 AI 拆解时读取</p>
+    <p>填写需求信息，PRD Markdown 内容可选粘贴（用于 AI 拆解时读取）</p>
     <label>需求名称 <span style="color:#ef4444;">*</span></label>
     <input type="text" id="reqNameInput" placeholder="填写需求名称，如：商旅用户出行意图识别与偏好表达" />
     <label style="margin-top:12px;">提交人 <span style="color:#ef4444;">*</span></label>
     <input type="text" id="reqOwnerInput" placeholder="填写提交人花名，如：晰予" />
     <label style="margin-top:12px;">语雀 PRD 链接 <span style="color:#ef4444;">*</span></label>
     <input type="text" id="prdUrlInput" placeholder="粘贴语雀链接，如：https://aliyuque.antfin.com/..." />
-    <label style="margin-top:12px;">PRD Markdown 内容 <span style="color:#ef4444;">*</span></label>
+    <label style="margin-top:12px;">PRD Markdown 内容（可选）</label>
     <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
       <img src="https://aone-copilot.oss-cn-shanghai.aliyuncs.com/images/1776929516321.png" style="height:36px;border-radius:4px;flex-shrink:0;" />
       <span style="font-size:12px;color:var(--text-secondary);line-height:1.5;">在语雀文档右上角点击 <strong style="color:var(--text-primary);">「复制为 Markdown 格式」</strong>，然后粘贴到下方输入框</span>
@@ -2692,14 +2692,14 @@ function handleEditReq(reqId) {
 function restoreSubmitModal() {
   const container = document.getElementById("submitModalContent");
   container.innerHTML = '<h2>提交需求</h2>'
-    + '<p>填写需求信息，并粘贴 PRD Markdown 内容，供 AI 拆解时读取</p>'
+    + '<p>填写需求信息，PRD Markdown 内容可选粘贴（用于 AI 拆解时读取）</p>'
     + '<label>需求名称 <span style="color:#ef4444;">*</span></label>'
     + '<input type="text" id="reqNameInput" placeholder="填写需求名称，如：商旅用户出行意图识别与偏好表达" />'
     + '<label style="margin-top:12px;">提交人 <span style="color:#ef4444;">*</span></label>'
     + '<input type="text" id="reqOwnerInput" placeholder="填写提交人花名，如：晰予" />'
     + '<label style="margin-top:12px;">语雀 PRD 链接 <span style="color:#ef4444;">*</span></label>'
     + '<input type="text" id="prdUrlInput" placeholder="粘贴语雀链接，如：https://aliyuque.antfin.com/..." />'
-    + '<label style="margin-top:12px;">PRD Markdown 内容 <span style="color:#ef4444;">*</span></label>'
+    + '<label style="margin-top:12px;">PRD Markdown 内容（可选）</label>'
     + '<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">'
     + '<img src="https://aone-copilot.oss-cn-shanghai.aliyuncs.com/images/1776929516321.png" style="height:36px;border-radius:4px;flex-shrink:0;" />'
     + '<span style="font-size:12px;color:var(--text-secondary);line-height:1.5;">在语雀文档右上角点击 <strong style="color:var(--text-primary);">「复制为 Markdown 格式」</strong>，然后粘贴到下方输入框</span>'
@@ -3162,11 +3162,6 @@ async function handleSubmitReq() {
     showToast("请填写语雀 PRD 链接", "error");
     return;
   }
-  if (!markdownInput) {
-    showToast("请粘贴 PRD Markdown 内容", "error");
-    return;
-  }
-
   // 需求名称和提交人直接用用户填写的，Markdown 存入 summary
   var docTitle = reqNameInput;
   var docCreator = reqOwnerInput;
