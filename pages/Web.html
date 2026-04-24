@@ -257,18 +257,13 @@
     }
     .req-card:hover .req-card-delete { display: flex; opacity: 1; }
     .req-card-delete:hover { background: rgba(239,68,68,0.3); }
-    .req-card-id {
-      font-size: 10px;
-      color: var(--text-muted);
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      margin-bottom: 4px;
-    }
     .req-card-name {
       font-size: 13px;
       font-weight: 500;
       color: var(--text-primary);
       margin-bottom: 6px;
       line-height: 1.4;
+      padding-right: 32px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
@@ -371,7 +366,6 @@
       min-width: 0;
       flex-wrap: wrap;
     }
-    .modal-id { display: none; }
     .modal-name {
       font-size: 20px; font-weight: 600;
       line-height: 20px;
@@ -402,6 +396,7 @@
       gap: 4px;
       flex-shrink: 0;
     }
+    /* 有有效链接：<a> 用蓝色，表示可打开外链 */
     .modal-header-link {
       display: inline-flex;
       align-items: center;
@@ -410,26 +405,27 @@
       border-radius: var(--radius-sm);
       font-size: 12px;
       text-decoration: none;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      background: var(--bg-primary);
+      border: 1px solid rgba(79,140,255,0.3);
+      color: var(--accent-blue);
+      background: rgba(79,140,255,0.14);
       transition: all 0.2s;
     }
     .modal-header-link:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
-      background: rgba(79,140,255,0.08);
+      border-color: rgba(79,140,255,0.45);
+      color: #8eb6ff;
+      background: rgba(79,140,255,0.22);
     }
+    /* 无链接：占位按钮用灰色，点击后去补链接 */
     .modal-header-link-add {
-      background: rgba(79,140,255,0.14);
-      color: var(--accent-blue);
-      border-color: rgba(79,140,255,0.3);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
       cursor: pointer;
     }
     .modal-header-link-add:hover {
-      background: rgba(79,140,255,0.22);
-      border-color: rgba(79,140,255,0.45);
-      color: #8eb6ff;
+      border-color: var(--border);
+      color: var(--text-primary);
+      background: var(--bg-hover);
     }
     .modal-close {
       width: 32px; height: 32px; border: none; background: var(--bg-primary);
@@ -1614,6 +1610,7 @@
   需求看板 v2.0 | Owner: Liang Yu
 </footer>
 
+<script src="ecs-api-endpoint.js"></script>
 <script>
 // ==================== Data ====================
 const requirementsData = {
@@ -1703,6 +1700,7 @@ async function loadLocalDataFallback(reasonLabel) {
       throw new Error("本地数据格式错误：缺少 requirements 数组");
     }
     requirementsData.requirements = json.requirements;
+    normalizeRequirementStatusesInPlace();
     renderStats();
     renderTabs();
     renderKanban();
@@ -1849,6 +1847,7 @@ async function loadData() {
         const json = await res.json();
         if (json.requirements && Array.isArray(json.requirements)) {
           requirementsData.requirements = json.requirements;
+          normalizeRequirementStatusesInPlace();
           console.log("[API Load] Loaded " + json.requirements.length + " items from backend");
           renderStats();
           renderTabs();
@@ -1866,13 +1865,17 @@ async function loadData() {
       }
     }
 
-    const fallbackOk = await loadLocalDataFallback("后端加载失败");
-    if (fallbackOk) return;
+    // 线上环境不降级到本地数据，直接提示错误
+    var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    if (isLocal) {
+      const fallbackOk = await loadLocalDataFallback("后端加载失败");
+      if (fallbackOk) return;
+    }
 
     renderStats();
     renderTabs();
     renderKanban();
-    showToast("⚠️ 后端数据加载失败，且本地兜底也失败，请检查网络后刷新页面", "error");
+    showToast("⚠️ 后端数据加载失败，请检查网络后刷新页面", "error");
     return;
   }
 
@@ -1887,6 +1890,7 @@ async function loadData() {
       const json = await res.json();
       if (json.requirements && Array.isArray(json.requirements)) {
         requirementsData.requirements = json.requirements;
+        normalizeRequirementStatusesInPlace();
         console.log("[OSS Load] Loaded " + json.requirements.length + " items from OSS");
         renderStats();
         renderTabs();
@@ -1904,14 +1908,18 @@ async function loadData() {
     }
   }
 
-  const fallbackOk = await loadLocalDataFallback("云端加载失败");
-  if (fallbackOk) return;
+  // 线上环境不降级到本地数据，直接提示错误
+  var isLocalHost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  if (isLocalHost) {
+    const fallbackOk = await loadLocalDataFallback("云端加载失败");
+    if (fallbackOk) return;
+  }
 
   // 加载失败：渲染空状态并提示用户
   renderStats();
   renderTabs();
   renderKanban();
-  showToast("⚠️ 云端数据加载失败，且本地兜底也失败，请检查网络后刷新页面", "error");
+  showToast("⚠️ 云端数据加载失败，请检查网络后刷新页面", "error");
 }
 
 // ==================== Month Switcher ====================
@@ -1952,6 +1960,33 @@ function shiftMonth(delta) {
 }
 
 // ==================== Helpers ====================
+/** 与看板列名不一致的 status 会导致「Tab 有数量、列全空」；统一映射到 requirementsData.statuses */
+const STATUS_ALIASES = {
+  "待对齐": "待对焦",
+  "待评审": "待对焦",
+  "已发布": "已上线"
+};
+
+function getCanonicalStatus(raw) {
+  const list = requirementsData.statuses;
+  const s = raw == null ? "" : String(raw).trim();
+  if (!s) return "待对焦";
+  if (list.indexOf(s) !== -1) return s;
+  if (STATUS_ALIASES[s]) return STATUS_ALIASES[s];
+  return "待对焦";
+}
+
+function normalizeRequirementStatusesInPlace() {
+  requirementsData.requirements.forEach(function(r) {
+    if (!r) return;
+    const c = getCanonicalStatus(r.status);
+    if (r.status !== c) {
+      console.warn("[Status] Normalized " + (r.id || "?") + " from " + JSON.stringify(r.status) + " to " + c);
+      r.status = c;
+    }
+  });
+}
+
 function getStatusMeta(status) {
   return requirementsData.statusMeta[status] || requirementsData.statusMeta["待对焦"];
 }
@@ -1970,7 +2005,7 @@ function getFilteredReqs() {
   return reqs;
 }
 function getFilteredReqsByStatus(status) {
-  return getFilteredReqs().filter(r => r.status === status);
+  return getFilteredReqs().filter(r => getCanonicalStatus(r.status) === status);
 }
 function generateReqId() {
   const maxId = requirementsData.requirements.reduce((max, r) => {
@@ -2117,7 +2152,6 @@ function renderReqCard(req, index) {
 
   return '<div class="req-card animate-in" style="animation-delay:' + animDelay + '" draggable="true" data-req-id="' + req.id + '" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" onclick="handleCardClick(event, \'' + req.id + '\')" ontouchstart="handleTouchStart(event, \'' + req.id + '\')" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event)">'
     + '<button class="req-card-delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
-    + '<div class="req-card-id">' + escapeHtml(req.id) + '</div>'
     + '<div class="req-card-name">' + escapeHtml(req.name) + '</div>'
     + '<div class="req-card-meta">'
     + (showPart ? '<span class="req-card-part-badge">' + escapeHtml(req.part) + '</span>' : '')
@@ -2231,9 +2265,9 @@ function handleTouchEnd(event) {
     const newStatus = targetColumn.dataset.status;
     const statusOrder = ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "灰度中", "已上线"];
     const req = requirementsData.requirements.find(r => r.id === touchDragReqId);
-    if (req && newStatus && req.status !== newStatus) {
+    if (req && newStatus && getCanonicalStatus(req.status) !== newStatus) {
       const oldStatus = req.status;
-      const oldIndex = statusOrder.indexOf(oldStatus);
+      const oldIndex = statusOrder.indexOf(getCanonicalStatus(req.status));
       const newIndex = statusOrder.indexOf(newStatus);
       const isForwardMove = newIndex > oldIndex;
 
@@ -2286,9 +2320,9 @@ function handleDrop(event) {
   const statusOrder = ["待对焦", "待设计", "设计中", "设计完成", "待开发", "开发中", "灰度中", "已上线"];
 
   const req = requirementsData.requirements.find(r => r.id === draggedReqId);
-  if (req && req.status !== newStatus) {
+  if (req && getCanonicalStatus(req.status) !== newStatus) {
     const oldStatus = req.status;
-    const oldIndex = statusOrder.indexOf(oldStatus);
+    const oldIndex = statusOrder.indexOf(getCanonicalStatus(req.status));
     const newIndex = statusOrder.indexOf(newStatus);
     const isForwardMove = newIndex > oldIndex;
 
@@ -2322,7 +2356,7 @@ function deleteStatusHistory(reqId, index) {
 function renderStatusHistory(req) {
   const history = req.status_history;
   if (!Array.isArray(history) || history.length === 0) {
-    if (req && req.status === "待对焦") {
+    if (req && getCanonicalStatus(req.status) === "待对焦") {
       const intakeTime = getPendingFocusIntakeTime(req);
       return '<div class="status-history">'
         + '<div class="status-history-title">状态变更记录</div>'
@@ -2425,7 +2459,6 @@ function openModal(reqId) {
   const req = requirementsData.requirements.find(r => r.id === reqId);
   if (!req) return;
 
-  const meta = getStatusMeta(req.status);
   const priorityClass = ({"P0":"priority-p0","P1":"priority-p1","P2":"priority-p2","P3":"priority-p3"})[req.priority] || "priority-p2";
   const prdUrl = normalizeExternalUrl(req.prd_url);
   const designUrl = normalizeExternalUrl(req.design_url);
@@ -2444,7 +2477,7 @@ function openModal(reqId) {
   var metaLineHtml = '<div class="modal-header-meta">提交人: ' + escapeHtml(req.owner || '未指定') + ' | Created: ' + escapeHtml(req.created_at || '') + ' | Updated: ' + escapeHtml(req.updated_at || '') + '</div>';
 
   modal.innerHTML = '<div class="modal-sticky-section">'
-    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-id">' + escapeHtml(req.id) + '</div><div class="modal-title-row"><div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><div class="modal-header-links">' + prdHeaderLink + figmaHeaderLink + '</div></div>' + metaLineHtml + '</div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
+    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-title-row"><div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><div class="modal-header-links">' + prdHeaderLink + figmaHeaderLink + '</div></div>' + metaLineHtml + '</div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
     + '<div class="modal-body-collapse"><div class="modal-body">'
     + historyCard
     + '</div></div>'
@@ -2562,7 +2595,7 @@ function openEditModal(reqId) {
   document.getElementById("modalOverlay").classList.remove("visible");
 
   const statusOptions = requirementsData.statuses.map(s =>
-    '<option value="' + s + '"' + (s === req.status ? ' selected' : '') + '>' + s + '</option>'
+    '<option value="' + s + '"' + (s === getCanonicalStatus(req.status) ? ' selected' : '') + '>' + s + '</option>'
   ).join('');
   const partOptions = requirementsData.parts.map(p =>
     '<option value="' + p + '"' + (p === req.part ? ' selected' : '') + '>' + p + '</option>'
@@ -2572,7 +2605,6 @@ function openEditModal(reqId) {
   ).join('');
 
   const editHtml = '<h2>Edit Requirement</h2>'
-    + '<p>' + req.id + '</p>'
     + '<label>Name *</label>'
     + '<input type="text" id="editNameInput" value="' + req.name.replace(/"/g, '&quot;') + '" />'
     + '<div class="form-row"><div><label>Part</label><select id="editPartSelect">' + partOptions + '</select></div>'
@@ -2779,16 +2811,16 @@ function parseMarkdownContent(markdown) {
 }
 
 /**
- * Try to fetch doc info from Yuque API via proxy (optional enhancement).
+ * 未设置 window.API_BASE 时：非 localhost 默认直连 ECS 的 http 根；localhost 仍用 3001。
+ * GitHub Pages 为 https 时，应通过 pages/ecs-api-endpoint.js 填 Cloudflare Worker 的 https 基址，见 cloudflare-worker/ecs-api-proxy.js 与 docs/backend-ecs-deployment.md「与 GitHub Pages 联调」。
  */
-const DEFAULT_API_BASE = "https://outdoors-through-possess-opposition.trycloudflare.com";
+const DEFAULT_API_BASE = "http://121.41.229.77";
 const LOCAL_API_BASE = "http://localhost:3001";
-// API_BASE 自动检测：本地访问时优先用 localhost:3001（内网语雀可用），否则用 ECS 公网地址
 const API_BASE = (function() {
   try {
     if (window.API_BASE) return window.API_BASE;
     var host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1') {
+    if (host === "localhost" || host === "127.0.0.1") {
       return LOCAL_API_BASE;
     }
     return DEFAULT_API_BASE;
@@ -2796,6 +2828,17 @@ const API_BASE = (function() {
     return DEFAULT_API_BASE;
   }
 })();
+
+if (
+  typeof window !== "undefined" &&
+  window.location &&
+  window.location.protocol === "https:" &&
+  String(API_BASE).indexOf("http://") === 0
+) {
+  console.warn(
+    "[API] 当前为 https 页面，但 API 基址仍是 http，fetch 会被拦截。请部署 cloudflare-worker/ecs-api-proxy 后在 pages/ecs-api-endpoint.js 填写 Worker 的 https 根地址，或为 ECS 配置 https 域名。见 docs/backend-ecs-deployment.md"
+  );
+}
 
 function apiUrl(path) {
   var base = API_BASE.replace(/\/+$/, "");
@@ -3967,11 +4010,7 @@ function _refreshSectionByModifier(req, modifier, renderFn) {
   var modal = document.getElementById('modalContent');
   if (!modal) return;
   var currentReqId = modal.getAttribute('data-open-req-id');
-  if (!currentReqId) {
-    var idEl = modal.querySelector('.modal-id');
-    currentReqId = idEl ? idEl.textContent : '';
-  }
-  if (currentReqId !== req.id) return;
+  if (!currentReqId || currentReqId !== req.id) return;
 
   var body = document.querySelector('#modalContent .modal-scroll-content');
   if (!body) return;
@@ -4220,8 +4259,8 @@ function renderGstackReviewSection(req) {
       + escapeHtml(review.last_error) + '</div>';
   }
 
-  // 审查摘要（完成态已并入状态模块）
-  if (review.summary && !(review.status === 'completed' && !isRunning)) {
+  // 审查摘要：完成态已并入上方 ai-review-merged；运行中不得展示上轮回填的 summary，避免与进度条并存
+  if (review.summary && !isRunning && review.status !== 'completed') {
     html += '<div class="ai-summary">'
       + '<div class="ai-summary-label">审查结论</div>'
       + escapeHtml(review.summary)
@@ -4375,13 +4414,13 @@ async function triggerGstackReview(reqId) {
 }
 
 /**
- * 轮询审查任务状态（每 3 秒一次，最多 5 分钟）
+ * 轮询审查任务状态（每 3 秒一次，最多约 10 分钟；AI 审查偶发超 5 分钟）
  */
 function startGstackReviewPolling(reqId, jobId) {
   if (_reviewPollTimers[reqId]) {
     clearInterval(_reviewPollTimers[reqId]);
   }
-  var maxPolls = 100;
+  var maxPolls = 200;
   var pollCount = 0;
 
   _reviewPollTimers[reqId] = setInterval(async function() {
@@ -4389,6 +4428,34 @@ function startGstackReviewPolling(reqId, jobId) {
     if (pollCount > maxPolls) {
       clearInterval(_reviewPollTimers[reqId]);
       delete _reviewPollTimers[reqId];
+      // 再拉一次终态，避免长耗时任务在客户端被误判为“卡住”
+      try {
+        var resFinal = await fetch(API_BASE + '/api/ai-design/jobs/' + jobId);
+        if (resFinal.ok) {
+          var jobFinal = await resFinal.json();
+          var reqFinal = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+          if (reqFinal && (jobFinal.status === 'completed' || jobFinal.status === 'failed')) {
+            reqFinal.ai_review = {
+              status:      jobFinal.status,
+              stage:       jobFinal.stage,
+              job_id:      jobFinal.id,
+              summary:     jobFinal.review_summary || jobFinal.summary || null,
+              last_error:  jobFinal.last_error,
+              report_path: jobFinal.report_path || null,
+              updated_at:  jobFinal.updated_at
+            };
+            saveData();
+            _refreshReviewSectionIfOpen(reqFinal);
+            if (jobFinal.status === 'completed') {
+              showToast('Gstack 审查完成', 'success');
+            } else {
+              showToast('Gstack 审查失败：' + (jobFinal.last_error || '未知错误'), 'error');
+            }
+            return;
+          }
+        }
+      } catch (e) { /* ignore */ }
+      showToast('长时间未收到结果，已停止自动刷新；可刷新页面或点「重跑」再试', 'error');
       return;
     }
     try {
@@ -4424,10 +4491,10 @@ function startGstackReviewPolling(reqId, jobId) {
         updated_at:  job.updated_at
       };
 
+      saveData();
       _refreshReviewSectionIfOpen(req);
 
       if (job.status === 'completed' || job.status === 'failed') {
-        saveData();
         clearInterval(_reviewPollTimers[reqId]);
         delete _reviewPollTimers[reqId];
         if (job.status === 'completed') {
