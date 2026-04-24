@@ -131,13 +131,6 @@ async function pull() {
     process.exit(1);
   }
 
-  // 备份本地文件
-  if (fs.existsSync(LOCAL_FILE)) {
-    const backupPath = LOCAL_FILE.replace('.json', `.backup-${Date.now()}.json`);
-    fs.copyFileSync(LOCAL_FILE, backupPath);
-    console.log(`[oss-sync] 已备份本地文件 → ${path.basename(backupPath)}`);
-  }
-
   fs.writeFileSync(LOCAL_FILE, result.body);
   const ossData = JSON.parse(result.body);
   const count   = ossData?.requirements?.length ?? '?';
