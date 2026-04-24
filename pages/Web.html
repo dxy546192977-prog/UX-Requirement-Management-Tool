@@ -1749,7 +1749,9 @@ async function buildOssPresignedPutUrl(expiresInSeconds) {
 }
 
 async function saveData() {
-  if (API_BASE) {
+  // 本地环境走后端接口，线上环境直接走 OSS
+  var isLocalEnv = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  if (isLocalEnv && API_BASE) {
     try {
       const res = await fetch(apiUrl("/api/data"), {
         method: "POST",
