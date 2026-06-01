@@ -390,6 +390,34 @@
       line-height: 17px;
       color: var(--text-muted);
     }
+    .meta-date-editable {
+      cursor: pointer;
+      color: var(--accent-blue);
+      border-bottom: 1px dashed var(--accent-blue);
+      padding-bottom: 1px;
+      transition: all 0.2s;
+    }
+    .meta-date-editable:hover {
+      background: rgba(79,140,255,0.1);
+      border-radius: 3px;
+      padding: 1px 4px;
+      margin: -1px -4px;
+    }
+    .meta-date-input {
+      font-size: 12px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--accent-blue);
+      border-radius: 6px;
+      padding: 2px 6px;
+      outline: none;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .meta-date-input::-webkit-calendar-picker-indicator {
+      filter: invert(0.7);
+      cursor: pointer;
+    }
     .modal-header-note {
       font-size: 12px;
       line-height: 17px;
@@ -1261,33 +1289,6 @@
       background: rgba(239,68,68,0.18);
     }
 
-    .modal-move-btn {
-      background: rgba(52,211,153,0.1); color: var(--accent-green);
-    }
-    .modal-move-btn:hover {
-      background: rgba(52,211,153,0.2);
-    }
-    .move-month-dropdown {
-      position: absolute; top: 100%; right: 0; z-index: 200;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 8px 0; min-width: 160px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-      display: none; flex-direction: column;
-    }
-    .move-month-dropdown.visible { display: flex; }
-    .move-month-dropdown-title {
-      padding: 6px 14px 4px; font-size: 11px; font-weight: 600;
-      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .move-month-option {
-      padding: 7px 14px; font-size: 13px; color: var(--text-primary);
-      cursor: pointer; border: none; background: none; text-align: left; width: 100%;
-      transition: background 0.15s;
-    }
-    .move-month-option:hover { background: var(--bg-hover); }
-    .move-month-option.current {
-      color: var(--accent-blue); font-weight: 600;
-    }
 
     /* ===== AI Design Assistant ===== */
     /* 卡片级徽标 */
@@ -2553,85 +2554,42 @@ function handleUndo() {
 }
 
 
-// ==================== Move to Month ====================
-function toggleMoveMonthDropdown(reqId) {
-  var dropdown = document.getElementById("moveMonthDropdown");
-  if (!dropdown) return;
-  if (dropdown.classList.contains("visible")) {
-    dropdown.classList.remove("visible");
-    document.removeEventListener("click", closeMoveMonthDropdownOutside);
-    return;
-  }
+// ==================== Inline Date Editor ====================
+function openDateEditor(reqId, spanEl) {
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req) return;
-  var reqMonth = (req.created_at || "").substring(0, 7);
-  var months = getMoveMonthOptions();
-  var html = '<div class="move-month-dropdown-title">移动到月份</div>';
-  months.forEach(function(m) {
-    var isCurrent = m.value === reqMonth;
-    html += '<button class="move-month-option' + (isCurrent ? ' current' : '') + '" onclick="event.stopPropagation();moveReqToMonth(\'' + reqId + '\',\'' + m.value + '\')">'
-      + m.label + (isCurrent ? ' ✓' : '') + '</button>';
+  var currentDate = req.created_at || todayStr();
+  var input = document.createElement("input");
+  input.type = "date";
+  input.className = "meta-date-input";
+  input.value = currentDate;
+  spanEl.style.display = "none";
+  spanEl.parentNode.insertBefore(input, spanEl.nextSibling);
+  input.focus();
+  try { input.showPicker(); } catch(e) {}
+
+  function commitDate() {
+    var newDate = input.value;
+    if (newDate && newDate !== currentDate) {
+      req.created_at = newDate;
+      req.updated_at = todayStr();
+      saveData();
+      spanEl.textContent = newDate;
+      renderKanban();
+      renderStats();
+      renderTabs();
+      var parts = newDate.split("-");
+      var label = parseInt(parts[0]) + "年" + parseInt(parts[1]) + "月" + parseInt(parts[2]) + "日";
+      showToast('"' + req.name + '" 跟进时间已改为 ' + label, "success");
+    }
+    spanEl.style.display = "";
+    if (input.parentNode) input.parentNode.removeChild(input);
+  }
+
+  input.addEventListener("change", commitDate);
+  input.addEventListener("blur", function() {
+    setTimeout(commitDate, 150);
   });
-  dropdown.innerHTML = html;
-  dropdown.classList.add("visible");
-  setTimeout(function() {
-    document.addEventListener("click", closeMoveMonthDropdownOutside);
-  }, 0);
-}
-
-function closeMoveMonthDropdownOutside(event) {
-  var dropdown = document.getElementById("moveMonthDropdown");
-  var btn = document.getElementById("moveMonthBtn");
-  if (dropdown && !dropdown.contains(event.target) && btn !== event.target && !btn.contains(event.target)) {
-    dropdown.classList.remove("visible");
-    document.removeEventListener("click", closeMoveMonthDropdownOutside);
-  }
-}
-
-function getMoveMonthOptions() {
-  var now = new Date();
-  var options = [];
-  for (var i = -3; i <= 6; i++) {
-    var d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-    var value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
-    var label = d.getFullYear() + "年" + (d.getMonth() + 1) + "月";
-    options.push({ value: value, label: label });
-  }
-  return options;
-}
-
-function moveReqToMonth(reqId, targetMonth) {
-  var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
-  if (!req) return;
-  var oldCreated = req.created_at || "";
-  var oldMonth = oldCreated.substring(0, 7);
-  if (oldMonth === targetMonth) {
-    var dropdown = document.getElementById("moveMonthDropdown");
-    if (dropdown) dropdown.classList.remove("visible");
-    return;
-  }
-  var parts = targetMonth.split("-");
-  var targetYear = parseInt(parts[0], 10);
-  var targetMon = parseInt(parts[1], 10);
-  var oldDay = 1;
-  if (oldCreated.length >= 10) {
-    oldDay = parseInt(oldCreated.substring(8, 10), 10) || 1;
-  }
-  var maxDay = new Date(targetYear, targetMon, 0).getDate();
-  var newDay = Math.min(oldDay, maxDay);
-  var newDate = targetYear + "-" + String(targetMon).padStart(2, "0") + "-" + String(newDay).padStart(2, "0");
-  req.created_at = newDate;
-  req.updated_at = todayStr();
-  saveData();
-  var dropdown = document.getElementById("moveMonthDropdown");
-  if (dropdown) dropdown.classList.remove("visible");
-  document.removeEventListener("click", closeMoveMonthDropdownOutside);
-  forceCloseModal();
-  renderKanban();
-  renderStats();
-  renderTabs();
-  var label = targetYear + "年" + targetMon + "月";
-  showToast('"' + req.name + '" 已移动到 ' + label, "success");
 }
 
 // ==================== Delete ====================
@@ -3054,10 +3012,10 @@ function openModal(reqId) {
   modal.classList.remove("modal-scrolled");
   var historyHtml = renderStatusHistory(req);
   var historyCard = historyHtml ? '<div class="modal-history-card">' + historyHtml + '</div>' : '';
-  var metaLineHtml = '<div class="modal-header-meta">提交人: ' + escapeHtml(req.owner || '未指定') + ' | Created: ' + escapeHtml(req.created_at || '') + ' | Updated: ' + escapeHtml(req.updated_at || '') + '</div>';
+  var metaLineHtml = '<div class="modal-header-meta">提交人: ' + escapeHtml(req.owner || '未指定') + ' | 跟进时间: <span class="meta-date-editable" onclick="event.stopPropagation();openDateEditor(\'' + req.id + '\', this)" title="点击修改日期">' + escapeHtml(req.created_at || '') + '</span> | Updated: ' + escapeHtml(req.updated_at || '') + '</div>';
 
   modal.innerHTML = '<div class="modal-sticky-section">'
-    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-title-row"><div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><div class="modal-header-links">' + prdHeaderLink + figmaHeaderLink + '</div></div>' + metaLineHtml + '</div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><div style="position:relative"><button class="modal-action-btn modal-move-btn" title="移动到其他月份" onclick="event.stopPropagation();toggleMoveMonthDropdown(\'' + req.id + '\')" id="moveMonthBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button><div id="moveMonthDropdown" class="move-month-dropdown"></div></div><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
+    + '<div class="modal-header"><div class="modal-title-area"><div class="modal-title-row"><div class="modal-name" title="' + escapeHtml(req.name) + '">' + escapeHtml(req.name) + '</div><span class="badge req-card-priority ' + priorityClass + '">' + escapeHtml(req.priority) + '</span><div class="modal-header-links">' + prdHeaderLink + figmaHeaderLink + '</div></div>' + metaLineHtml + '</div><div class="modal-actions"><button class="modal-action-btn modal-edit-btn" title="Edit" onclick="event.stopPropagation();openEditModal(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="modal-action-btn modal-delete-btn" title="Delete" onclick="event.stopPropagation();deleteRequirement(\'' + req.id + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button><button class="modal-close" onclick="forceCloseModal()">&times;</button></div></div>'
     + '<div class="modal-body-collapse"><div class="modal-body">'
     + historyCard
     + '</div></div>'
