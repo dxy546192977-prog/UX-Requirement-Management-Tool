@@ -403,20 +403,92 @@
       padding: 1px 4px;
       margin: -1px -4px;
     }
-    .meta-date-input {
-      font-size: 12px;
-      background: var(--bg-card);
-      color: var(--text-primary);
-      border: 1px solid var(--accent-blue);
-      border-radius: 6px;
-      padding: 2px 6px;
-      outline: none;
-      font-family: inherit;
-      cursor: pointer;
+    /* ===== shadcn Calendar Component ===== */
+    .scn-calendar-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 999;
     }
-    .meta-date-input::-webkit-calendar-picker-indicator {
-      filter: invert(0.7);
-      cursor: pointer;
+    .scn-calendar {
+      position: absolute; z-index: 1000;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      user-select: none;
+      animation: scn-calendar-in 0.15s ease-out;
+    }
+    @keyframes scn-calendar-in {
+      from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .scn-calendar-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 4px 8px;
+    }
+    .scn-calendar-title {
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+      cursor: default;
+    }
+    .scn-calendar-nav-btn {
+      width: 28px; height: 28px; border: none; border-radius: 6px;
+      background: transparent; color: var(--text-muted);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      font-size: 14px;
+    }
+    .scn-calendar-nav-btn:hover {
+      background: var(--bg-hover); color: var(--text-primary);
+    }
+    .scn-calendar-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
+    }
+    .scn-calendar-weekday {
+      font-size: 11px; font-weight: 500; color: var(--text-muted);
+      text-align: center; padding: 4px 0 8px;
+    }
+    .scn-calendar-day {
+      width: 36px; height: 36px; border: none; border-radius: 8px;
+      background: transparent; color: var(--text-primary);
+      cursor: pointer; font-size: 13px; font-weight: 400;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.12s; margin: 0 auto;
+    }
+    .scn-calendar-day:hover {
+      background: var(--bg-hover);
+    }
+    .scn-calendar-day.today {
+      background: rgba(79,140,255,0.1); color: var(--accent-blue); font-weight: 600;
+    }
+    .scn-calendar-day.selected {
+      background: var(--accent-blue) !important; color: #fff !important; font-weight: 600;
+    }
+    .scn-calendar-day.other-month {
+      color: var(--text-muted); opacity: 0.4;
+    }
+    .scn-calendar-day.other-month:hover {
+      opacity: 0.7;
+    }
+    .scn-calendar-footer {
+      display: flex; justify-content: flex-end; gap: 6px;
+      padding-top: 8px; border-top: 1px solid var(--border); margin-top: 8px;
+    }
+    .scn-calendar-footer-btn {
+      font-size: 12px; padding: 4px 12px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+    }
+    .scn-calendar-footer-btn:hover {
+      background: var(--bg-hover); border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+    .scn-calendar-footer-btn.primary {
+      background: var(--accent-blue); color: #fff; border-color: var(--accent-blue);
+    }
+    .scn-calendar-footer-btn.primary:hover {
+      background: #3a7aef;
     }
     .modal-header-note {
       font-size: 12px;
@@ -2554,42 +2626,158 @@ function handleUndo() {
 }
 
 
-// ==================== Inline Date Editor ====================
+// ==================== shadcn Calendar Date Editor ====================
+var _scnCalendarActive = null;
+
 function openDateEditor(reqId, spanEl) {
+  if (_scnCalendarActive) { closeSCNCalendar(); return; }
   var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
   if (!req) return;
   var currentDate = req.created_at || todayStr();
-  var input = document.createElement("input");
-  input.type = "date";
-  input.className = "meta-date-input";
-  input.value = currentDate;
-  spanEl.style.display = "none";
-  spanEl.parentNode.insertBefore(input, spanEl.nextSibling);
-  input.focus();
-  try { input.showPicker(); } catch(e) {}
+  var selectedDate = currentDate;
+  var parts = currentDate.split("-");
+  var viewYear = parseInt(parts[0], 10);
+  var viewMonth = parseInt(parts[1], 10) - 1;
 
-  function commitDate() {
-    var newDate = input.value;
-    if (newDate && newDate !== currentDate) {
-      req.created_at = newDate;
-      req.updated_at = todayStr();
-      saveData();
-      spanEl.textContent = newDate;
-      renderKanban();
-      renderStats();
-      renderTabs();
-      var parts = newDate.split("-");
-      var label = parseInt(parts[0]) + "年" + parseInt(parts[1]) + "月" + parseInt(parts[2]) + "日";
-      showToast('"' + req.name + '" 跟进时间已改为 ' + label, "success");
+  var overlay = document.createElement("div");
+  overlay.className = "scn-calendar-overlay";
+  overlay.onclick = function() { closeSCNCalendar(); };
+
+  var cal = document.createElement("div");
+  cal.className = "scn-calendar";
+  cal.onclick = function(e) { e.stopPropagation(); };
+
+  var rect = spanEl.getBoundingClientRect();
+  cal.style.position = "fixed";
+  cal.style.top = (rect.bottom + 6) + "px";
+  cal.style.left = Math.max(8, rect.left - 80) + "px";
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(cal);
+  _scnCalendarActive = { overlay: overlay, cal: cal, reqId: reqId, spanEl: spanEl, originalDate: currentDate };
+
+  function render() {
+    var today = todayStr();
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+    var prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
+    var monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+    var weekdays = ["日","一","二","三","四","五","六"];
+
+    var html = '<div class="scn-calendar-nav">'
+      + '<button class="scn-calendar-nav-btn" onclick="scnCalNavMonth(-1)">‹</button>'
+      + '<span class="scn-calendar-title">' + viewYear + '年 ' + monthNames[viewMonth] + '</span>'
+      + '<button class="scn-calendar-nav-btn" onclick="scnCalNavMonth(1)">›</button>'
+      + '</div>';
+
+    html += '<div class="scn-calendar-grid">';
+    weekdays.forEach(function(w) {
+      html += '<div class="scn-calendar-weekday">' + w + '</div>';
+    });
+
+    var startOffset = firstDay === 0 ? 0 : firstDay;
+    for (var i = 0; i < startOffset; i++) {
+      var d = prevMonthDays - startOffset + 1 + i;
+      var prevM = viewMonth === 0 ? 12 : viewMonth;
+      var prevY = viewMonth === 0 ? viewYear - 1 : viewYear;
+      var dateStr = prevY + "-" + String(prevM).padStart(2,"0") + "-" + String(d).padStart(2,"0");
+      html += '<button class="scn-calendar-day other-month" data-date="' + dateStr + '">' + d + '</button>';
     }
-    spanEl.style.display = "";
-    if (input.parentNode) input.parentNode.removeChild(input);
+
+    for (var day = 1; day <= daysInMonth; day++) {
+      var dateStr = viewYear + "-" + String(viewMonth + 1).padStart(2,"0") + "-" + String(day).padStart(2,"0");
+      var cls = "scn-calendar-day";
+      if (dateStr === today) cls += " today";
+      if (dateStr === selectedDate) cls += " selected";
+      html += '<button class="' + cls + '" data-date="' + dateStr + '">' + day + '</button>';
+    }
+
+    var totalCells = startOffset + daysInMonth;
+    var remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+    for (var i = 1; i <= remaining; i++) {
+      var nextM = viewMonth + 2;
+      var nextY = viewYear;
+      if (nextM > 12) { nextM = 1; nextY++; }
+      var dateStr = nextY + "-" + String(nextM).padStart(2,"0") + "-" + String(i).padStart(2,"0");
+      html += '<button class="scn-calendar-day other-month" data-date="' + dateStr + '">' + i + '</button>';
+    }
+    html += '</div>';
+
+    html += '<div class="scn-calendar-footer">'
+      + '<button class="scn-calendar-footer-btn" onclick="scnCalSetToday()">今天</button>'
+      + '<button class="scn-calendar-footer-btn primary" onclick="scnCalConfirm()">确定</button>'
+      + '</div>';
+
+    cal.innerHTML = html;
+
+    cal.querySelectorAll(".scn-calendar-day").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        selectedDate = btn.getAttribute("data-date");
+        _scnCalendarActive.selectedDate = selectedDate;
+        var p = selectedDate.split("-");
+        viewYear = parseInt(p[0], 10);
+        viewMonth = parseInt(p[1], 10) - 1;
+        render();
+      });
+    });
   }
 
-  input.addEventListener("change", commitDate);
-  input.addEventListener("blur", function() {
-    setTimeout(commitDate, 150);
-  });
+  _scnCalendarActive.render = render;
+  _scnCalendarActive.getViewState = function() { return { viewYear: viewYear, viewMonth: viewMonth }; };
+  _scnCalendarActive.setViewState = function(y, m) { viewYear = y; viewMonth = m; render(); };
+  _scnCalendarActive.selectedDate = selectedDate;
+  render();
+}
+
+function scnCalNavMonth(delta) {
+  if (!_scnCalendarActive) return;
+  var st = _scnCalendarActive.getViewState();
+  var d = new Date(st.viewYear, st.viewMonth + delta, 1);
+  _scnCalendarActive.setViewState(d.getFullYear(), d.getMonth());
+}
+
+function scnCalSetToday() {
+  if (!_scnCalendarActive) return;
+  var today = todayStr();
+  _scnCalendarActive.selectedDate = today;
+  var p = today.split("-");
+  _scnCalendarActive.setViewState(parseInt(p[0], 10), parseInt(p[1], 10) - 1);
+}
+
+function scnCalConfirm() {
+  if (!_scnCalendarActive) return;
+  var ctx = _scnCalendarActive;
+  var newDate = ctx.selectedDate;
+  var reqId = ctx.reqId;
+  var spanEl = ctx.spanEl;
+  var originalDate = ctx.originalDate;
+  closeSCNCalendar();
+
+  if (newDate && newDate !== originalDate) {
+    var req = requirementsData.requirements.find(function(r) { return r.id === reqId; });
+    if (!req) return;
+    req.created_at = newDate;
+    req.updated_at = todayStr();
+    saveData();
+    spanEl.textContent = newDate;
+    renderKanban();
+    renderStats();
+    renderTabs();
+    var parts = newDate.split("-");
+    var label = parseInt(parts[0]) + "年" + parseInt(parts[1]) + "月" + parseInt(parts[2]) + "日";
+    showToast('"' + req.name + '" 跟进时间已改为 ' + label, "success");
+  }
+}
+
+function closeSCNCalendar() {
+  if (!_scnCalendarActive) return;
+  if (_scnCalendarActive.overlay && _scnCalendarActive.overlay.parentNode) {
+    _scnCalendarActive.overlay.parentNode.removeChild(_scnCalendarActive.overlay);
+  }
+  if (_scnCalendarActive.cal && _scnCalendarActive.cal.parentNode) {
+    _scnCalendarActive.cal.parentNode.removeChild(_scnCalendarActive.cal);
+  }
+  _scnCalendarActive = null;
 }
 
 // ==================== Delete ====================
