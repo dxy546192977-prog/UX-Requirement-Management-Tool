@@ -201,8 +201,7 @@ function _yuqueGet(config, apiPath) {
         'X-Auth-Token':   config.yuque_token,
         'Content-Type':   'application/json',
         'User-Agent':     'RequirementsManagement/1.0'
-      },
-      rejectUnauthorized: false
+      }
     };
 
     const req = https.request(options, (res) => {
@@ -236,9 +235,9 @@ function fetchPrdViaYuqueFetch(prdUrl) {
   return new Promise((resolve, reject) => {
     // 查找 yuque-fetch.mjs 脚本路径（支持多个可能的位置）
     const path = require('path');
+    const projectRoot = process.cwd();
     const possiblePaths = [
-      path.join(__dirname, '.agents/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
-      path.join(__dirname, '../.agents/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
+      path.join(projectRoot, '.agents/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
       path.join(process.env.HOME || '', '.claude/skills/yuque-doc-fetch/scripts/yuque-fetch.mjs'),
     ];
 
@@ -422,8 +421,7 @@ function _fetchRemoteBinaryInternal(url, redirectsLeft) {
       headers: {
         'User-Agent': 'RequirementsManagement/1.0',
         'Accept': '*/*'
-      },
-      rejectUnauthorized: false
+      }
     }, (res) => {
       const statusCode = res.statusCode || 0;
       if ([301, 302, 307, 308].includes(statusCode) && res.headers.location) {

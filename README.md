@@ -1,6 +1,6 @@
 # UX-Requirement-Management-Tool
 
-基于「需求看板 + 本地代理服务」的需求管理工具，面向 UX、产品、研发协作场景。支持语雀 PRD 解析、看板流转、AI 拆解与设计方案衔接。
+基于 Next.js + 需求看板静态页面 + Serverless API 的需求管理工具，面向 UX、产品、研发协作场景。支持语雀 PRD 解析、看板流转、AI 拆解与设计方案衔接，可部署到 Vercel。
 
 ## 功能概览
 
@@ -20,7 +20,30 @@
 
 ## 快速开始
 
-### 1) 配置 `config/config.json`
+### 1) 安装依赖
+
+```bash
+npm install
+```
+
+### 2) 本地配置
+
+本地开发推荐使用 `.env.local`：
+
+```bash
+cp .env.example .env.local
+```
+
+然后至少填写：
+
+```bash
+YUQUE_TOKEN=your_yuque_token
+OSS_ACCESS_KEY_ID=your_oss_access_key_id
+OSS_ACCESS_KEY_SECRET=your_oss_access_key_secret
+AI_API_KEY=your_ai_api_key
+```
+
+旧版 `config/config.json` 仍兼容：
 
 先复制模板：
 
@@ -40,30 +63,48 @@ cp config/config.example.json config/config.json
 
 语雀 Token 获取地址：<https://yuque.antfin.com/lark/openapi/dh8zp4>
 
-### 2) 启动代理服务
+### 3) 启动 Next.js
 
 ```bash
-node proxy-server.js
+npm run dev
 ```
 
-默认启动地址为 `http://localhost:3001`。
+默认启动地址为 `http://localhost:3000`。
 
-### 3) 打开看板
+### 4) 打开看板
 
-- 基础看板：可直接打开 `需求管理看板.html`。
-- 使用 AI 功能：请通过 `http://localhost:3001` 访问（不要直接本地文件打开）。
-- 在线地址（协作优先）：<https://dxy546192977-prog.github.io/UX-Requirement-Management-Tool/>
+- Next.js 本地：`http://localhost:3000`
+- 健康检查：`http://localhost:3000/health`
+- 旧代理服务仍可用：`npm run legacy:server`，默认 `http://localhost:3001`
 
-## 多人协同部署（推荐）
+## Vercel 部署
 
-若你希望团队成员共享同一份需求数据，建议采用「ECS 后端 + OSS 存储」模式：
+在 Vercel 创建项目后，Framework Preset 选择 `Next.js`，Build Command 使用默认 `npm run build` 即可。
 
-1. 在 ECS 部署 `proxy-server.js`。
-2. 在服务端 `config/config.json` 配置 OSS AccessKey（不要放前端）。
-3. 放行安全组端口 `3001` 和 `80`，并使用 Nginx 将 `80` 反代到 `3001`。
-4. 前端统一请求后端 API（如 `/api/data`），避免刷新后数据重置。
+需要在 Vercel Project Settings 里配置这些环境变量，不要提交真实密钥：
 
-详细步骤见：`docs/backend-ecs-deployment.md`。
+- `YUQUE_API_BASE`
+- `YUQUE_TOKEN`
+- `OSS_ACCESS_KEY_ID`
+- `OSS_ACCESS_KEY_SECRET`
+- `OSS_BUCKET`
+- `OSS_REGION`
+- `OSS_FILE_KEY`
+- `AI_PROVIDER`
+- `AI_API_BASE`
+- `AI_API_KEY`
+- `AI_MODEL`
+- `AI_DECOMPOSE_PROVIDER`
+- `AI_DECOMPOSE_API_BASE`
+- `AI_DECOMPOSE_API_KEY`
+- `AI_DECOMPOSE_MODEL`
+- `AI_DECOMPOSE_MAX_IMAGES`
+
+说明：Vercel Serverless Function 的部署目录是只读的，线上保存需求数据必须配置 OSS 这类持久化存储；未配置 `OSS_ACCESS_KEY_ID` / `OSS_ACCESS_KEY_SECRET` 时，`POST /api/data` 会拒绝保存而不是写入本地 JSON。Vercel 也不适合作为长期后台任务进程；当前 AI 任务仍沿用内存任务模型，可跑通接口，但生产多人协同时建议后续接入持久化队列或独立后端。
+
+## ECS 部署（旧方案）
+
+如果你仍希望使用常驻 Node 服务，可以继续采用「ECS 后端 + OSS 存储」模式，运行 `npm run legacy:server` 或 `node proxy-server.js`。详细步骤见：`docs/backend-ecs-deployment.md`。
 
 后端接口清单见：`docs/backend-api.md`。
 
@@ -105,7 +146,7 @@ node proxy-server.js
 
 ## AI API 快速索引
 
-启动 `proxy-server.js` 后可用：
+启动 Next.js 或 `proxy-server.js` 后可用：
 
 - `POST /api/ai-design/jobs`：创建 AI 拆解任务
 - `GET /api/ai-design/jobs/:id`：查询任务状态与产物
@@ -122,7 +163,9 @@ node proxy-server.js
 
 ## 目录速览
 
-- `需求管理看板.html`：主界面入口
+- `src/app/`：Next.js App Router 入口与 API Route Handler
+- `public/pages/`：需求看板与生成页静态资源
+- `public/data/`：前端可读取的静态数据种子
 - `proxy-server.js`：本地代理服务
 - `config/config.example.json`：配置模板
 - `config/config.json`：本地运行配置（需自行创建）

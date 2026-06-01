@@ -8,7 +8,7 @@
  *   Phase 2 — decompose    : 结构化需求拆解（页面 + 模块清单）
  *   Phase 3 — designPlan   : 生成每个模块的设计意图与建议处理方式
  *
- * 第一版实现：内存任务表（服务重启后正在跑的任务状态丢失，结果在调用方写回 OSS）。
+ * 任务存储：内存 Map + 本地 JSON 文件双写，服务重启后可从文件恢复任务状态。
  * AI 调用支持按阶段配置：
  * - 默认阶段（planning）：config.ai_*
  * - PRD 拆解阶段（decomposing）：优先 config.ai_decompose_*，缺省回退 config.ai_*
@@ -20,10 +20,65 @@ const crypto = require('crypto');
 const fs     = require('fs');
 const path   = require('path');
 
-// ---------- 任务存储（内存）----------
+// ---------- 任务持久化（内存 + 本地 JSON）----------
+
+const PROJECT_ROOT = process.cwd();
+const JOBS_STORE_PATH = path.join(PROJECT_ROOT, 'data', 'ai_design_jobs.json');
 
 /** @type {Map<string, AiDesignJob>} */
 const jobs = new Map();
+
+/** 从本地文件恢复已完成/失败的任务，供重启后查询历史 */
+function _loadJobsFromDisk() {
+  try {
+    if (!fs.existsSync(JOBS_STORE_PATH)) return;
+    const raw = fs.readFileSync(JOBS_STORE_PATH, 'utf-8');
+    const stored = JSON.parse(raw);
+    if (!Array.isArray(stored)) return;
+    let restored = 0;
+    stored.forEach((job) => {
+      if (job && job.id && !jobs.has(job.id)) {
+        // 进行中的任务重启后标记为失败（无法恢复异步上下文）
+        if (job.status === 'queued' || job.status === 'processing') {
+          job.status = 'failed';
+          job.last_error = '服务重启，任务中断，请重新发起';
+          job.updated_at = new Date().toISOString();
+        }
+        jobs.set(job.id, job);
+        restored++;
+      }
+    });
+    if (restored > 0) {
+      console.log(`[AiDesign] Restored ${restored} jobs from disk`);
+    }
+  } catch (err) {
+    console.warn('[AiDesign] Failed to load jobs from disk:', err.message);
+  }
+}
+
+/** 将当前所有任务持久化到本地文件（节流写入，避免频繁 IO） */
+let _persistTimer = null;
+function _persistJobsToDisk() {
+  if (_persistTimer) return;
+  _persistTimer = setTimeout(() => {
+    _persistTimer = null;
+    try {
+      const dir = path.dirname(JOBS_STORE_PATH);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      // 只保留最近 200 条，防止文件无限增长
+      const allJobs = Array.from(jobs.values());
+      const recentJobs = allJobs
+        .sort((jobA, jobB) => jobB.created_at.localeCompare(jobA.created_at))
+        .slice(0, 200);
+      fs.writeFileSync(JOBS_STORE_PATH, JSON.stringify(recentJobs, null, 2), 'utf-8');
+    } catch (err) {
+      console.warn('[AiDesign] Failed to persist jobs to disk:', err.message);
+    }
+  }, 500);
+}
+
+// 启动时恢复历史任务
+_loadJobsFromDisk();
 
 /**
  * @typedef {Object} AiDesignJob
@@ -79,6 +134,8 @@ function _newJob(reqId, prdUrl, skillKey, figmaUrl, prdMd) {
 
 function _updateJob(job, patch) {
   Object.assign(job, patch, { updated_at: _now() });
+  // 每次状态变更时节流写盘，保证重启后可查询历史
+  _persistJobsToDisk();
 }
 
 // ---------- 公开 API ----------
@@ -383,7 +440,7 @@ async function _runH5Generation(job, config, yuqueSvc) {
  * 返回结构化的规范内容，供 H5 system prompt 使用
  */
 function _loadDesignSkillContent() {
-  const skillBase = path.join(__dirname, '..', 'skills', 'fliggy-flight-design-guide');
+  const skillBase = path.join(PROJECT_ROOT, 'skills', 'fliggy-flight-design-guide');
   const fdsBase   = path.join(skillBase, 'playbooks', 'flight-funnel', '0 Fliggy Design Skill');
   const refsBase  = path.join(skillBase, 'references');
 
@@ -661,8 +718,8 @@ async function _saveH5Output(jobId, h5Content) {
   const fenceMatch = html.match(/```(?:html)?\s*([\s\S]+?)```/i);
   if (fenceMatch) html = fenceMatch[1].trim();
 
-  // 输出到 pages/ 目录，方便直接预览
-  const outputDir = path.join(__dirname, '..', 'pages');
+  // 输出到 public/pages/ 目录，方便 Next.js 和旧代理服务直接预览
+  const outputDir = path.join(PROJECT_ROOT, 'public', 'pages');
   fs.mkdirSync(outputDir, { recursive: true });
 
   const fileName = `${jobId}.html`;
@@ -899,7 +956,7 @@ function _parseFigmaReviewText(reviewText) {
 }
 
 async function _saveReviewReport(job, markdown) {
-  const pagesDir = path.join(__dirname, '..', 'pages');
+  const pagesDir = path.join(PROJECT_ROOT, 'public', 'pages');
   try {
     fs.mkdirSync(pagesDir, { recursive: true });
   } catch (e) {
@@ -1354,7 +1411,6 @@ function _httpsPost(url, headers, body, timeoutMs) {
       path:             parsed.pathname + parsed.search,
       method:           'POST',
       headers:          { ...headers, 'Content-Length': Buffer.byteLength(body) },
-      rejectUnauthorized: false,
       secureOptions:    crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT
     };
 

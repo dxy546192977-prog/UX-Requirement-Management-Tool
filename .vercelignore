@@ -1,0 +1,16 @@
+.git
+.vercel
+.next
+.codex-tools
+node_modules
+
+.env
+.env*.local
+config/config.json
+config.json
+
+data/local_requirements.json
+data/ai_design_jobs.json
+screenshot.png
+*.DS_Store
+.DS_Store

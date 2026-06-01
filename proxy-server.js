@@ -95,7 +95,6 @@ function fetchYuqueDoc(config, group_login, book_slug, doc_slug) {
         'Content-Type': 'application/json',
         'User-Agent': 'RequirementsManagement/1.0'
       },
-      rejectUnauthorized: false
     };
 
     const req = https.request(options, (res) => {
@@ -149,10 +148,27 @@ function serveStaticFile(pathname, res) {
   if (pathname === '/online-index.html' || pathname === '/pages/online-index.html') pathname = '/pages/Web.html';
   if (pathname === '/workflow-monitor.html' || pathname === '/pages/workflow-monitor.html') pathname = '/pages/Token.html';
 
-  const filePath = path.join(__dirname, pathname);
+  const publicRoot = path.join(__dirname, 'public');
+  const roots = [publicRoot, __dirname];
+  let filePath = path.join(publicRoot, pathname);
+  let matchedRoot = publicRoot;
+
+  for (const root of roots) {
+    const candidate = path.join(root, pathname);
+    if (!candidate.startsWith(root)) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('Forbidden');
+      return;
+    }
+    if (fs.existsSync(candidate)) {
+      filePath = candidate;
+      matchedRoot = root;
+      break;
+    }
+  }
 
   // Security: prevent directory traversal
-  if (!filePath.startsWith(__dirname)) {
+  if (!filePath.startsWith(matchedRoot)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     res.end('Forbidden');
     return;
@@ -357,12 +373,63 @@ async function saveRequirementsToOss(config, payload) {
   throw new Error(`OSS PUT returned ${res.statusCode}: ${res.body || ''}`);
 }
 
+// ==================== Routes ====================
+const registerDataRoutes    = require('./routes/data');
+const registerConfigRoutes  = require('./routes/config');
+const registerYuqueRoutes   = require('./routes/yuque');
+const registerAiDesignRoutes = require('./routes/ai-design');
+
 // ==================== HTTP Server ====================
 const PORT = 3001;
 
+// 允许的来源：本地开发域 + 可选的 ECS 生产域（通过环境变量 ALLOWED_ORIGIN 注入）
+const ALLOWED_ORIGINS = new Set([
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  ...(process.env.ALLOWED_ORIGIN ? [process.env.ALLOWED_ORIGIN] : [])
+]);
+
+function getCorsOrigin(requestOrigin) {
+  if (!requestOrigin) return null;
+  return ALLOWED_ORIGINS.has(requestOrigin) ? requestOrigin : null;
+}
+
+// 路由上下文：将公共函数注入各路由模块，避免循环依赖
+const routeCtx = {
+  loadConfig,
+  saveConfig,
+  getOssConfig,
+  normalizeDingTalkWebhook,
+  postJsonToRemoteUrl,
+  requestHttps,
+  loadRequirementsFromOss,
+  saveRequirementsToOss,
+  fetchYuqueDoc,
+  getYuqueConfigOrError,
+  getFileExtFromUrl,
+  normalizeAiKey,
+  hasAnyAiKey,
+  readBody,
+  yuqueSvc,
+  aiDesignSvc
+};
+
+const handleDataRoute     = registerDataRoutes(routeCtx);
+const handleConfigRoute   = registerConfigRoutes(routeCtx);
+const handleYuqueRoute    = registerYuqueRoutes(routeCtx);
+const handleAiDesignRoute = registerAiDesignRoutes(routeCtx);
+
 const server = http.createServer(async (req, res) => {
-  // CORS headers for API routes
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS headers — 仅允许白名单来源，防止任意域名跨域调用敏感接口
+  // 如需在 ECS 上开放特定域名，请设置环境变量 ALLOWED_ORIGIN=https://your-domain.com
+  const requestOrigin = req.headers['origin'];
+  const allowedOrigin = getCorsOrigin(requestOrigin);
+  if (allowedOrigin) {
+    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+    res.setHeader('Vary', 'Origin');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -372,10 +439,9 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const parsed = new URL(req.url, `http://localhost:${PORT}`);
-  const pathname = parsed.pathname;
-
-  // ---- API Routes ----
+  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
+  const pathname  = parsedUrl.pathname;
+  const method    = req.method;
 
   // Health check
   if (pathname === '/health') {
@@ -384,546 +450,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // GET /api/data - Load saved requirements
-  if (pathname === '/api/data' && req.method === 'GET') {
-    try {
-      const config = loadConfig();
-      if (config) {
-        try {
-          const ossData = await loadRequirementsFromOss(config);
-          if (ossData) {
-            console.log(`[Data] Loaded ${ossData.requirements.length} requirements from OSS`);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(ossData));
-            return;
-          }
-        } catch (ossErr) {
-          console.warn('[Data] OSS load failed, fallback to local file:', ossErr.message);
-        }
-      }
+  // ---- 分模块路由派发 ----
+  if (await handleDataRoute(pathname, method, req, res))     return;
+  if (await handleConfigRoute(pathname, method, req, res))   return;
+  if (await handleYuqueRoute(pathname, method, req, res, parsedUrl))  return;
+  if (await handleAiDesignRoute(pathname, method, req, res)) return;
 
-      if (fs.existsSync(DATA_PATH)) {
-        const raw = fs.readFileSync(DATA_PATH, 'utf-8');
-        console.log('[Data] Loaded requirements from local file fallback');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(raw);
-      } else {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ requirements: [] }));
-      }
-    } catch (err) {
-      console.error('[Data] Load error:', err.message);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load data' }));
-    }
-    return;
-  }
-
-  // GET /api/config/client - 前端可读配置（基于 config/config.json）
-  if (pathname === '/api/config/client' && req.method === 'GET') {
-    const config = loadConfig() || {};
-    const hasWebhook = Boolean(normalizeDingTalkWebhook(config.dingtalk_webhook));
-    const hasOssConfig = Boolean(getOssConfig(config));
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      has_dingtalk_webhook: hasWebhook,
-      dingtalk_webhook: hasWebhook ? normalizeDingTalkWebhook(config.dingtalk_webhook) : '',
-      has_oss_config: hasOssConfig
-    }));
-    return;
-  }
-
-  // POST /api/config/dingtalk-webhook - 设置钉钉 webhook（写入 config/config.json）
-  if (pathname === '/api/config/dingtalk-webhook' && req.method === 'POST') {
-    let body;
-    try {
-      body = JSON.parse(await readBody(req));
-    } catch {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Invalid JSON body' }));
-      return;
-    }
-    const webhookUrl = normalizeDingTalkWebhook(body && body.webhookUrl);
-    if (!webhookUrl) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Invalid DingTalk webhook URL' }));
-      return;
-    }
-    const config = loadConfig() || {};
-    config.dingtalk_webhook = webhookUrl;
-    if (!saveConfig(config)) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to save config/config.json' }));
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ success: true }));
-    return;
-  }
-
-  // POST /api/config/dingtalk-webhook/clear - 清空钉钉 webhook（写入 config/config.json）
-  if (pathname === '/api/config/dingtalk-webhook/clear' && req.method === 'POST') {
-    const config = loadConfig() || {};
-    config.dingtalk_webhook = '';
-    if (!saveConfig(config)) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to save config/config.json' }));
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ success: true }));
-    return;
-  }
-
-  // POST /api/notify/dingtalk - 使用 config/config.json 内 webhook 发送通知
-  if (pathname === '/api/notify/dingtalk' && req.method === 'POST') {
-    let body;
-    try {
-      body = JSON.parse(await readBody(req));
-    } catch {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Invalid JSON body' }));
-      return;
-    }
-    const message = body && body.message;
-    if (!message || typeof message !== 'object') {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'message is required' }));
-      return;
-    }
-    const config = loadConfig() || {};
-    const webhookUrl = normalizeDingTalkWebhook(config.dingtalk_webhook);
-    if (!webhookUrl) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'DingTalk webhook not configured in config/config.json' }));
-      return;
-    }
-    try {
-      const result = await postJsonToRemoteUrl(webhookUrl, message);
-      if (result.statusCode < 200 || result.statusCode >= 300) {
-        res.writeHead(502, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `DingTalk returned ${result.statusCode}`, detail: result.body || '' }));
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
-    } catch (err) {
-      res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: err.message }));
-    }
-    return;
-  }
-
-  // POST /api/data - Save requirements
-  if (pathname === '/api/data' && req.method === 'POST') {
-    try {
-      const body = await readBody(req);
-      const data = JSON.parse(body);
-      const requirements = Array.isArray(data && data.requirements) ? data.requirements : [];
-      const payload = { requirements };
-
-      const config = loadConfig();
-      if (config) {
-        try {
-          const saved = await saveRequirementsToOss(config, payload);
-          if (saved) {
-            console.log(`[Data] Saved ${requirements.length} requirements to OSS`);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: true, storage: 'oss' }));
-            return;
-          }
-        } catch (ossErr) {
-          console.warn('[Data] OSS save failed, fallback to local file:', ossErr.message);
-        }
-      }
-
-      // Ensure data directory exists
-      const dataDir = path.dirname(DATA_PATH);
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-      }
-
-      fs.writeFileSync(DATA_PATH, JSON.stringify(payload, null, 2), 'utf-8');
-      console.log(`[Data] Saved ${requirements.length} requirements to local file fallback`);
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, storage: 'local_fallback' }));
-    } catch (err) {
-      console.error('[Data] Save error:', err.message);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to save data: ' + err.message }));
-    }
-    return;
-  }
-
-  // GET /api/yuque/doc?url=...
-  if (pathname === '/api/yuque/doc' && req.method === 'GET') {
-    const rawYuqueUrl = parsed.searchParams.get('url');
-
-    if (!rawYuqueUrl) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Missing "url" query parameter' }));
-      return;
-    }
-
-    const config = loadConfig();
-    if (!config) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
-      return;
-    }
-
-    // 统一先做 URL 清洗：去掉 /g/ 前缀、/collaborator/join 后缀、锚点等
-    const yuqueUrl = yuqueSvc.cleanYuqueUrl(rawYuqueUrl);
-    const parts = yuqueSvc.parseYuqueUrl(yuqueUrl);
-
-    const hasToken = Boolean(config.yuque_token && config.yuque_token !== 'YOUR_YUQUE_API_TOKEN_HERE');
-
-    // 策略：OpenAPI Token 优先（历史稳定路径），Skylark 兜底（内网登录态、无 Token 场景）
-    let openapiError = null;
-    if (hasToken) {
-      if (!parts) {
-        console.warn(`[Yuque] URL 无法解析为 {group}/{book}/{doc}，跳过 OpenAPI，尝试 Skylark: ${yuqueUrl}`);
-      } else {
-        console.log(`[Yuque] OpenAPI first: ${parts.group_login}/${parts.book_slug}/${parts.doc_slug}`);
-        try {
-          const result = await fetchYuqueDoc(config, parts.group_login, parts.book_slug, parts.doc_slug);
-          const docData = result.data || {};
-          const creatorObj = docData.creator || docData.user || {};
-          const creatorName = creatorObj.name || creatorObj.login || creatorObj.nickname || 'Unknown';
-          const creatorLogin = creatorObj.login || '';
-          const response = {
-            title: docData.title || 'Untitled',
-            creator: creatorName,
-            creator_login: creatorLogin,
-            description: docData.description || '',
-            doc_id: docData.id,
-            word_count: docData.word_count || 0,
-            created_at: docData.created_at,
-            updated_at: docData.updated_at
-          };
-          console.log(`[Yuque] OpenAPI success - Title: "${response.title}", Creator: "${response.creator}" (login=${creatorLogin})`);
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(response));
-          return;
-        } catch (err) {
-          openapiError = err;
-          console.warn(`[Yuque] OpenAPI failed (${err.message})，尝试 Skylark 兜底`);
-        }
-      }
-    } else {
-      console.log('[Yuque] yuque_token 未配置，跳过 OpenAPI，直接走 Skylark');
-    }
-
-    // Skylark 兜底（使用内网登录态，无需 Token）
-    try {
-      const skylarkResult = await yuqueSvc.fetchDocViaSkylark(yuqueUrl);
-      console.log(`[Yuque] Skylark success - Title: "${skylarkResult.title}", Creator: "${skylarkResult.creator}" (login=${skylarkResult.creator_login})`);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({
-        title: skylarkResult.title,
-        creator: skylarkResult.creator,
-        creator_login: skylarkResult.creator_login,
-        description: skylarkResult.description,
-        doc_id: skylarkResult.doc_id
-      }));
-      return;
-    } catch (skylarkErr) {
-      console.error(`[Yuque] Skylark failed: ${skylarkErr.message}`);
-      const detail = openapiError ? `OpenAPI: ${openapiError.message}; Skylark: ${skylarkErr.message}` : `Skylark: ${skylarkErr.message}`;
-      const hint = !hasToken
-        ? '请配置 config/config.json 中的 yuque_token，或检查内网/VPN 与 ali-mcpcli 可用性。'
-        : '请检查语雀 Token 是否有该文档权限，或内网 / VPN 是否通畅。';
-      res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: `无法获取语雀 PRD 信息：${hint}`, detail }));
-      return;
-    }
-  }
-
-  // GET /api/yuque/doc-assets?url=... — 读取 PRD 正文 + 图片列表
-  if (pathname === '/api/yuque/doc-assets' && req.method === 'GET') {
-    const yuqueUrl = parsed.searchParams.get('url');
-    if (!yuqueUrl) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Missing "url" query parameter' }));
-      return;
-    }
-
-    const config = getYuqueConfigOrError(res);
-    if (!config) return;
-
-    try {
-      const parts = yuqueSvc.parseYuqueUrl(yuqueUrl);
-      if (!parts) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Invalid Yuque URL format' }));
-        return;
-      }
-
-      const prdFull = await yuqueSvc.fetchPrdFull(config, yuqueUrl);
-      // 从 prdFull.body 提取图片（fetchPrdFull 内部已包含 404 降级逻辑）
-      const imageUrls = yuqueSvc.extractImageUrlsFromDoc({ body: prdFull.body, body_lake: prdFull.body });
-
-      const imageItems = imageUrls.map((url, idx) => ({
-        index: idx,
-        url,
-        proxy_download_url: `/api/yuque/doc-images/download?url=${encodeURIComponent(yuqueUrl)}&index=${idx}`
-      }));
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({
-        title: prdFull.title,
-        creator: prdFull.creator,
-        description: prdFull.description,
-        body: prdFull.body,
-        body_text: prdFull.body_text || '',
-        image_count: imageItems.length,
-        images: imageItems
-      }));
-    } catch (err) {
-      console.error('[Yuque Assets] Error:', err.message);
-      res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: err.message }));
-    }
-    return;
-  }
-
-  // GET /api/yuque/doc-images/download?url=...&index=...
-  if (pathname === '/api/yuque/doc-images/download' && req.method === 'GET') {
-    const yuqueUrl = parsed.searchParams.get('url');
-    const indexRaw = parsed.searchParams.get('index');
-    if (!yuqueUrl || indexRaw == null) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Both "url" and "index" query parameters are required' }));
-      return;
-    }
-    const index = Number(indexRaw);
-    if (!Number.isInteger(index) || index < 0) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Invalid "index" query parameter' }));
-      return;
-    }
-
-    const config = getYuqueConfigOrError(res);
-    if (!config) return;
-
-    try {
-      const parts = yuqueSvc.parseYuqueUrl(yuqueUrl);
-      if (!parts) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Invalid Yuque URL format' }));
-        return;
-      }
-
-      const docData = await yuqueSvc.fetchYuqueDocContent(config, parts.group_login, parts.book_slug, parts.doc_slug);
-      const imageUrls = yuqueSvc.extractImageUrlsFromDoc(docData);
-      const target = imageUrls[index];
-      if (!target) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `Image index out of range: ${index}` }));
-        return;
-      }
-
-      const fetched = await yuqueSvc.fetchRemoteBinary(target);
-      const ext = getFileExtFromUrl(target, fetched.contentType);
-      const filename = `yuque-image-${index + 1}${ext}`;
-
-      res.writeHead(200, {
-        'Content-Type': fetched.contentType || 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="${filename}"`
-      });
-      res.end(fetched.buffer);
-    } catch (err) {
-      console.error('[Yuque Image Download] Error:', err.message);
-      res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: err.message }));
-    }
-    return;
-  }
-
-  // ---- AI Design Assistant Routes ----
-
-  // POST /api/ai-design/jobs — 创建 AI 设计拆解任务
-  if (pathname === '/api/ai-design/jobs' && req.method === 'POST') {
-    let body;
-    try {
-      body = JSON.parse(await readBody(req));
-    } catch {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Invalid JSON body' }));
-      return;
-    }
-
-    const { reqId, prdUrl, prdMd, skillKey, figmaUrl } = body;
-    if (!reqId) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'reqId is required' }));
-      return;
-    }
-
-    const allowedSkills = new Set(['default', 'prd_html_decompose', 'fliggy_flight_prd_to_h5', 'fliggy_flight_h5_review']);
-    const skill = allowedSkills.has(skillKey) ? skillKey : 'default';
-
-    // fliggy_flight_h5_review 需要 figmaUrl；其它 skill 需要 prdUrl 或 prdMd 至少一个
-    if (skill === 'fliggy_flight_h5_review') {
-      if (!figmaUrl) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'figmaUrl is required for fliggy_flight_h5_review' }));
-        return;
-      }
-    } else if (!prdUrl && !(prdMd && prdMd.trim())) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'prdUrl or prdMd is required' }));
-      return;
-    }
-
-    const config = loadConfig();
-    if (!config) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
-      return;
-    }
-
-    const isMock = !hasAnyAiKey(config);
-    if (isMock) {
-      console.log('[AiDesign] No valid ai_api_key / ai_decompose_api_key — running in MOCK mode');
-    }
-
-    const job = aiDesignSvc.createJob(reqId, prdUrl || '', config, yuqueSvc, { skillKey: skill, figmaUrl: figmaUrl || '', prdMd: prdMd || '' });
-    console.log(`[AiDesign] Created job ${job.id} for req ${reqId} (skill=${skill})${isMock ? ' (mock)' : ''}${prdMd ? ' (with prdMd fallback)' : ''}`);
-
-    res.writeHead(201, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(job));
-    return;
-  }
-
-  // GET /api/ai-design/jobs/:id — 查询任务状态与产物
-  const jobGetMatch = pathname.match(/^\/api\/ai-design\/jobs\/([^/]+)$/);
-  if (jobGetMatch && req.method === 'GET') {
-    const jobId = jobGetMatch[1];
-    const job   = aiDesignSvc.getJob(jobId);
-    if (!job) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: `Job ${jobId} not found` }));
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(job));
-    return;
-  }
-
-  // POST /api/ai-design/jobs/:id/retry — 重跑任务
-  const jobRetryMatch = pathname.match(/^\/api\/ai-design\/jobs\/([^/]+)\/retry$/);
-  if (jobRetryMatch && req.method === 'POST') {
-    const jobId  = jobRetryMatch[1];
-    const config = loadConfig();
-    if (!config) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
-      return;
-    }
-
-    // 先尝试重跑内存中已有的 Job
-    let job = aiDesignSvc.retryJob(jobId, config, yuqueSvc);
-
-    // Job 不在内存中（后端重启后丢失），从请求 body 读取参数重新创建
-    if (!job) {
-      const body = await new Promise((resolve) => {
-        let raw = '';
-        req.on('data', chunk => { raw += chunk; });
-        req.on('end', () => {
-          try { resolve(JSON.parse(raw)); } catch { resolve({}); }
-        });
-      });
-      const { req_id, prd_url, skill_key, figma_url } = body;
-      const skill = skill_key || 'default';
-      // review 任务以 figma_url 为主，其它任务以 prd_url 为主
-      if (!req_id || (skill === 'fliggy_flight_h5_review' ? !figma_url : !prd_url)) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `Job ${jobId} not found，请提供 req_id 及 ${skill === 'fliggy_flight_h5_review' ? 'figma_url' : 'prd_url'} 重新创建` }));
-        return;
-      }
-      console.log(`[AiDesign] Job ${jobId} not in memory, creating new job for req ${req_id} (skill=${skill})`);
-      job = aiDesignSvc.createJob(req_id, prd_url || '', config, yuqueSvc, { skillKey: skill, figmaUrl: figma_url || '' });
-    } else {
-      console.log(`[AiDesign] Retrying job ${jobId}`);
-    }
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(job));
-    return;
-  }
-
-  // POST /api/ai-design/jobs/:id/confirm — 确认方案并触发 H5 生成
-  const jobConfirmMatch = pathname.match(/^\/api\/ai-design\/jobs\/([^/]+)\/confirm$/);
-  if (jobConfirmMatch && req.method === 'POST') {
-    const jobId  = jobConfirmMatch[1];
-    const config = loadConfig();
-    if (!config) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to load config/config.json' }));
-      return;
-    }
-
-    // 先尝试确认内存中已有的 Job
-    let job = aiDesignSvc.confirmJob(jobId, config, yuqueSvc);
-
-    // Job 不在内存中（后端重启后丢失），从请求 body 读取参数重新创建并直接生成 H5
-    if (!job) {
-      const body = await new Promise((resolve) => {
-        let raw = '';
-        req.on('data', chunk => { raw += chunk; });
-        req.on('end', () => {
-          try { resolve(JSON.parse(raw)); } catch { resolve({}); }
-        });
-      });
-      const { req_id, prd_url, skill_key } = body;
-      if (!req_id || !prd_url) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `Job ${jobId} not found，请提供 req_id 和 prd_url` }));
-        return;
-      }
-      console.log(`[AiDesign] Job ${jobId} not in memory, creating new job for req ${req_id} and generating H5`);
-      job = aiDesignSvc.createJob(req_id, prd_url, config, yuqueSvc, { skillKey: skill_key || 'fliggy_flight_prd_to_h5' });
-    } else {
-      console.log(`[AiDesign] Confirmed job ${jobId}, H5 generation started`);
-    }
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(job));
-    return;
-  }
-
-  // GET /api/yuque/doc-content?url=... — 读取 PRD 正文
-  if (pathname === '/api/yuque/doc-content' && req.method === 'GET') {
-    const yuqueUrl = parsed.searchParams.get('url');
-    if (!yuqueUrl) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Missing "url" query parameter' }));
-      return;
-    }
-
-    const config = loadConfig();
-    if (!config || !config.yuque_token || config.yuque_token === 'YOUR_YUQUE_API_TOKEN_HERE') {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Yuque API Token not configured' }));
-      return;
-    }
-
-    try {
-      const prdFull = await yuqueSvc.fetchPrdFull(config, yuqueUrl);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(prdFull));
-    } catch (err) {
-      console.error('[Yuque Content] Error:', err.message);
-      res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: err.message }));
-    }
-    return;
-  }
-
-  // ---- Static Files (fallback) ----
-  if (req.method === 'GET' && !pathname.startsWith('/api/')) {
+  // ---- 静态文件（兜底）----
+  if (method === 'GET' && !pathname.startsWith('/api/')) {
     if (pathname === '/config/config.json' || pathname === '/config.json') {
       res.writeHead(403, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Config file is not publicly accessible' }));
@@ -933,7 +467,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 404 for other routes
+  // 404
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'Not found' }));
 });

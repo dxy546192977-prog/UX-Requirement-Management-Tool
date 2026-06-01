@@ -1,0 +1,20 @@
+{
+  "name": "ux-requirement-management-tool",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.2.2",
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "legacy:server": "node proxy-server.js"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@next/swc-wasm-nodejs": "16.2.6"
+  }
+}

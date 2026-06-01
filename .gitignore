@@ -3,6 +3,14 @@ openapi.json
 
 # Node.js
 node_modules/
+.next/
+out/
+.codex-tools/
+.vercel/
+
+# 环境变量
+.env
+.env*.local
 
 # 敏感配置（包含 API Token）
 config/config.json
@@ -16,3 +24,4 @@ screenshot.png
 
 # IDE/Agent 配置物理目录（根目录的 .vscode、.cursor、.agents 等为目录联接，勿删）
 _ide-config-store/
+.vercel

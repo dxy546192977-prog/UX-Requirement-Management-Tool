@@ -1,0 +1,19 @@
+{
+  "yuque_api_base": "https://yuque-api.antfin-inc.com",
+  "yuque_token": "YOUR_YUQUE_API_TOKEN_HERE",
+  "dingtalk_webhook": "",
+  "oss_access_key_id": "YOUR_OSS_ACCESS_KEY_ID",
+  "oss_access_key_secret": "YOUR_OSS_ACCESS_KEY_SECRET",
+  "oss_bucket": "designacceleration",
+  "oss_region": "oss-cn-beijing",
+  "oss_file_key": "requirements.json",
+  "ai_provider": "openai",
+  "ai_api_base": "https://api.openai.com",
+  "ai_api_key": "YOUR_AI_API_KEY_HERE",
+  "ai_model": "gpt-4o-mini",
+  "ai_decompose_provider": "",
+  "ai_decompose_api_base": "",
+  "ai_decompose_api_key": "",
+  "ai_decompose_model": "",
+  "ai_decompose_max_images": 8
+}
